@@ -10,6 +10,8 @@
     "react-scripts": "3.2.0"
   },
   "scripts": {
+    "start-api": "cd backend && venv/bin/flask run --no-debugger",
+    "start-windows": "cd backend && venv\\Scripts\\flask run --no-debugger",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
