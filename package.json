@@ -13,8 +13,11 @@
     "start-api": "cd backend && venv/bin/flask run --no-debugger",
     "start-windows": "cd backend && venv\\Scripts\\flask run --no-debugger",
     "start": "react-scripts start",
+    "start-api": "cd backend && venv/bin/flask run --no-debugger",
+    "start-windows": "cd backend && venv\\Scripts\\flask run --no-debugger",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test-api": "cd backend && flask test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
