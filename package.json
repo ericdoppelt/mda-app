@@ -11,11 +11,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-<<<<<<< HEAD
-=======
-    "start-api": "cd api && venv/bin/flask run --no-debugger",
-    "start-windows": "cd api && venv\\Scripts\\flask run --no-debugger",
->>>>>>> 671724d23c50d961c53bb79344269faf249ef2d9
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
