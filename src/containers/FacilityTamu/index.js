@@ -46,20 +46,21 @@ export default () => (
         </Header>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
-            Our physical address (use this for equipment shipments):
-<br><br>
-Cyclotron Institute<br>
-Texas A&M University<br>
-120 Spence St.<br>
-College Station, TX 77843-3366
-<br><br>
-Our Mailing Address:
-<br>
-Cyclotron Institute<br>
-Texas A&M University<br>
-3366 TAMU<br>
-College Station, TX 77843-3366
-
+            Our physical address (use this for equipment shipments): 
+            <br/>
+            <br/>
+            Cyclotron Institute<br/>
+            Texas A&M University<br/>
+            120 Spence St.<br/>
+            College Station, TX 77843-3366
+            <br/>
+            <br/>
+            Our Mailing Address:
+            <br/>
+            Cyclotron Institute<br/>
+            Texas A&M University<br/>
+            3366 TAMU<br/>
+            College Station, TX 77843-3366
           </Paragraph>
         </Row>
         <Header>
@@ -70,18 +71,18 @@ College Station, TX 77843-3366
           Additional Documents
         </Header>
         <Paragraph>
-          Beam Time Request Form (offline)<br>
-Parking Map<br>
-Cryogenic Safety Guidelines<br>
-Building Entry<br>
-Safety Orientation<br>
-Heavy Ion Beam List<br>
-Beam Change Times<br>
-Beam Characterization and Verification<br><br>
+          Beam Time Request Form (offline)<br/>
+Parking Map<br/>
+Cryogenic Safety Guidelines<br/>
+Building Entry<br/>
+Safety Orientation<br/>
+Heavy Ion Beam List<br/>
+Beam Change Times<br/>
+Beam Characterization and Verification<br/><br/>
 
-Facility Brochures:<br>
-Full Brochure<br>
-Heavy Ion Facility Brochure<br>
+Facility Brochures:<br/>
+Full Brochure<br/>
+Heavy Ion Facility Brochure<br/>
 Proton Facility Brochure
 
         </Paragraph>
