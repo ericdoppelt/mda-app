@@ -26,7 +26,7 @@ function App() {
         >
           Learn React
         </a>
-        <p>The current time is now .</p>
+        <p>Sample text from database: {currentTime}.</p>
       </header>
     </div>
   );
