@@ -14,13 +14,13 @@ import Stack from '../../components/Stack';
 export default () => (
   <Main style={{ justifyContent: 'center', alignItems: 'center' }}>
     <NavigationHeader>
-      <Link to="/empty-artboard">
+      <Link to="/e3308636ddad4d50adcf41cdb793f31f-jpeg">
         <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-02.jpg)' }} />
       </Link>
       <Link to="/a2f310241f66477195c4bb216a1ae169-jpeg">
         <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-01.jpg)' }} />
       </Link>
-      <Link to="/e3308636ddad4d50adcf41cdb793f31f-jpeg">
+      <Link to="/empty-artboard">
         <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-03.jpg)' }} />
       </Link>
       <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-04.jpg)' }} />
@@ -29,7 +29,7 @@ export default () => (
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
-            Lorem ipsum dolor
+            Login Form
           </Paragraph>
         </Row>
         <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
