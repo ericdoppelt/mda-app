@@ -1,80 +1,62 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Button from '../../components/Button';
-import Card from '../../components/Card';
-import CircleImage from '../../components/CircleImage';
-import InputField from '../../components/InputField';
+import Header from '../../components/Header';
+import Image from '../../components/Image';
 import Main from '../../components/Main';
 import NavigationHeader from '../../components/NavigationHeader';
-import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
+import Subheader from '../../components/Subheader';
 
 export default () => (
   <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
     <NavigationHeader>
-      <Link to="/e3308636ddad4d50adcf41cdb793f31f-jpeg">
-        <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-03.jpg)' }} />
+      <Image style={{ width: '50px', height: '90px', backgroundImage: 'url(/images/homeIcon.png)' }} />
+      <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/a544991c-8004-402e-a784-9d0a51d6d3b0.png)' }} />
+      <Image style={{ width: '120px', height: '90px', backgroundImage: 'url(/images/62187f3a-3839-43dc-8b2e-76b97b7ae0b1.png)' }} />
+      <Image style={{ width: '170px', height: '90px', backgroundImage: 'url(/images/c8a8db2c-5298-4115-ba33-dc56f20bf50a.png)' }} />
+      <Link to="/empty-artboard-1">
+        <Image style={{ width: '170px', height: '90px', backgroundImage: 'url(/images/viewRequests.png)' }} />
       </Link>
-      <Link to="/a2f310241f66477195c4bb216a1ae169-jpeg">
-        <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-01.jpg)' }} />
-      </Link>
-      <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-02.jpg)' }} />
-      <Link to="/">
-        <CircleImage style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/placeholder-04.jpg)' }} />
-      </Link>
+      <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/d102a6df-a42a-4af3-bfdc-8da28402a42d.png)' }} />
     </NavigationHeader>
-    <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-      <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
+    <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
+      <Stack style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+        <Header>
+          Hello, John Doe!
+        </Header>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Paragraph>
-            Beam Request Form
-          </Paragraph>
+          <Subheader>
+            Username:
+<br/>
+Affiliation:
+<br/>
+User Type:
+<br/>
+Phone:
+<br/>
+Email:
+
+          </Subheader>
+          <Subheader>
+            @john
+<br/>
+MDA
+<br/>
+Integrator
+<br/>
+555-555-5555
+<br/>
+johnDoe@mda.mil
+
+          </Subheader>
         </Row>
-        <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Paragraph>
-              Sit amet
-            </Paragraph>
-            <InputField placeholder="Input Field" style={{ width: '370px' }} />
-          </Row>
-          <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Paragraph>
-              Porttitor
-            </Paragraph>
-            <InputField placeholder="Input Field" style={{ width: '370px' }} />
-          </Row>
-        </Stack>
-        <Stack style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexGrow: '0', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
-          <Paragraph>
-            Payment details
-          </Paragraph>
-          <InputField placeholder="First Name" style={{ width: 'calc(100% - 20px)' }} />
-          <InputField placeholder="Last Name" style={{ width: 'calc(100% - 20px)' }} />
-          <InputField placeholder="Card Number" style={{ width: 'calc(100% - 20px)' }} />
-          <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <InputField placeholder="Expiration" style={{ width: 'calc(100% - 20px)' }} />
-            <InputField placeholder="CVC" style={{ width: 'calc(100% - 20px)' }} />
-          </Row>
-          <Button style={{ width: 'calc(100% - 20px)' }}>
-            Confirm
-          </Button>
-        </Stack>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Button>
-            Sollicitudin
-          </Button>
-          <Button>
-            Sollicitudin
-          </Button>
-        </Row>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Paragraph>
-            Adipiscing elit sed
-          </Paragraph>
-        </Row>
-      </Card>
-    </Row>
+      </Stack>
+      <Subheader>
+        Update Contact Info
+      </Subheader>
+      <Image style={{ width: '1000px', height: '600px', backgroundImage: 'url(/images/Screen Shot 2020-06-03 at 5.41.23 PM.png)' }} />
+    </Stack>
   </Main>
 );

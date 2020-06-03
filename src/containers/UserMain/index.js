@@ -24,8 +24,12 @@ export default () => (
       <Link to="/request-main">
         <Image style={{ width: '170px', height: '90px', backgroundImage: 'url(/images/c8a8db2c-5298-4115-ba33-dc56f20bf50a.png)' }} />
       </Link>
-      <Image style={{ width: '150px', height: '90px', backgroundImage: 'url(/images/viewlogo.png)' }} />
-      <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/d102a6df-a42a-4af3-bfdc-8da28402a42d.png)' }} />
+      <Link to="/empty-artboard-1">
+        <Image style={{ width: '150px', height: '90px', backgroundImage: 'url(/images/viewlogo.png)' }} />
+      </Link>
+      <Link to="/empty-artboard">
+        <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/d102a6df-a42a-4af3-bfdc-8da28402a42d.png)' }} />
+      </Link>
     </NavigationHeader>
     <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
@@ -37,28 +41,30 @@ export default () => (
         <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
             <Paragraph>
-              Sit amet
+              Username
             </Paragraph>
             <InputField placeholder="Input Field" style={{ width: '370px' }} />
           </Row>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
             <Paragraph>
-              Porttitor
+              Password
             </Paragraph>
             <InputField placeholder="Input Field" style={{ width: '370px' }} />
           </Row>
         </Stack>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+          <Link to="/empty-artboard">
+            <Button>
+              Log In
+            </Button>
+          </Link>
           <Button>
-            Sollicitudin
-          </Button>
-          <Button>
-            Sollicitudin
+            Create Account
           </Button>
         </Row>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
-            Adipiscing elit sed
+            Forgot Your Password?
           </Paragraph>
         </Row>
       </Card>
