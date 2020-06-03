@@ -1,35 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-function App() {
-  const [currentTime, setCurrentTime] = useState(0);
+import Artboard5dd5bcb83f4346fb8421eed5bc0b1ddfJpeg from './containers/Artboard5dd5bcb83f4346fb8421eed5bc0b1ddfJpeg';
+import E3308636ddad4d50adcf41cdb793f31fJpeg from './containers/E3308636ddad4d50adcf41cdb793f31fJpeg';
+import A2f310241f66477195c4bb216a1ae169Jpeg from './containers/A2f310241f66477195c4bb216a1ae169Jpeg';
+import EmptyArtboard from './containers/EmptyArtboard';
+import EmptyArtboard1 from './containers/EmptyArtboard1';
 
-  useEffect(() => {
-    fetch('/time').then(res => res.json()).then(data => {
-      setCurrentTime(data.time);
-    });
-  }, []);
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>Sample text from database: {currentTime}.</p>
-      </header>
-    </div>
-  );
-}
+const App = () => (
+  <BrowserRouter>
+    <Switch>
+      <Route path="/" exact component={Artboard5dd5bcb83f4346fb8421eed5bc0b1ddfJpeg} />
+      <Route path="/e3308636ddad4d50adcf41cdb793f31f-jpeg" component={E3308636ddad4d50adcf41cdb793f31fJpeg} />
+      <Route path="/a2f310241f66477195c4bb216a1ae169-jpeg" component={A2f310241f66477195c4bb216a1ae169Jpeg} />
+      <Route path="/empty-artboard" component={EmptyArtboard} />
+      <Route path="/empty-artboard-1" component={EmptyArtboard1} />
+    </Switch>
+  </BrowserRouter>
+);
 
 export default App;
