@@ -1,0 +1,7 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  background-color: rgba(undefined, undefined, undefined, undefined);
+}
