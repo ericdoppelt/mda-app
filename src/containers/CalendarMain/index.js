@@ -13,6 +13,7 @@ import Row from '../../components/Row';
 import Stack from '../../components/Stack';
 import Switch from '../../components/Switch';
 import Title from '../../components/Title';
+import DemoApp from '../../components/Calendar/DemoApp';
 
 export default () => (
   <Main style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -36,7 +37,8 @@ export default () => (
     </NavigationHeader>
     <Row style={{ minWidth: '50px', minHeight: '50px' }}>
       <Stack style={{ justifyContent: 'flex-end', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
-        <Image style={{ width: '900px', height: '800px', backgroundImage: 'url(/images/calendar2.png)' }} />
+        {/*<Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/d102a6df-a42a-4af3-bfdc-8da28402a42d.png)' }} /> */}
+        <DemoApp />
       </Stack>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '700px', width: '350px', flexGrow: '0' }}>
         <Header>
