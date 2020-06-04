@@ -12,17 +12,17 @@ import Stack from '../../components/Stack';
 export default () => (
   <Main style={{ justifyContent: 'space-between', alignItems: 'center' }}>
     <NavigationHeader>
-      <Link to="/home-page">
+      <Link to="/home">
         <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/homelogo.png)' }} />
       </Link>
       <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/a544991c-8004-402e-a784-9d0a51d6d3b0.png)' }} />
       <Link to="/calendar-main">
         <Image style={{ width: '120px', height: '90px', backgroundImage: 'url(/images/62187f3a-3839-43dc-8b2e-76b97b7ae0b1.png)' }} />
       </Link>
-      <Link to="/request-main">
+      <Link to="/request-form-main">
         <Image style={{ width: '170px', height: '90px', backgroundImage: 'url(/images/c8a8db2c-5298-4115-ba33-dc56f20bf50a.png)' }} />
       </Link>
-      <Link to="/empty-artboard-1">
+      <Link to="/view-requests-main">
         <Image style={{ width: '150px', height: '90px', backgroundImage: 'url(/images/viewlogo.png)' }} />
       </Link>
       <Link to="/">

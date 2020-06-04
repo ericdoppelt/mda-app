@@ -4,11 +4,11 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import UserMain from './containers/UserMain';
 import FacilityMain from './containers/FacilityMain';
 import CalendarMain from './containers/CalendarMain';
-import RequestMain from './containers/RequestMain';
+import RequestFormMain from './containers/RequestFormMain';
 import FacilityTamu from './containers/FacilityTamu';
-import HomePage from './containers/HomePage';
-import EmptyArtboard from './containers/EmptyArtboard';
-import EmptyArtboard1 from './containers/EmptyArtboard1';
+import Home from './containers/Home';
+import UserProfile from './containers/UserProfile';
+import ViewRequestsMain from './containers/ViewRequestsMain';
 
 const App = () => (
   <BrowserRouter>
@@ -16,11 +16,11 @@ const App = () => (
       <Route path="/" exact component={UserMain} />
       <Route path="/facility-main" component={FacilityMain} />
       <Route path="/calendar-main" component={CalendarMain} />
-      <Route path="/request-main" component={RequestMain} />
+      <Route path="/request-form-main" component={RequestFormMain} />
       <Route path="/facility-tamu" component={FacilityTamu} />
-      <Route path="/home-page" component={HomePage} />
-      <Route path="/empty-artboard" component={EmptyArtboard} />
-      <Route path="/empty-artboard-1" component={EmptyArtboard1} />
+      <Route path="/home" component={Home} />
+      <Route path="/user-profile" component={UserProfile} />
+      <Route path="/view-requests-main" component={ViewRequestsMain} />
     </Switch>
   </BrowserRouter>
 );
