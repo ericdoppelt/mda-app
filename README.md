@@ -31,10 +31,11 @@ This will automatically open a window to the frontend, and the web address will 
 
 ## Explanation of the files
 The following files compose the react frontend contents within the top level directory:
-* config/* - this file configures the react frontend
-* public/* - this contains the built html
-* scripts/* - this contains the scripts used in react
-* src/* - this contains the react source files
+* public/* - this folder contains the html resources to display
+* src/components - this folder contains the web components such as buttons, calendar, dropdowns, etc
+* src/containers - this folder contains the web pages for each section of the website
+* src/App.js - this file contains the frontend routes for each section of the website
+* package.js - this contains the scripts for yarn
 
 The following files compose the flask backend contents within the backend folder:
 * venv/* - this folder contains all the contents of the virtual environment
