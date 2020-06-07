@@ -10,7 +10,10 @@ import NavigationHeader from '../../components/NavigationHeader';
 import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
+import HerokuText from '../../HerokuText';
 
+let text = "caleb";
+              
 export default () => (
   <Main style={{ justifyContent: 'center', alignItems: 'center' }}>
     <NavigationHeader>
@@ -65,9 +68,7 @@ export default () => (
           </Button>
         </Row>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Paragraph>
-            Forgot Your Password?
-          </Paragraph>
+          <HerokuText/>
         </Row>
       </Card>
     </Row>
