@@ -5,8 +5,8 @@ import './LoginForm.css'
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
