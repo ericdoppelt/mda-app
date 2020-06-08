@@ -10,7 +10,7 @@ export default class HerokuText extends React.Component {
     };
 
     async componentDidMount() {
-        const url = "http://localhost:5000/time";
+        const url = "https://mda-phoenix.herokuapp.com/time";
         axios.get(url, {}).then((response)=>{
             console.log({response});
             this.setState({message: response.data.time, loading: false})
