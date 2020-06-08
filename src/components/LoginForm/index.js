@@ -4,14 +4,13 @@ import React from 'react';
 import './LoginForm.css'
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
-
+import history from '../../history';
 
 export default function LoginForm() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [correctPassword, setCorrectness] = React.useState(true);
   const [testText, setText] = React.useState("");
-
 
   function validateForm() {
     return username.length > 0 && password.length > 0;
@@ -20,11 +19,8 @@ export default function LoginForm() {
   function handleSubmit(event) {
     setCorrectness(true)
     if (username === 'mike') {
-      const params = new URLSearchParams;
-      params.append('username', username);
-      params.append('password', password);
-      axios.post('https://mda-phoenix.herokuapp.com/login', params);
-      
+      // eslint-disable-next-line no-restricted-globals
+      history.push('/user-profile');
       setText('hi mike')
     } else {
       setCorrectness(false)
