@@ -73,7 +73,7 @@ def login():
 
     return jsonify(result)
 
-@app.route('/user/<username>')
+@app.route('/user/<username>', methods=['POST'])
 #@login_required
 def user(username):
     user = Users.query.filter_by(username=username).first()
