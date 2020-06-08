@@ -32,7 +32,7 @@ export default () => (
       <Link to="/view-requests-main">
         <Image style={{ width: '150px', height: '90px', backgroundImage: 'url(/images/viewlogo.png)' }} />
       </Link>
-      <Link to="/user-profile">
+      <Link to="/user-main">
         <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/d102a6df-a42a-4af3-bfdc-8da28402a42d.png)' }} />
       </Link>
     </NavigationHeader>
