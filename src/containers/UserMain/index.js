@@ -10,6 +10,7 @@ import NavigationHeader from '../../components/NavigationHeader';
 import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
+import LoginForm from '../../components/LoginForm';
 import HerokuText from '../../HerokuText';
 
 let text = "caleb";
@@ -70,6 +71,7 @@ export default () => (
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <HerokuText/>
         </Row>
+        <LoginForm/>
       </Card>
     </Row>
   </Main>
