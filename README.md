@@ -1,4 +1,4 @@
-# mda_app
+# mda-app
 ## Initial Installation
 When downloading the app for the first time, react needs to be initialized along with the virtual environment along with its dependencies need to be installed locally. After cloning the repository, open up your python termal, cd into the mda-app. To initialize the react app, run 
 ```
@@ -6,6 +6,7 @@ npm install
 npm install node-sass
 npm install fullcalendar
 npm install --save @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction @fullcalendar/core @fullcalendar/react
+npm install axios
 ```
 To initialize the virtual environment, cd in to the backend directory, and create the virtual environment by running 
 ```
