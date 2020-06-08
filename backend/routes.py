@@ -58,7 +58,7 @@ def login():
     result = ""
 
     user = Users.query.filter_by(username=username).first()
-    pass_test = bcrypt.generate_password_hash(user.password)
+    #pass_test = bcrypt.generate_password_hash(user.password)
 
     if not user:
         result = {'error' : "Incorrect username"}
