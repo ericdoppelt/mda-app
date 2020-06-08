@@ -20,6 +20,11 @@ export default function LoginForm() {
   function handleSubmit(event) {
     setCorrectness(true)
     if (username === 'mike') {
+      const params = new URLSearchParams;
+      params.append('username', username);
+      params.append('password', password);
+      axios.post('https://mda-phoenix.herokuapp.com/login', params);
+      
       setText('hi mike')
     } else {
       setCorrectness(false)
