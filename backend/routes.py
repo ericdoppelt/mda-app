@@ -49,8 +49,6 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    print(request.get_json())
-    print(request.get_json()['username'])
     username = request.get_json()['username']
     password = request.get_json()['password']
     # username = "mm92"
@@ -58,16 +56,18 @@ def login():
     result = ""
 
     user = Users.query.filter_by(username=username).first()
-    #pass_test = bcrypt.generate_password_hash(user.password)
 
     if not user:
-        result = {'error' : "Incorrect username"}
+        result = {'success' : "false",
+        'error' : "Incorrect username"}
     # elif bcrypt.check_password_hash(pass_test, password):
     #     result = {'first_name' : user.first_name,
     #     'last_name' : user.last_name}
     elif user.password == password:
-        result = {'success' : user.first_name}
+        result = {'success' : "true",
+        'error' : ""}
     else:
-        result = {'error' : "Incorrect password"}
+        result = {'success' : "true",
+        'error' : "Incorrect password"}
 
     return jsonify({'result': result})
