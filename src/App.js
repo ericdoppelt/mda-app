@@ -13,14 +13,14 @@ import ViewRequestsMain from './containers/ViewRequestsMain';
 const App = () => (
   <BrowserRouter>
     <Switch>
-      <Route path="/" exact component={UserMain} />
-      <Route path="/facility-main" component={FacilityMain} />
-      <Route path="/calendar-main" component={CalendarMain} />
-      <Route path="/request-form-main" component={RequestFormMain} />
-      <Route path="/facility-tamu" component={FacilityTamu} />
-      <Route path="/home" component={Home} />
+      <Route path="/" exact component={Home} />
+      <Route path="/facilities" component={FacilityMain} />
+      <Route path="/facilities-tamu" component={FacilityTamu} />
+      <Route path="/calendar" component={CalendarMain} />
+      <Route path="/request-form" component={RequestFormMain} />
+      <Route path="/view-requests" component={ViewRequestsMain} />
+      <Route path="/user-login" component={UserMain} />
       <Route path="/user-profile" component={UserProfile} />
-      <Route path="/view-requests-main" component={ViewRequestsMain} />
     </Switch>
   </BrowserRouter>
 );

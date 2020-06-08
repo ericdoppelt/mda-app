@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
 import Image from '../../components/Image';
 import Main from '../../components/Main';
 import Row from '../../components/Row';
