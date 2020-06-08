@@ -1,6 +1,7 @@
 from main import app, bcrypt
 from models import Test, Users
 from flask import jsonify, request, json
+from flask_login import current_user, login_required, login_user, logout_user
 #from flask_jwt_extended import (create_access_token)
 #from flask_login import LoginManager
 from sqlalchemy import func
@@ -58,16 +59,24 @@ def login():
     user = Users.query.filter_by(username=username).first()
 
     if not user:
-        result = {'success' : "false",
+        result = {'success' : False,
         'error' : "Incorrect username"}
     # elif bcrypt.check_password_hash(pass_test, password):
     #     result = {'first_name' : user.first_name,
     #     'last_name' : user.last_name}
     elif user.password == password:
-        result = {'success' : "true",
+        result = {'success' : True,
         'error' : ""}
     else:
-        result = {'success' : "true",
+        result = {'success' : False,
         'error' : "Incorrect password"}
 
-    return jsonify({'result': result})
+    return jsonify(result)
+
+@app.route('/user/<username>')
+#@login_required
+def user(username):
+    user = Users.query.filter_by(username=username).first()
+    account_info = {'id': user.id, 'user': user.username, 
+    'password': user.password, 'first_name': user.first_name, 'last_name': user.last_name}
+    return account_info
