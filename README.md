@@ -30,6 +30,20 @@ yarn start
 ```
 This will automatically open a window to the frontend, and the web address will be http://127.0.0.1:3000/
 
+## Deploying to heroku
+First create a Heroku repository at heroku.com. You can get free 500 Mb app, 1000 hours free run time, and a free 10,000 entry database under a single user (Heroku teams do not have the free run time). Once you have done that, connect your heroku repository to your github deployment by running 
+```
+heroku git:remote -a repository
+```
+where repository is the name of your Heroku app.
+Then, you can push your backend changes to Heroku with
+```
+git subtree push --prefix backend heroku master
+```
+This will push only the backend folder to the Heroku app. The other frontend files are not necessary, and since there is a 500 Mb limit, you shouldn't push the rest of your frontend files. If you want to push the entire folder, you would use the following command
+```
+git push heroku master
+```
 ## Explanation of the files
 The following files compose the react frontend contents within the top level directory:
 * public/* - this folder contains the html resources to display
