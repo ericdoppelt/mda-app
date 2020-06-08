@@ -25,33 +25,6 @@ export default () => (
             Login Form
           </Paragraph>
         </Row>
-        <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Paragraph>
-              Username
-            </Paragraph>
-            <InputField placeholder="Input Field" style={{ width: '370px' }} />
-          </Row>
-          <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Paragraph>
-              Password
-            </Paragraph>
-            <InputField placeholder="Input Field" style={{ width: '370px' }} />
-          </Row>
-        </Stack>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Link to="/user-profile">
-            <Button>
-              Log In
-            </Button>
-          </Link>
-          <Button>
-            Create Account
-          </Button>
-        </Row>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <HerokuText/>
-        </Row>
         <LoginForm/>
       </Card>
     </Row>

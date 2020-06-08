@@ -4,28 +4,39 @@ import React from 'react';
 import './LoginForm.css'
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
+
+
 export default function LoginForm() {
-  const [email, setEmail] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [correctPassword, setCorrectness] = React.useState(true);
+  const [testText, setText] = React.useState("");
+
 
   function validateForm() {
-    return email.length > 0 && password.length > 0;
+    return username.length > 0 && password.length > 0;
   }
 
   function handleSubmit(event) {
+    setCorrectness(true)
+    if (username === 'mike') {
+      setText('hi mike')
+    } else {
+      setCorrectness(false)
+    }
     event.preventDefault();
   }
 
   return (
     <div className="LoginForm">
       <form onSubmit={handleSubmit}>
-        <FormGroup controlId="email" bsSize="large">
-          <ControlLabel>Email</ControlLabel>
+        <FormGroup controlId="text" bsSize="large">
+          <ControlLabel>Username</ControlLabel>
           <FormControl
             autoFocus
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
           />
         </FormGroup>
         <FormGroup controlId="password" bsSize="large">
@@ -40,6 +51,9 @@ export default function LoginForm() {
           Login
         </Button>
       </form>
+      
+      {correctPassword ? testText : <div>Incorrect Password</div>}
+
     </div>
   );
 }
