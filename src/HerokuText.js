@@ -17,6 +17,11 @@ export default class HerokuText extends React.Component {
         }).catch((error) => {
             alert(error)
          });
+
+         const params = new URLSearchParams;
+         params.append('username', 'Mike');
+         params.append('password', '12345');
+         axios.post('https://mda-phoenix.herokuapp.com/login', params);
     }
 
 
