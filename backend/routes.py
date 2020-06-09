@@ -64,12 +64,12 @@ def login():
     if not user:
         result = {'success' : False,
         'error' : "Incorrect username"}
-    elif bcrypt.check_password_hash(user.password, password):
-        result = {'success' : True,
-        'error' : ""}
-    # elif user.password == password:
+    # elif bcrypt.check_password_hash(user.password, password):
     #     result = {'success' : True,
     #     'error' : ""}
+    elif user.password == password:
+        result = {'success' : True,
+        'error' : ""}
 
         #login_user(user)
     else:
