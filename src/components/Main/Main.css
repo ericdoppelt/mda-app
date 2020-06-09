@@ -2,6 +2,6 @@
   display: flex;
   flex-direction: column;
   align-self: stretch;
-  width: 100%;
+  width: 100vw;
   background-color: rgba(undefined, undefined, undefined, undefined);
 }

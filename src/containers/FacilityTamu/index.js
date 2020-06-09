@@ -14,58 +14,65 @@ export default () => (
     <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Paragraph>
-            Texas A&M Facility Information
-          </Paragraph>
+          <h1>Texas A&M Facility Information</h1>
         </Row>
         <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
             <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/1388bb77-92c9-4f33-843b-4978f4a94606.png)' }} />
           </Row>
         </Stack>
-        <Paragraph>
-          Contact Information
-        </Paragraph>
+        <h2>Contact Information</h2>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
-            Our physical address (use this for equipment shipments):
-<br/><br/>
-Cyclotron Institute<br/>
-Texas A&M University<br/>
-120 Spence St.<br/>
-College Station, TX 77843-3366
-<br/><br/>
-Our Mailing Address:
-<br/>
-Cyclotron Institute<br/>
-Texas A&M University<br/>
-3366 TAMU<br/>
-College Station, TX 77843-3366
-
+            Physical Address:
+            <br/>
+            <br/>
+            Cyclotron Institute
+            <br/>
+            Texas A&M University
+            <br/>
+            120 Spence St.
+            <br/>
+            College Station, TX 77843-3366
+            <br/>
+            <br/>
+            Mailing Address:
+            <br/>
+            <br/>
+            Cyclotron Institute<br/>
+            Texas A&M University<br/>
+            3366 TAMU<br/>
+            College Station, TX 77843-3366
           </Paragraph>
         </Row>
+        <h2>Additional Documents</h2>
         <Paragraph>
-          Beam Information
-        </Paragraph>
-        <Image style={{ width: '50px', height: '50px', backgroundImage: 'url(/images/placeholder-01.jpg)' }} />
-        <Paragraph>
-          Additional Documents
-        </Paragraph>
-        <Paragraph>
-          Beam Time Request Form (offline)<br/>
-Parking Map<br/>
-Cryogenic Safety Guidelines<br/>
-Building Entry<br/>
-Safety Orientation<br/>
-Heavy Ion Beam List<br/>
-Beam Change Times<br/>
-Beam Characterization and Verification<br/><br/>
-
-Facility Brochures:<br/>
-Full Brochure<br/>
-Heavy Ion Facility Brochure<br/>
-Proton Facility Brochure
-
+          <a href="https://cyclotron.tamu.edu/ref/images/btrf.pdf" target="_blank">Beam Time Request Form (PDF)</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/btrf.docx" target="_blank">Beam Time Request Form (Word)</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank">Parking Map</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/ci_ref_cryo_guidelines.pdf" target="_blank">Cryogenic Safety Guidelines</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank">Building Entry</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/safety_form_plus_map.pdf" target="_blank">Safety Orientation</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/heavy_ion_beams.pdf" target="_blank">Heavy Ion Beam List</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/Beam_Change_Time.PDF" target="_blank">Beam Change Times</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/TAMU%20beam%20characterization%20and%20verification.pdf" target="_blank">Characterization and Verification</a>
+          <br/>
+          <br/>
+          Facility Brochures:
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/brochure_2019.pdf" target="_blank">Full Brochure</a>
+          <br/>
+          <a href="https://cyclotron.tamu.edu/ref/images/heavy_ion_brochure.pdf" target="_blank">Heavy Ion Facility Brochure</a>
+          <br/>
+          <a href="Proton Facility Brochure" target="_blank">Proton Facility Brochure</a>
         </Paragraph>
       </Card>
     </Row>

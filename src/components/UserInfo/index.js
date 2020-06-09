@@ -26,7 +26,7 @@ export default (props) => (
             Email:
           </Subheader>
           <Subheader>
-            @{props.username}
+            {props.username}
             <br/>
             {props.affiliation}
             <br/>
