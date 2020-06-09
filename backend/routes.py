@@ -29,7 +29,8 @@ def register():
     if not user:
         user = Users(
             username = str(username),
-            password = str(password), #bcrypt.generate_password_hash(request.get_json(['password']).decode('utf-8')),
+            password = str(password), #bcrypt.generate_password_hash(request.get_json(['password']).encode('utf-8')).decode('utf-8'),
+            #bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
             first_name = str(first_name), #request.get_json()['first_name'],
             last_name = str(last_name) #request.get_json()['last_name']
         )
@@ -46,7 +47,7 @@ def register():
     else:
         result = {'error' : "User already registered, please login"}
 
-    return jsonify({'result': result})
+    return jsonify(result)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -58,15 +59,19 @@ def login():
 
     user = Users.query.filter_by(username=username).first()
 
+    print(bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8'))
+
     if not user:
         result = {'success' : False,
         'error' : "Incorrect username"}
-    # elif bcrypt.check_password_hash(pass_test, password):
-    #     result = {'first_name' : user.first_name,
-    #     'last_name' : user.last_name}
-    elif user.password == password:
+    elif bcrypt.check_password_hash(user.password, password):
         result = {'success' : True,
         'error' : ""}
+    # elif user.password == password:
+    #     result = {'success' : True,
+    #     'error' : ""}
+
+        #login_user(user)
     else:
         result = {'success' : False,
         'error' : "Incorrect password"}
