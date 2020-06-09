@@ -4,7 +4,7 @@ import Main from '../../components/Main';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
 import Title from '../../components/Title';
-
+import Button from '@material-ui/core/Button';
 import MDAHeader from '../../components/MDAHeader';
 
 export default () => (
@@ -19,6 +19,7 @@ export default () => (
         <Title>
           COMING SOON...
         </Title>
+        <Button>Material UI Test</Button>
       </Stack>
     </Row>
   </Main>
