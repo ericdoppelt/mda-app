@@ -21,6 +21,10 @@ class Users(db.Model):
     password = db.Column(db.String())
     first_name = db.Column(db.String())
     last_name = db.Column(db.String())
+    affiliation = db.Column(db.String())
+    user_type = db.Column(db.String())
+    phone = db.Column(db.String())
+    email = db.Column(db.String())
 
     def __repr__(self):
         return "<User(id=%s, text=%s)>" % (self.id, self.text)
