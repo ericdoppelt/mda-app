@@ -38,7 +38,7 @@ class LoginForm extends React.Component {
       if (response.data.success === true) {
         this.props.history.push({
           pathname: "/user-profile",
-          state: {user: "TEST"}
+          state: {user: self.state.username}
         });
       } else {
         self.setState({displayedText: response.data.error});
