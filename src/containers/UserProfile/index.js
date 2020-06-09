@@ -14,18 +14,27 @@ export default class UserProfile extends React.Component {
     super(props);
 
     this.state = {
+      name: "",
       username: "",
-      password: "",
-      displayedText: "",
+      affiliation: "",
+      userType: "",
+      phone: "",
+      email: ""
     }
   }
 
+  
   async componentDidMount() {
-    const url = "https://mda-phoenix.herokuapp.com/" + this.props.location.state.user;
+    const url = "https://mda-phoenix.herokuapp.com/user/" + this.props.location.state.user;
     console.log(url);
-    
+  
+    var self = this;
     await axios.post(url, {}).then(response => {
       console.log(response);
+      self.setState({
+        name: response.data.first_name + " " + response.data.last_name,
+        username: response.data.user,
+      });
       })
       .catch(error => {
         console.log("error");
@@ -38,7 +47,7 @@ render() {
     <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
       <MDAHeader/>
       <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
-        <UserInfo name="Mike McKenna" username={this.props.location.state.user} affiliation="MDA" userType="Integrator" phone = "555-555-5555" email = "mike@mda.mil"/>
+        <UserInfo name={this.state.name} username={this.state.username} affiliation="MDA" userType="Integrator" phone = "555-555-5555" email = "mike@mda.mil"/>
         <Subheader>
           Update Contact Info
         </Subheader>
