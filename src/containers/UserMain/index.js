@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Card from '../../components/Card';
 import Main from '../../components/Main';
 import Paragraph from '../../components/Paragraph';
@@ -7,7 +6,6 @@ import Row from '../../components/Row';
 import LoginForm from '../../components/LoginForm';
 import MDAHeader from '../../components/MDAHeader';
 
-              
 export default () => (
   <Main style={{ justifyContent: 'center', alignItems: 'center' }}>
     <MDAHeader/>

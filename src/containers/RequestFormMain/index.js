@@ -9,13 +9,15 @@ import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
 import MDAHeader from '../../components/MDAHeader';
+import BeamRequest1 from '../../components/BeamRequest1';
 
 export default () => (
   <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
     <MDAHeader/>
     <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+        <BeamRequest1/>
+        {/*<Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
             Beam Request - General Information
           </Paragraph>
@@ -59,7 +61,7 @@ export default () => (
           <Button>
             Next Section
           </Button>
-        </Row>
+        </Row>*/}
       </Card>
     </Row>
   </Main>

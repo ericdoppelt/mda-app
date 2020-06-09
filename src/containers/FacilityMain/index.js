@@ -8,7 +8,6 @@ import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
 import MDAHeader from '../../components/MDAHeader';
-import NavigationHeader from '../../components/NavigationHeader';
 
 export default () => (
   <Main style={{ justifyContent: 'space-between', alignItems: 'center'}}>
