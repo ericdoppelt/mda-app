@@ -8,9 +8,10 @@ import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
 import MDAHeader from '../../components/MDAHeader';
+import NavigationHeader from '../../components/NavigationHeader';
 
 export default () => (
-  <Main style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+  <Main style={{ justifyContent: 'space-between', alignItems: 'center'}}>
     <MDAHeader/>
     <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>

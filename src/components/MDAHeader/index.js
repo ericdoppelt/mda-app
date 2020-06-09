@@ -7,7 +7,7 @@ import Image from '../Image';
 import './MDAHeader.css';
 
 export default() => (
-      <NavigationHeader style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <NavigationHeader>
         <Link to="/">
           <Image style={{ width: '90px', height: '90px', backgroundImage: 'url(/images/homeIcon.png)' }} />
         </Link>
