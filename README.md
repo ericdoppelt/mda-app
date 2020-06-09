@@ -8,6 +8,7 @@ npm install fullcalendar
 npm install --save @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction @fullcalendar/core @fullcalendar/react
 npm install axios
 npm install react-bootstrap@0.32.4 --save 
+npm install --save redux react-redux
 ```
 To initialize the virtual environment, cd in to the backend directory, and create the virtual environment by running 
 ```
