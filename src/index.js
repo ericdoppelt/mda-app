@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { Router, Switch, Route, Link} from 'react-router-dom';
+import { Provider } from 'react-redux'
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
