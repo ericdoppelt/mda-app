@@ -7,8 +7,8 @@ import Header from '../Header';
 import Row from '../Row';
 import Subheader from '../Subheader';
 
-export default (props) => (    
-  <div>
+export default (props) => (
+    <div>
         <Stack style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
         <Header>
           Hello, {props.name}
@@ -26,7 +26,7 @@ export default (props) => (
             Email:
           </Subheader>
           <Subheader>
-            @{props.username}
+            {props.username}
             <br/>
             {props.affiliation}
             <br/>
