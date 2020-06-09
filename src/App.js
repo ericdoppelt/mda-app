@@ -1,6 +1,5 @@
 import React from 'react';
-import { Router, Switch, Route, Link} from 'react-router-dom';
-import { Provider } from 'react-redux'
+import { Router, Route} from 'react-router-dom';
 import UserMain from './containers/UserMain';
 import FacilityMain from './containers/FacilityMain';
 import CalendarMain from './containers/CalendarMain';

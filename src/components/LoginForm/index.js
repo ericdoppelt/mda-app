@@ -35,17 +35,17 @@ class LoginForm extends React.Component {
       password: self.state.password
     }).then(response => {
       console.log(response);
-      if (response.data.error === "") {
-        console.log("success");
-        this.props.history.push("/user-profile");
+      if (response.data.success === true) {
+        this.props.history.push({
+          pathname: "/user-profile",
+          state: {user: "TEST"}
+        });
       } else {
-        console.log("fail");
         self.setState({displayedText: response.data.error});
         } 
       })
       .catch(error => {
-        console.log("error")
-        console.log(error);
+        alert(error);
     });
   }
 
