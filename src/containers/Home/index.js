@@ -4,7 +4,6 @@ import Main from '../../components/Main';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
 import Title from '../../components/Title';
-
 import MDAHeader from '../../components/MDAHeader';
 
 export default () => (

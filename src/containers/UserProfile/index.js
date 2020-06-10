@@ -34,6 +34,10 @@ export default class UserProfile extends React.Component {
       self.setState({
         name: response.data.first_name + " " + response.data.last_name,
         username: response.data.user,
+        affiliation: response.data.affiliation,
+        userType: response.data.user_type,
+        phone: response.data.phone,
+        email: response.data.email,
       });
       })
       .catch(error => {
@@ -47,7 +51,7 @@ render() {
     <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
       <MDAHeader/>
       <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
-        <UserInfo name={this.state.name} username={this.state.username} affiliation="MDA" userType="Integrator" phone = "555-555-5555" email = "mike@mda.mil"/>
+        <UserInfo name={this.state.name} username={this.state.username} affiliation={this.state.affiliation} userType={this.state.userType} phone = {this.state.phone} email = {this.state.email}/>
         <Subheader>
           Update Contact Info
         </Subheader>

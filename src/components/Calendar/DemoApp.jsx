@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction' // needed for dayClick
+import {useLocation} from "react-router-dom";
 
 import './DemoApp.scss'
 
@@ -55,16 +56,19 @@ export default class DemoApp extends React.Component {
   }
 
   handleDateClick = (arg) => {
+    var dateStr = prompt('Enter a date in YYYY-MM-DD format');
+    var timeStr = prompt('Enter a time in HH:MM format');
+    var date = new Date(dateStr + 'T'+timeStr+':00');
     // eslint-disable-next-line no-restricted-globals
-    if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
+    //if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
       this.setState({  // add new event data
         calendarEvents: this.state.calendarEvents.concat({ // creates a new array
           title: 'New Event',
-          start: arg.date,
+          start: date,
           allDay: arg.allDay
         })
       })
-    }
+    //}
   }
 
 }
