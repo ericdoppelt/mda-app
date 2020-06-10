@@ -42,11 +42,11 @@ def register():
         except Exception as e:
             print(e)
             result = {'error' : "Unable to register user",
-            'success' : True}
+            'success' : False}
 
     else:
         result = {'error' : "User already registered, please login",
-        'success' : True}
+        'success' : False}
 
     return jsonify(result)
 
