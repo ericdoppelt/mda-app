@@ -68,7 +68,7 @@ def login():
     return jsonify(result)
 
 @app.route('/user/<username>', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def user(username):
     print("accessed")
     account_info = ""
