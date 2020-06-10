@@ -1,11 +1,12 @@
 from main import app, bcrypt
-from models import Test, Users
+from models import Test, Users, Calendar
 from flask import jsonify, request, json
 from flask_login import current_user, login_required, login_user, logout_user
 #from flask_jwt_extended import (create_access_token)
 #from flask_login import LoginManager
 from sqlalchemy import func
 from extensions import db
+from DateTime import DateTime
 #from werkzeug.security import generate_password_hash, check_password_hash
 
 @app.route('/time', methods=['GET'])
@@ -79,6 +80,20 @@ def user(username):
         'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
         'email': user.email}
     return account_info
+
+@app.route('/calendar', methods=['GET', 'POST'])
+#@login_required
+def entry():
+    entry_info = ""
+    if request.method == 'POST':
+        username = request.get_json()['username']
+        entry = Calendar.query.filter_by(username=username).first()
+        startDate = entry.startDate.strftime("%Y-%m-%d")
+        cannotRun = entry.cannotRun.strftime("%Y-%m-%d")
+        entry_info = {'username': entry.username, 
+        'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
+        'totalTime': entry.totalTime, 'cannotRun': cannotRun}
+    return entry_info
 
 @app.route('/logout')
 def logout():

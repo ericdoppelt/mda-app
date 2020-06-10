@@ -37,6 +37,20 @@ class Users(UserMixin, db.Model):
     def __repr__(self):
         return "<User(id=%s, first_name=%s, last_name=%s)>" % (self.id, self.first_name, self.last_name)
 
+class Calendar(db.Model):
+    """Model for the stations table"""
+    __tablename__ = 'Calendar'
+
+    username = db.Column(db.String(), primary_key = True)
+    facility = db.Column(db.String())
+    integrator = db.Column(db.String())
+    totalTime = db.Column(db.Integer())
+    startDate = db.Column(db.DateTime())
+    cannotRun = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return "<Calendar(username=%s)>" % (self.username)
+
 @login.user_loader
 def load_user(username):
     print(Users.query.filter_by(username=username).first())
