@@ -36,14 +36,17 @@ def register():
             db.session.commit()
             result = {
                 'first_name' : user.first_name,
-                'last_name'  : user.last_name
+                'last_name'  : user.last_name,
+                'success' : True
             }
         except Exception as e:
             print(e)
-            result = {'error' : "Unable to register user"}
+            result = {'error' : "Unable to register user",
+            'success' : True}
 
     else:
-        result = {'error' : "User already registered, please login"}
+        result = {'error' : "User already registered, please login",
+        'success' : True}
 
     return jsonify(result)
 
