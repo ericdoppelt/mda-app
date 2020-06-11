@@ -5,7 +5,7 @@ import CalendarMain from './containers/CalendarMain';
 import RequestFormMain from './containers/RequestFormMain';
 
 import FacilityMain from './containers/FacilityMain';
-import FacilityTAMU from './containers/FacilityTAMU';
+import FacilityTAMU from './containers/FacilityTamu';
 import FacilityLBNL from './containers/FacilityLBNL';
 import FacilityBNL from './containers/FacilityNSRL';
 import FacilityMSU from './containers/FacilityMSU';
