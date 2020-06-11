@@ -1,4 +1,4 @@
-import React from 'react';
+import React from './node_modules/react';
 
 import Card from '../../components/Card';
 import Image from '../../components/Image';
