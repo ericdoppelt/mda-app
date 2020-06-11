@@ -4,7 +4,6 @@ import React from 'react';
 import './BeamRequest.css'
 
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
 class BeamRequest1 extends React.Component {
@@ -16,6 +15,7 @@ class BeamRequest1 extends React.Component {
     this.handleSubmit= this.handleSubmit.bind(this);
 
     this.state = {
+      user: "",
       facility: "",
       integrator: "",
       totalTime: "",
@@ -28,10 +28,9 @@ class BeamRequest1 extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     
-    var self = this;
     this.props.history.push({
       pathname: "/calendar",
-      state: {facility: this.state.facility, integrator: this.state.integrator, 
+      state: {user: this.state.user, facility: this.state.facility, integrator: this.state.integrator, 
         totalTime: this.state.totalTime, startDate: this.state.startDate}
     });
   }
@@ -40,6 +39,15 @@ class BeamRequest1 extends React.Component {
     return (
       <div className="BeamRequest">
       <form onSubmit={this.handleSubmit}>
+      <FormGroup controlId="text" bsSize="large">
+          <ControlLabel>Username </ControlLabel>
+          <FormControl
+            autoFocus
+            type="text"
+            value={this.state.user}
+            onChange={e => this.setState({user: e.target.value})}
+          />
+        </FormGroup>
         <FormGroup controlId="text" bsSize="large">
           <ControlLabel>Facility </ControlLabel>
           <FormControl

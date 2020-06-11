@@ -47,32 +47,32 @@ export default () => (
         </Row>
         <h2>Additional Documents</h2>
         <Paragraph>
-          <a href="https://cyclotron.tamu.edu/ref/images/btrf.pdf" target="_blank">Beam Time Request Form (PDF)</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/btrf.pdf" target="_blank" rel="noopener noreferrer">Beam Time Request Form (PDF)</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/btrf.docx" target="_blank">Beam Time Request Form (Word)</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/btrf.docx" target="_blank" rel="noopener noreferrer">Beam Time Request Form (Word)</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank">Parking Map</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank" rel="noopener noreferrer">Parking Map</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/ci_ref_cryo_guidelines.pdf" target="_blank">Cryogenic Safety Guidelines</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/ci_ref_cryo_guidelines.pdf" target="_blank" rel="noopener noreferrer">Cryogenic Safety Guidelines</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank">Building Entry</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank" rel="noopener noreferrer">Building Entry</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/safety_form_plus_map.pdf" target="_blank">Safety Orientation</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/safety_form_plus_map.pdf" target="_blank" rel="noopener noreferrer">Safety Orientation</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/heavy_ion_beams.pdf" target="_blank">Heavy Ion Beam List</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/heavy_ion_beams.pdf" target="_blank" rel="noopener noreferrer">Heavy Ion Beam List</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/Beam_Change_Time.PDF" target="_blank">Beam Change Times</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/Beam_Change_Time.PDF" target="_blank" rel="noopener noreferrer">Beam Change Times</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/TAMU%20beam%20characterization%20and%20verification.pdf" target="_blank">Characterization and Verification</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/TAMU%20beam%20characterization%20and%20verification.pdf" target="_blank" rel="noopener noreferrer">Characterization and Verification</a>
           <br/>
           <br/>
           Facility Brochures:
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/brochure_2019.pdf" target="_blank">Full Brochure</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/brochure_2019.pdf" target="_blank" rel="noopener noreferrer">Full Brochure</a>
           <br/>
-          <a href="https://cyclotron.tamu.edu/ref/images/heavy_ion_brochure.pdf" target="_blank">Heavy Ion Facility Brochure</a>
+          <a href="https://cyclotron.tamu.edu/ref/images/heavy_ion_brochure.pdf" target="_blank" rel="noopener noreferrer">Heavy Ion Facility Brochure</a>
           <br/>
-          <a href="Proton Facility Brochure" target="_blank">Proton Facility Brochure</a>
+          <a href="Proton Facility Brochure" target="_blank" rel="noopener noreferrer">Proton Facility Brochure</a>
         </Paragraph>
       </Card>
     </Row>
