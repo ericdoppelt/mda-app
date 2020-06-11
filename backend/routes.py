@@ -125,6 +125,6 @@ def logout():
     token_id = token_id.id
     try:
         revoke_token(token_id, user_identity)
-        return jsonify({'msg': 'Token revoked'}), 200
+        return jsonify({'success': True, 'msg': 'Token revoked'}), 200
     except TokenNotFound:
-        return jsonify({'msg': 'The specified token was not found'}), 404
+        return jsonify({'success': False, 'msg': 'The specified token was not found'}), 404
