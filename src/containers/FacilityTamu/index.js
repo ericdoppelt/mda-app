@@ -14,7 +14,7 @@ export default () => (
     <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <h1>Texas A&M Facility Information</h1>
+          <h1>Texas A&M University Cyclotron</h1>
         </Row>
         <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>

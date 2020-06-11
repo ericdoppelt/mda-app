@@ -62,19 +62,16 @@ class LoginForm extends React.Component {
         <br/>
         <TextField 
           type="password" 
-          onChange = {(event,newValue) => this.setState({password:newValue})}
+          onChange = {(newValue) => this.setState({password:newValue})}
           label = "Password"
           onChange={event => {this.setState({password: event.target.value})}}/>
         <br/>
-        <Button id="button" label="Log In" style={style} onClick={(event) => this.handleSubmit(event)}>Login</Button>
+        <Button id="button" onClick={(event) => this.handleSubmit(event)}>Login</Button>
+        <Button onClick={() => {this.props.history.push('/user-registration')}}>Create Account</Button>
          {this.state.displayedText}
       </div>
   );
   }
 }
-
-const style = {
-  margin: 15,
- };
 
 export default withRouter(LoginForm);
