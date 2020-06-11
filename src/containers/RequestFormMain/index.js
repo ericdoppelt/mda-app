@@ -1,13 +1,8 @@
 import React from 'react';
 
-import Button from '../../components/Button';
 import Card from '../../components/Card';
-import InputField from '../../components/InputField';
-import InputDropdown from '../../components/InputDropdown';
 import Main from '../../components/Main';
-import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
-import Stack from '../../components/Stack';
 import MDAHeader from '../../components/MDAHeader';
 import BeamRequest1 from '../../components/BeamRequest1';
 

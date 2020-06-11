@@ -24,11 +24,17 @@ export default () => (
             <Link to="/facilities-tamu">
               <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/tamulogo.png)' }} />
             </Link>
-            <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/LBNLLogo.jpg)' }} />
+            <Link to="/facilities-lbnl">
+              <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/LBNLLogo.jpg)' }} />
+            </Link>
           </Row>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Image style={{ width: '210px', height: '120px', backgroundImage: 'url(/images/brnllogo.png)' }} />
-            <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/MSULogo.png)' }} />
+            <Link to="/facilities-nsrl">
+              <Image style={{ width: '210px', height: '120px', backgroundImage: 'url(/images/brnllogo.png)' }} /> 
+            </Link>
+            <Link to="facilities-msu">
+              <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/MSULogo.png)' }} />
+            </Link>
           </Row>
         </Stack>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>

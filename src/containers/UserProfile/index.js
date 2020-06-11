@@ -25,11 +25,13 @@ export default class UserProfile extends React.Component {
 
   
   async componentDidMount() {
-    const url = "https://mda-phoenix.herokuapp.com/user/" + this.props.location.state.user;
-    console.log(url);
+    const url = "Http://127.0.0.1:5000/user";
   
     var self = this;
-    await axios.post(url, {}).then(response => {
+    console.log(self.props.location.state.token);
+    await axios.post(url, {
+      access_token: self.props.location.state.token
+    }).then(response => {
       console.log(response);
       self.setState({
         name: response.data.first_name + " " + response.data.last_name,

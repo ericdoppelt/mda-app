@@ -20,10 +20,6 @@ class LoginForm extends React.Component {
       displayedText: "",
     }
   }
-  
-  validateForm() {
-    return this.state.username.length > 0 && this.state.password.length > 0;
-  }
 
   async handleSubmit(event) {
     event.preventDefault();
@@ -32,7 +28,8 @@ class LoginForm extends React.Component {
     console.log(this.state.password);
 
     var self = this;
-    await axios.post('https://mda-phoenix.herokuapp.com/login', {
+    let url = 'http://127.0.0.1:5000/login';
+    await axios.post(url, {
       username: self.state.username,
       password: self.state.password
     }).then(response => {
@@ -40,7 +37,7 @@ class LoginForm extends React.Component {
       if (response.data.success === true) {
         this.props.history.push({
           pathname: "/user-profile",
-          state: {user: self.state.username}
+          state: {token: response.data.access_token}
         });
       } else {
         self.setState({displayedText: response.data.error});
@@ -62,19 +59,16 @@ class LoginForm extends React.Component {
         <br/>
         <TextField 
           type="password" 
-          onChange = {(event,newValue) => this.setState({password:newValue})}
+          onChange = {(newValue) => this.setState({password:newValue})}
           label = "Password"
           onChange={event => {this.setState({password: event.target.value})}}/>
         <br/>
-        <Button id="button" label="Log In" style={style} onClick={(event) => this.handleSubmit(event)}>Login</Button>
+        <Button id="button" onClick={(event) => this.handleSubmit(event)}>Login</Button>
+        <Button onClick={() => {this.props.history.push('/user-registration')}}>Create Account</Button>
          {this.state.displayedText}
       </div>
   );
   }
 }
-
-const style = {
-  margin: 15,
- };
 
 export default withRouter(LoginForm);

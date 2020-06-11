@@ -9,7 +9,10 @@ npm install --save @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegr
 npm install axios
 npm install --save redux react-redux
 npm install @material-ui/core
+<<<<<<< HEAD
+=======
 
+>>>>>>> 4c5bd4dc85cbb3fcf57516737ec7ce2a7289387f
 ```
 To initialize the virtual environment, cd in to the backend directory, and create the virtual environment by running 
 ```

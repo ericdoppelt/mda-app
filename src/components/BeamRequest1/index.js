@@ -2,9 +2,8 @@
 
 import React from 'react';
 import './BeamRequest.css'
+import {TextField, Button} from '@material-ui/core';
 
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
 class BeamRequest1 extends React.Component {
@@ -16,6 +15,7 @@ class BeamRequest1 extends React.Component {
     this.handleSubmit= this.handleSubmit.bind(this);
 
     this.state = {
+      username: "",
       facility: "",
       integrator: "",
       totalTime: "",
@@ -28,10 +28,9 @@ class BeamRequest1 extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     
-    var self = this;
     this.props.history.push({
       pathname: "/calendar",
-      state: {facility: this.state.facility, integrator: this.state.integrator, 
+      state: {user: this.state.user, facility: this.state.facility, integrator: this.state.integrator, 
         totalTime: this.state.totalTime, startDate: this.state.startDate}
     });
   }
@@ -39,53 +38,47 @@ class BeamRequest1 extends React.Component {
   render() {
     return (
       <div className="BeamRequest">
-      <form onSubmit={this.handleSubmit}>
-        <FormGroup controlId="text" bsSize="large">
-          <ControlLabel>Facility </ControlLabel>
-          <FormControl
-            autoFocus
-            type="text"
-            value={this.state.facility}
-            onChange={e => this.setState({facility: e.target.value})}
-          />
-        </FormGroup>
-        <FormGroup controlId="text" bsSize="large">
-          <ControlLabel>Integrator </ControlLabel>
-          <FormControl
-            value={this.state.integrator}
-            onChange={e => this.setState({integrator: e.target.value})}
-            type="text"
-          />
-        </FormGroup>
-        <FormGroup controlId="text" bsSize="large">
-          <ControlLabel>Total Time Requested (in hours) </ControlLabel>
-          <FormControl
-            value={this.state.totalTime}
-            onChange={e => this.setState({totalTime: e.target.value})}
-            type="text"
-          />
-        </FormGroup>
-        <FormGroup controlId="text" bsSize="large">
-          <ControlLabel>Preferred Start Date (YYYY-MM-DD) </ControlLabel>
-          <FormControl
-            value={this.state.startDate}
-            onChange={e => this.setState({startDate: e.target.value})}
-            type="text"
-          />
-        </FormGroup>
-        <FormGroup controlId="text" bsSize="large">
-          <ControlLabel>Dates you cannot run</ControlLabel>
-          <FormControl
-            value={this.state.cannotRunDate}
-            onChange={e => this.setState({cannotRunDate: e.target.value})}
-            type="text"
-          />
-        </FormGroup>
-        <Button block bsSize="large" type="submit">
-          Submit
-        </Button>
-      </form>
-      {this.state.displayedText}
+      <TextField 
+        label = "Username"
+        onChange={event => {this.setState({username: event.target.value})}}
+        hintStyle={{ textAlign: 'center', width: '100%' }}
+      />
+      <br/>
+      <TextField 
+        label = "Facility"
+        onChange={event => {this.setState({facility: event.target.value})}}
+      />
+      <br/>
+      <TextField 
+        label = "Integrator"
+        onChange={event => {this.setState({integrator: event.target.value})}}
+      />
+      <br/>
+      <TextField 
+        label = "Total Hours Requested"
+        onChange={event => {this.setState({totalTime: event.target.value})}}
+      />
+      <br/>
+      <br/>
+      <TextField 
+        label = "Preferred Start Date"
+        type="date"
+        defaultValue = "2020-06-10"
+        onChange={event => {this.setState({startDate: event.target.value})}}
+      />
+      <br/>
+      <br/>
+      <TextField 
+        label = "Dates You Cannot Run"
+        type="date"
+        defaultValue = "2020-06-11"
+        onChange={event => {this.setState({cannotRunDate: event.target.value})}}
+      />
+      <br/>
+      <br/>
+      <Button id="submitButton">
+        Submit
+      </Button>
     </div>
   );
   }
