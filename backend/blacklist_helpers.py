@@ -87,6 +87,19 @@ def unrevoke_token(token_id, user):
     except NoResultFound:
         raise TokenNotFound("Could not find the token {}".format(token_id))
 
+def revoke_user_tokens(username):
+    """
+    Revokes the given token. Raises a TokenNotFound error if the token does
+    not exist in the database
+    """
+    tokens = TokenBlacklist.query.filter_by(revoked=False, user_identity=username).all()
+    for token in tokens:
+        try:
+            token.revoked = True
+            db.session.commit()
+        except NoResultFound:
+            raise TokenNotFound("Could not find the token for user {}".format(username))
+
 
 def prune_database():
     """
