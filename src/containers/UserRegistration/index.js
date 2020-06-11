@@ -3,21 +3,21 @@ import Card from '../../components/Card';
 import Main from '../../components/Main';
 import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
-import LoginForm from '../../components/LoginForm';
+import Stack from '../../components/Stack';
+import RegistrationForm from '../../components/RegistrationForm';
 import MDAHeader from '../../components/MDAHeader';
-import {Button} from '@material-ui/core';
 
 export default () => (
   <Main style={{ justifyContent: 'center', alignItems: 'center' }}>
     <MDAHeader/>
     <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+        <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
-            Login Form
+            Registration
           </Paragraph>
-        </Row>
-        <LoginForm/>
+          <RegistrationForm/>
+        </Stack>
       </Card>
     </Row>
   </Main>
