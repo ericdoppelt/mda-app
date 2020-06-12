@@ -5,7 +5,11 @@ import CalendarMain from './containers/CalendarMain';
 import RequestFormMain from './containers/RequestFormMain';
 
 import FacilityMain from './containers/FacilityMain';
+<<<<<<< HEAD
 import FacilityTamu from './containers/FacilityTamu';
+=======
+import FacilityTAMU from './containers/FacilityTamu';
+>>>>>>> 10867010867026202035633e730717b557a87a89
 import FacilityLBNL from './containers/FacilityLBNL';
 import FacilityBNL from './containers/FacilityNSRL';
 import FacilityMSU from './containers/FacilityMSU';

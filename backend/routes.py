@@ -71,12 +71,14 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
+        
         expires = timedelta(hours=12)
         access_token = create_access_token(identity = username, expires_delta=expires)
         add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
         result = {'success' : True,
         'error' : "",
         'access_token': access_token}
+        print(access_token)
     else:
         result = {'success' : False,
         'error' : "Incorrect password"}
@@ -86,6 +88,7 @@ def login():
 @app.route('/user', methods=['GET', 'POST'])
 @jwt_required
 def user():
+    print("accessed")
     account_info = ""
     username = get_jwt_identity()
     if request.method == 'POST':
@@ -117,7 +120,6 @@ def check_if_token_revoked(decoded_token):
 @app.route('/logout', methods=['DELETE'])
 @jwt_required
 def logout():
-    print("accessed")
     auth_header = request.headers.get('Authorization')
     auth_token = auth_header.split(" ")[1]
     user_identity = get_jwt_identity()
