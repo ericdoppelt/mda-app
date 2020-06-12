@@ -27,7 +27,7 @@ class LoginForm extends React.Component {
     console.log(this.state.password);
 
     var self = this;
-    let url = 'http://127.0.0.1:5000/login';
+    let url = 'https://mda-phoenix.herokuapp.com/login';
     await axios.post(url, {
       username: self.state.username,
       password: self.state.password
