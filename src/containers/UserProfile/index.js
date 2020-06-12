@@ -25,7 +25,7 @@ export default class UserProfile extends React.Component {
 
   
   async componentDidMount() {
-    const url = "Http://127.0.0.1:5000/user";
+    const url = "https://mda-phoenix.herokuapp.com//user";
   
     var self = this;
     console.log(self.props.location.state.token);
