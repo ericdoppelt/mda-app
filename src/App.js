@@ -5,7 +5,7 @@ import CalendarMain from './containers/CalendarMain';
 import RequestFormMain from './containers/RequestFormMain';
 
 import FacilityMain from './containers/FacilityMain';
-import FacilityTAMU from './containers/FacilityTAMU';
+import FacilityTamu from './containers/FacilityTamu';
 import FacilityLBNL from './containers/FacilityLBNL';
 import FacilityBNL from './containers/FacilityNSRL';
 import FacilityMSU from './containers/FacilityMSU';
@@ -21,7 +21,7 @@ const App = () => (
     <div>
       <Route path="/" exact component={Home} />
       <Route path="/facilities" component={FacilityMain} />
-      <Route path="/facilities-tamu" component={FacilityTAMU} />
+      <Route path="/facilities-tamu" component={FacilityTamu} />
       <Route path="/facilities-lbnl" component={FacilityLBNL}/>
       <Route path="/facilities-nsrl" component={FacilityBNL}/>
       <Route path="/facilities-msu" component={FacilityMSU}/>

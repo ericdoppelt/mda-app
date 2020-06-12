@@ -5,7 +5,6 @@ import Paragraph from '../../components/Paragraph';
 import Row from '../../components/Row';
 import LoginForm from '../../components/LoginForm';
 import MDAHeader from '../../components/MDAHeader';
-import {Button} from '@material-ui/core';
 
 export default () => (
   <Main style={{ justifyContent: 'center', alignItems: 'center' }}>
