@@ -78,6 +78,7 @@ def login():
         result = {'success' : True,
         'error' : "",
         'access_token': access_token}
+        print(access_token)
     else:
         result = {'success' : False,
         'error' : "Incorrect password"}
@@ -87,6 +88,7 @@ def login():
 @app.route('/user', methods=['GET', 'POST'])
 @jwt_required
 def user():
+    print("accessed")
     account_info = ""
     username = get_jwt_identity()
     if request.method == 'POST':

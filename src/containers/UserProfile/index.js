@@ -29,8 +29,8 @@ export default class UserProfile extends React.Component {
   
     var self = this;
     console.log(self.props.location.state.token);
-    await axios.post(url, {
-      access_token: self.props.location.state.token
+    await axios.post(url, null, {
+      headers: { Authorization: `Bearer ${self.props.location.state.token}` }
     }).then(response => {
       console.log(response);
       self.setState({
