@@ -60,7 +60,7 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
-        revoke_user_tokens(username)
+        
         expires = timedelta(hours=12)
         access_token = create_access_token(identity = username, expires_delta=expires)
         add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
@@ -108,14 +108,10 @@ def check_if_token_revoked(decoded_token):
 @app.route('/logout', methods=['DELETE'])
 @jwt_required
 def logout():
-    auth_header = request.headers.get('Authorization')
-    auth_token = auth_header.split(" ")[1]
-    user_identity = get_jwt_identity()
-    token_id = TokenBlacklist.query.filter_by(jti=get_jti(auth_token)).first()
-    token_id = token_id.id
+    username = get_jwt_identity()
     try:
-        revoke_token(token_id, user_identity)
-        return jsonify({'success': True, 'msg': 'Token revoked'}), 200
+        revoke_user_tokens(username)
+        return jsonify({'success': True, 'msg': 'Tokens revoked'}), 200
     except TokenNotFound:
         return jsonify({'success': False, 'msg': 'The specified token was not found'}), 404
 
