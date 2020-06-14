@@ -13,7 +13,7 @@ from extensions import db
 from models import Test, Users, Calendar, TokenBlacklist
 from blacklist_helpers import (
     is_token_revoked, add_token_to_database, get_user_tokens,
-    revoke_token, unrevoke_token,
+    revoke_token, unrevoke_token, revoke_user_tokens,
     prune_database
 )
 from exceptions import TokenNotFound
@@ -40,18 +40,7 @@ def register():
             last_name = request.get_json()['last_name']
         )
         user.set_password(password)
-        try:
-            db.session.add(user)
-            db.session.commit()
-            result = {
-                'first_name' : user.first_name,
-                'last_name'  : user.last_name,
-                'success' : True
-            }
-        except Exception as e:
-            print(e)
-            result = {'error' : "Unable to register user",
-            'success' : False}
+        result = user.register_user()
 
     else:
         result = {'error' : "User already registered, please login",
@@ -71,14 +60,13 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
-        
+        revoke_user_tokens(username)
         expires = timedelta(hours=12)
         access_token = create_access_token(identity = username, expires_delta=expires)
         add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
         result = {'success' : True,
         'error' : "",
         'access_token': access_token}
-        print(access_token)
     else:
         result = {'success' : False,
         'error' : "Incorrect password"}
@@ -88,7 +76,7 @@ def login():
 @app.route('/user', methods=['GET', 'POST'])
 @jwt_required
 def user():
-    print("accessed")
+    print("user accesssed")
     account_info = ""
     username = get_jwt_identity()
     if request.method == 'POST':
@@ -130,3 +118,9 @@ def logout():
         return jsonify({'success': True, 'msg': 'Token revoked'}), 200
     except TokenNotFound:
         return jsonify({'success': False, 'msg': 'The specified token was not found'}), 404
+
+# TODO delete or change for production, development purposes only
+@app.route('/deleteuser/<username>', methods=['DELETE'])
+def delete(username):
+    Users.query.filter_by(username=username).delete()
+    db.session.commit()

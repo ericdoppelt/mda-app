@@ -3,6 +3,7 @@ import { Router, Route} from 'react-router-dom';
 import UserMain from './containers/UserMain';
 import CalendarMain from './containers/CalendarMain';
 import RequestFormMain from './containers/RequestFormMain';
+import axios from 'axios';
 
 import FacilityMain from './containers/FacilityMain';
 import FacilityTamu from './containers/FacilityTamu';
@@ -34,5 +35,15 @@ const App = () => (
     </div>
   </Router>
 );
+
+window.addEventListener("beforeunload", (ev) => 
+{  
+  if (window.sessionStorage.getItem("access_token") !== null) {
+    let url = "https://mda-phoenix.herokuapp.com/logout"
+    axios.delete(url, {
+      headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+    })
+  }
+});
 
 export default App;

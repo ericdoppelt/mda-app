@@ -26,13 +26,26 @@ class Users(UserMixin, db.Model):
     user_type = db.Column(db.String())
     phone = db.Column(db.String())
     email = db.Column(db.String())
-    pass_test = db.Column(db.LargeBinary())
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
+
+    def register_user(self):
+        result = ""
+        try:
+            db.session.add(self)
+            db.session.commit()
+            result = {
+                'success' : True
+            }
+        except Exception as e:
+            print(e)
+            result = {'error' : "Unable to register user",
+            'success' : False}
+        return result
 
     def __repr__(self):
         return "<User(id=%s, first_name=%s, last_name=%s)>" % (self.id, self.first_name, self.last_name)

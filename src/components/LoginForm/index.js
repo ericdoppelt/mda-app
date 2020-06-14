@@ -34,9 +34,9 @@ class LoginForm extends React.Component {
     }).then(response => {
       console.log(response);
       if (response.data.success === true) {
+        window.sessionStorage.setItem("access_token", response.data.access_token)
         this.props.history.push({
-          pathname: "/user-profile",
-          state: {token: response.data.access_token}
+          pathname: "/user-profile"
         });
       } else {
         self.setState({displayedText: response.data.error});
