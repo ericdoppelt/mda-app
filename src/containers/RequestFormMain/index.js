@@ -6,12 +6,19 @@ import Row from '../../components/Row';
 import MDAHeader from '../../components/MDAHeader';
 import BeamRequest1 from '../../components/BeamRequest1';
 
+import MultipleDatePicker from 'react-multiple-datepicker';
+
+
 export default () => (
+  
   <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
     <MDAHeader/>
     <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <BeamRequest1/>
+        <MultipleDatePicker
+          onSubmit={dates => console.log('selected date', dates)}
+        />
         {/*<Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
             Beam Request - General Information
