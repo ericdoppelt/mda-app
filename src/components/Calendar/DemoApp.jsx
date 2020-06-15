@@ -7,7 +7,8 @@ import axios from 'axios';
 import "fullcalendar"
 import './DemoApp.scss'
 
-import Card from '../../components/Card';
+//import Card from '../../components/Card';
+import CardNoShadow from '../../components/CardNoShadow';
 import Header from '../../components/Header';
 import Paragraph from '../../components/Paragraph';
 import Radio from '../../components/Radio';
@@ -68,7 +69,7 @@ export default class DemoApp extends React.Component {
     return (
       <div className='demo-app'>
         <div className='demo-app-top'>
-          {/*<button onClick={ this.testMike }>Mike</button>&nbsp; */}
+          <button onClick={ this.testMike }>Mike</button>&nbsp;
         </div>
         <div className='demo-app-calendar'>
         <Row style={{ minWidth: '50px', minHeight: '50px' }}>
@@ -86,9 +87,12 @@ export default class DemoApp extends React.Component {
             weekends={ this.state.calendarWeekends }
             events={ this.state.calendarEvents }
             dateClick={ this.handleDateClick }
+            //eventRender={ function(info) {
+              //console.log('hi');
+            //} }
             />
           </Stack>
-          <Card style={{ justifyContent: 'center', minWidth: '200px', minHeight: '100px', width: '350px', flexGrow: '0' }}>
+          <CardNoShadow style={{ justifyContent: 'center', minWidth: '200px', minHeight: '100px', width: '350px', flexGrow: '0' }}>
             <Header>
               Filter
             </Header>
@@ -197,7 +201,7 @@ export default class DemoApp extends React.Component {
                 </Paragraph>
               </Stack>
             </Row>
-          </Card>
+          </CardNoShadow>
         </Row>
           
         </div>
@@ -206,7 +210,7 @@ export default class DemoApp extends React.Component {
   }
   
   /*** TESTING ***/
-  /*testMike = () => {
+  testMike = () => {
     this.componentDidMount('mm92');
     let calendarApi = this.calendarComponentRef.current.getApi();
     var inputId = this.state.username;
@@ -220,7 +224,7 @@ export default class DemoApp extends React.Component {
       e.remove();
     })
     
-    var event = calendarApi.getEventById(inputId);
+    event = calendarApi.getEventById(inputId);
     console.log(this.state.startDate);
     if (event !== null) {
       event.remove();
@@ -235,9 +239,9 @@ export default class DemoApp extends React.Component {
         start: dateObj
       })
     })
-    var event = calendarApi.getEventById(inputId);
+    event = calendarApi.getEventById(inputId);
     console.log(this.state.calendarEvents);
-  }*/
+  }
 
   toggleWeekends = () => {
     this.setState({ // update a property
