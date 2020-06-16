@@ -27,7 +27,7 @@ class BeamRequest1 extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    
+    console.log(this.state.startDate);
     this.props.history.push({
       pathname: "/calendar",
       state: {user: this.state.user, facility: this.state.facility, integrator: this.state.integrator, 

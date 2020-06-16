@@ -3,10 +3,11 @@ import { Router, Route} from 'react-router-dom';
 import UserMain from './containers/UserMain';
 import CalendarMain from './containers/CalendarMain';
 import RequestFormMain from './containers/RequestFormMain';
+import RequestTAMU from './containers/RequestTAMU';
 import axios from 'axios';
 
 import FacilityMain from './containers/FacilityMain';
-import FacilityTamu from './containers/FacilityTamu';
+import FacilityTamu from './containers/FacilityTAMU';
 import FacilityLBNL from './containers/FacilityLBNL';
 import FacilityBNL from './containers/FacilityNSRL';
 import FacilityMSU from './containers/FacilityMSU';
@@ -28,6 +29,7 @@ const App = () => (
       <Route path="/facilities-msu" component={FacilityMSU}/>
       <Route path="/calendar" component={CalendarMain} />
       <Route path="/request-form" component={RequestFormMain} />
+      <Route path="/request-tamu" component={RequestTAMU}/>
       <Route path="/view-requests" component={ViewRequestsMain} />
       <Route path="/user-login" component={UserMain} />
       <Route path="/user-profile" component={UserProfile} />
