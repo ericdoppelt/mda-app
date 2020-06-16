@@ -1,6 +1,6 @@
 
 from flask import jsonify, request, json, make_response
-from flask_login import current_user, login_required, login_user, logout_user
+from flask_mail import Message
 from flask_jwt_extended import (create_access_token, 
 create_refresh_token, jwt_required, 
 get_jwt_identity, get_jti)
@@ -8,7 +8,7 @@ from sqlalchemy import func
 from DateTime import DateTime
 from datetime import timedelta
 
-from main import app, bcrypt, jwt
+from main import app, bcrypt, jwt, mail
 from extensions import db
 from models import Test, Users, Calendar, TokenBlacklist
 from blacklist_helpers import (
@@ -17,6 +17,7 @@ from blacklist_helpers import (
     prune_database
 )
 from exceptions import TokenNotFound
+from pdf_builder import FormBuilder
 
 @app.route('/time', methods=['GET'])
 def get_current_time():
@@ -76,7 +77,6 @@ def login():
 @app.route('/user', methods=['GET', 'POST'])
 @jwt_required
 def user():
-    print("user accesssed")
     account_info = ""
     username = get_jwt_identity()
     if request.method == 'POST':
@@ -88,17 +88,20 @@ def user():
     return account_info
 
 @app.route('/calendar', methods=['GET', 'POST'])
-def entry():
-    entry_info = ""
+def entries():
+    myList = []
     if request.method == 'POST':
-        username = request.get_json()['username']
-        entry = Calendar.query.filter_by(username=username).first()
-        startDate = entry.startDate.strftime("%Y-%m-%d")
-        cannotRun = entry.cannotRun.strftime("%Y-%m-%d")
-        entry_info = {'username': entry.username, 
-        'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
-        'totalTime': entry.totalTime, 'cannotRun': cannotRun}
-    return entry_info
+        entries = Calendar.query.all()
+        for entry in entries:
+            startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
+            cannotRun = ""
+            if entry.cannotRun is not None:
+                cannotRun = entry.cannotRun.strftime("%Y-%m-%dT%H:%M")
+            entry_info = {'username': entry.username, 
+            'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
+            'totalTime': entry.totalTime, 'cannotRun': cannotRun}
+            myList.append(entry_info)
+    return jsonify({'entries' : myList})
 
 @jwt.token_in_blacklist_loader
 def check_if_token_revoked(decoded_token):
@@ -118,5 +121,29 @@ def logout():
 # TODO delete or change for production, development purposes only
 @app.route('/deleteuser/<username>', methods=['DELETE'])
 def delete(username):
-    Users.query.filter_by(username=username).delete()
-    db.session.commit()
+    try:
+        Users.query.filter_by(username=username).delete()
+        db.session.commit()
+        return jsonify({'success': True, 'msg': 'User deleted'}), 200
+    except:
+        return jsonify({'success': False, 'msg': 'The specified user was not found'}), 404
+    
+
+# TODO make jwt required after development
+@app.route('/requestform', methods=['POST'])
+#@jwt_required
+def requestform():
+    try:
+        form = request.get_json()
+        pdf = FormBuilder(form)
+        pdf.fill()
+        # msg = Message("Send Request Form Demo",
+		# sender="app.MDA2020@gmail.com",
+		# recipients=["@gmail.com"])
+        # msg.body = "Here is the request form for beam time"
+        # with app.open_resource("simple_demo.pdf") as fp:
+        #     msg.attach("simple_demo.pdf", "simple_demo/pdf", fp.read())
+        # mail.send(msg)
+        return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'msg': str(e)}), 404

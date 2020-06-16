@@ -54,7 +54,8 @@ class Calendar(db.Model):
     """Model for the stations table"""
     __tablename__ = 'Calendar'
 
-    username = db.Column(db.String(), primary_key = True)
+    id = db.Column(db.Integer(), primary_key = True)
+    username = db.Column(db.String())
     facility = db.Column(db.String())
     integrator = db.Column(db.String())
     totalTime = db.Column(db.Integer())
