@@ -34,6 +34,7 @@ class RequestFormTAMU extends React.Component {
       billingZip: "",
 
       secondExperiment: false,
+      facility: "TAMU",
     }
   }
 
