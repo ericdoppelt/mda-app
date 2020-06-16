@@ -1,4 +1,5 @@
 bcrypt==3.1.7
+blinker==1.4
 cffi==1.14.0
 click==7.1.2
 DateTime==4.3
@@ -7,11 +8,14 @@ Flask-Bcrypt==0.7.1
 Flask-Cors==3.0.8
 Flask-JWT-Extended==3.24.1
 Flask-Login==0.5.0
+Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.4.3
+fpdf==1.7.2
 gunicorn==20.0.4
 itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
+pdfrw==0.4
 psycopg2-binary==2.8.5
 pycparser==2.20
 PyJWT==1.7.1
