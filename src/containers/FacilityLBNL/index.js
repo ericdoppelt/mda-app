@@ -44,21 +44,21 @@ export default () => (
         </Row>
         <h2>Additional Information</h2>
         <Paragraph>
-          <a href="http://cyclotron.lbl.gov/beam-request" target="_blank">Beam Request</a>
+          <a href="http://cyclotron.lbl.gov/beam-request" target="_blank" rel="noopener noreferrer">Beam Request</a>
           <br/>
-          <a href="http://cyclotron.lbl.gov/new-user-checklist" target="_blank">New User Checklist</a>
+          <a href="http://cyclotron.lbl.gov/new-user-checklist" target="_blank" rel="noopener noreferrer">New User Checklist</a>
           <br/>
-          <a href="http://cyclotron.lbl.gov/schedule" target="_blank">Schedule</a>
+          <a href="http://cyclotron.lbl.gov/schedule" target="_blank" rel="noopener noreferrer">Schedule</a>
           <br/>
-          <a href="http://cyclotron.lbl.gov/procedures" target="_blank">Procedures</a>
+          <a href="http://cyclotron.lbl.gov/procedures" target="_blank" rel="noopener noreferrer">Procedures</a>
           <br/>
-          <a href="https://commute.lbl.gov/resource/maps-directions-to-berkeley-lab/" target="_blank">Directions and Parking</a>
+          <a href="https://commute.lbl.gov/resource/maps-directions-to-berkeley-lab/" target="_blank" rel="noopener noreferrer">Directions and Parking</a>
           <br/>
-          <a href="https://commute.lbl.gov/resource/maps-directions-to-berkeley-lab/" target="_blank">Directions and Parking</a>
+          <a href="https://commute.lbl.gov/resource/maps-directions-to-berkeley-lab/" target="_blank" rel="noopener noreferrer">Directions and Parking</a>
         </Paragraph>
         <h2>Additional Documents</h2>
         <Paragraph>
-          <a href="https://drive.google.com/file/d/0B-7RPAKnuE05XzRSYlJ3RU1Dc2xEaFJOaUdBVkJ2OFdJeEFz/view" target="_blank">Affiliate Forms</a>
+          <a href="https://drive.google.com/file/d/0B-7RPAKnuE05XzRSYlJ3RU1Dc2xEaFJOaUdBVkJ2OFdJeEFz/view" target="_blank" rel="noopener noreferrer">Affiliate Forms</a>
         </Paragraph>
       </Card>
     </Row>

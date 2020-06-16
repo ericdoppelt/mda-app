@@ -82,31 +82,31 @@ export default () => (
         </Row>
         <h2>Additional Information</h2>
         <Paragraph>
-          <a href="https://www.nscl.msu.edu/about/index.html" target="_blank">About</a>
+          <a href="https://www.nscl.msu.edu/about/index.html" target="_blank" rel="noopener noreferrer">About</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/visit.html" target="_blank">Visit Info</a>
+          <a href="https://nscl.msu.edu/users/visit.html" target="_blank" rel="noopener noreferrer">Visit Info</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/experimenters-responsibilities.html" target="_blank">Responsibility of Experimenters</a>
+          <a href="https://nscl.msu.edu/users/experimenters-responsibilities.html" target="_blank" rel="noopener noreferrer">Responsibility of Experimenters</a>
           <br/>
-          <a href="https://nscl.msu.edu/exp/prep-exp/questionnaire.php" target="_blank">Questionnaire for Scheduling Experiments</a>
+          <a href="https://nscl.msu.edu/exp/prep-exp/questionnaire.php" target="_blank" rel="noopener noreferrer">Questionnaire for Scheduling Experiments</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/resources.html" target="_blank">Schedule</a>
+          <a href="https://nscl.msu.edu/users/resources.html" target="_blank" rel="noopener noreferrer">Schedule</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/beams.html" target="_blank">Available Beams</a>
+          <a href="https://nscl.msu.edu/users/beams.html" target="_blank" rel="noopener noreferrer">Available Beams</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/contact.html" target="_blank">Beam Contact List</a>
+          <a href="https://nscl.msu.edu/users/contact.html" target="_blank" rel="noopener noreferrer">Beam Contact List</a>
         </Paragraph>
         <h2>Additional Documents</h2>
         <Paragraph>
-          <a href="https://nscl.msu.edu/users/Scientific_User_Disclosure_form.pdf" target="_blank">Outside User Collaboration Form</a>
+          <a href="https://nscl.msu.edu/users/Scientific_User_Disclosure_form.pdf" target="_blank" rel="noopener noreferrer">Outside User Collaboration Form</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/D2L%20Instructions%20for%20Non-NSCL-FRIB%20Personnel.pdf" target="_blank">Outside User Collaboration Form</a>
+          <a href="https://nscl.msu.edu/users/D2L%20Instructions%20for%20Non-NSCL-FRIB%20Personnel.pdf" target="_blank" rel="noopener noreferrer">Outside User Collaboration Form</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/ExperimenterResponsibilities.pdf" target="_blank">Responsibility of Experimenters (PDF)</a>
+          <a href="https://nscl.msu.edu/users/ExperimenterResponsibilities.pdf" target="_blank" rel="noopener noreferrer">Responsibility of Experimenters (PDF)</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/ReA_PACcall_final2.pdf" target="_blank">Calls for Proposals</a>
+          <a href="https://nscl.msu.edu/users/ReA_PACcall_final2.pdf" target="_blank" rel="noopener noreferrer">Calls for Proposals</a>
           <br/>
-          <a href="https://nscl.msu.edu/users/2019-PAC43_ReA_beam_rate_estimates_forweb.pdf" target="_blank">Radioactive Beam List (PDF)</a> 
+          <a href="https://nscl.msu.edu/users/2019-PAC43_ReA_beam_rate_estimates_forweb.pdf" target="_blank" rel="noopener noreferrer">Radioactive Beam List (PDF)</a> 
         </Paragraph>
       </Card>
     </Row>

@@ -3,10 +3,11 @@ import { Router, Route} from 'react-router-dom';
 import UserMain from './containers/UserMain';
 import CalendarMain from './containers/CalendarMain';
 import RequestFormMain from './containers/RequestFormMain';
+import RequestTAMU from './containers/RequestTAMU';
 import axios from 'axios';
 
 import FacilityMain from './containers/FacilityMain';
-import FacilityTamu from './containers/FacilityTamu';
+import FacilityTAMU from './containers/FacilityTAMU';
 import FacilityLBNL from './containers/FacilityLBNL';
 import FacilityBNL from './containers/FacilityNSRL';
 import FacilityMSU from './containers/FacilityMSU';
@@ -22,12 +23,13 @@ const App = () => (
     <div>
       <Route path="/" exact component={Home} />
       <Route path="/facilities" component={FacilityMain} />
-      <Route path="/facilities-tamu" component={FacilityTamu} />
+      <Route path="/facilities-tamu" component={FacilityTAMU} />
       <Route path="/facilities-lbnl" component={FacilityLBNL}/>
       <Route path="/facilities-nsrl" component={FacilityBNL}/>
       <Route path="/facilities-msu" component={FacilityMSU}/>
       <Route path="/calendar" component={CalendarMain} />
       <Route path="/request-form" component={RequestFormMain} />
+      <Route path="/request-tamu" component={RequestTAMU}/>
       <Route path="/view-requests" component={ViewRequestsMain} />
       <Route path="/user-login" component={UserMain} />
       <Route path="/user-profile" component={UserProfile} />
@@ -36,8 +38,8 @@ const App = () => (
   </Router>
 );
 
-window.addEventListener("beforeunload", (ev) => 
-{  
+window.addEventListener("beforeunload", (ev) =>
+{
   if (window.sessionStorage.getItem("access_token") !== null) {
     let url = "https://mda-phoenix.herokuapp.com/logout"
     axios.delete(url, {
