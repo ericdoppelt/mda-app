@@ -10,13 +10,13 @@ import './DemoApp.scss'
 //import Card from '../../components/Card';
 import CardNoShadow from '../../components/CardNoShadow';
 import Header from '../../components/Header';
-import Paragraph from '../../components/Paragraph';
 import Radio from '../../components/Radio';
 import Row from '../../components/Row';
 import Stack from '../../components/Stack';
 import Title from '../../components/Title';
 
-import { Checkbox, FormControl, FormLabel, RadioGroup, FormControlLabel, Button } from '@material-ui/core';  
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { Checkbox, FormControl, FormLabel, RadioGroup, FormControlLabel, Button, Select, InputLabel } from '@material-ui/core';  
 
 // Checkbox items
 const facilities = [
@@ -36,6 +36,16 @@ const beamTypes = [
   'Heavy Ion',
   'Proton'
 ]; 
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  }
+}));
+
+
 
 
 export default class DemoApp extends React.Component {
@@ -117,6 +127,19 @@ export default class DemoApp extends React.Component {
       })
     );
   }
+
+  
+
+  handleChangeMultiple = (event) => {
+    const { options } = event.target;
+    const value = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+    //setPersonName(value);
+  };
   
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
@@ -132,127 +155,121 @@ export default class DemoApp extends React.Component {
     })
     return (
       <div className='demo-app'>
-        <div className='demo-app-top'>
-          
-        </div>
         <div className='demo-app-calendar'>
-        <Row style={{ minWidth: '50px', minHeight: '50px' }}>
+        
           <Stack style={{ justifyContent: 'flex-end', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
 
-            {/*** CALENDAR PLUGIN ***/}
-            <FullCalendar
-            defaultView="dayGridMonth"
-            header={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-            }}
-            plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-            ref={ this.calendarComponentRef }
-            weekends={ this.state.calendarWeekends }
-            events={ this.state.calendarEvents }
-            dateClick={ this.handleDateClick }
+            {/*** FILTER CARD ***/}
+            <CardNoShadow style={{ justifyContent: 'left', minWidth: '150px', minHeight: '100px', width: '100%', flexGrow: '0' }}>
+              
+              {/*** FACILITY CHECKBOXES ***/}
+              {/* Title */}
+              <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' }}>
+                <Title style={{ width: '120px', minHeight: '0px', textAlign: 'left', justifyContent: 'left', alignItems: 'flex-end' }}>
+                  Testing Site: 
+                </Title>
+                {/* Checkboxes */}
+                <Stack style={{ height: '100%', alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' , maxWidth: '100%'}}>
+                  <form onSubmit={this.handleFormSubmit}>
+                    { this.state.facilities.map(x =>
+                      <FormControlLabel
+                      control={<Checkbox 
+                        color="primary" 
+                        checked={this.state.checkedValues.includes(x)} 
+                        onChange={e => this.handleCheck(e,x)} 
+                        name={x} 
+                        />}
+                      label={x}
+                      />
+                    ) }
+                  </form>
 
-            /* Render Event Options */
-            eventRender={ function(info) {
-              var arr = self.state.checkedValues;
-              console.log(arr)
-              return (arr.indexOf(info.event.extendedProps.facility) >=0 
-                && arr.indexOf(info.event.extendedProps.integrator) >=0
-                && arr.indexOf(info.event.extendedProps.beamType) >=0
-              )  
-            } }
-            />
-          </Stack>
+                </Stack>
+              </Row>
+              {/*** INTEGRATOR CHECKBOXES ***/}
+              {/* Title */}
+              <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' }}>
+                <Title style={{ width: '120px', minHeight: '0px', textAlign: 'center', justifyContent: 'left', alignItems: 'flex-end' }}>
+                  Integrator:
+                </Title>
+                {/* Checkboxes */}
+                <Stack style={{ alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' , maxWidth: '100%'}}>
+                  <form onSubmit={this.handleFormSubmit}>
+                    { this.state.integrators.map(x =>
+                      <FormControlLabel
+                      control={<Checkbox 
+                        color="primary" 
+                        checked={this.state.checkedValues.includes(x)} 
+                        onChange={e => this.handleCheck(e,x)} 
+                        name={x} 
+                        />}
+                      label={x}
+                      />
+                    ) }
+                  </form>
+                </Stack>
+              </Row>
+              
 
-
-          {/*** FILTER CARD ***/}
-          <CardNoShadow style={{ justifyContent: 'center', minWidth: '150px', minHeight: '100px', width: '100px', flexGrow: '0' }}>
-            <Header>
-              Filter
-            </Header>
-
-            {/*** FACILITY CHECKBOXES ***/}
-            {/* Title */}
-            <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' }}>
-              <Title style={{ width: 'calc(100% - 20px)', minHeight: '0px', textAlign: 'center', justifyContent: 'center', alignItems: 'flex-end' }}>
-                Testing Site
-              </Title>
-            </Row>
-            {/* Checkboxes */}
-            <Row style={{ justifyContent: 'left', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-              <Stack style={{ alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' , maxWidth: '100px'}}>
-                <form onSubmit={this.handleFormSubmit}>
-                  { this.state.facilities.map(x =>
-                    <FormControlLabel
-                    control={<Checkbox 
-                      color="primary" 
-                      checked={this.state.checkedValues.includes(x)} 
-                      onChange={e => this.handleCheck(e,x)} 
-                      name={x} 
-                      />}
-                    label={x}
-                    />
-                  ) }
-                </form>
-              </Stack>
-            </Row>
-
-            {/*** INTEGRATOR CHECKBOXES ***/}
-            {/* Title */}
-            <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' }}>
-              <Title style={{ width: '180px', minHeight: '0px', textAlign: 'center', justifyContent: 'center', alignItems: 'flex-end' }}>
-                Integrator
-              </Title>
-            </Row>
-            {/* Checkboxes */}
-            <Row style={{ justifyContent: 'left', flexGrow: '0', minWidth: '50px', minHeight: '0px' }}>
-              <Stack style={{ alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' , maxWidth: '100px'}}>
-                <form onSubmit={this.handleFormSubmit}>
-                  { this.state.integrators.map(x =>
-                    <FormControlLabel
-                    control={<Checkbox 
-                      color="primary" 
-                      checked={this.state.checkedValues.includes(x)} 
-                      onChange={e => this.handleCheck(e,x)} 
-                      name={x} 
-                      />}
-                    label={x}
-                    />
-                  ) }
-                </form>
-              </Stack>
-            </Row>
-
-            {/*** BEAM TYPE CHECKBOXES ***/}
-            {/* Title */}
-            <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' }}>
-              <Title style={{ width: '180px', minHeight: '0px', textAlign: 'center', justifyContent: 'center', alignItems: 'flex-end' }}>
-                Beam Type
-              </Title>
-            </Row>
-            {/* Checkboxes */}
-            <Row style={{ justifyContent: 'left', flexGrow: '0', minWidth: '50px', minHeight: '0px' }}>
-              <Stack style={{ alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' , maxWidth: '100px'}}>
-                <form onSubmit={this.handleFormSubmit}>
-                  { this.state.beamTypes.map(x =>
-                    <FormControlLabel
-                    control={<Checkbox 
-                      color="primary" 
-                      checked={this.state.checkedValues.includes(x)} 
-                      onChange={e => this.handleCheck(e,x)} 
-                      name={x} 
-                      />}
-                    label={x}
-                    />
-                  ) }
-                </form>
-              </Stack>
-            </Row>
-
+              {/*** BEAM TYPE CHECKBOXES ***/}
+              {/* Title */}
+              <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' }}>
+                <Title style={{ width: '120px', minHeight: '0px', textAlign: 'left', justifyContent: 'left', alignItems: 'flex-end' }}>
+                  Beam Type:
+                </Title>
+                {/* Checkboxes */}
+                <Stack style={{ alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' , maxWidth: '100%'}}>
+                  <form onSubmit={this.handleFormSubmit}>
+                    { this.state.beamTypes.map(x =>
+                      <FormControlLabel
+                      control={<Checkbox 
+                        color="primary" 
+                        checked={this.state.checkedValues.includes(x)} 
+                        onChange={e => this.handleCheck(e,x)} 
+                        name={x} 
+                        />}
+                      label={x}
+                      />
+                    ) }
+                  </form>
+                </Stack>
+              </Row>
+              
+            </CardNoShadow>
             
-          </CardNoShadow>
-        </Row>
+
+
+            {/*** CALENDAR PLUGIN ***/}
+            <Row style={{ minWidth: '50px', minHeight: '50px' }}>
+              <FullCalendar
+              defaultView="dayGridMonth"
+              header={{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+              }}
+              plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+              ref={ this.calendarComponentRef }
+              weekends={ this.state.calendarWeekends }
+              events={ this.state.calendarEvents }
+              dateClick={ this.handleDateClick }
+
+              /* Render Event Options */
+              eventRender={ function(info) {
+                var arr = self.state.checkedValues;
+                console.log(arr)
+                return (arr.indexOf(info.event.extendedProps.facility) >=0 
+                  && arr.indexOf(info.event.extendedProps.integrator) >=0
+                  && arr.indexOf(info.event.extendedProps.beamType) >=0
+                )  
+              } }
+              />
+            </Row>
+
+
+          
+
+        </Stack>
           
         </div>
       </div>
