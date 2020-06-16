@@ -11,8 +11,7 @@ import Stack from '../../components/Stack';
 export default () => (
   <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
     <MDAHeader/>
-    <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-      <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
+    <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <h1>Texas A&M University Cyclotron</h1>
         </Row>
@@ -22,7 +21,6 @@ export default () => (
           </Row>
         </Stack>
         <h2>Contact Information</h2>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Paragraph>
             Physical Address:
             <br/>
@@ -44,7 +42,6 @@ export default () => (
             3366 TAMU<br/>
             College Station, TX 77843-3366
           </Paragraph>
-        </Row>
         <h2>Additional Documents</h2>
         <Paragraph>
           <a href="https://cyclotron.tamu.edu/ref/images/btrf.pdf" target="_blank" rel="noopener noreferrer">Beam Time Request Form (PDF)</a>
@@ -74,7 +71,6 @@ export default () => (
           <br/>
           <a href="Proton Facility Brochure" target="_blank" rel="noopener noreferrer">Proton Facility Brochure</a>
         </Paragraph>
-      </Card>
-    </Row>
+    </Stack>
   </Main>
 );
