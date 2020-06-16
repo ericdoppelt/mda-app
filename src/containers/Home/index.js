@@ -9,7 +9,7 @@ import MDAHeader from '../../components/MDAHeader';
 export default () => (
   <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
     <MDAHeader/>
-    <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
+    {/*<Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Stack style={{ justifyContent: 'flex-start', flexGrow: '0', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
         <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/MDALogo.png)' }} />
@@ -19,6 +19,6 @@ export default () => (
           COMING SOON...
         </Title>
       </Stack>
-    </Row>
+    </Row>*/}
   </Main>
 );

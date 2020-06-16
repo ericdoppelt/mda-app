@@ -16,7 +16,8 @@ import Stack from '../../components/Stack';
 import Title from '../../components/Title';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Checkbox, FormControl, FormLabel, RadioGroup, FormControlLabel, Button, Select, InputLabel } from '@material-ui/core';  
+import { Checkbox, FormControl, FormLabel, RadioGroup, FormControlLabel, Button, Select, InputLabel, useScrollTrigger } from '@material-ui/core';  
+import { data } from 'jquery'
 
 // Checkbox items
 const facilities = [
@@ -95,26 +96,48 @@ export default class DemoApp extends React.Component {
     }
   }
 
-
   
-
+  
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
     const url = "https://mda-phoenix.herokuapp.com/calendar";
     var self = this;
-    await axios.post(url, {"username":username}).then(response => {
-      self.setState({
+    await axios.post(url).then(response => {
+      /*self.setState({
         username: response.data.username,
         facility: response.data.facility,
         integrator: response.data.integrator,
         totalTime: response.data.totalTime,
         startDate: response.data.startDate,
         cannotRun: response.data.cannotRun
-        });
+        });*/
+        //console.log(response.data)
+        var data = [];
+        response.data.entries.forEach(function(event) {
+          console.log(self.makeEvent(event.facility,event.integrator,event.startDate));
+          data.push(self.makeEvent(event.facility,event.integrator,event.startDate));
+        })
+        console.log(data);
+        self.setState({calendarEvents : data});
       })
       .catch(error => {
         console.log(error);
       });
+  }
+
+
+  /*** EVENT CREATOR FOR UPDATE FROM DATABASE ***/
+  makeEvent = (facility, integrator, startDate) => {
+    var titleString = facility + " - " + integrator;
+    return { id: "1", extendedProps: {facility: facility, integrator: integrator, beamType: "Heavy Ion"}, 
+    title: titleString, start: new Date(startDate), backgroundColor: this.makeEventColor(facility)}
+  };
+
+  makeEventColor = (facility) => {
+    return facility==='TAMU' ? '#c0392b'
+      : facility==='LBNL' ? '#2980b9'
+      : facility==='MSU' ? '#27ae60'
+      : '#34495e';
   }
 
 
@@ -128,8 +151,6 @@ export default class DemoApp extends React.Component {
     );
   }
 
-  
-
   handleChangeMultiple = (event) => {
     const { options } = event.target;
     const value = [];
@@ -140,6 +161,8 @@ export default class DemoApp extends React.Component {
     }
     //setPersonName(value);
   };
+
+
   
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
@@ -183,7 +206,6 @@ export default class DemoApp extends React.Component {
                       />
                     ) }
                   </form>
-
                 </Stack>
               </Row>
               {/*** INTEGRATOR CHECKBOXES ***/}
@@ -257,7 +279,7 @@ export default class DemoApp extends React.Component {
               /* Render Event Options */
               eventRender={ function(info) {
                 var arr = self.state.checkedValues;
-                console.log(arr)
+                //console.log(arr)
                 return (arr.indexOf(info.event.extendedProps.facility) >=0 
                   && arr.indexOf(info.event.extendedProps.integrator) >=0
                   && arr.indexOf(info.event.extendedProps.beamType) >=0
@@ -303,26 +325,6 @@ export default class DemoApp extends React.Component {
         })
       })
     //}
-  }
-
-  RadioButtonsGroup = () => {
-    const [value, setValue] = React.useState('female');
-  
-    const handleChange = (event) => {
-      setValue(event.target.value);
-    };
-  
-    return (
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Gender</FormLabel>
-        <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-          <FormControlLabel value="female" control={<Radio />} label="Female" />
-          <FormControlLabel value="male" control={<Radio />} label="Male" />
-          <FormControlLabel value="other" control={<Radio />} label="Other" />
-          <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
-        </RadioGroup>
-      </FormControl>
-    );
   }
 
 }
