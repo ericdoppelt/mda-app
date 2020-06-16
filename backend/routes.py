@@ -134,9 +134,15 @@ def delete(username):
 #@jwt_required
 def requestform():
     try:
+        facility = request.get_json()['facility']
+        template = ""
+        output = ""
+        if facility == 'TAMU':
+            template = "TAMU_request_template.pdf"
+            output = "TAMU_request.pdf"
         form = request.get_json()
         pdf = FormBuilder(form)
-        pdf.fill()
+        pdf.fill(template, output)
         # msg = Message("Send Request Form Demo",
 		# sender="app.MDA2020@gmail.com",
 		# recipients=["@gmail.com"])

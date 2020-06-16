@@ -20,7 +20,7 @@ class FormBuilder():
 
         """
         Under Construction
-        
+
         pdf.cell(200, 10, txt="Beam Time Parameters", ln=1, align="C")
 
         first_name_text = "First Name: " + first_name
@@ -49,10 +49,8 @@ class FormBuilder():
         pdf.output("simple_demo.pdf") 
         """
 
-    def fill(self):
-        REQUEST_TEMPLATE_PATH = 'TAMU_request_template.pdf'
-        INVOICE_OUTPUT_PATH = 'TAMU_request.pdf'
-        template_pdf = pdfrw.PdfReader(REQUEST_TEMPLATE_PATH)
+    def fill(self, template, output):
+        template_pdf = pdfrw.PdfReader(template)
         annotations = template_pdf.pages[0][ANNOT_KEY]
         for annotation in annotations:
             if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
@@ -63,5 +61,5 @@ class FormBuilder():
                             pdfrw.PdfDict(V='{}'.format(self.form[key]))
                         )
         template_pdf.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
-        pdfrw.PdfWriter().write(INVOICE_OUTPUT_PATH, template_pdf)
+        pdfrw.PdfWriter().write(output, template_pdf)
 
