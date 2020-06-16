@@ -89,11 +89,15 @@ class RequestFormTAMU extends React.Component {
             onChange={event => {this.setState({continuous1: event.target.value})}}
             fullWidth
           />
+          <br/>
           <TextField 
-            label = "Preferred Start Date"
+            helperText = "Preferred Start Date"
+            defaultValue = "2020-06-15"
             onChange={event => {this.setState({startDate1: event.target.value})}}
+            type="date"
             fullWidth
           />
+        
           <TextField 
             label = "Dates You Cannot Run"
             onChange={event => {this.setState({badDates1: event.target.value})}}
@@ -117,11 +121,15 @@ class RequestFormTAMU extends React.Component {
             onChange={event => {this.setState({continuous2: event.target.value})}}
             fullWidth
           />
+          <br/>
           <TextField 
-            label = "Preferred Start Date"
+            helperText = "Preferred Start Date"
+            defaultValue = "2020-06-15"
             onChange={event => {this.setState({startDate2: event.target.value})}}
+            type="date"
             fullWidth
           />
+
           <TextField 
             label = "Dates You Cannot Run"
             onChange={event => {this.setState({badDates2: event.target.value})}}

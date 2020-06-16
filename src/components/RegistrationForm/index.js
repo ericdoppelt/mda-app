@@ -51,7 +51,7 @@ class RegistrationForm extends React.Component {
         last_name: self.state.lastName,
       }).then(response => {
         console.log(response);
-        if (response.data.success == true) {
+        if (response.data.success === true) {
           self.props.history.push('/user-login');
         } else {
           self.setState({userNameValid: false});
