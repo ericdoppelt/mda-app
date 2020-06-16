@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from "react-dom";
 import { Link } from 'react-router-dom';
 import { SizeMe, withSize } from 'react-sizeme';
 
@@ -8,6 +9,7 @@ import Title from '../Title';
 
 import './MDAHeader.css';
 
+/*
 function MyComponent({ size }) {
   return (
     <SizeMe
@@ -20,8 +22,8 @@ function MyComponent({ size }) {
 }
 
 export default withSize()(MyComponent)
+*/
 
-/*
 export default() => (
   <NavigationHeader>
     <Link to="/">
