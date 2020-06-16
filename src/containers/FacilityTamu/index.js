@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Card from '../../components/Card';
 import Image from '../../components/Image';
 import Main from '../../components/Main';
 import MDAHeader from '../../components/MDAHeader';
