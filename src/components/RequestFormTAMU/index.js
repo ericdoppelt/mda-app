@@ -11,7 +11,7 @@ class RequestFormTAMU extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleSubmit= this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = {
       time1: "",
@@ -32,12 +32,64 @@ class RequestFormTAMU extends React.Component {
       billingCity: "",
       billingState: "",
       billingZip: "",
+
+      secondExperiment: false,
+      facility: "TAMU",
     }
   }
 
+  
+
+  getSecondExperimentButton() {
+    return (
+    <div>
+      <Button onClick={(event) => {this.setState({secondExperiment: true})}}>Add Another Experiment</Button>
+    </div>
+    );
+  }
+
+  getExperimentForm(experimentNumber) {
+    console.log("called");
+    return (
+      <div>
+        <Box>Please enter the information needed for the following test.</Box>
+            <TextField 
+              label = "# of 8-Hour Shifts"
+              onChange={event => {this.setState({["time" + experimentNumber]: event.target.value})}}
+              fullWidth
+            />
+            <TextField 
+              label = "Continuous or Interleaved?"
+              onChange={event => {this.setState({["continuous" + experimentNumber]: event.target.value})}}
+              fullWidth
+            />
+            <br/>
+            <br/>
+            <TextField 
+              helperText = "Preferred Start Date"
+              defaultValue = "2020-06-15"
+              onChange={event => {this.setState({["startDate" + experimentNumber]: event.target.value})}}
+              type="date"
+             fullWidth
+            />
+            <br/>
+            <TextField 
+              label = "Dates You Cannot Run"
+              onChange={event => {this.setState({["badDates" + experimentNumber]: event.target.value})}}
+              fullWidth
+            />
+            <TextField 
+              label = "Particles and Energies Required"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              fullWidth
+            />
+          <br/>
+        </div>
+    )
+  }
 
   handleSubmit() {
-    console.log(this.state);
+    console.log(this.state.secondExperiment);
   }
 
   render() {
@@ -78,75 +130,17 @@ class RequestFormTAMU extends React.Component {
             fullWidth
           />
           <br/>
-          <Box>Please enter the information for your first experiment.</Box>
-          <TextField 
-            label = "# of 8-Hour Shifts"
-            onChange={event => {this.setState({time1: event.target.value})}}
-            fullWidth
-          />
-          <TextField 
-            label = "Continuous or Interleaved?"
-            onChange={event => {this.setState({continuous1: event.target.value})}}
-            fullWidth
-          />
+          {this.getExperimentForm(1)}
           <br/>
-          <TextField 
-            helperText = "Preferred Start Date"
-            defaultValue = "2020-06-15"
-            onChange={event => {this.setState({startDate1: event.target.value})}}
-            type="date"
-            fullWidth
-          />
-        
-          <TextField 
-            label = "Dates You Cannot Run"
-            onChange={event => {this.setState({badDates1: event.target.value})}}
-            fullWidth
-          />
-          <TextField 
-            label = "Particles and Energies Required"
-            onChange={event => {this.setState({particles1: event.target.value})}}
-            fullWidth
-          />
-
-          <br/>
-          <Box>Please enter the information for your first experiment.</Box>
-          <TextField 
-            label = "# of 8-Hour Shifts"
-            onChange={event => {this.setState({time2: event.target.value})}}
-            fullWidth
-          />
-          <TextField 
-            label = "Continuous or Interleaved?"
-            onChange={event => {this.setState({continuous2: event.target.value})}}
-            fullWidth
-          />
-          <br/>
-          <TextField 
-            helperText = "Preferred Start Date"
-            defaultValue = "2020-06-15"
-            onChange={event => {this.setState({startDate2: event.target.value})}}
-            type="date"
-            fullWidth
-          />
-
-          <TextField 
-            label = "Dates You Cannot Run"
-            onChange={event => {this.setState({badDates2: event.target.value})}}
-            fullWidth
-          />
-          <TextField 
-            label = "Particles and Energies Required"
-            onChange={event => {this.setState({particles2: event.target.value})}}
-            fullWidth
-          />
+          
+          {this.state.secondExperiment ? this.getExperimentForm(2) : this.getSecondExperimentButton()}
           <br/>
           <Button onClick={this.handleSubmit}>
             Submit
           </Button>
         </Stack>
     </div>
-  );
+    );
   }
 }
 
