@@ -10,7 +10,7 @@ import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
 
 export default() => (
   <div>
-    <AppBar 
+    <AppBar
       >
       <Tabs
         variant="fullWidth"
