@@ -9,6 +9,9 @@ npm install --save @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegr
 npm install axios
 npm install --save redux react-redux
 npm install @material-ui/core
+npm install react-nice-dates date-fns --save
+npm install @material-ui/icons
+
 ```
 To initialize the virtual environment, cd in to the backend directory, and create the virtual environment by running 
 ```

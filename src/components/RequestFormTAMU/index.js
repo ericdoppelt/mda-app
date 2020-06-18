@@ -1,5 +1,8 @@
 import React from 'react';
 import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
+import { enGB } from 'date-fns/locale'
+import { DatePickerCalendar } from 'react-nice-dates'
+import 'react-nice-dates/build/style.css'
 
 import { withRouter } from 'react-router-dom';
 import Stack from '../Stack';
@@ -91,7 +94,7 @@ class RequestFormTAMU extends React.Component {
     if (this.state["continuous" + formNumber] == "") this.state["continuousErrorText" + formNumber] = "Please enter either continuous or interleaved.";
     else this.state["continuousErrorText" + formNumber] = "";
 
-    if (this.state["startDate" + formNumber] = "mm-dd-yyyy") this.state["startDateErrorText" + formNumber] = "Please enter a start date.";
+    if (this.state["startDate" + formNumber] == "") this.state["startDateErrorText" + formNumber] = "Please enter a start date.";
     else this.state["startDateErrorText" + formNumber] = "";
 
     if (this.state["particles" + formNumber] == "") this.state["particlesErrorText" + formNumber] = "Please enter your particle and energy information.";
