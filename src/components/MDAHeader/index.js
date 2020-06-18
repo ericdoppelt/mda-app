@@ -7,6 +7,7 @@ import FaceRoundedIcon from '@material-ui/icons/FaceRounded';
 import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded';
 import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
+import { Link } from 'react-router-dom';
 
 export default() => (
   <div>
@@ -15,12 +16,12 @@ export default() => (
       <Tabs
         variant="fullWidth"
         >
-          <Tab icon={<HomeRoundedIcon />}label="Home" href="/"/>
-          <Tab icon={<AccountBalanceRoundedIcon/>}label="Sites" href="/facilities"/>
-          <Tab icon={<CalendarTodayRoundedIcon/>} label="Calendar" href="/calendar"/>
-          <Tab icon={<AssignmentRoundedIcon/>} label="Request Forms" href="/request-form"/>
-          <Tab icon={<DvrRoundedIcon/>}label="View Requests" href="/view-requests"/>
-          <Tab icon={<FaceRoundedIcon/>}label="User" href="/user-login"/>
+          <Tab icon={<HomeRoundedIcon />} label="Home" component={Link} to="/"/>
+          <Tab icon={<AccountBalanceRoundedIcon/>}label="Sites" component={Link} to="/facilities"/>
+          <Tab icon={<CalendarTodayRoundedIcon/>} label="Calendar" component={Link} to="/calendar"/>
+          <Tab icon={<AssignmentRoundedIcon/>} label="Request Forms" component={Link}  to="/request-form"/>
+          <Tab icon={<DvrRoundedIcon/>}label="View Requests" component={Link}  to="/view-requests"/>
+          <Tab icon={<FaceRoundedIcon/>}label="User" component={Link} to="/user-login"/>
         </Tabs>
     </AppBar>
   </div>
