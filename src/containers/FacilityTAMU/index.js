@@ -93,13 +93,13 @@ export default () => (
             </ul>
             <li><strong>Preparing for Visit</strong></li>
             <ul>
-              <li>Location:</li>
+              <li><strong>Location:</strong></li>
               <ul>
                 <li>Physical address: 120 Spence St, College Station, TX</li>
                 <li>The Radiation Effects Facility is located within the Luedecke Cyclotron Institute building directly across Spence Street from the Zachary Engineering Education Complex and directly behind the Jack E. Brown Engineering Building</li>
                 <li><a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank" rel="noopener noreferrer">Building Entry</a></li>
               </ul>
-              <li>Transportation and Lodging</li>
+              <li><strong>Transportation and Lodging</strong></li>
               <ul>
                 <li>Airports: <a href="https://www.flyeasterwood.com/" target="_blank" rel="noopener noreferrer">Easterwood</a> (local),
                     <a href="https://www.fly2houston.com/iah/overview/" target="_blank" rel="noopener noreferrer">Houston</a> (1.5 hour drive),
@@ -107,7 +107,7 @@ export default () => (
                 <li><a href="https://www.experiencebcs.com/hotels/" target="_blank" rel="noopener noreferrer">Hotels</a></li>
                 <li><a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank" rel="noopener noreferrer">Parking</a></li>
               </ul>
-              <li>Shipping equipment</li>
+              <li><strong>Shipping equipment</strong></li>
               <ul>
                 <li>Address: ATTN: H. Clark or B. Hyman, Cyclotron Institute, 120 Spence Street, Texas A&M University MS #3366, College Station, TX 77843-3366</li>
                 <li>For assistance contact Bruce Hyman</li>

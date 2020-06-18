@@ -107,7 +107,7 @@ export default () => (
                 </ul>
               </ul>
               <li>Submit BNL Arrival Notification to <a href="Submit BNL Arrival Notification to Guest Central web page" target="_blank" rel="noopener noreferrer">Guest Central web page</a></li>
-              <li><a href="https://www.bnl.gov/staffservices/onsitehousing.php" target="_blank" rel="noopener noreferrer">Housing</a></li>
+              <li><a href="https://www.bnl.gov/staffservices/onsitehousing.php" target="_blank" rel="noopener noreferrer"><strong>Housing</strong></a></li>
               <ul>
                 <li>Must first be registered in the Guest Information System</li>
                 <li>To reserve on-site housing, call the BNL Housing Office</li>
@@ -116,7 +116,7 @@ export default () => (
                   <li>Email: housing@bnl.gov</li>
                 </ul>
               </ul>
-              <li><a href="https://www.bnl.gov/training/pass/" target="_blank" rel="noopener noreferrer">Taining</a></li>
+              <li><a href="https://www.bnl.gov/training/pass/" target="_blank" rel="noopener noreferrer"><strong>Training</strong></a></li>
               <ul>
                 <li>Must first be registered in the Guest Information System</li>
                 <li>Complete Cyber Security training  and Guest Site Orientation found <a href="https://www.bnl.gov/training/pass/" target="_blank" rel="noopener noreferrer">here</a></li>
