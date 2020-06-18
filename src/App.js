@@ -1,21 +1,21 @@
 import React from 'react';
 import { Router, Route} from 'react-router-dom';
-import UserMain from './containers/UserMain';
-import CalendarMain from './containers/CalendarMain';
-import RequestFormMain from './containers/RequestFormMain';
-import RequestTAMU from './containers/RequestTAMU';
+import UserMain from './containers/User/UserMain';
+import CalendarMain from './containers/Calendar/CalendarMain';
+import RequestFormMain from './containers/RequestForm/RequestFormMain';
+import RequestTAMU from './containers/RequestForm/RequestTAMU';
 import axios from 'axios';
 
-import FacilityMain from './containers/FacilityMain';
-import FacilityTAMU from './containers/FacilityTAMU';
-import FacilityLBNL from './containers/FacilityLBNL';
-import FacilityBNL from './containers/FacilityNSRL';
-import FacilityMSU from './containers/FacilityMSU';
+import FacilityMain from './containers/Facility/FacilityMain';
+import FacilityTAMU from './containers/Facility/FacilityTAMU';
+import FacilityLBNL from './containers/Facility/FacilityLBNL';
+import FacilityBNL from './containers/Facility/FacilityNSRL';
+import FacilityMSU from './containers/Facility/FacilityMSU';
 
 import Home from './containers/Home';
-import UserProfile from './containers/UserProfile';
-import ViewRequestsMain from './containers/ViewRequestsMain';
-import UserRegistration from './containers/UserRegistration';
+import UserProfile from './containers/User/UserProfile';
+import ViewRequestsMain from './containers/ViewRequests/ViewRequestsMain';
+import UserRegistration from './containers/User/UserRegistration';
 import history from './history';
 
 const App = () => (
