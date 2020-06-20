@@ -1,7 +1,5 @@
 import React from 'react';
 import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
-//import { enGB } from 'date-fns/locale'
-//import { DatePickerCalendar } from 'react-nice-dates'
 import 'react-nice-dates/build/style.css'
 
 import { withRouter } from 'react-router-dom';
@@ -9,12 +7,16 @@ import Stack from '../../UIzard/Stack';
 
 import './RequestFormTAMU.css'
 
+import 'react-nice-dates/build/style.css'
+import MultipleDatePicker from '../MultipleDatePicker';
+
 class RequestFormTAMU extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    
     this.state = {
       time1: "",
       timeErrorText1: "",
@@ -54,6 +56,7 @@ class RequestFormTAMU extends React.Component {
       facility: "TAMU",
       submitted: false,
       secondExperiment: false,
+      open: false,
     }
   }
 
@@ -108,7 +111,6 @@ class RequestFormTAMU extends React.Component {
     </div>
     );
   }
-
 
   getAgreementForm() {
     return (
@@ -230,6 +232,7 @@ class RequestFormTAMU extends React.Component {
           {this.state.secondExperiment ? this.getExperimentForm(2) : this.getSecondExperimentButton()}
           <br/>
           <Button onClick={this.handleSubmit}>Submit</Button>
+          <MultipleDatePicker/>
         </Stack>
     </div>
     );

@@ -1,5 +1,4 @@
 import React from 'react';
-import './MDAHeader.css';
 import {AppBar, Tabs, Tab, Menu, MenuItem} from '@material-ui/core';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import CalendarTodayRoundedIcon from '@material-ui/icons/CalendarTodayRounded';
