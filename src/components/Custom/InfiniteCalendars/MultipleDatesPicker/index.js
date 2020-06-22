@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import InfiniteCalendar from 'react-infinite-calendar';
+import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
 import 'react-infinite-calendar/styles.css';
 
 var today = new Date();
@@ -11,13 +11,17 @@ class MultipeDatesPicker extends React.Component {
 
 render() {
   return(
+    <div>
     <InfiniteCalendar
-      width={400}
-      height={600}
-      selected={today}
-      disabledDays={[0,6]}
-      minDate={lastWeek}
-    />
+      Component={withMultipleDates(Calendar)}
+      selected={[
+       new Date(2020, 6, 15),
+       new Date(),
+       new Date(2020, 7, 2)
+      ]}
+     interpolateSelection={defaultMultipleDateInterpolation}
+     />
+    </div>
   );
   }
 }
