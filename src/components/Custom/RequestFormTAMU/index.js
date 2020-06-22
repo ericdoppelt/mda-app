@@ -1,5 +1,6 @@
 import React from 'react';
 import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
+import MultipleDatesPicker from '../InfiniteCalendars/MultipleDatesPicker';
 import 'react-nice-dates/build/style.css'
 
 import { withRouter } from 'react-router-dom';
@@ -61,11 +62,10 @@ class RequestFormTAMU extends React.Component {
   }
 
   handleSubmit() {
+    this.setState({submitted: true});
     this.validateAgreementForm();
     this.validateExperimentForm(1);
     if (this.state.secondExperiment === true) this.validateExperimentForm(2);
-
-    this.setState({submitted: true});
     console.log(this.state);
   }
 
@@ -114,7 +114,7 @@ class RequestFormTAMU extends React.Component {
 
   getAgreementForm() {
     return (
-      <div>
+      <div className="agreementForm">
         <Box>Please enter your company information.</Box>
         <TextField 
           label = "Company Name"
@@ -164,17 +164,16 @@ class RequestFormTAMU extends React.Component {
   }
 
   getExperimentForm(experimentNumber) {
-    console.log("called");
     return (
-      <div>
+      <div className="experimentForm">
         <Box>Please enter the information needed for test #{experimentNumber}.</Box>
             <TextField 
               label = "# of 8-Hour Shifts"
               onChange={event => {this.setState({["time" + experimentNumber]: event.target.value})}}
               error = {this.state["timeErrorText" + experimentNumber].length !== 0 && this.state.submitted}
               helperText = {this.state["timeErrorText" + 1]}
-              fullWidth
               type="Number"
+              fullWidth
             />
             <FormControl 
               className='dropdownBox'
@@ -194,10 +193,11 @@ class RequestFormTAMU extends React.Component {
             <br/>
             <br/>
             <TextField 
-              helperText = "Preferred Start Date"
+              label = "Preferred Start Date"
               onChange={event => {this.setState({["startDate" + experimentNumber]: event.target.value})}}
               type="date"
               error = {this.state["startDateErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              InputLabelProps={{ shrink: true }}
               helperText = {this.state["startDateErrorText" + experimentNumber]}
               fullWidth
             />
@@ -212,8 +212,8 @@ class RequestFormTAMU extends React.Component {
               onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
               error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
               helperText = {this.state["particlesErrorText" + experimentNumber]}
-              fullWidth
               multiline
+              fullWidth
             />
           <br/>
         </div>
@@ -232,6 +232,11 @@ class RequestFormTAMU extends React.Component {
           {this.state.secondExperiment ? this.getExperimentForm(2) : this.getSecondExperimentButton()}
           <br/>
           <Button onClick={this.handleSubmit}>Submit</Button>
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+          <MultipleDatesPicker/>
           <MultipleDatePicker/>
         </Stack>
     </div>

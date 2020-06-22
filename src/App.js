@@ -4,6 +4,7 @@ import UserMain from './containers/User/UserMain';
 import CalendarMain from './containers/Calendar/CalendarMain';
 import RequestFormMain from './containers/RequestForm/RequestFormMain';
 import RequestTAMU from './containers/RequestForm/RequestTAMU';
+import RequestLBNL from './containers/RequestForm/RequestLBNL';
 import axios from 'axios';
 
 import FacilityMain from './containers/Facility/FacilityMain';
@@ -30,6 +31,7 @@ const App = () => (
       <Route path="/calendar" component={CalendarMain} />
       <Route path="/request-form" component={RequestFormMain} />
       <Route path="/request-tamu" component={RequestTAMU}/>
+      <Route path="/request-lbnl" component={RequestLBNL}/>
       <Route path="/view-requests" component={ViewRequestsMain} />
       <Route path="/user-login" component={UserMain} />
       <Route path="/user-profile" component={UserProfile} />
