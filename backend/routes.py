@@ -140,7 +140,6 @@ def requestform():
         form = request.get_json()
         pdf = FormBuilder(form)
         msg = Message("Send Request Form Demo", cc=[form['senderEmail']])
-        msg.recipients = ['robcyale@gmail.com']
         if facility == 'TAMU':
             # msg.recipients = ['clark@comp.tamu.edu']
             template = "TAMU_request_template.pdf"
@@ -152,8 +151,7 @@ def requestform():
         if facility == 'LBNL':
             # msg.recipients = ['88beamrequest@lbl.gov']
             msg.body = pdf.mail()
-        mail.send(msg)
-        print(msg)
+        # mail.send(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         return jsonify({'success': False, 'msg': str(e)}), 404
