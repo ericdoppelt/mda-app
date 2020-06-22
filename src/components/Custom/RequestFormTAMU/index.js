@@ -11,8 +11,6 @@ import 'react-nice-dates/build/style.css'
 import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
 import 'react-infinite-calendar/styles.css';
 
-var today = new Date();
-
 class RequestFormTAMU extends React.Component {
 
   constructor(props) {
@@ -25,7 +23,7 @@ class RequestFormTAMU extends React.Component {
       timeErrorText1: "",
       continuous1: "",
       continuousErrorText1: "",
-      startDate1: "",
+      startDate1: null,
       startDateErrorText1: "",
       badDates1: [],
       badDatesErrorText1: "",
@@ -36,7 +34,7 @@ class RequestFormTAMU extends React.Component {
       timeErrorText2: "",
       continuous2: "",
       continuousErrorText2: "",
-      startDate2: "",
+      startDate2: null,
       startDateErrorText2: "",
       badDates2: [],
       badDatesErrorText2: "",
@@ -55,6 +53,9 @@ class RequestFormTAMU extends React.Component {
       billingStateErrorText: "",
       billingZip: "",
       billingZipErrorText: "",
+
+      senderEmail: "",
+      senderEmailErrorText: "",
 
       facility: "TAMU",
       submitted: false,
@@ -90,6 +91,9 @@ class RequestFormTAMU extends React.Component {
 
     if (this.state.billingZip === "") this.state.billingZipErrorText = "Please enter the city for the billing address.";
     else this.state.billingZipErrorText = "";
+
+    if (this.state.senderEmail === "") this.state.senderEmailErrorText = "Please enter an email to send this form to."
+    else this.state.senderEmailErrorText = "";
   }
   
 
@@ -110,7 +114,7 @@ class RequestFormTAMU extends React.Component {
   getSecondExperimentButton() {
     return (
     <div>
-      <Button onClick={(event) => {this.setState({secondExperiment: true})}}>Add Another Experiment</Button>
+      <Button onClick={this.setState({secondExperiment: true})}>Add Another Experiment</Button>
     </div>
     );
   }
@@ -162,6 +166,13 @@ class RequestFormTAMU extends React.Component {
           helperText = {this.state.billingZipErrorText}
           fullWidth
           />
+        <TextField 
+          label = "Personal Email"
+          onChange={event => {this.setState({senderEmail: event.target.value})}}
+          error = {this.state.senderEmailErrorText !== 0 && this.state.submitted}
+          helperText = {this.state.senderEmailErrorText}
+          fullWidth
+          />
       </div>
     )
   }
@@ -195,14 +206,11 @@ class RequestFormTAMU extends React.Component {
             </FormControl>
             <br/>
             <br/>
-            <TextField 
-              label = "Preferred Start Date"
-              onChange={event => {this.setState({["startDate" + experimentNumber]: event.target.value})}}
-              type="date"
-              error = {this.state["startDateErrorText" + experimentNumber].length !== 0 && this.state.submitted}
-              InputLabelProps={{ shrink: true }}
-              helperText = {this.state["startDateErrorText" + experimentNumber]}
-              fullWidth
+            <InfiniteCalendar
+              selected={this.state["startDate" + experimentNumber]}
+              onSelect={(event) => this.setState({["startDate" + experimentNumber]: event})}
+              minDate={new Date()}
+              min={new Date()}
             />
             <br/>
             <TextField 
@@ -243,10 +251,6 @@ class RequestFormTAMU extends React.Component {
           {this.state.secondExperiment ? this.getExperimentForm(2) : this.getSecondExperimentButton()}
           <br/>
           <Button onClick={this.handleSubmit}>Submit</Button>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
         </Stack>
     </div>
     );

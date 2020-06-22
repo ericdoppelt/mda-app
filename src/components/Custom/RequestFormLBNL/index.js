@@ -19,8 +19,8 @@ class RequestFormLBNL extends React.Component {
       investigatorNameErrorText: "",
       investigatorOrg: "",
       investigatorOrgErrorText: "",
-      investigatorEmail: "",
-      investigatorEmailErrorText: "",
+      senderEmail: "",
+      senderEmailErrorText: "",
       investigatorAddress: "",
       investigatorAddressErrorText: "",
       investigatorOfficePhone: "",
@@ -89,8 +89,8 @@ class RequestFormLBNL extends React.Component {
     if (this.state.investigatorOrg === "") this.state.investigatorOrgErrorText = "Please enter an organization.";
     else this.state.investigatorOrgErrorText = "";
 
-    if (this.state.investigatorEmail === "") this.state.investigatorEmailErrorText = "Please enter an email.";
-    else this.state.investigatorEmailErrorText = "";
+    if (this.state.senderEmail === "") this.state.senderEmailErrorText = "Please enter an email.";
+    else this.state.senderEmailErrorText = "";
 
     if (this.state.investigatorAddress === "") this.state.investigatorAddressErrorText = "Please enter an address.";
     else this.state.billingCityErrorText = "";
@@ -108,7 +108,7 @@ class RequestFormLBNL extends React.Component {
     else this.state.financierEmailErrorText = "";
 
     if (this.state.financierTelephone === "") this.state.financierTelephoneErrorText = "Please enter the phone number for a financier.";
-    else this.state.investigatorEmailErrorText = "";
+    else this.state.senderEmailErrorText = "";
 
     if (this.state.experimentTitle === "") this.state.experimentTitleErrorText = "Please enter an experiment title.";
     else this.state.experimentTitleErrorText = "";
@@ -182,8 +182,8 @@ class RequestFormLBNL extends React.Component {
         <TextField 
           label = "Principal Investigator E-mail"
           onChange={event => {this.setState({investigatorEmail: event.target.value})}}
-          error = {this.state.investigatorEmailErrorText !== "" && this.state.submitted}
-          helperText = {this.state.investigatorEmailErrorText}
+          error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
+          helperText = {this.state.senderEmailErrorText}
           fullWidth
           />
         <TextField 
