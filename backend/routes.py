@@ -139,7 +139,7 @@ def requestform():
         output = ""
         form = request.get_json()
         pdf = FormBuilder(form)
-        msg = Message("Send Request Form Demo", cc=form['senderEmail'])
+        msg = Message("Send Request Form Demo")
         msg.recipients = ['robcyale@gmail.com']
         if facility == 'TAMU':
             # msg.recipients = ['clark@comp.tamu.edu']
