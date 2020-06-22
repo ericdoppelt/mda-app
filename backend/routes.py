@@ -137,19 +137,21 @@ def requestform():
         facility = request.get_json()['facility']
         template = ""
         output = ""
-        if facility == 'TAMU':
-            template = "TAMU_request_template.pdf"
-            output = "TAMU_request.pdf"
         form = request.get_json()
         pdf = FormBuilder(form)
-        pdf.fill(template, output)
-        # msg = Message("Send Request Form Demo",
-		# sender="app.MDA2020@gmail.com",
-		# recipients=["@gmail.com"])
-        # msg.body = "Here is the request form for beam time"
-        # with app.open_resource("simple_demo.pdf") as fp:
-        #     msg.attach("simple_demo.pdf", "simple_demo/pdf", fp.read())
-        # mail.send(msg)
+        msg = Message("Send Request Form Demo")
+        if facility == 'TAMU':
+            # msg.recipients = ['clark@comp.tamu.edu']
+            template = "TAMU_request_template.pdf"
+            output = "TAMU_request.pdf"
+            pdf.fill(template, output)
+            msg.body = "Here is the request form for beam time"
+            with app.open_resource("TAMU_request.pdf") as fp:
+                msg.attach("TAMU_request.pdf", "TAMU_request/pdf", fp.read())
+        if facility == 'LBNL':
+            # msg.recipients = ['88beamrequest@lbl.gov']
+            msg.body = pdf.mail()
+        mail.send(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         return jsonify({'success': False, 'msg': str(e)}), 404
