@@ -151,7 +151,7 @@ def requestform():
         if facility == 'LBNL':
             # msg.recipients = ['88beamrequest@lbl.gov']
             msg.body = pdf.mail()
-        mail.send(msg)
+        # mail.send(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         return jsonify({'success': False, 'msg': str(e)}), 404
