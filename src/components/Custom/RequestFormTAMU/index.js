@@ -1,6 +1,5 @@
 import React from 'react';
 import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
-import MultipleDatesPicker from '../InfiniteCalendars/MultipleDatesPicker';
 import 'react-nice-dates/build/style.css'
 
 import { withRouter } from 'react-router-dom';
@@ -9,7 +8,10 @@ import Stack from '../../UIzard/Stack';
 import './RequestFormTAMU.css'
 
 import 'react-nice-dates/build/style.css'
-import MultipleDatePicker from '../MultipleDatePicker';
+import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
+import 'react-infinite-calendar/styles.css';
+
+var today = new Date();
 
 class RequestFormTAMU extends React.Component {
 
@@ -25,7 +27,7 @@ class RequestFormTAMU extends React.Component {
       continuousErrorText1: "",
       startDate1: "",
       startDateErrorText1: "",
-      badDates1: "",
+      badDates1: [],
       badDatesErrorText1: "",
       particles1: "",
       particlesErrorText1: "",
@@ -36,7 +38,7 @@ class RequestFormTAMU extends React.Component {
       continuousErrorText2: "",
       startDate2: "",
       startDateErrorText2: "",
-      badDates2: "",
+      badDates2: [],
       badDatesErrorText2: "",
       particles2: "",
       particlesErrorText2: "",
@@ -69,6 +71,7 @@ class RequestFormTAMU extends React.Component {
     console.log(this.state);
   }
 
+  
   validateAgreementForm() {
     if (this.state.companyName === "") this.state.companyNameErrorText = "Please enter a company name.";
     else this.state.companyNameErrorText = "";
@@ -207,6 +210,14 @@ class RequestFormTAMU extends React.Component {
               onChange={event => {this.setState({["badDates" + experimentNumber]: event.target.value})}}
               fullWidth
             />
+            <InfiniteCalendar
+              Component={withMultipleDates(Calendar)}
+              selected={this.state["badDates" + experimentNumber]}
+              onSelect={(event) => this.setState({["badDates" + experimentNumber]: this.state["badDates" + experimentNumber].concat(event)})}
+              minDate={new Date()}
+              min={new Date()}
+              interpolateSelection={defaultMultipleDateInterpolation}
+            />
             <TextField 
               label = "Particles and Energies Required"
               onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
@@ -236,8 +247,6 @@ class RequestFormTAMU extends React.Component {
           <br/>
           <br/>
           <br/>
-          <MultipleDatesPicker/>
-          <MultipleDatePicker/>
         </Stack>
     </div>
     );
