@@ -1,13 +1,31 @@
 import React from 'react';
 
-import Main from '../../../components/UIzard/Main';
 import Calendar from '../../../components/Custom/Calendar/Calendar';
-import MDAHeader from '../../../components/Custom/MDAHeader';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default () => (
-  <Main style={{ justifyContent: 'center', alignItems: 'center' }}>
-    <MDAHeader/>
-    <Calendar/>
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  appBarSpacer: theme.mixins.toolbar
+}));
 
-  </Main>
-);
+export default function CalendarMain() {
+
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <MDAHeader2/>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Calendar/>
+      </main>
+    </div>
+  );
+};

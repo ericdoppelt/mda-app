@@ -8,9 +8,9 @@ import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
 import { Link } from 'react-router-dom';
 
- 
+
 class MDAHeader extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.openUserMenu = this.openUserMenu.bind(this);
@@ -19,8 +19,8 @@ class MDAHeader extends React.Component {
       open: false,
     }
   }
-    
-  
+
+
   openUserMenu(event) {
     this.setState({
       menuAnchor: event.target,
