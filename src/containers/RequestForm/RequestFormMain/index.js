@@ -1,23 +1,31 @@
 import React from 'react';
 
-import Main from '../../../components/UIzard/Main';
 import Row from '../../../components/UIzard/Row';
-import MDAHeader from '../../../components/Custom/MDAHeader';
 import RequestSelector from '../../../components/Custom/RequestSelector';
-import Card from '../../../components/UIzard/Card';
+import Stack from '../../../components/UIzard/Stack';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import * as Constants from '../../../constants'
+import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 
+export default function Home() {
 
-export default () => (
-  
-  <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-    <MDAHeader/>
-    <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
-      <Card style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>
-        <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-          <RequestSelector/>
+  const classes = Constants.useStyles();
+  return (
+    <ThemeProvider theme={Constants.darkTheme}>
+      <div className={classes.root}>
+        <MDAHeader2/>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+        <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
+          <Stack style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>
+            <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
+              <RequestSelector/>
+            </Row>
+          </Stack>
         </Row>
-      </Card>
-    </Row>
-  </Main>
-);
+        </main>
+      </div>
+    </ThemeProvider>
+  );
+};

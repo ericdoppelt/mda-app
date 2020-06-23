@@ -79,14 +79,14 @@ class RequestFormTAMU extends React.Component {
       poNumber: this.state.poNumber,
       billingAddress: this.state.billingAddress,
       billingCity: this.state.billingCity,
-      billingState: this.billingState,
-      billingZip: this.billingZip,
+      billingState: this.state.billingState,
+      billingZip: this.state.billingZip,
 
       time1: this.state.time1,
       continuous1: this.state.continuous1,
       startDate1: this.state.startDate1,
       badDates1: this.state.badDates1,
-      particles1: this.particles1,
+      particles1: this.state.particles1,
 
       time2: this.state.time2,
       continuous2: this.state.continuous2,

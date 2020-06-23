@@ -4,6 +4,8 @@ import './FacilitiesSelector.css'
 import {FormControl, InputLabel, Select, MenuItem, Button} from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
+import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
 
 class FacilitiesSelector extends React.Component {
 
@@ -24,13 +26,15 @@ class FacilitiesSelector extends React.Component {
 
   render() {
     return (
+      
         <div className='wrapper'>
             <Stack>
-            <FormControl className='dropdownBox'> 
-                <InputLabel>Facility</InputLabel>
+            <FormControl className='dropdownBox' style={{ backgroundColor: "#fafafa" }}> 
+                <InputLabel style={{ color: 'rgba(0, 0, 0, 0.26)', backgroundColor: "#fafafa" }}>Facility</InputLabel>
                 <Select
                     value={this.state.facility}
                     onChange={event => {this.setState({facility: event.target.value})}}
+                    style={{ backgroundColor: "#fafafa" }}
                 >
                     <MenuItem value={"TAMU"}>TAMU</MenuItem>
                     <MenuItem value={"NSRL"}>NSRL</MenuItem>

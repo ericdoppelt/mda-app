@@ -20,7 +20,7 @@ export default function Home() {
         <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
           <Stack style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>
             <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-              <RequestFormTAMU/>
+              Coming Soon
             </Row>
           </Stack>
         </Row>
