@@ -8,23 +8,15 @@ import Stack from '../../../components/UIzard/Stack';
 import VerticalLinearStepper from '../../../components/Custom/FacilityPages/FacilityNSRL'
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  appBarSpacer: theme.mixins.toolbar
-}));
+import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import * as Constants from '../../../constants'
 
 export default function FacilityNSRL() {
 
-  const classes = useStyles();
+  const classes = Constants.useStyles();
 
   return (
+    <ThemeProvider theme={Constants.darkTheme}>
     <div className={classes.root}>
       <MDAHeader2/>
       <main className={classes.content}>
@@ -86,5 +78,6 @@ export default function FacilityNSRL() {
         </Row>
       </main>
     </div>
+    </ThemeProvider>
   );
 };

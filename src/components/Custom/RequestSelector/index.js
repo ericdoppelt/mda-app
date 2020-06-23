@@ -7,19 +7,6 @@ import Stack from '../../UIzard/Stack';
 import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 
-const darkTheme = createMuiTheme({
-  palette: {
-    type: 'dark',
-    //background: '#FFC0CB'
-    background: {
-      default: "#fafafa"
-    },
-    text: {
-      primary: "rgba(0, 0, 0, 0.87)"
-    }
-  },
-});
-
 class FacilitiesSelector extends React.Component {
 
   constructor(props) {
@@ -39,7 +26,6 @@ class FacilitiesSelector extends React.Component {
 
   render() {
     return (
-      <ThemeProvider theme={darkTheme}>
         <div className='wrapper'>
             <Stack>
             <FormControl className='dropdownBox' style={{ backgroundColor: "#fafafa" }}> 
@@ -49,9 +35,9 @@ class FacilitiesSelector extends React.Component {
                     onChange={event => {this.setState({facility: event.target.value})}}
                     style={{ backgroundColor: "#fafafa" }}
                 >
-                    <MenuItem value={"TAMU"} style={{ backgroundColor: "#fafafa" }}>TAMU</MenuItem>
-                    <MenuItem value={"NSRL"} style={{ backgroundColor: "#fafafa" }}>NSRL</MenuItem>
-                    <MenuItem value={"LBNL"} style={{ backgroundColor: "#fafafa" }}>LBNL</MenuItem>
+                    <MenuItem value={"TAMU"}>TAMU</MenuItem>
+                    <MenuItem value={"NSRL"}>NSRL</MenuItem>
+                    <MenuItem value={"LBNL"}>LBNL</MenuItem>
                 </Select>
             </FormControl>
             <br/>
@@ -59,7 +45,6 @@ class FacilitiesSelector extends React.Component {
             <Button onClick={this.routeToForm}>Submit</Button>
             </Stack>
         </div>
-      </ThemeProvider>
     );
   }
 }

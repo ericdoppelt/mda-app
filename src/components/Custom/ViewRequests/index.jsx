@@ -77,18 +77,6 @@ const useStyles = theme => ({
   },
 });
 
-const darkTheme = createMuiTheme({
-  palette: {
-    type: 'dark',
-    //background: '#FFC0CB'
-    background: {
-      default: "#fafafa"
-    },
-    text: {
-      primary: "rgba(0, 0, 0, 0.87)"
-    }
-  },
-});
 
 class ViewRequests extends React.Component {
 
@@ -144,12 +132,11 @@ class ViewRequests extends React.Component {
     const rowsPerPage = this.state.rowsPerPage;
     
     return (
-      <ThemeProvider theme={darkTheme}>
         <div className='view-requests'>
           <div className='view-requests-inner'>
             <Paper className={classes.root}>
-              <TableContainer className={classes.container}>
-                <Table stickyHeader aria-label="sticky table">
+              <TableContainer className={classes.container} >
+                <Table stickyHeader aria-label="sticky table" style={{color: "rgba(0, 0, 0, 0.87)"}}>
                   <TableHead>
                     <TableRow>
                       {columns.map((column) => (
@@ -166,7 +153,7 @@ class ViewRequests extends React.Component {
                   <TableBody>
                     {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                       return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.name} style={{ backgroundColor: 'white' }}>
+                        <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
                           {columns.map((column) => {
                             const value = row[column.id];
                             return (
@@ -194,7 +181,6 @@ class ViewRequests extends React.Component {
             </Paper>
           </div>
         </div>
-      </ThemeProvider>
     )
   }
 

@@ -43,6 +43,7 @@ const useStyles = theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    backgroundColor: "#424242"
   },
   drawer: {
     width: drawerWidth,
@@ -50,6 +51,7 @@ const useStyles = theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
+    backgroundColor: "#424242"
   },
   drawerContainer: {
     overflow: 'auto',
@@ -67,19 +69,6 @@ const useStyles = theme => ({
   },
   nested: {
     paddingLeft: theme.spacing(4),
-  },
-});
-
-const darkTheme = createMuiTheme({
-  palette: {
-    type: 'dark',
-    //background: '#FFC0CB'
-    background: {
-      default: "#fafafa"
-    },
-    text: {
-      primary: "rgba(0, 0, 0, 0.87)"
-    }
   },
 });
 
@@ -112,7 +101,6 @@ class MDAHeader2 extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <ThemeProvider theme={darkTheme}>
       <div className={classes.root}>
         <CssBaseline />
         <AppBar position="fixed" className={classes.appBar} color="paper">
@@ -220,7 +208,6 @@ class MDAHeader2 extends React.Component {
           </div>
         </Drawer>
       </div>
-      </ThemeProvider>
     );
   }
 }
