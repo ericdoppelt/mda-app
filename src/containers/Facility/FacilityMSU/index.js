@@ -6,7 +6,7 @@ import Main from '../../../components/UIzard/Main';
 import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
-import MDAHeader2 from '../../../components/Cutom/MDAHeader2'
+import MDAHeader2 from '../../../components/Custom/MDAHeader2'
 import VerticalLinearStepper from '../../../components/Custom/FacilityPages/FacilityMSU'
 
 export default () => (
