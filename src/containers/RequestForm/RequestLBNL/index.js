@@ -2,21 +2,39 @@ import React, {useState} from 'react';
 
 import Main from '../../../components/UIzard/Main';
 import Row from '../../../components/UIzard/Row';
-import MDAHeader from '../../../components/Custom/MDAHeader';
 import RequestFormLBNL from '../../../components/Custom/RequestFormLBNL';
-import Card from '../../../components/UIzard/Card';
+import Stack from '../../../components/UIzard/Stack';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default () => (
-  
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  appBarSpacer: theme.mixins.toolbar
+}));
 
-  <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-    <MDAHeader/>
-    <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
-      <Card style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>
-        <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-          <RequestFormLBNL/>
+export default function Home() {
+
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <MDAHeader2/>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
+          <Stack style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>
+            <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
+              <RequestFormLBNL/>
+            </Row>
+          </Stack>
         </Row>
-      </Card>
-    </Row>
-  </Main>
-);
+      </main>
+    </div>
+  );
+};
