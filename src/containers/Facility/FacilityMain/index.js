@@ -7,42 +7,60 @@ import Main from '../../../components/UIzard/Main';
 import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
-import MDAHeader from '../../../components/Custom/MDAHeader';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default () => (
-  <Main style={{ justifyContent: 'space-between', alignItems: 'center'}}>
-    <MDAHeader/>
-    <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
-      <Card style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Paragraph>
-            Facility Information
-          </Paragraph>
-        </Row>
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  appBarSpacer: theme.mixins.toolbar
+}));
+
+export default function FacilityMain() {
+
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <MDAHeader2/>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
         <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Link to="/facilities-tamu">
-              <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/tamulogo.png)' }} />
-            </Link>
-            <Link to="/facilities-lbnl">
-              <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/LBNLLogo.jpg)' }} />
-            </Link>
+            <Paragraph>
+              Facility Information
+            </Paragraph>
           </Row>
+          <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+            <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+              <Link to="/facilities-tamu">
+                <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/tamulogo.png)' }} />
+              </Link>
+              <Link to="/facilities-lbnl">
+                <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/LBNLLogo.jpg)' }} />
+              </Link>
+            </Row>
+            <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+              <Link to="/facilities-nsrl">
+                <Image style={{ width: '210px', height: '120px', backgroundImage: 'url(/images/brnllogo.png)' }} /> 
+              </Link>
+              <Link to="facilities-msu">
+                <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/MSULogo.png)' }} />
+              </Link>
+            </Row>
+          </Stack>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Link to="/facilities-nsrl">
-              <Image style={{ width: '210px', height: '120px', backgroundImage: 'url(/images/brnllogo.png)' }} /> 
-            </Link>
-            <Link to="facilities-msu">
-              <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/MSULogo.png)' }} />
-            </Link>
+            <Paragraph>
+              Choose a facility to continue...
+            </Paragraph>
           </Row>
         </Stack>
-        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Paragraph>
-            Choose a facility to continue...
-          </Paragraph>
-        </Row>
-      </Card>
-    </Row>
-  </Main>
-);
+      </main>
+    </div>
+  );
+};

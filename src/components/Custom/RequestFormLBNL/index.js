@@ -1,11 +1,10 @@
 import React from 'react';
 import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
-
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
-
 import './RequestFormLBNL.css'
+import axios from 'axios';
 
 class RequestFormLBNL extends React.Component {
 
@@ -19,8 +18,8 @@ class RequestFormLBNL extends React.Component {
       investigatorNameErrorText: "",
       investigatorOrg: "",
       investigatorOrgErrorText: "",
-      investigatorEmail: "",
-      investigatorEmailErrorText: "",
+      senderEmail: "",
+      senderEmailErrorText: "",
       investigatorAddress: "",
       investigatorAddressErrorText: "",
       investigatorOfficePhone: "",
@@ -70,17 +69,63 @@ class RequestFormLBNL extends React.Component {
       personnel: "",
       personnelErrorText: "",
 
-      facility: "LBNL",
       submitted: false,
       comments: "",
     }
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     this.setState({submitted: true});
     this.validateForm();
-    console.log(this.state);
-  }
+    let url = 'https://mda-phoenix.herokuapp.com/requestform';
+    await axios.post(url, {
+      investigatorName: this.state.investigatorName,
+      investigatorOrg: this.state.investigatorOrg,
+      senderEmail: this.state.senderEmail,
+      investigatorAddress: this.state.investigatorAddress,
+      investigatorOfficePhone: this.state.investigatorOfficePhone,
+      investigatorCell: this.state.investigatorCell,
+
+      financierName: this.state.financierName,
+      financierEmail: this.state.financierEmail,
+      financierTelephone: this.state.financierTelephone,
+
+      experimentTitle: this.state.experimentTitle,
+      experimentAbstract: this.state.experimentAbstract,
+      desiredStartDate: this.state.desiredStartDate,
+      alternateStartDate: this.state.alternateStartDate,
+      totalHours: this.state.totalHours,
+      targetMaterials: this.state.targetMaterials,
+      fundingSource: this.state.fundingSource,
+      safetyConcerns: this.state.safetyConcerns,
+
+      beamType: this.state.beamType,
+      specialIons: this.state.specialIons,
+      desiredEnergy: this.state.desiredEnergy,
+      desiredIntensity: this.state.desiredIntensity,
+
+      airOrVacuum: this.state.airOrVacuum,
+      controlRestrictions: this.state.controlRestrictions,
+      electricallySafe: this.state.electricallySafe,
+      personnel: this.state.personnel,
+
+      facility: "LBNL",
+      comments: this.state.comments,
+      }).then(response => {
+        if (response.data.success === true) {
+        alert("Form was sent to LBNL successfully. Please check your email!")
+          this.props.history.push({
+            pathname: "/"
+          });
+        } else {
+          alert(response.data.msg);
+          } 
+        })
+        .catch(error => {
+          alert(error);
+      });
+    }
+
 
   validateForm() {
     if (this.state.investigatorName === "") this.state.investigatorNameErrorText = "Please enter a name.";
@@ -89,8 +134,8 @@ class RequestFormLBNL extends React.Component {
     if (this.state.investigatorOrg === "") this.state.investigatorOrgErrorText = "Please enter an organization.";
     else this.state.investigatorOrgErrorText = "";
 
-    if (this.state.investigatorEmail === "") this.state.investigatorEmailErrorText = "Please enter an email.";
-    else this.state.investigatorEmailErrorText = "";
+    if (this.state.senderEmail === "") this.state.senderEmailErrorText = "Please enter an email.";
+    else this.state.senderEmailErrorText = "";
 
     if (this.state.investigatorAddress === "") this.state.investigatorAddressErrorText = "Please enter an address.";
     else this.state.billingCityErrorText = "";
@@ -108,7 +153,7 @@ class RequestFormLBNL extends React.Component {
     else this.state.financierEmailErrorText = "";
 
     if (this.state.financierTelephone === "") this.state.financierTelephoneErrorText = "Please enter the phone number for a financier.";
-    else this.state.investigatorEmailErrorText = "";
+    else this.state.financierTelephoneErrorText = "";
 
     if (this.state.experimentTitle === "") this.state.experimentTitleErrorText = "Please enter an experiment title.";
     else this.state.experimentTitleErrorText = "";
@@ -181,9 +226,9 @@ class RequestFormLBNL extends React.Component {
           />
         <TextField 
           label = "Principal Investigator E-mail"
-          onChange={event => {this.setState({investigatorEmail: event.target.value})}}
-          error = {this.state.investigatorEmailErrorText !== "" && this.state.submitted}
-          helperText = {this.state.investigatorEmailErrorText}
+          onChange={event => {this.setState({senderEmail: event.target.value})}}
+          error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
+          helperText = {this.state.senderEmailErrorText}
           fullWidth
           />
         <TextField 

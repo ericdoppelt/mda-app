@@ -1,64 +1,41 @@
 import React from 'react';
-
-import Image from '../../../components/UIzard/Image';
-import Main from '../../../components/UIzard/Main';
+import Paragraph from '../../../components/UIzard/Paragraph';
+import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
-import Subheader from '../../../components/UIzard/Subheader';
-import UserInfo from '../../../components/Custom/UserInfo';
-import MDAHeader from '../../../components/Custom/MDAHeader';
-import axios from 'axios';
+import LoginForm from '../../../components/Custom/LoginForm';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import { makeStyles } from '@material-ui/core/styles';
+import UserProfile from '../../../components/Custom/UserProfile';
 
-export default class UserProfile extends React.Component {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  appBarSpacer: theme.mixins.toolbar
+}));
 
-  constructor(props) {
-    super(props);
+export default function UserProfileMain() {
 
-    this.state = {
-      name: "",
-      username: "",
-      affiliation: "",
-      userType: "",
-      phone: "",
-      email: ""
-    }
-  }
+  const classes = useStyles();
 
-  
-  async componentDidMount() {
-    const url = "https://mda-phoenix.herokuapp.com/user";
-  
-    var self = this;
-    await axios.post(url, null, {
-      headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
-    }).then(response => {
-      console.log(response);
-      self.setState({
-        name: response.data.first_name + " " + response.data.last_name,
-        username: response.data.user,
-        affiliation: response.data.affiliation,
-        userType: response.data.user_type,
-        phone: response.data.phone,
-        email: response.data.email,
-      });
-      })
-      .catch(error => {
-        console.log("error");
-        console.log(error);
-    });
-  }
-
-render() {
-    return (
-    <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-      <MDAHeader/>
-      <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
-        <UserInfo name={this.state.name} username={this.state.username} affiliation={this.state.affiliation} userType={this.state.userType} phone = {this.state.phone} email = {this.state.email}/>
-        <Subheader>
-          Update Contact Info
-        </Subheader>
-        <Image style={{ width: '1000px', height: '600px', backgroundImage: 'url(/images/userCalendar.png)' }} />
-      </Stack>
-    </Main>
-    )
-  }
-}
+  return (
+    <div className={classes.root}>
+      <MDAHeader2/>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
+          <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
+            <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+              <UserProfile/>
+            </Row>
+            <LoginForm/>
+          </Stack>
+        </Row>
+      </main>
+    </div>
+  );
+};

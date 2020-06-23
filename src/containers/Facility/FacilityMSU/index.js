@@ -3,15 +3,15 @@ import React from 'react';
 import Card from '../../../components/UIzard/Card';
 import Image from '../../../components/UIzard/Image';
 import Main from '../../../components/UIzard/Main';
-import MDAHeader from '../../../components/Custom/MDAHeader';
 import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
+import MDAHeader2 from '../../../components/Cutom/MDAHeader2'
 import VerticalLinearStepper from '../../../components/Custom/FacilityPages/FacilityMSU'
 
 export default () => (
   <Main style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-    <MDAHeader/>
+    <MDAHeader2/>
     <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
       <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
