@@ -29,7 +29,7 @@ export default function FacilityNSRL() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-          <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
+          <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px'}}>
             <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               <h1>Brookhaven National Laboratory NSRL</h1>
             </Row>

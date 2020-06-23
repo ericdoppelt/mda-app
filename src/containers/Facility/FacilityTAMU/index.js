@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    margin: 0,
   },
   appBarSpacer: theme.mixins.toolbar
 }));
@@ -26,7 +27,7 @@ export default function Home() {
       <MDAHeader2/>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
+        <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px'}}>
           <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
             <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               <h1>Texas A&M University Cyclotron</h1>
