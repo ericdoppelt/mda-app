@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogContent} from '@material-ui/core';
+import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
@@ -15,7 +15,12 @@ class RequestFormTAMU extends React.Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    
+    this.openStartDatePicker = this.openStartDatePicker.bind(this);
+    this.closeStartDatepicker = this.closeStartDatepicker.bind(this);
+    this.openBadDatesPicker = this.openBadDatesPicker.bind(this);
+    this.closeBadDatesPicker = this.closeBadDatesPicker.bind(this);
+    this.openSecondExperimentForm = this.openSecondExperimentForm.bind(this);
+
     this.state = {
       time1: "",
       timeErrorText1: "",
@@ -52,6 +57,8 @@ class RequestFormTAMU extends React.Component {
       billingZip: "",
       billingZipErrorText: "",
 
+      openStartDate: false,
+      openBadDates: false,
       senderEmail: "",
       senderEmailErrorText: "",
 
@@ -145,10 +152,32 @@ class RequestFormTAMU extends React.Component {
     else this.state["particlesErrorText" + formNumber] = "";
   }
 
+  openStartDatePicker() {
+    this.setState({openStartDate: true});
+  }
+
+  closeStartDatepicker() {
+    this.setState({openStartDate: false})
+  }
+
+  openBadDatesPicker() {
+    this.setState({openBadDates: true});
+  }
+
+  closeBadDatesPicker() {
+    this.setState({openBadDates: false})
+  }
+
+  openSecondExperimentForm() {
+    this.setState({secondExperiment: true})
+  }
+  
+  
+
   getSecondExperimentButton() {
     return (
     <div>
-      <Button onClick={this.setState({secondExperiment: true})}>Add Another Experiment</Button>
+      <Button onClick={this.openSecondExperimentForm}>Add Another Experiment</Button>
     </div>
     );
   }
@@ -240,21 +269,34 @@ class RequestFormTAMU extends React.Component {
             </FormControl>
             <br/>
             <br/>
-            <InfiniteCalendar
-              selected={this.state["startDate" + experimentNumber]}
-              onSelect={(event) => this.setState({["startDate" + experimentNumber]: event})}
-              minDate={new Date()}
-              min={new Date()}
-            />
+            <Button onClick={this.openStartDatePicker}>Select Start Date</Button>
+            <Dialog open={this.state.openStartDate} onClose={this.closeStartDatepicker}>
+              <DialogTitle>Please enter a start date.</DialogTitle>
+              <DialogContent>
+              <InfiniteCalendar
+                selected={this.state["startDate" + experimentNumber]}
+                onSelect={(event) => this.setState({["startDate" + experimentNumber]: event})}
+                minDate={new Date()}
+                min={new Date()}
+              />
+              </DialogContent>
+            </Dialog>
             <br/>
-            <InfiniteCalendar
+            <Button onClick={this.openBadDatesPicker}>Select Bad Dates</Button>
+            <Dialog open={this.state.openBadDates} onClose={this.closeBadDatesPicker}>
+              <DialogTitle>Please enter dates you cannot run.</DialogTitle>
+              <DialogContent>
+              <InfiniteCalendar
               Component={withMultipleDates(Calendar)}
               selected={this.state["badDates" + experimentNumber]}
               onSelect={(event) => this.setState({["badDates" + experimentNumber]: this.state["badDates" + experimentNumber].concat(event)})}
               minDate={new Date()}
               min={new Date()}
               interpolateSelection={defaultMultipleDateInterpolation}
-            />
+              />
+              </DialogContent>
+            </Dialog>
+          
             <TextField 
               label = "Particles and Energies Required"
               onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
