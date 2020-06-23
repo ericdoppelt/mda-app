@@ -5,8 +5,7 @@ from flask_jwt_extended import (create_access_token,
 create_refresh_token, jwt_required, 
 get_jwt_identity, get_jti)
 from sqlalchemy import func
-from DateTime import DateTime
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from main import app, bcrypt, jwt, mail
 from extensions import db
@@ -133,11 +132,15 @@ def delete(username):
 @app.route('/requestform', methods=['POST'])
 #@jwt_required
 def requestform():
+    print(request)
+    print(request.get_json())
     try:
-        facility = request.get_json()['facility']
+        form = request.get_json()
+        facility = form['facility']
+        form['signature'] = form['name']
+        form['date'] = datetime.today().strftime("%m/%d/%Y")
         template = ""
         output = ""
-        form = request.get_json()
         pdf = FormBuilder(form)
         msg = Message("Send Request Form Demo", cc=[form['senderEmail']])
         if facility == 'TAMU':
