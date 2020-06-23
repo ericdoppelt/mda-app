@@ -136,7 +136,7 @@ class ViewRequests extends React.Component {
           <div className='view-requests-inner'>
             <Paper className={classes.root}>
               <TableContainer className={classes.container} >
-                <Table stickyHeader aria-label="sticky table" style={{color: "rgba(0, 0, 0, 0.87)"}}>
+                <Table stickyHeader aria-label="sticky table">
                   <TableHead>
                     <TableRow>
                       {columns.map((column) => (

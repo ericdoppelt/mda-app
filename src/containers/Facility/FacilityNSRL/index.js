@@ -22,7 +22,7 @@ export default function FacilityNSRL() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-          <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px'}}>
+          <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', flexGrow:'0'}}>
             <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               <h1>Brookhaven National Laboratory NSRL</h1>
             </Row>
@@ -74,7 +74,7 @@ export default function FacilityNSRL() {
             </Paragraph>
             <h3>Guide to Reserving Testing Time</h3>
             <VerticalLinearStepper/>
-          </Stack>
+          </Card>
         </Row>
       </main>
     </div>

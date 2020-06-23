@@ -2,11 +2,11 @@ import React from 'react';
 import Image from '../../../components/UIzard/Image';
 import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
+import Card from '../../../components/UIzard/Card';
 import Stack from '../../../components/UIzard/Stack';
 import VerticalLinearStepper from '../../../components/Custom/FacilityPages/FacilityTAMU';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../../constants'
 
 export default function Home() {
@@ -18,8 +18,8 @@ export default function Home() {
         <MDAHeader2/>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px'}}>
-            <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
+          <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
+            <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', flexGrow:'0'}}>
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <h1>Texas A&M University Cyclotron</h1>
               </Row>
@@ -81,7 +81,7 @@ export default function Home() {
               </Paragraph>
               <h3>Guide to Reserving Testing Time</h3>
               <VerticalLinearStepper/>
-            </Stack>
+            </Card>
           </Row>
         </main>
       </div>

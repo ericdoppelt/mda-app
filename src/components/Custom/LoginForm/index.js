@@ -52,18 +52,34 @@ class LoginForm extends React.Component {
     return (
       <div className="loginform">
         <TextField 
+          id="outlined-error-helper-text"
           onChange = {(event,newValue) => this.setState({username:newValue})}
           label = "Username"
+          variant="outlined"
           onChange={event => {this.setState({username: event.target.value})}}/>
-        <br/>
+        <br/><br/>
         <TextField 
           type="password" 
           onChange = {(newValue) => this.setState({password:newValue})}
           label = "Password"
+          variant="outlined"
           onChange={event => {this.setState({password: event.target.value})}}/>
         <br/>
-        <Button id="button" onClick={(event) => this.handleSubmit(event)}>Login</Button>
-        <Button onClick={() => {this.props.history.push('/user-registration')}}>Create Account</Button>
+        <Button 
+          id="button" 
+          variant="contained"
+          color="primary"
+          onClick={(event) => this.handleSubmit(event)}
+        >
+          Login
+        </Button>
+        <Button 
+          variant="contained"
+          color="primary"
+          onClick={() => {this.props.history.push('/user-registration')}}
+        >
+          Create Account
+        </Button>
          {this.state.displayedText}
       </div>
   );

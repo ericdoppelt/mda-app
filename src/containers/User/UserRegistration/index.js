@@ -20,14 +20,14 @@ export default function Home() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-            <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
+            <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
               <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <Paragraph>
                   Registration
                 </Paragraph>
                 <RegistrationForm/>
               </Stack>
-            </Stack>
+            </Card>
           </Row>
         </main>
       </div>
