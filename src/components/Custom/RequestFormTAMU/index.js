@@ -1,15 +1,13 @@
 import React from 'react';
-import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
+import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogContent} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
-
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
-
 import './RequestFormTAMU.css'
-
 import 'react-nice-dates/build/style.css'
 import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
 import 'react-infinite-calendar/styles.css';
+import axios from 'axios';
 
 class RequestFormTAMU extends React.Component {
 
@@ -23,7 +21,7 @@ class RequestFormTAMU extends React.Component {
       timeErrorText1: "",
       continuous1: "",
       continuousErrorText1: "",
-      startDate1: null,
+      startDate1: "",
       startDateErrorText1: "",
       badDates1: [],
       badDatesErrorText1: "",
@@ -34,7 +32,7 @@ class RequestFormTAMU extends React.Component {
       timeErrorText2: "",
       continuous2: "",
       continuousErrorText2: "",
-      startDate2: null,
+      startDate2: "",
       startDateErrorText2: "",
       badDates2: [],
       badDatesErrorText2: "",
@@ -57,20 +55,56 @@ class RequestFormTAMU extends React.Component {
       senderEmail: "",
       senderEmailErrorText: "",
 
-      facility: "TAMU",
       submitted: false,
       secondExperiment: false,
-      open: false,
     }
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     this.setState({submitted: true});
     this.validateAgreementForm();
     this.validateExperimentForm(1);
     if (this.state.secondExperiment === true) this.validateExperimentForm(2);
-    console.log(this.state);
+    
+    let url = 'https://mda-phoenix.herokuapp.com/requestform';
+    await axios.post(url, {
+      companyName: this.state.companyName,
+      poNumber: this.state.poNumber,
+      billingAddress: this.state.billingAddress,
+      billingCity: this.state.billingCity,
+      billingState: this.billingState,
+      billingZip: this.billingZip,
+
+      time1: this.state.time1,
+      continuous1: this.state.continuous1,
+      startDate1: this.state.startDate1,
+      badDates1: this.state.badDates1,
+      particles1: this.particles1,
+
+      time2: this.state.time2,
+      continuous2: this.state.continuous2,
+      startDate2: this.state.startDate2,
+      badDates2: this.state.badDates2,
+      particles2: this.state.particles2,
+
+      senderEmail: this.state.senderEmail,
+      secondExperiment: this.state.secondExperiment,
+      facility: "TAMU",
+    }).then(response => {
+      if (response.data.success === true) {
+        alert("Form was sent to TAMU successfully. Please check your email!")
+        this.props.history.push({
+          pathname: "/"
+        });
+      } else {
+        alert(response.data.msg);
+        } 
+      })
+      .catch(error => {
+        alert(error);
+    });
   }
+  
 
   
   validateAgreementForm() {
@@ -167,7 +201,7 @@ class RequestFormTAMU extends React.Component {
           fullWidth
           />
         <TextField 
-          label = "Personal Email"
+          label = "Sender Email"
           onChange={event => {this.setState({senderEmail: event.target.value})}}
           error = {this.state.senderEmailErrorText !== 0 && this.state.submitted}
           helperText = {this.state.senderEmailErrorText}
@@ -213,11 +247,6 @@ class RequestFormTAMU extends React.Component {
               min={new Date()}
             />
             <br/>
-            <TextField 
-              label = "Dates You Cannot Run"
-              onChange={event => {this.setState({["badDates" + experimentNumber]: event.target.value})}}
-              fullWidth
-            />
             <InfiniteCalendar
               Component={withMultipleDates(Calendar)}
               selected={this.state["badDates" + experimentNumber]}
