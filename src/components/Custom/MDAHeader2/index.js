@@ -15,13 +15,15 @@ import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
 
 const icons = [<HomeRoundedIcon />, 
                <CalendarTodayRoundedIcon />, 
@@ -37,6 +39,7 @@ const drawerWidth = 240;
 const useStyles = theme => ({
   root: {
     display: 'flex',
+    width: '100%',
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -62,6 +65,9 @@ const useStyles = theme => ({
     marginLeft: "auto",
     marginRight: -12
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 });
 
 const darkTheme = createMuiTheme({
@@ -77,7 +83,6 @@ const darkTheme = createMuiTheme({
   },
 });
 
- 
 class MDAHeader2 extends React.Component {
   
   constructor(props) {
@@ -88,7 +93,12 @@ class MDAHeader2 extends React.Component {
       open: false,
     }
   }
-    
+
+  handleClick () {
+    this.setState(state => ({
+      open: !this.state.open
+      }))
+  };
   
   openUserMenu(event) {
     this.setState({
@@ -98,6 +108,7 @@ class MDAHeader2 extends React.Component {
     console.log(this.state);
   }
 
+  
   render() {
     const { classes } = this.props;
     return (
@@ -130,16 +141,72 @@ class MDAHeader2 extends React.Component {
           <Toolbar />
           <div className={classes.drawerContainer}>
             <List>
-              {['Home', 'Calendar', 'Sites', 'Request Forms'].map((text, index) => (
-                <Link to={links[index]} style={{ color: '#FFF' }}>
-                  <ListItem button key={text}>
-                    <ListItemIcon>{icons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                </Link>
-              ))}
+              {/*----HOME----*/}
+              <Link to={links[0]} style={{ color: '#FFF' }}>
+                <ListItem button key='Home'>
+                  <ListItemIcon>{icons[0]}</ListItemIcon>
+                  <ListItemText primary='Home' />
+                </ListItem>
+              </Link>
+              {/*----CALENDAR----*/}
+              <Link to={links[1]} style={{ color: '#FFF' }}>
+                <ListItem button key='Calendar'>
+                  <ListItemIcon>{icons[1]}</ListItemIcon>
+                  <ListItemText primary='Calendar' />
+                </ListItem>
+              </Link>
+              {/*----SITES----*/}
+              <ListItem button onClick={() => this.handleClick()} style={{ color: '#FFF' }}>
+                <ListItemIcon>{icons[2]}</ListItemIcon>
+                <ListItemText primary="Sites"/>
+                {this.state.open ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {/*----TAMU----*/}
+                  <Link to='facilities-tamu' style={{ color: '#FFF' }}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                      </ListItemIcon>
+                      <ListItemText primary="TAMU" />
+                    </ListItem>
+                  </Link>
+                  {/*----MSU----*/}
+                  <Link to='facilities-msu' style={{ color: '#FFF' }}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                      </ListItemIcon>
+                      <ListItemText primary="MSU" />
+                    </ListItem>
+                  </Link>
+                  {/*----LBNL----*/}
+                  <Link to='facilities-lbnl' style={{ color: '#FFF' }}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                      </ListItemIcon>
+                      <ListItemText primary="LBNL" />
+                    </ListItem>
+                  </Link>
+                  {/*----NSRL----*/}
+                  <Link to='facilities-nsrl' style={{ color: '#FFF' }}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                      </ListItemIcon>
+                      <ListItemText primary="NSRL" />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
+              {/*----REQUEST FORMS----*/}
+              <Link to={links[3]} style={{ color: '#FFF' }}>
+                <ListItem button key='Request Forms'>
+                  <ListItemIcon>{icons[3]}</ListItemIcon>
+                  <ListItemText primary='Request Forms' />
+                </ListItem>
+              </Link>
             </List>
             <Divider />
+            {/*----USER AND VIEW REQUESTS----*/}
             <List>
               {['User', 'View Requests'].map((text, index) => (
                 <Link to={links[index+4]} style={{ color: '#FFF' }}>

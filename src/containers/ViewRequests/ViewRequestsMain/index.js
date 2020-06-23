@@ -26,7 +26,7 @@ export default function Home() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root} style={{ display:'flex', justifyContent:'center' }}>
+    <div className={classes.root}>
       <MDAHeader2/>
       <main className={classes.content}> 
         <div className={classes.appBarSpacer} />
