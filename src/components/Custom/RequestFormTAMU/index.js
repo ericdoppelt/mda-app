@@ -66,14 +66,14 @@ class RequestFormTAMU extends React.Component {
     this.validateExperimentForm(1);
     if (this.state.secondExperiment === true) this.validateExperimentForm(2);
     
-    let url = 'https://mda-phoenix.herokuapp.com/requestform';
+    let url = 'http://127.0.0.1:5000/requestform';
     await axios.post(url, {
       companyName: this.state.companyName,
       poNumber: this.state.poNumber,
       billingAddress: this.state.billingAddress,
       billingCity: this.state.billingCity,
-      billingState: this.billingState,
-      billingZip: this.billingZip,
+      billingState: this.state.billingState,
+      billingZip: this.state.billingZip,
 
       time1: this.state.time1,
       continuous1: this.state.continuous1,
