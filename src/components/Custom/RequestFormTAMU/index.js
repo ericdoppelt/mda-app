@@ -9,7 +9,7 @@ import Stack from '../../UIzard/Stack';
 import './RequestFormTAMU.css'
 
 import 'react-nice-dates/build/style.css'
-import MultipleDatePicker from '../MultipleDatePicker';
+//import MultipleDatesPicker from '../MultipleDatePicker';
 
 class RequestFormTAMU extends React.Component {
 
@@ -237,7 +237,6 @@ class RequestFormTAMU extends React.Component {
           <br/>
           <br/>
           <MultipleDatesPicker/>
-          <MultipleDatePicker/>
         </Stack>
     </div>
     );

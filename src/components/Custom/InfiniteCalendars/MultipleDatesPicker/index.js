@@ -6,7 +6,7 @@ import 'react-infinite-calendar/styles.css';
 var today = new Date();
 var lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
 
-class MultipeDatesPicker extends React.Component {
+class MultipleDatesPicker extends React.Component {
 
 
 render() {
@@ -25,4 +25,4 @@ render() {
   );
   }
 }
-export default MultipeDatesPicker;
+export default MultipleDatesPicker;

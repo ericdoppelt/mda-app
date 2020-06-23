@@ -66,7 +66,7 @@ class FormBuilder():
     def mail(self):
         body = "Principal Investigator Name: " + self.form['investigatorName'] + "\n\n\n"
         body += "Principal Investigator Organization: " + self.form['investigatorOrg'] + "\n\n\n"
-        body += "Principal Investigator E-mail: " + self.form['investigatorEmail'] + "\n\n\n"
+        body += "Principal Investigator E-mail: " + self.form['senderEmail'] + "\n\n\n"
         body += "Principal Investigator Address:" + self.form['investigatorAddress'] + "\n\n\n"
         body += "Principal Investigator Office Phone: " + self.form['investigatorOfficePhone'] + "\n\n\n"
         body += "Principal Investigator Cell Phone During Experiment: " + self.form['investigatorCell'] + "\n\n\n"
