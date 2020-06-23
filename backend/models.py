@@ -2,7 +2,7 @@ from main import db, bcrypt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_login import UserMixin
 
-        
+
 class Test(db.Model):
     """Model for the stations table"""
     __tablename__ = 'test'
@@ -26,6 +26,7 @@ class Users(UserMixin, db.Model):
     user_type = db.Column(db.String())
     phone = db.Column(db.String())
     email = db.Column(db.String())
+    org_id = db.Column(db.Integer)
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
@@ -49,6 +50,34 @@ class Users(UserMixin, db.Model):
 
     def __repr__(self):
         return "<User(id=%s, first_name=%s, last_name=%s)>" % (self.id, self.first_name, self.last_name)
+
+class Organization(db.Model):
+    """Model for the stations table"""
+    __tablename__ = 'Organization'
+
+    id = db.Column(db.Integer(), primary_key = True)
+    name = db.Column(db.String(50))
+    poc_name = db.Column(db.String(50))
+    poc_email = db.Column(db.String(254))
+    poc_phone = db.Column(db.String(15))
+    address = db.Column(db.String(95))
+    city = db.Column(db.String(50))
+    state = db.Column(db.String(20))
+    zipcode = db.Column(db.Integer)
+
+    def __repr__(self):
+        return "<Organization(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name, self.poc_name)
+
+class Facility(db.Model):
+    """Model for the stations table"""
+    __tablename__ = 'Facility'
+
+    id = db.Column(db.Integer(), primary_key = True)
+    name = db.Column(db.String())
+
+    def __repr__(self):
+        return "<Organization(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name, self.poc_name)
+
 
 class Calendar(db.Model):
     """Model for the stations table"""
