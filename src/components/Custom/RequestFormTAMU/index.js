@@ -1,6 +1,7 @@
 import React from 'react';
-import {TextField, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent} from '@material-ui/core';
+import {TextField, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent, DialogActions, Box} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
+import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
 import './RequestFormTAMU.css'
@@ -9,6 +10,30 @@ import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterp
 import 'react-infinite-calendar/styles.css';
 import axios from 'axios';
 import Image from '../../../components/UIzard/Image';
+import SendIcon from '@material-ui/icons/Send';
+
+const useStyles = theme => ({
+  submitButton: {
+    backgroundColor: "#bfddff",
+    width: '100%',
+  },
+  startButton: {
+    backgroundColor: "#bfffc8",
+    width: '100%',
+    marginTop: '20px',
+    marginBottom: '15px',
+  },
+  unavailableButton: {
+    backgroundColor: "#f5c1b8",
+    width: '100%',
+    marginBottom: '40px',
+  },
+  addButton: {
+    backgroundColor: "#dda5f0",
+    width: '100%',
+    marginBottom: '15px',
+  }
+});
 
 class RequestFormTAMU extends React.Component {
 
@@ -16,11 +41,8 @@ class RequestFormTAMU extends React.Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.openStartDatePicker = this.openStartDatePicker.bind(this);
-    this.closeStartDatepicker = this.closeStartDatepicker.bind(this);
-    this.openBadDatesPicker = this.openBadDatesPicker.bind(this);
-    this.closeBadDatesPicker = this.closeBadDatesPicker.bind(this);
     this.openSecondExperimentForm = this.openSecondExperimentForm.bind(this);
+    this.getExperimentForm = this.getExperimentForm.bind(this);
 
     this.state = {
       time1: "",
@@ -45,6 +67,8 @@ class RequestFormTAMU extends React.Component {
       particles2: "",
       particlesErrorText2: "",
       
+      senderName: "",
+      senderNameErrorText: "",
       companyName: "",
       companyNameErrorText: "",
       poNumber: "",
@@ -58,8 +82,10 @@ class RequestFormTAMU extends React.Component {
       billingZip: "",
       billingZipErrorText: "",
 
-      openStartDate: false,
-      openBadDates: false,
+      openStartDate1: false,
+      openBadDates1: false,
+      openStartDate2: false,
+      openBadDates2: false,
       senderEmail: "",
       senderEmailErrorText: "",
 
@@ -74,6 +100,7 @@ class RequestFormTAMU extends React.Component {
     this.validateExperimentForm(1);
     if (this.state.secondExperiment === true) this.validateExperimentForm(2);
     
+    if (this.state.validForm) {
     let url = 'https://mda-phoenix.herokuapp.com/requestform';
     await axios.post(url, {
       companyName: this.state.companyName,
@@ -95,9 +122,13 @@ class RequestFormTAMU extends React.Component {
       badDates2: this.state.badDates2,
       particles2: this.state.particles2,
 
+      senderName: this.state.senderName,
       senderEmail: this.state.senderEmail,
+      date: new Date(),
       secondExperiment: this.state.secondExperiment,
       facility: "TAMU",
+
+      validForm: true,
     }).then(response => {
       if (response.data.success === true) {
         alert("Form was sent to TAMU successfully. Please check your email!")
@@ -111,59 +142,92 @@ class RequestFormTAMU extends React.Component {
       .catch(error => {
         alert(error);
     });
+  } else {
+    console.log(this.state);
   }
+}
 
   validateAgreementForm() {
-    if (this.state.companyName === "") this.state.companyNameErrorText = "Please enter a company name.";
+    let sectionIsValid = true;
+    if (this.state.senderName === "") {
+      this.state.senderNameErrorText = "Please enter your name.";
+      sectionIsValid = false;
+    }
+    else this.state.senderNameErrorText = "";
+
+    if (this.state.companyName === "") {
+      this.state.companyNameErrorText = "Please enter a company name.";
+      sectionIsValid = false;
+    }
     else this.state.companyNameErrorText = "";
 
-    if (this.state.poNumber === "") this.state.poNumberErrorText = "Please enter a P.O. #.";
+    if (this.state.poNumber === "") {
+      this.state.poNumberErrorText = "Please enter a P.O. #.";
+      sectionIsValid = false;
+    }
     else this.state.poNumberErrorText = "";
 
-    if (this.state.billingAddress === "") this.state.billingAddressErrorText = "Please enter a billing address.";
+    if (this.state.billingAddress === "") {
+      this.state.billingAddressErrorText = "Please enter a billing address.";
+      sectionIsValid = false;
+    }
     else this.state.billingAddressErrorText = "";
 
-    if (this.state.billingCity === "") this.state.billingCityErrorText = "Please enter the city for the billing address.";
+    if (this.state.billingCity === "") {
+      this.state.billingCityErrorText = "Please enter the city for the billing address.";
+      sectionIsValid = false;
+    }
     else this.state.billingCityErrorText = "";
 
-    if (this.state.billingState === "") this.state.billingStateErrorText = "Please enter the state for the billing address.";
+    if (this.state.billingState === "") {
+      this.state.billingStateErrorText = "Please enter the state for the billing address.";
+      sectionIsValid = false;
+    }
     else this.state.billingStateErrorText = "";
 
-    if (this.state.billingZip === "") this.state.billingZipErrorText = "Please enter the city for the billing address.";
+    if (this.state.billingZip === "") {
+      this.state.billingZipErrorText = "Please enter the city for the billing address.";
+      sectionIsValid = false;
+    }
     else this.state.billingZipErrorText = "";
 
-    if (this.state.senderEmail === "") this.state.senderEmailErrorText = "Please enter an email to send this form to."
+    if (this.state.senderEmail === "") {
+      this.state.senderEmailErrorText = "Please enter an email to send this form to."
+      sectionIsValid = false;
+    }
     else this.state.senderEmailErrorText = "";
+
+    if (!sectionIsValid) this.setState({validForm: false})
   }
 
   validateExperimentForm(formNumber) {
-    if (this.state["time" + formNumber] === "") this.state["timeErrorText" + formNumber] = "Please enter the time for your test.";
+    let sectionIsValid = true;
+
+    if (this.state["time" + formNumber] === "") {
+      this.state["timeErrorText" + formNumber] = "Please enter the time for your test.";
+      sectionIsValid = false;
+    }
     else this.state["timeErrorText" + formNumber] = "";
 
-    if (this.state["continuous" + formNumber] === "") this.state["continuousErrorText" + formNumber] = "Please enter either continuous or interleaved.";
+    if (this.state["continuous" + formNumber] === "") {
+      this.state["continuousErrorText" + formNumber] = "Please enter either continuous or interleaved.";
+      sectionIsValid = false;
+    }
     else this.state["continuousErrorText" + formNumber] = "";
 
-    if (this.state["startDate" + formNumber] === "") this.state["startDateErrorText" + formNumber] = "Please enter a start date.";
+    if (this.state["startDate" + formNumber] === "") {
+      this.state["startDateErrorText" + formNumber] = "Please enter a start date.";
+      sectionIsValid = false;
+    }
     else this.state["startDateErrorText" + formNumber] = "";
 
-    if (this.state["particles" + formNumber] === "") this.state["particlesErrorText" + formNumber] = "Please enter your particle and energy information.";
+    if (this.state["particles" + formNumber] === "") {
+      this.state["particlesErrorText" + formNumber] = "Please enter your particle and energy information.";
+      sectionIsValid = false;
+    }
     else this.state["particlesErrorText" + formNumber] = "";
-  }
 
-  openStartDatePicker() {
-    this.setState({openStartDate: true});
-  }
-
-  closeStartDatepicker() {
-    this.setState({openStartDate: false})
-  }
-
-  openBadDatesPicker() {
-    this.setState({openBadDates: true});
-  }
-
-  closeBadDatesPicker() {
-    this.setState({openBadDates: false})
+    if (!sectionIsValid) this.setState({validForm: false})
   }
 
   openSecondExperimentForm() {
@@ -171,9 +235,10 @@ class RequestFormTAMU extends React.Component {
   }
   
   getSecondExperimentButton() {
+    const { classes } = this.props;
     return (
-    <div>
-      <Button onClick={this.openSecondExperimentForm}>Add Another Experiment</Button>
+    <div className="fullForm">
+      <Button className={classes.addButton} onClick={this.openSecondExperimentForm}>Add Another Experiment</Button>
     </div>
     );
   }
@@ -181,7 +246,21 @@ class RequestFormTAMU extends React.Component {
   getAgreementForm() {
     return (
       <div className="agreementForm">
-        <h3>Please enter your company information.</h3>
+        <Box>Please enter your company information.</Box>
+        <TextField 
+          label = "Name"
+          onChange={event => {this.setState({senderName: event.target.value})}}
+          error = {this.state.senderNameErrorText !== 0 && this.state.submitted}
+          helperText = {this.state.senderNameErrorText}
+          fullWidth
+          />
+        <TextField 
+          label = "Email"
+          onChange={event => {this.setState({senderEmail: event.target.value})}}
+          error = {this.state.senderEmailErrorText !== 0 && this.state.submitted}
+          helperText = {this.state.senderEmailErrorText}
+          fullWidth
+          />
         <TextField 
           label = "Company Name"
           onChange={event => {this.setState({companyName: event.target.value})}}
@@ -225,21 +304,15 @@ class RequestFormTAMU extends React.Component {
           helperText = {this.state.billingZipErrorText}
           fullWidth
           />
-        <TextField 
-          label = "Sender Email"
-          onChange={event => {this.setState({senderEmail: event.target.value})}}
-          error = {this.state.senderEmailErrorText !== 0 && this.state.submitted}
-          helperText = {this.state.senderEmailErrorText}
-          fullWidth
-          />
       </div>
     )
   }
 
   getExperimentForm(experimentNumber) {
+    const { classes } = this.props;
     return (
       <div className="experimentForm">
-        <h3>Please enter the information needed for test #{experimentNumber}.</h3>
+        <Box>Please enter the information needed for test #{experimentNumber}.</Box>
             <TextField 
               label = "# of 8-Hour Shifts"
               onChange={event => {this.setState({["time" + experimentNumber]: event.target.value})}}
@@ -274,8 +347,9 @@ class RequestFormTAMU extends React.Component {
             />
             <br/>
             <br/>
-            <Button onClick={this.openStartDatePicker}>Select Start Date</Button>
-            <Dialog open={this.state.openStartDate} onClose={this.closeStartDatepicker}>
+
+            <Button className={classes.startButton} onClick={() => this.setState({["openStartDate" + experimentNumber]: true})}>Select Start Date for Experiment #{experimentNumber}</Button>
+            <Dialog open={this.state["openStartDate" + experimentNumber]} onClose={() => this.setState({["openStartDate" + experimentNumber]: false})}>
               <DialogTitle>Please enter a start date.</DialogTitle>
               <DialogContent>
               <InfiniteCalendar
@@ -285,10 +359,14 @@ class RequestFormTAMU extends React.Component {
                 min={new Date()}
               />
               </DialogContent>
+              <DialogActions>
+                <Button autoFocus onClick={() => this.setState({["openStartDate" + experimentNumber]: false})}>
+                Select Date
+                </Button>
+              </DialogActions>
             </Dialog>
-            <br/>
-            <Button onClick={this.openBadDatesPicker}>Enter Unavailability</Button>
-            <Dialog open={this.state.openBadDates} onClose={this.closeBadDatesPicker}>
+            <Button className={classes.unavailableButton} onClick={() => this.setState({["openBadDates" + experimentNumber]: true})}>Select Unavailable Dates for Experiment #{experimentNumber}</Button>
+            <Dialog open={this.state["openBadDates" + experimentNumber]} onClose={() => this.setState({["openBadDates" + experimentNumber]: false})}>
               <DialogTitle>Please enter dates you cannot run.</DialogTitle>
               <DialogContent>
               <InfiniteCalendar
@@ -300,13 +378,18 @@ class RequestFormTAMU extends React.Component {
               interpolateSelection={defaultMultipleDateInterpolation}
               />
               </DialogContent>
+              <DialogActions>
+                <Button autoFocus onClick={() => this.setState({["openBadDates" + experimentNumber]: false})}>
+                Select Dates
+                </Button>
+              </DialogActions>
             </Dialog>
-          <br/>
         </div>
     )
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div className="fullForm">
         <Stack>
@@ -316,12 +399,14 @@ class RequestFormTAMU extends React.Component {
           <br/>
           {this.getExperimentForm(1)}
           {this.state.secondExperiment ? this.getExperimentForm(2) : this.getSecondExperimentButton()}
-          <br/>
-          <Button onClick={this.handleSubmit}>Submit</Button>
+          <Button className={classes.submitButton} onClick={this.handleSubmit}>
+            Submit
+            <SendIcon/>
+            </Button>
         </Stack>
     </div>
     );
   }
 }
 
-export default withRouter(RequestFormTAMU);
+export default withRouter(withStyles(useStyles)(RequestFormTAMU));
