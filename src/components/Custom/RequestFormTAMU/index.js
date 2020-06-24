@@ -45,6 +45,7 @@ class RequestFormTAMU extends React.Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.validateAgreementForm = this.validateAgreementForm.bind(this);
     this.openSecondExperimentForm = this.openSecondExperimentForm.bind(this);
     this.getExperimentForm = this.getExperimentForm.bind(this);
 
@@ -94,15 +95,19 @@ class RequestFormTAMU extends React.Component {
       senderEmailErrorText: "",
 
       submitted: false,
+      validForm: false,
       secondExperiment: false,
+      render: false,
     }
   }
 
   async handleSubmit() {
+    this.state.submitted = true;
     this.setState({submitted: true});
     this.validateAgreementForm();
     this.validateExperimentForm(1);
     if (this.state.secondExperiment === true) this.validateExperimentForm(2);
+    
     
     if (this.state.validForm) {
     let url = 'https://mda-phoenix.herokuapp.com/requestform';
@@ -202,6 +207,8 @@ class RequestFormTAMU extends React.Component {
     else this.state.senderEmailErrorText = "";
 
     if (!sectionIsValid) this.setState({validForm: false})
+    console.log(this.state.submitted);
+    console.log("submitted2");
   }
 
   validateExperimentForm(formNumber) {
@@ -256,7 +263,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField}
           label = "Name"
           onChange={event => {this.setState({senderName: event.target.value})}}
-          error = {this.state.senderNameErrorText !== 0 && this.state.submitted}
+          error = {this.state.senderNameErrorText !== "" && this.state.submitted}
           helperText = {this.state.senderNameErrorText}
           fullWidth
           />
@@ -264,7 +271,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField}
           label = "Email"
           onChange={event => {this.setState({senderEmail: event.target.value})}}
-          error = {this.state.senderEmailErrorText !== 0 && this.state.submitted}
+          error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
           helperText = {this.state.senderEmailErrorText}
           fullWidth
           />
@@ -272,7 +279,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField}
           label = "Company Name"
           onChange={event => {this.setState({companyName: event.target.value})}}
-          error = {this.state.companyNameErrorText !== 0 && this.state.submitted}
+          error = {this.state.companyNameErrorText !== "" && this.state.submitted}
           helperText = {this.state.companyNameErrorText}
           fullWidth
           />
@@ -280,7 +287,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField}
           label = "P.O. No."
           onChange={event => {this.setState({poNumber: event.target.value})}}
-          error = {this.state.poNumberErrorText !== 0 && this.state.submitted}
+          error = {this.state.poNumberErrorText !== "" && this.state.submitted}
           helperText = {this.state.poNumberErrorText}
           type="Number"
           fullWidth
@@ -289,7 +296,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField} 
           label = "Billing Address"
           onChange={event => {this.setState({billingAddress: event.target.value})}}
-          error = {this.state.billingAddressErrorText !== 0 && this.state.submitted}
+          error = {this.state.billingAddressErrorText !== "" && this.state.submitted}
           helperText = {this.state.billingAddressErrorText}
           fullWidth
           />
@@ -297,7 +304,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField}
           label = "City"
           onChange={event => {this.setState({billingCity: event.target.value})}}
-          error = {this.state.billingCityErrorText !== 0 && this.state.submitted}
+          error = {this.state.billingCityErrorText !== "" && this.state.submitted}
           helperText = {this.state.billingCityErrorText}
           fullWidth
           />
@@ -305,7 +312,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField}
           label = "State"
           onChange={event => {this.setState({billingState: event.target.value})}}
-          error = {this.state.billingStateErrorText !== 0 && this.state.submitted}
+          error = {this.state.billingStateErrorText !== "" && this.state.submitted}
           helperText = {this.state.billingStateErrorText}
           fullWidth
           />
@@ -313,7 +320,7 @@ class RequestFormTAMU extends React.Component {
           className={classes.textField}
           label = "Zip"
           onChange={event => {this.setState({billingZip: event.target.value})}}
-          error = {this.state.billingZipErrorText !== 0 && this.state.submitted}
+          error = {this.state.billingZipErrorText !== "" && this.state.submitted}
           helperText = {this.state.billingZipErrorText}
           fullWidth
           />
