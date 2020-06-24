@@ -13,6 +13,8 @@ npm install @material-ui/icons
 npm i @material-ui/pickers
 npm i @date-io/date-fns
 npm install react-infinite-calendar --save
+npm install fontsource-roboto
+
 
 ```
 To initialize the virtual environment, cd in to the backend directory, and create the virtual environment by running 

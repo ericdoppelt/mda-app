@@ -16,7 +16,7 @@ export default function Home() {
       <div className={classes.root}>
         <MDAHeader2/>
         <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
+          <div className={classes.appBarSpacer}/>
         <Row style={{ justifyContent: 'flex-start', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
           <Stack style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: '50px', minHeight: '600px', width: '900px', flexGrow: '0' }}>
             <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>

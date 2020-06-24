@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent} from '@material-ui/core';
+import {TextField, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
@@ -8,6 +8,7 @@ import 'react-nice-dates/build/style.css'
 import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
 import 'react-infinite-calendar/styles.css';
 import axios from 'axios';
+import Image from '../../../components/UIzard/Image';
 
 class RequestFormTAMU extends React.Component {
 
@@ -111,9 +112,7 @@ class RequestFormTAMU extends React.Component {
         alert(error);
     });
   }
-  
 
-  
   validateAgreementForm() {
     if (this.state.companyName === "") this.state.companyNameErrorText = "Please enter a company name.";
     else this.state.companyNameErrorText = "";
@@ -136,7 +135,6 @@ class RequestFormTAMU extends React.Component {
     if (this.state.senderEmail === "") this.state.senderEmailErrorText = "Please enter an email to send this form to."
     else this.state.senderEmailErrorText = "";
   }
-  
 
   validateExperimentForm(formNumber) {
     if (this.state["time" + formNumber] === "") this.state["timeErrorText" + formNumber] = "Please enter the time for your test.";
@@ -172,8 +170,6 @@ class RequestFormTAMU extends React.Component {
     this.setState({secondExperiment: true})
   }
   
-  
-
   getSecondExperimentButton() {
     return (
     <div>
@@ -185,7 +181,7 @@ class RequestFormTAMU extends React.Component {
   getAgreementForm() {
     return (
       <div className="agreementForm">
-        <Box>Please enter your company information.</Box>
+        <h3>Please enter your company information.</h3>
         <TextField 
           label = "Company Name"
           onChange={event => {this.setState({companyName: event.target.value})}}
@@ -243,7 +239,7 @@ class RequestFormTAMU extends React.Component {
   getExperimentForm(experimentNumber) {
     return (
       <div className="experimentForm">
-        <Box>Please enter the information needed for test #{experimentNumber}.</Box>
+        <h3>Please enter the information needed for test #{experimentNumber}.</h3>
             <TextField 
               label = "# of 8-Hour Shifts"
               onChange={event => {this.setState({["time" + experimentNumber]: event.target.value})}}
@@ -268,6 +264,15 @@ class RequestFormTAMU extends React.Component {
               <FormHelperText>{this.state["continuousErrorText" + experimentNumber]}</FormHelperText>
             </FormControl>
             <br/>
+            <TextField 
+              label = "Particles and Energies Required"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              helperText = {this.state["particlesErrorText" + experimentNumber]}
+              multiline
+              fullWidth
+            />
+            <br/>
             <br/>
             <Button onClick={this.openStartDatePicker}>Select Start Date</Button>
             <Dialog open={this.state.openStartDate} onClose={this.closeStartDatepicker}>
@@ -282,7 +287,7 @@ class RequestFormTAMU extends React.Component {
               </DialogContent>
             </Dialog>
             <br/>
-            <Button onClick={this.openBadDatesPicker}>Select Bad Dates</Button>
+            <Button onClick={this.openBadDatesPicker}>Enter Unavailability</Button>
             <Dialog open={this.state.openBadDates} onClose={this.closeBadDatesPicker}>
               <DialogTitle>Please enter dates you cannot run.</DialogTitle>
               <DialogContent>
@@ -296,15 +301,6 @@ class RequestFormTAMU extends React.Component {
               />
               </DialogContent>
             </Dialog>
-          
-            <TextField 
-              label = "Particles and Energies Required"
-              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
-              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
-              helperText = {this.state["particlesErrorText" + experimentNumber]}
-              multiline
-              fullWidth
-            />
           <br/>
         </div>
     )
@@ -314,11 +310,11 @@ class RequestFormTAMU extends React.Component {
     return (
       <div className="fullForm">
         <Stack>
-          <br/>
+          <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/1388bb77-92c9-4f33-843b-4978f4a94606.png)' }} />
+          <h1 variant="h1" component="h2">Texas A&M Beam Request Form</h1>
           {this.getAgreementForm()}
           <br/>
           {this.getExperimentForm(1)}
-          <br/>
           {this.state.secondExperiment ? this.getExperimentForm(2) : this.getSecondExperimentButton()}
           <br/>
           <Button onClick={this.handleSubmit}>Submit</Button>

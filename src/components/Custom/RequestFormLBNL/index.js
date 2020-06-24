@@ -1,10 +1,13 @@
 import React from 'react';
-import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
+import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent, Typography} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
 import './RequestFormLBNL.css'
 import axios from 'axios';
+import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
+import Image from '../../../components/UIzard/Image';
+import 'fontsource-roboto';
 
 class RequestFormLBNL extends React.Component {
 
@@ -69,9 +72,28 @@ class RequestFormLBNL extends React.Component {
       personnel: "",
       personnelErrorText: "",
 
+      openStartDate: false,
+      openAltStartDate: false,
+
       submitted: false,
       comments: "",
     }
+  }
+
+  openStartDatePicker() {
+    this.setState({openStartDate: true});
+  }
+
+  closeStartDatepicker() {
+    this.setState({openStartDate: false});
+  }
+
+  openAltStartDatePicker() {
+    this.setState({alternateStartDate: true});
+  }
+
+  closeAltStartDatePicker() {
+    this.setState({alternateStartDate: false});
   }
 
   async handleSubmit() {
@@ -209,6 +231,8 @@ class RequestFormLBNL extends React.Component {
     return (
       <div className="fullForm">
         <Stack>
+        <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/LBNLLogo.jpg)' }} />
+        <h1 variant="h1" component="h2">Lawrence Berkley National Lab Beam Request Form</h1>
         <Box>Please enter the following information.</Box>
         <TextField 
           label = "Principal Investigator Name"
@@ -287,24 +311,33 @@ class RequestFormLBNL extends React.Component {
           helperText = {this.state.experimentAbstractErrorText}
           fullWidth
           />
-        <TextField 
-          label = "Desired Start Date of Run"
-          onChange={event => {this.setState({desiredStartDate: event.target.value})}}
-          error = {this.state.desiredStartDateErrorText !== "" && this.state.submitted}
-          helperText = {this.state.desiredStartDateErrorText}
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          fullWidth
-          />
-        <TextField 
-          label = "Alternate Start Date of Run"
-          onChange={event => {this.setState({alternateStartDate: event.target.value})}}
-          error = {this.state.alternateStartDateErrorText !== "" && this.state.submitted}
-          helperText = {this.state.alternateStartDateErrorText}
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          fullWidth
-          />
+          <Button onClick={this.openStartDatePicker}>Select Start Date</Button>
+          <Dialog open={this.state.openStartDate} onClose={this.closeStartDatepicker}>
+              <DialogTitle>Please enter a desired start date.</DialogTitle>
+              <DialogContent>
+              <InfiniteCalendar
+                selected={this.state.desiredStartDate}
+                onSelect={(event) => this.setState({desiredStartDate: event})}
+                minDate={new Date()}
+                min={new Date()}
+              />
+              </DialogContent>
+            </Dialog>
+            <br/>
+            <Button onClick={this.openAltStartDatePicker}>Select Alternate Start Date</Button>
+            <Dialog open={this.state.openAltStartDate} onClose={this.closeAltStartDatePicker}>
+              <DialogTitle>Please enter an alternate start date.</DialogTitle>
+              <DialogContent>
+              <InfiniteCalendar
+                Component={withMultipleDates(Calendar)}
+                selected={this.state.alternateStartDate}
+                onSelect={(event) => this.setState({alternateStartDate: event})}
+                minDate={new Date()}
+                min={new Date()}
+                interpolateSelection={defaultMultipleDateInterpolation}
+              />
+              </DialogContent>
+            </Dialog>
         <TextField 
           label = "Total Tune & Run Hours Needed"
           onChange={event => {this.setState({totalHours: event.target.value})}}
