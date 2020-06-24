@@ -128,9 +128,10 @@ class RequestFormLBNL extends React.Component {
 
   async handleSubmit() {
     this.setState({submitted: true});
+    this.state.submitted = true;
     this.validateForm();
 
-    if (this.state.formIsValid === true) {
+    if (this.state.validForm === true) {
     let url = 'https://mda-phoenix.herokuapp.com/requestform';
     await axios.post(url, {
       investigatorName: this.state.investigatorName,
@@ -179,6 +180,7 @@ class RequestFormLBNL extends React.Component {
           alert(error);
       });
     } else {
+      alert("not sent");
       console.log(this.state);
     }
   }
@@ -337,6 +339,7 @@ class RequestFormLBNL extends React.Component {
     else this.state.personnelErrorText = "";
 
     this.setState({validForm: formIsValid});
+    this.state.validForm = formIsValid;
   }
   
 
