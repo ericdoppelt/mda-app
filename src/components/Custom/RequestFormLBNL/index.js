@@ -27,6 +27,10 @@ const useStyles = theme => ({
     width: '100%',
     marginBottom: '30px',
   },
+  textField: {
+    marginBottom: '2px',
+    marginTop: '2px',
+  }
 });
 
 class RequestFormLBNL extends React.Component {
@@ -344,7 +348,8 @@ class RequestFormLBNL extends React.Component {
         <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/LBNLLogo.jpg)' }} />
         <h1 variant="h1" component="h2">Lawrence Berkley National Lab Beam Request Form</h1>
         <Box>Please enter the following information.</Box>
-        <TextField 
+        <TextField
+          className={classes.textField}
           label = "Principal Investigator Name"
           onChange={event => {this.setState({investigatorName: event.target.value})}}
           error = {this.state.investigatorNameErrorText !== "" && this.state.submitted}
@@ -352,6 +357,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Principal Investigator Organization"
           onChange={event => {this.setState({investigatorOrg: event.target.value})}}
           error = {this.state.investigatorOrgErrorText !== "" && this.state.submitted}
@@ -359,6 +365,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Principal Investigator E-mail"
           onChange={event => {this.setState({senderEmail: event.target.value})}}
           error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
@@ -366,6 +373,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Principal Investigator Address"
           onChange={event => {this.setState({investigatorAddress: event.target.value})}}
           error = {this.state.investigatorAddressErrorText !== "" && this.state.submitted}
@@ -373,6 +381,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Principal Investigator Office Phone"
           onChange={event => {this.setState({investigatorOfficePhone: event.target.value})}}
           error = {this.state.investigatorOfficePhoneErrorText !== "" && this.state.submitted}
@@ -380,6 +389,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Principal Investigator Cell Phone During Experiment"
           onChange={event => {this.setState({investigatorCell: event.target.value})}}
           error = {this.state.investigatorCellErrorText !== "" && this.state.submitted}
@@ -387,6 +397,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
           <TextField 
+          className={classes.textField}
           label = "Contract/Financial Point of Contact Name"
           onChange={event => {this.setState({financierName: event.target.value})}}
           error = {this.state.financierNameErrorText !== "" && this.state.submitted}
@@ -394,6 +405,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Contract/Financial Point of Contact E-mail"
           onChange={event => {this.setState({financierEmail: event.target.value})}}
           error = {this.state.financierEmailErrorText !== "" && this.state.submitted}
@@ -401,6 +413,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Contract/Financial Point of Contact Telephone"
           onChange={event => {this.setState({financierTelephone: event.target.value})}}
           error = {this.state.financierTelephoneErrorText !== "" && this.state.submitted}
@@ -408,6 +421,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Title of Experiment/Proposal"
           onChange={event => {this.setState({experimentTitle: event.target.value})}}
           error = {this.state.experimentTitleErrorText !== "" && this.state.submitted}
@@ -415,6 +429,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Abstract of Experiment/Proposal"
           onChange={event => {this.setState({experimentAbstract: event.target.value})}}
           error = {this.state.experimentAbstractErrorText !== "" && this.state.submitted}
@@ -422,6 +437,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Total Tune & Run Hours Needed"
           onChange={event => {this.setState({totalHours: event.target.value})}}
           error = {this.state.totalHoursErrorText !== "" && this.state.submitted}
@@ -430,6 +446,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Target Material(s) and Thickness"
           onChange={event => {this.setState({targetMaterials: event.target.value})}}
           error = {this.state.targetMaterialsErrorText !== "" && this.state.submitted}
@@ -438,6 +455,7 @@ class RequestFormLBNL extends React.Component {
           multiline
           />
         <TextField 
+          className={classes.textField}
           label = "Funding Source"
           onChange={event => {this.setState({fundingSource: event.target.value})}}
           error = {this.state.fundingSourceErrorText !== "" && this.state.submitted}
@@ -445,6 +463,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Potential Safety Concerns"
           onChange={event => {this.setState({safetyConcerns: event.target.value})}}
           error = {this.state.safetyConcernsErrorText !== "" && this.state.submitted}
@@ -453,6 +472,7 @@ class RequestFormLBNL extends React.Component {
           multiline
           />
         <TextField 
+          className={classes.textField}
           label = "Type of Beam Desired"
           onChange={event => {this.setState({beamType: event.target.value})}}
           error = {this.state.beamTypeErrorText !== "" && this.state.submitted}
@@ -461,6 +481,7 @@ class RequestFormLBNL extends React.Component {
           multiline
           />
           <TextField 
+          className={classes.textField}
           label = "Special Request Ions"
           onChange={event => {this.setState({specialIons: event.target.value})}}
           error = {this.state.specialIonsErrorText !== "" && this.state.submitted}
@@ -469,6 +490,7 @@ class RequestFormLBNL extends React.Component {
           multiline
           />
         <TextField 
+          className={classes.textField}
           label = "Desired Energy"
           onChange={event => {this.setState({desiredEnergy: event.target.value})}}
           error = {this.state.desiredEnergyErrorText !== "" && this.state.submitted}
@@ -477,6 +499,7 @@ class RequestFormLBNL extends React.Component {
           multiline
           />
         <TextField 
+          className={classes.textField}
           label = "Desired Intensity/Flux"
           onChange={event => {this.setState({desiredIntensity: event.target.value})}}
           error = {this.state.desiredIntensityErrorText !== "" && this.state.submitted}
@@ -485,7 +508,7 @@ class RequestFormLBNL extends React.Component {
           multiline
           />
         <FormControl 
-          className='dropdownBox'
+          className={classes.textField}
           error = {this.state.airOrVacuumErrorText !== "" && this.state.submitted}
           fullWidth
           > 
@@ -500,6 +523,7 @@ class RequestFormLBNL extends React.Component {
           <FormHelperText>{this.state.airOrVacuumErrorText}</FormHelperText>
         </FormControl>
         <TextField 
+          className={classes.textField}
           label = "Does this work have export control restrictions?"
           onChange={event => {this.setState({controlRestrictions: event.target.value})}}
           error = {this.state.controlRestrictionsErrorText !== "" && this.state.submitted}
@@ -507,7 +531,7 @@ class RequestFormLBNL extends React.Component {
           fullWidth
           />
         <FormControl 
-          className='dropdownBox'
+          className={classes.textField}
           error = {this.state.electricallySafeErrorText !== "" && this.state.submitted}
           fullWidth
           > 
@@ -522,6 +546,7 @@ class RequestFormLBNL extends React.Component {
           <FormHelperText>{this.state.electricallySafeErrorText}</FormHelperText>
         </FormControl>
         <TextField 
+          className={classes.textField}
           label = "Names of all personnel participating in the experiment"
           onChange={event => {this.setState({personnel: event.target.value})}}
           error = {this.state.personnelErrorText !== "" && this.state.submitted}
@@ -530,12 +555,12 @@ class RequestFormLBNL extends React.Component {
           multiline
           />
         <TextField 
+          className={classes.textField}
           label = "Comments"
           onChange={event => {this.setState({comments: event.target.value})}}
           fullWidth
           multiline
           />
-
         <br/>
 
         <Button className={classes.startButton} onClick={this.openStartDatePicker}>

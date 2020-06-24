@@ -26,12 +26,16 @@ const useStyles = theme => ({
   unavailableButton: {
     backgroundColor: "#f5c1b8",
     width: '100%',
-    marginBottom: '40px',
+    marginBottom: '15px',
   },
   addButton: {
     backgroundColor: "#dda5f0",
     width: '100%',
     marginBottom: '15px',
+  },
+  textField: {
+    marginBottom: '2px',
+    marginTop: '2px',
   }
 });
 
@@ -244,10 +248,12 @@ class RequestFormTAMU extends React.Component {
   }
 
   getAgreementForm() {
+    const { classes } = this.props;
     return (
       <div className="agreementForm">
         <Box>Please enter your company information.</Box>
-        <TextField 
+        <TextField
+          className={classes.textField}
           label = "Name"
           onChange={event => {this.setState({senderName: event.target.value})}}
           error = {this.state.senderNameErrorText !== 0 && this.state.submitted}
@@ -255,6 +261,7 @@ class RequestFormTAMU extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Email"
           onChange={event => {this.setState({senderEmail: event.target.value})}}
           error = {this.state.senderEmailErrorText !== 0 && this.state.submitted}
@@ -262,6 +269,7 @@ class RequestFormTAMU extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Company Name"
           onChange={event => {this.setState({companyName: event.target.value})}}
           error = {this.state.companyNameErrorText !== 0 && this.state.submitted}
@@ -269,6 +277,7 @@ class RequestFormTAMU extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "P.O. No."
           onChange={event => {this.setState({poNumber: event.target.value})}}
           error = {this.state.poNumberErrorText !== 0 && this.state.submitted}
@@ -276,7 +285,8 @@ class RequestFormTAMU extends React.Component {
           type="Number"
           fullWidth
           />
-        <TextField 
+        <TextField
+          className={classes.textField} 
           label = "Billing Address"
           onChange={event => {this.setState({billingAddress: event.target.value})}}
           error = {this.state.billingAddressErrorText !== 0 && this.state.submitted}
@@ -284,6 +294,7 @@ class RequestFormTAMU extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "City"
           onChange={event => {this.setState({billingCity: event.target.value})}}
           error = {this.state.billingCityErrorText !== 0 && this.state.submitted}
@@ -291,6 +302,7 @@ class RequestFormTAMU extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "State"
           onChange={event => {this.setState({billingState: event.target.value})}}
           error = {this.state.billingStateErrorText !== 0 && this.state.submitted}
@@ -298,6 +310,7 @@ class RequestFormTAMU extends React.Component {
           fullWidth
           />
         <TextField 
+          className={classes.textField}
           label = "Zip"
           onChange={event => {this.setState({billingZip: event.target.value})}}
           error = {this.state.billingZipErrorText !== 0 && this.state.submitted}
@@ -314,6 +327,7 @@ class RequestFormTAMU extends React.Component {
       <div className="experimentForm">
         <Box>Please enter the information needed for test #{experimentNumber}.</Box>
             <TextField 
+              className={classes.textField}
               label = "# of 8-Hour Shifts"
               onChange={event => {this.setState({["time" + experimentNumber]: event.target.value})}}
               error = {this.state["timeErrorText" + experimentNumber].length !== 0 && this.state.submitted}
@@ -322,7 +336,7 @@ class RequestFormTAMU extends React.Component {
               fullWidth
             />
             <FormControl 
-              className='dropdownBox'
+              className={classes.textField}
               error = {this.state["continuousErrorText" + experimentNumber].length !== 0 && this.state.submitted}
               fullWidth
               > 
@@ -338,6 +352,7 @@ class RequestFormTAMU extends React.Component {
             </FormControl>
             <br/>
             <TextField 
+              className={classes.textField}
               label = "Particles and Energies Required"
               onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
               error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
@@ -347,7 +362,6 @@ class RequestFormTAMU extends React.Component {
             />
             <br/>
             <br/>
-
             <Button className={classes.startButton} onClick={() => this.setState({["openStartDate" + experimentNumber]: true})}>Select Start Date for Experiment #{experimentNumber}</Button>
             <Dialog open={this.state["openStartDate" + experimentNumber]} onClose={() => this.setState({["openStartDate" + experimentNumber]: false})}>
               <DialogTitle>Please enter a start date.</DialogTitle>
