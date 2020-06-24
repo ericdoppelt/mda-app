@@ -136,8 +136,6 @@ class RequestFormTAMU extends React.Component {
       date: new Date(),
       secondExperiment: this.state.secondExperiment,
       facility: "TAMU",
-
-      validForm: true,
     }).then(response => {
       if (response.data.success === true) {
         alert("Form was sent to TAMU successfully. Please check your email!")
@@ -152,6 +150,7 @@ class RequestFormTAMU extends React.Component {
         alert(error);
     });
   } else {
+    alert("not sent");
     console.log(this.state);
   }
 }
@@ -206,9 +205,13 @@ class RequestFormTAMU extends React.Component {
     }
     else this.state.senderEmailErrorText = "";
 
-    if (!sectionIsValid) this.setState({validForm: false})
-    console.log(this.state.submitted);
-    console.log("submitted2");
+    if (sectionIsValid) {
+      this.setState({validForm: true});
+      this.state.validForm = true;
+    } else {
+      this.setState({validForm: false});
+      this.state.validForm = false;
+    }
   }
 
   validateExperimentForm(formNumber) {
@@ -238,8 +241,14 @@ class RequestFormTAMU extends React.Component {
     }
     else this.state["particlesErrorText" + formNumber] = "";
 
-    if (!sectionIsValid) this.setState({validForm: false})
+    if (sectionIsValid) {
+      this.setState({validForm: true});
+      this.state.validForm = true;
+  } else {
+      this.setState({validForm: false});
+      this.state.validForm = false;
   }
+}
 
   openSecondExperimentForm() {
     this.setState({secondExperiment: true})
