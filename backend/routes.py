@@ -1,4 +1,5 @@
 
+import copy
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token, 
@@ -132,19 +133,46 @@ def delete(username):
 @app.route('/requestform', methods=['POST'])
 #@jwt_required
 def requestform():
-    print(request)
-    print(request.get_json())
     try:
         form = request.get_json()
         facility = form['facility']
-        form['signature'] = form['name']
         form['date'] = datetime.today().strftime("%m/%d/%Y")
         template = ""
         output = ""
         pdf = FormBuilder(form)
         msg = Message("Send Request Form Demo", cc=[form['senderEmail']])
-        if facility == 'TAMU':
+        msg.recipients = ['edopp4182@gmail.com']
+        if facility == 'TAMU': 
             # msg.recipients = ['clark@comp.tamu.edu']
+            form['signature'] = form['senderName']
+            if form['startDate1'] != "":
+                date = datetime.strptime(form['startDate1'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                form['startDate1'] = date.strftime('%m/%d/%Y')
+            if form['startDate2'] != "":
+                date = datetime.strptime(form['startDate2'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                form['startDate2'] = date.strftime('%m/%d/%Y')
+            badDates1 = copy.deepcopy(form['badDates1'])
+            for i, date in enumerate(badDates1):
+                date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
+                if i != 0 or i != len(badDates1) - 1:
+                    form['badDates1'] += ', '
+                if i == 0:
+                    form['badDates1'] = date.strftime('%m/%d/%Y')
+                else:
+                    form['badDates1'] += date.strftime('%m/%d/%Y')
+            badDates2 = copy.deepcopy(form['badDates2'])
+            if form['badDates2']:
+                for i, date in enumerate(badDates2):
+                    date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
+                    form['badDates2'] += date.strftime('%m/%d/%Y')
+                    if i == 0:
+                        form['badDates2'] = date.strftime('%m/%d/%Y')
+                    else:
+                        form['badDates2'] += date.strftime('%m/%d/%Y')
+                    if i != 0 or i != len(badDates2) - 1:
+                        form['badDates2'] += ', '
+            else:
+                form['badDates2'] = ""
             template = "TAMU_request_template.pdf"
             output = "TAMU_request.pdf"
             pdf.fill(template, output)
@@ -154,7 +182,9 @@ def requestform():
         if facility == 'LBNL':
             # msg.recipients = ['88beamrequest@lbl.gov']
             msg.body = pdf.mail()
-        # mail.send(msg)
+        mail.send(msg)
+        print(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
+        print(e)
         return jsonify({'success': False, 'msg': str(e)}), 404

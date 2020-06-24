@@ -1,5 +1,7 @@
 import os
 import pdfrw
+import copy
+from datetime import datetime
 from fpdf import FPDF
 
 ANNOT_KEY = '/Annots'
@@ -64,6 +66,19 @@ class FormBuilder():
         pdfrw.PdfWriter().write(output, template_pdf)
 
     def mail(self):
+        # if self.form['startDate1'] != "":
+        #     date = datetime.strptime(self.form['startDate1'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        #     self.form['startDate1'] = date.strftime('%m/%d/%Y')
+        # if self.form['startDate2'] != "":
+        #     date = datetime.strptime(self.form['startDate2'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        #     self.form['startDate2'] = date.strftime('%m/%d/%Y')
+        if self.form['desiredStartDate'] != "":
+            date = datetime.strptime(self.form['desiredStartDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            self.form['desiredStartDate'] = date.strftime('%m/%d/%Y')
+        if self.form['alternateStartDate'] != "":
+            date = datetime.strptime(self.form['alternateStartDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            self.form['alternateStartDate'] = date.strftime('%m/%d/%Y')
+
         body = "Principal Investigator Name: " + self.form['investigatorName'] + "\n\n\n"
         body += "Principal Investigator Organization: " + self.form['investigatorOrg'] + "\n\n\n"
         body += "Principal Investigator E-mail: " + self.form['senderEmail'] + "\n\n\n"
