@@ -4,7 +4,6 @@ import './FacilitiesSelector.css'
 import {FormControl, InputLabel, Select, MenuItem, Button} from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import Stack from '../../UIzard/Stack';
-import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 
 class FacilitiesSelector extends React.Component {

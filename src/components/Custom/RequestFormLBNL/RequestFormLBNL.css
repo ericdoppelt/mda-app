@@ -1,4 +1,4 @@
 .fullForm {
-    text-align: center;
-    background-color: aquamarine;
+    min-width: 400px;
+    width: 100%;
 }

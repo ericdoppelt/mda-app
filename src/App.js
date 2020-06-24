@@ -20,10 +20,12 @@ import UserProfile from './containers/User/UserProfile';
 import ViewRequestsMain from './containers/ViewRequests/ViewRequestsMain';
 import UserRegistration from './containers/User/UserRegistration';
 import history from './history';
+import * as Constants from './constants'
+
 
 const App = () => (
   <Router history={history}>
-    <div>
+    <div className='App' style={{display: 'flex', width:'100%'}}>
       <Route path="/" exact component={Home} />
       <Route path="/facilities" component={FacilityMain} />
       <Route path="/facilities-tamu" component={FacilityTAMU} />

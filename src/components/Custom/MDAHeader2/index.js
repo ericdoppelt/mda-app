@@ -7,7 +7,6 @@ import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded'
 import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
 import { Link } from 'react-router-dom';
-import Image from '../../UIzard/Image';
 import Row from '../../UIzard/Row';
 
 import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -19,11 +18,10 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
+import axios from 'axios';
 
 const icons = [<HomeRoundedIcon />, 
                <CalendarTodayRoundedIcon />, 
@@ -84,6 +82,7 @@ class MDAHeader2 extends React.Component {
       menuAnchor: null,
       facilitiesOpen: false,
       formsOpen: false,
+      loggedIn: false,
     }
   }
 
@@ -112,25 +111,77 @@ class MDAHeader2 extends React.Component {
       formsOpen: true
     })
   }
+
+  LoginButtons = () => {
+    console.log("Logged in state:");
+    console.log(this.state.loggedIn);
+    if (this.state.loggedIn) {
+      return (
+        <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+          <Link to='user-login' style={{ color: '#FFF' }}>
+            <ListItem button key='Log Out'>
+              <ListItemText primary='Log Out'/>
+            </ListItem>
+          </Link>
+        </Row>
+      )
+    } else {
+      return (
+        <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+          <Link to='user-login' style={{ color: '#FFF' }}>
+            <ListItem button key='Log In'>
+              <ListItemText primary='Log In'/>
+            </ListItem>
+          </Link>
+          <Link to='user-registration' style={{ color: '#FFF' }}>
+            <ListItem button key='Register'>
+              <ListItemText primary='Register' />
+            </ListItem>
+          </Link>
+        </Row>
+      )
+    }
+  }
+
+  async componentDidMount() {
+    const url = "https://mda-phoenix.herokuapp.com/user";
+  
+    var self = this;
+    this.setState(state => ({loggedIn: false}));
+    await axios.post(url, null, {
+      headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+    }).then(response => {
+      console.log(response);
+      self.setState({
+        name: response.data.first_name + " " + response.data.last_name,
+        username: response.data.user,
+        affiliation: response.data.affiliation,
+        userType: response.data.user_type,
+        phone: response.data.phone,
+        email: response.data.email,
+        loggedIn: true,
+      });
+      })
+      .catch(error => {
+        console.log("error");
+        console.log(error);
+    });
+  }
   
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
+      <div className='column'>
         <CssBaseline />
         <AppBar position="fixed" className={classes.appBar} color="paper">
           <Toolbar>
-            <img src="images/ISEEULogoWhite.png" alt="logo" className={classes.logo} />
+            <Link to={links[0]} style={{ color: '#FFF' }}>
+              <img src="images/ISEEULogoWhite.png" alt="logo" className={classes.logo} />
+            </Link>
+            {/*----RIGHT TOOLBAR WITH LOGIN----*/}
 
             <section className={classes.rightToolbar}>
-              <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-                <Link to='user-login' style={{ color: '#FFF' }}>
-                  <ListItemText primary='Log In' style={{paddingRight: '20px'}}/>
-                </Link>
-                <Link to='user-registration' style={{ color: '#FFF' }}>
-                  <ListItemText primary='Register' />
-                </Link>
-              </Row>
+              {this.LoginButtons()}
             </section>
           </Toolbar>
         </AppBar>
