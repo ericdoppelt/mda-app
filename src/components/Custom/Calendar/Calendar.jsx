@@ -85,14 +85,11 @@ export default class Calendar extends React.Component {
         //console.log(response.data)
         var data = [];
         response.data.entries.forEach(function(event) {
-          console.log(self.makeEvent(event.facility,event.integrator,event.startDate));
           data.push(self.makeEvent(event.facility,event.integrator,event.startDate));
         })
-        console.log(data);
         self.setState({calendarEvents : data});
       })
       .catch(error => {
-        console.log(error);
       });
   }
 

@@ -1,14 +1,13 @@
 import React from 'react';
 import Card from '../../../components/UIzard/Card';
-import Main from '../../../components/UIzard/Main';
-import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
 import RegistrationForm from '../../../components/Custom/RegistrationForm';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
-import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-
+import { ThemeProvider } from '@material-ui/core/styles';
+import Image from '../../../components/UIzard/Image';
+import Title from '../../../components/UIzard/Title';
 
 export default function Home() {
 
@@ -22,9 +21,13 @@ export default function Home() {
           <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
             <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
               <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-                <Paragraph>
-                  Registration
-                </Paragraph>
+                <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+                  <Image style={{ width: '120px', height: '120px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
+                  
+                </Row>
+                <Title>
+                  <br/>Registration<br/><br/>
+                </Title>
                 <RegistrationForm/>
               </Stack>
             </Card>

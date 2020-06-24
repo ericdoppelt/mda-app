@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import './ViewRequests.scss'
 
-import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -105,7 +105,6 @@ class ViewRequests extends React.Component {
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
     const url = "https://mda-phoenix.herokuapp.com/calendar";
-    var self = this;
     await axios.post(url).then(response => {
 
     })
@@ -117,8 +116,7 @@ class ViewRequests extends React.Component {
 
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
-    var self = this;
-    
+
     const { classes } = this.props;
     const handleChangePage = (event, newPage) => {
       this.setState({page: newPage});

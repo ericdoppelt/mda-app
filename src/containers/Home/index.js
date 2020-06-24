@@ -5,7 +5,7 @@ import Row from '../../components/UIzard/Row';
 import Title from '../../components/UIzard/Title';
 import MDAHeader2 from '../../components/Custom/MDAHeader2';
 import * as Constants from '../../constants'
-import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 
 export default function Home() {

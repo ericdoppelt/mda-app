@@ -1,13 +1,11 @@
 import React from 'react';
-import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
-import Stack from '../../../components/UIzard/Stack';
 import Card from '../../../components/UIzard/Card';
-import LoginForm from '../../../components/Custom/LoginForm';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
-import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import UserProfile from '../../../components/Custom/UserProfile';
+import Calendar from '../../../components/Custom/Calendar/Calendar';
 
 export default function Home() {
 
@@ -23,7 +21,7 @@ export default function Home() {
             <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               <UserProfile/>
             </Row>
-            <LoginForm/>
+            <Calendar/>
           </Card>
         </Row>
         </main>

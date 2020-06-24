@@ -1,11 +1,9 @@
 import React from 'react';
 
 import Image from '../../UIzard/Image';
-import Main from '../../UIzard/Main';
 import Stack from '../../UIzard/Stack';
 import Subheader from '../../UIzard/Subheader';
 import UserInfo from '../UserInfo';
-import MDAHeader from '../MDAHeader';
 import axios from 'axios';
 
 export default class UserProfile extends React.Component {
@@ -54,7 +52,6 @@ render() {
         <Subheader>
           Update Contact Info
         </Subheader>
-        <Image style={{ width: '1000px', height: '600px', backgroundImage: 'url(/images/userCalendar.png)' }} />
       </Stack>
     )
   }
