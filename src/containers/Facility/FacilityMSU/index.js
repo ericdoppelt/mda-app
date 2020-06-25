@@ -6,7 +6,7 @@ import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2'
-import VerticalLinearStepper from '../../../components/Custom/FacilityPages/FacilityMSU'
+import MSUTabs from '../../../components/Custom/FacilityPages/FacilityMSU'
 import { ThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../../constants'
 
@@ -121,10 +121,10 @@ export default function FacilityNSRL() {
                 </Paragraph>
               </Stack>
             </Row>
-            
-            
+
+
             <h3><strong>Guide to Reserving Testing Time</strong></h3>
-            <VerticalLinearStepper/>
+            <MSUTabs/>
           </Card>
         </Row>
       </main>

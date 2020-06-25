@@ -23,10 +23,10 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import axios from 'axios';
 
-const icons = [<HomeRoundedIcon />, 
-               <CalendarTodayRoundedIcon />, 
-               <AccountBalanceRoundedIcon />, 
-               <AssignmentRoundedIcon />, 
+const icons = [<HomeRoundedIcon />,
+               <CalendarTodayRoundedIcon />,
+               <AccountBalanceRoundedIcon />,
+               <AssignmentRoundedIcon />,
                <FaceRoundedIcon />,
                <DvrRoundedIcon />]
 
@@ -73,7 +73,7 @@ const useStyles = theme => ({
 });
 
 class MDAHeader2 extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.openFacilitiesMenu = this.openFacilitiesMenu.bind(this);
@@ -97,7 +97,7 @@ class MDAHeader2 extends React.Component {
       formsOpen: !this.state.formsOpen
       }))
   };
-  
+
   openFacilitiesMenu(event) {
     this.setState({
       menuAnchor: event.target,
@@ -145,7 +145,7 @@ class MDAHeader2 extends React.Component {
 
   async componentDidMount() {
     const url = "https://mda-phoenix.herokuapp.com/user";
-  
+
     var self = this;
     this.setState(state => ({loggedIn: false}));
     await axios.post(url, null, {
@@ -167,7 +167,7 @@ class MDAHeader2 extends React.Component {
         console.log(error);
     });
   }
-  
+
   render() {
     const { classes } = this.props;
     return (
@@ -212,7 +212,7 @@ class MDAHeader2 extends React.Component {
               {/*----SITES----*/}
               <ListItem button onClick={() => this.handleFacilitiesClick()} style={{ color: '#FFF' }}>
                 <ListItemIcon>{icons[2]}</ListItemIcon>
-                <ListItemText primary="Sites"/>
+                <ListItemText primary="Facilities"/>
                 {this.state.facilitiesOpen ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={this.state.facilitiesOpen} timeout="auto" unmountOnExit>
@@ -248,7 +248,7 @@ class MDAHeader2 extends React.Component {
                 </List>
               </Collapse>
               <Link to={links[3]} style={{ color: '#FFF' }}>
-                
+
               </Link>
             </List>
             <Divider />
