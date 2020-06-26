@@ -32,7 +32,7 @@ const icons = [<HomeRoundedIcon />,
 
 const links = ['/', '/calendar', '/facilities','/request-form','/user-login','/view-requests']
 const facilityLinks = ['facilities-tamu', 'facilities-MSU', 'facilities-LBNL', 'facilities-NSRL']
-const formLinks = ['request-tamu', 'request-MSU', 'request-LBNL', 'request-NSRL']
+const formLinks = ['request-common','request-tamu', 'request-MSU', 'request-LBNL', 'request-NSRL']
 
 const drawerWidth = 240;
 
@@ -228,28 +228,7 @@ class MDAHeader2 extends React.Component {
                   ))}
                 </List>
               </Collapse>
-              {/*----REQUEST FORMS----*/}
-              <ListItem button onClick={() => this.handleFormsClick()} style={{ color: '#FFF' }}>
-                <ListItemIcon>{icons[3]}</ListItemIcon>
-                <ListItemText primary='Request Forms' />
-                {this.state.formsOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={this.state.formsOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {/*----FORM ITEMS----*/}
-                  {['TAMU','MSU','LBNL','NSRL'].map((text, index) => (
-                    <Link to={formLinks[index]} style={{ color: '#FFF' }}>
-                      <ListItem button key={text}>
-                        <ListItemIcon></ListItemIcon>
-                        <ListItemText primary={text} />
-                      </ListItem>
-                    </Link>
-                  ))}
-                </List>
-              </Collapse>
-              <Link to={links[3]} style={{ color: '#FFF' }}>
-
-              </Link>
+              
             </List>
             <Divider />
             {/*----USER AND VIEW REQUESTS----*/}
@@ -262,6 +241,25 @@ class MDAHeader2 extends React.Component {
                   </ListItem>
                 </Link>
               ))}
+              {/*----REQUEST FORMS----*/}
+              <ListItem button onClick={() => this.handleFormsClick()} style={{ color: '#FFF' }}>
+                <ListItemIcon>{icons[3]}</ListItemIcon>
+                <ListItemText primary='Request Forms' />
+                {this.state.formsOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={this.state.formsOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {/*----FORM ITEMS----*/}
+                  {['Common','TAMU','MSU','LBNL','NSRL'].map((text, index) => (
+                    <Link to={formLinks[index]} style={{ color: '#FFF' }}>
+                      <ListItem button key={text}>
+                        <ListItemIcon></ListItemIcon>
+                        <ListItemText primary={text} />
+                      </ListItem>
+                    </Link>
+                  ))}
+                </List>
+              </Collapse>
             </List>
           </div>
         </Drawer>

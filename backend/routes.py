@@ -10,7 +10,7 @@ from datetime import timedelta, datetime
 
 from main import app, bcrypt, jwt, mail
 from extensions import db
-from models import Test, Users, Calendar, TokenBlacklist
+from models import Test, Users, Calendar, TokenBlacklist, Beams, Organization
 from blacklist_helpers import (
     is_token_revoked, add_token_to_database, get_user_tokens,
     revoke_token, unrevoke_token, revoke_user_tokens,
@@ -127,6 +127,21 @@ def delete(username):
         return jsonify({'success': True, 'msg': 'User deleted'}), 200
     except:
         return jsonify({'success': False, 'msg': 'The specified user was not found'}), 404
+
+@app.route('/beams', methods=['POST'])
+def beams():
+    myList = []
+    req = request.get_json()
+    facility = Organization.query.filter_by(abbrv=req['facility']).one()
+    beams = Beams.query.filter_by(org_id=facility.id).all()
+    for beam in beams:
+        beam_info = {'ion': beam.ion, 
+        'mass': beam.mass, 'amev': beam.amev, 'max_energy': beam.max_energy,
+        'max_energy_units': beam.max_energy_units, 'let': beam.let, 'let_units': beam.let_units, 
+        'let_peak': beam.let_peak, 'beam_range': beam.beam_range, 'range_peak': beam.range_peak, 'range_units': beam.range_units,
+        'max_flux': beam.max_flux, 'max_flux_units': beam.max_flux_units, 'let_material': beam.let_material, 'air': beam.air}
+        myList.append(beam_info)
+    return jsonify({'beams' : myList})
     
 
 # TODO make jwt required after development

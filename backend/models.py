@@ -4,7 +4,7 @@ from flask_login import UserMixin
 
 
 class Test(db.Model):
-    """Model for the stations table"""
+    """Model for the test table"""
     __tablename__ = 'test'
 
     id = db.Column(db.Integer, primary_key = True)
@@ -14,7 +14,7 @@ class Test(db.Model):
         return "<User(id=%s, text=%s)>" % (self.id, self.text)
 
 class Users(UserMixin, db.Model):
-    """Model for the stations table"""
+    """Model for the users table"""
     __tablename__ = 'Users'
 
     id = db.Column(db.Integer, primary_key = True)
@@ -52,7 +52,7 @@ class Users(UserMixin, db.Model):
         return "<User(id=%s, first_name=%s, last_name=%s)>" % (self.id, self.first_name, self.last_name)
 
 class Organization(db.Model):
-    """Model for the stations table"""
+    """Model for the organization table"""
     __tablename__ = 'Organization'
 
     id = db.Column(db.Integer(), primary_key = True)
@@ -64,12 +64,13 @@ class Organization(db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(20))
     zipcode = db.Column(db.Integer)
+    abbrv = db.Column(db.String(6))
 
     def __repr__(self):
         return "<Organization(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name, self.poc_name)
 
 class Facility(db.Model):
-    """Model for the stations table"""
+    """Model for the facility table"""
     __tablename__ = 'Facility'
 
     id = db.Column(db.Integer(), primary_key = True)
@@ -80,7 +81,7 @@ class Facility(db.Model):
 
 
 class Calendar(db.Model):
-    """Model for the stations table"""
+    """Model for the calendar table"""
     __tablename__ = 'Calendar'
 
     id = db.Column(db.Integer(), primary_key = True)
@@ -94,8 +95,33 @@ class Calendar(db.Model):
     def __repr__(self):
         return "<Calendar(username=%s)>" % (self.username)
 
+class Beams(db.Model):
+    """Model for the Beams table"""
+    __tablename__ = 'Beams'
+
+    id = db.Column(db.Integer(), primary_key = True)
+    org_id = db.Column(db.Integer())
+    ion = db.Column(db.String())
+    mass = db.Column(db.Float())
+    amev = db.Column(db.Float())
+    max_energy = db.Column(db.Float())
+    max_energy_units = db.Column(db.String())
+    let = db.Column(db.ARRAY(db.Float()))
+    let_units = db.Column(db.String())
+    let_peak = db.Column(db.ARRAY(db.Float()))
+    beam_range = db.Column(db.Float())
+    range_peak = db.Column(db.Float())
+    range_units = db.Column(db.String())
+    max_flux = db.Column(db.Float())
+    max_flux_units = db.Column(db.String())
+    let_material = db.Column(db.ARRAY(db.String()))
+    air = db.Column(db.Boolean())
+
+    def __repr__(self):
+        return "<Beam(org_id=%s, ion=%s)>" % (self.org_id, self.ion)
+
 class TokenBlacklist(db.Model):
-    """Model for the stations table"""
+    """Model for the token blacklist table"""
     __tablename__ = 'TokenBlacklist'
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(36), nullable=False)
