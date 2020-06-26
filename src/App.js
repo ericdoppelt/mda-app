@@ -7,6 +7,7 @@ import RequestTAMU from './containers/RequestForm/RequestTAMU';
 import RequestLBNL from './containers/RequestForm/RequestLBNL';
 import RequestMSU from './containers/RequestForm/RequestMSU';
 import RequestNSRL from './containers/RequestForm/RequestNSRL';
+import RequestCommon from './containers/RequestForm/RequestCommon';
 import axios from 'axios';
 
 import FacilityMain from './containers/Facility/FacilityMain';
@@ -34,6 +35,7 @@ const App = () => (
       <Route path="/facilities-msu" component={FacilityMSU}/>
       <Route path="/calendar" component={CalendarMain} />
       <Route path="/request-form" component={RequestFormMain} />
+      <Route path="/request-common" component={RequestCommon}/>
       <Route path="/request-tamu" component={RequestTAMU}/>
       <Route path="/request-lbnl" component={RequestLBNL}/>
       <Route path="/request-msu" component={RequestMSU}/>
