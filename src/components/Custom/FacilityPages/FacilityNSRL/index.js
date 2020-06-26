@@ -1,38 +1,88 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Paragraph from '../../../../components/UIzard/Paragraph';
+import Row from '../../../../components/UIzard/Row';
+import Card from '../../../../components/UIzard/Card';
+import Stack from '../../../../components/UIzard/Stack';
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `scrollable-auto-tab-${index}`,
+    'aria-controls': `scrollable-auto-tabpanel-${index}`,
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    flexGrow: 1,
     width: '100%',
-  },
-  button: {
-    marginTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  actionsContainer: {
-    marginBottom: theme.spacing(2),
-  },
-  resetContainer: {
-    padding: theme.spacing(3),
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 
-function getSteps() {
-  return ['Initial Steps', 'Preparing for Visit', 'Additional Resources'];
-}
+export default function TabsNSRL() {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return (
-        <ul>
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          centered="true"
+
+        >
+          <Tab label="Initial Steps" {...a11yProps(0)} />
+          <Tab label="Preparing for Visit" {...a11yProps(1)} />
+          <Tab label="Additional Resources" {...a11yProps(2)} />
+            <Tab label="Contact Info" {...a11yProps(2)} />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+      <Paragraph>
+      <ul>
           <li><a href="https://www.bnl.gov/nsrl/" target="_blank" rel="noopener noreferrer">Website</a></li>
           <li>Use the <a href="https://www.bnl.gov/nsrl/facility-users/" target="_blank" rel="noopener noreferrer">Apply for Beam Time</a> portal to submit beam request</li>
           <ul>
@@ -60,9 +110,11 @@ function getStepContent(step) {
               <li>Fax: (631) 344-8686</li>
             </ul>
           </ul>
-        </ul>);
-    case 1:
-      return (
+        </ul>
+      </Paragraph>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <Paragraph>
         <ul>
           <li>If you do not have a valid BNL ID, you must register in BNL’s <a href="https://www.bnl.gov/guv/gis.php" target="_blank" rel="noopener noreferrer">Guest Information System</a> (GIS)</li>
           <ul>
@@ -100,77 +152,88 @@ function getStepContent(step) {
           <li><a href="https://www.bnl.gov/maps/" target="_blank" rel="noopener noreferrer">Directions to test facility</a></li>
           <li>All guests, users, and visitors must check-in at the Guest, User, Visitor Center, which is located in <a href="http://www.bnl.gov/maps/point.php?Lat=40.86808&Lng=-72.88330" target="_blank" rel="noopener noreferrer">Building 400A</a></li>
           <li>You MUST complete a dry run of your experiment before testing at NSRL. Contact NSRL Liaison Biologist (nsrllb@bnl.gov)</li>
-        </ul>);
-    case 2:
-      return (
-        <ul>
-          <li><a href="https://www.bnl.gov/nsrl/userguide/" target="_blank" rel="noopener noreferrer">First-Time User Information</a></li>
-          <li><a href="https://www.bnl.gov/nsrl/about.php" target="_blank" rel="noopener noreferrer">About</a></li>
-          <li><a href="https://www.bnl.gov/nsrl/runinfo.php" target="_blank" rel="noopener noreferrer">Run Information</a></li>
-          <li><a href="https://www.bnl.gov/nsrl/userguide/calculating-time.php" target="_blank" rel="noopener noreferrer">Calculating Target Room access time</a></li>
-          <li><a href="https://www.bnl.gov/nsrl/userguide/sample-holders.php" target="_blank" rel="noopener noreferrer">Sample holders</a></li>
-        </ul>);
-    default:
-      return 'Unknown step';
-  }
-}
+        </ul>
+        </Paragraph>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <a href="https://www.bnl.gov/nsrl/userguide/" target="_blank" rel="noopener noreferrer">First-Time User Information</a>
+        <br/>
+        <a href="https://www.bnl.gov/nsrl/about.php" target="_blank" rel="noopener noreferrer">About</a>
+        <br/>
+        <a href="https://www.bnl.gov/nsrl/runinfo.php" target="_blank" rel="noopener noreferrer">Run Information</a>
+        <br/>
+        <a href="https://www.bnl.gov/nsrl/userguide/calculating-time.php" target="_blank" rel="noopener noreferrer">Calculating Target Room access time</a>
+        <br/>
+        <a href="https://www.bnl.gov/nsrl/userguide/sample-holders.php" target="_blank" rel="noopener noreferrer">Sample holders</a>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <strong>NSRL Liaison Physicist</strong>
+        <br/>
+        Phone: 631-344-3072 or 631-344-5830
+        <br/>
+        <br/>
+        <strong>NSRL Finance Officer</strong>
+        <br/>
+        (contact for setting up an account for beam time)
+        <br/>
+        email: nsrlfin@bnl.gov
+        <br/>
+        <br/>
+        <strong>NSRL Liaison Biologist</strong>
+        <br/>
+        (contact for info on dry runs)
+        <br/>
+        email: nsrllb@bnl.gov
+        <br/>
+        <br/>
+        <strong>Scheduling Questions</strong>
+        <br/>
+        Email: nsrllp@bnl.gov
+        <br/>
+        <br/>
+        <strong>Guest, User, Visitor Center (GUV)</strong>
+        <br/>
+        (Contact for training questions)
+        <br/>
+        Phone: (631) 344-3333
+        <br/>
+        Email: guvcenter@bnl.gov
+        <br/>
+        <br/>
+        <strong>Housing Office</strong>
+        <br/>
+        Phone: (631) 344-2541
+        <br/>
+        Email: housing@bnl.gov
+        <br/>
+        <br/>
+        <strong>User Agreements</strong>
+        <br/>
+        Amanda Satterley
+        <br/>
+        Guest, User, Visitor Center
+        <br/>
+        Brookhaven National Laboratory
+        <br/>
+        Upton, NY 11973-5000
+        <br/>
+        Phone: (631) 344-5076
+        <br/>
+        Fax: (631) 344-8686
+        <br/>
+        Email: agreements@bnl.gov
+        <br/>
+        <br/>
+        <strong>Purchase Orders</strong>
+        <br/>
+        Ken Koebel
+        <br/>
+        Business Services Directorate
+        <br/>
+        Mail Stop 179A
+        <br/>
 
-export default function VerticalLinearStepper() {
-  const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  return (
-    <div className={classes.root}>
-      <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel align='left'>{label}</StepLabel>
-            <StepContent>
-              <Typography align='left'>{getStepContent(index)}</Typography>
-              <div className={classes.actionsContainer}>
-                <div>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    className={classes.button}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                  </Button>
-                </div>
-              </div>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button>
-        </Paper>
-      )}
+      </TabPanel>
     </div>
   );
 }
