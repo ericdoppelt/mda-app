@@ -136,22 +136,14 @@ def beams():
     beams = Beams.query.filter_by(org_id=facility.id).all()
     for beam in beams:
         if beam.ion in myList:
-            print("appending")
-        # append the new number to the existing array at this slot
             myList[beam.ion].append(beam.amev)
         else:
-            # create a new array in this slot
             myList[beam.ion] = [beam.amev]
         # beam_info = {'ion': beam.ion, 
         # 'mass': beam.mass, 'amev': beam.amev, 'max_energy': beam.max_energy,
         # 'max_energy_units': beam.max_energy_units, 'let': beam.let, 'let_units': beam.let_units, 
         # 'let_peak': beam.let_peak, 'beam_range': beam.beam_range, 'range_peak': beam.range_peak, 'range_units': beam.range_units,
         # 'max_flux': beam.max_flux, 'max_flux_units': beam.max_flux_units, 'let_material': beam.let_material, 'air': beam.air}
-
-    # if req['facility'] == 'TAMU':
-    #     for beam in beams:
-    #         beam_info = {'ion': beam.ion, 'max_energy': beam.max_energy, 'air': beam.air}
-    #         myList.append(beam_info)
 
     return myList
     
