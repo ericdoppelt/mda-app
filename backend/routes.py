@@ -130,18 +130,30 @@ def delete(username):
 
 @app.route('/beams', methods=['POST'])
 def beams():
-    myList = []
+    myList = {}
     req = request.get_json()
     facility = Organization.query.filter_by(abbrv=req['facility']).one()
     beams = Beams.query.filter_by(org_id=facility.id).all()
     for beam in beams:
-        beam_info = {'ion': beam.ion, 
-        'mass': beam.mass, 'amev': beam.amev, 'max_energy': beam.max_energy,
-        'max_energy_units': beam.max_energy_units, 'let': beam.let, 'let_units': beam.let_units, 
-        'let_peak': beam.let_peak, 'beam_range': beam.beam_range, 'range_peak': beam.range_peak, 'range_units': beam.range_units,
-        'max_flux': beam.max_flux, 'max_flux_units': beam.max_flux_units, 'let_material': beam.let_material, 'air': beam.air}
-        myList.append(beam_info)
-    return jsonify({'beams' : myList})
+        if beam.ion in myList:
+            print("appending")
+        # append the new number to the existing array at this slot
+            myList[beam.ion].append(beam.amev)
+        else:
+            # create a new array in this slot
+            myList[beam.ion] = [beam.amev]
+        # beam_info = {'ion': beam.ion, 
+        # 'mass': beam.mass, 'amev': beam.amev, 'max_energy': beam.max_energy,
+        # 'max_energy_units': beam.max_energy_units, 'let': beam.let, 'let_units': beam.let_units, 
+        # 'let_peak': beam.let_peak, 'beam_range': beam.beam_range, 'range_peak': beam.range_peak, 'range_units': beam.range_units,
+        # 'max_flux': beam.max_flux, 'max_flux_units': beam.max_flux_units, 'let_material': beam.let_material, 'air': beam.air}
+
+    # if req['facility'] == 'TAMU':
+    #     for beam in beams:
+    #         beam_info = {'ion': beam.ion, 'max_energy': beam.max_energy, 'air': beam.air}
+    #         myList.append(beam_info)
+
+    return myList
     
 
 # TODO make jwt required after development
@@ -156,7 +168,7 @@ def requestform():
         output = ""
         pdf = FormBuilder(form)
         msg = Message("Send Request Form Demo", cc=[form['senderEmail']])
-        msg.recipients = ['edopp4182@gmail.com']
+        # msg.recipients = ['edopp4182@gmail.com']
         if facility == 'TAMU': 
             # msg.recipients = ['clark@comp.tamu.edu']
             form['signature'] = form['senderName']
@@ -191,14 +203,18 @@ def requestform():
             template = "TAMU_request_template.pdf"
             output = "TAMU_request.pdf"
             pdf.fill(template, output)
+            template = "Universal_request_template.pdf"
+            output = "Universal_request.pdf"
+            pdf.fill(template, output)
+            print("bah")
             msg.body = "Here is the request form for beam time"
             with app.open_resource("TAMU_request.pdf") as fp:
                 msg.attach("TAMU_request.pdf", "TAMU_request/pdf", fp.read())
         if facility == 'LBNL':
             # msg.recipients = ['88beamrequest@lbl.gov']
             msg.body = pdf.mail()
-        mail.send(msg)
-        print(msg)
+        # mail.send(msg)
+        # print(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         print(e)
