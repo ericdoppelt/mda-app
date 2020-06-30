@@ -10,6 +10,8 @@ import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterp
 import Image from '../../../components/UIzard/Image';
 import 'fontsource-roboto';
 import SendIcon from '@material-ui/icons/Send';
+import LBNLStore from '../../../stores/LBNLStore';
+import { observer } from "mobx-react"
 
 const useStyles = theme => ({
   submitButton: {
@@ -43,70 +45,11 @@ class RequestFormLBNL extends React.Component {
     this.closeStartDatePicker = this.closeStartDatePicker.bind(this);
     this.openAltStartDatePicker = this.openAltStartDatePicker.bind(this);
     this.closeAltStartDatePicker = this.closeAltStartDatePicker.bind(this);
+      
+  }
 
-    this.state = {
-      investigatorName: "",
-      investigatorNameErrorText: "",
-      investigatorOrg: "",
-      investigatorOrgErrorText: "",
-      senderEmail: "",
-      senderEmailErrorText: "",
-      investigatorAddress: "",
-      investigatorAddressErrorText: "",
-      investigatorOfficePhone: "",
-      investigatorOfficePhoneErrorText: "",
-      investigatorCell: "",
-      investigatorCellErrorText: "",
-
-      financierName: "",
-      financierNameErrorText: "",
-      financierEmail: "",
-      financierEmailErrorText: "",
-      financierTelephone: "",
-      financierTelephoneErrorText: "",
-
-      experimentTitle: "",
-      experimentTitleErrorText: "",
-      experimentAbstract: "",
-      experimentAbstractErrorText: "",
-      desiredStartDate: "",
-      desiredStartDateErrorText: "",
-      alternateStartDate: "",
-      alternateStartDateErrorText: "",
-      totalHours: "",
-      totalHoursErrorText: "",
-      targetMaterials: "",
-      targetMaterialsErrorText: "",
-      fundingSource: "",
-      fundingSourceErrorText: "",
-      safetyConcerns: "",
-      safetyConcernsErrorText: "",
-
-      beamType: "",
-      beamTypeErrorText: "",
-      specialIons: "",
-      specialIonsErrorText: "",
-      desiredEnergy: "",
-      desiredEnergyErrorText: "",
-      desiredIntensity: "",
-      desiredIntensityErrorText: "",
-
-      airOrVacuum: "",
-      airOrVacuumErrorText: "",
-      controlRestrictions: "",
-      controlRestrictionsErrorText: "",
-      electricallySafe: "",
-      electricallySafeErrorText: "",
-      personnel: "",
-      personnelErrorText: "",
-
-      openStartDate: false,
-      openAltStartDate: false,
-
-      validForm: false,
-      submitted: false,
-      comments: "",
-    }
+  async getBeamInfo() {
+    
   }
 
   openStartDatePicker() {
@@ -354,49 +297,55 @@ class RequestFormLBNL extends React.Component {
         <TextField
           className={classes.textField}
           label = "Principal Investigator Name"
-          onChange={event => {this.setState({investigatorName: event.target.value})}}
-          error = {this.state.investigatorNameErrorText !== "" && this.state.submitted}
-          helperText = {this.state.investigatorNameErrorText}
+          value = {LBNLStore.senderName}
+          onChange={(event) => {LBNLStore.setSenderName(event.target.value)}}
+          error = {LBNLStore.senderNameError}
+          helperText = {LBNLStore.senderNameHelperText}
           fullWidth
           />
         <TextField 
           className={classes.textField}
           label = "Principal Investigator Organization"
-          onChange={event => {this.setState({investigatorOrg: event.target.value})}}
-          error = {this.state.investigatorOrgErrorText !== "" && this.state.submitted}
-          helperText = {this.state.investigatorOrgErrorText}
+          value = {LBNLStore.senderCompany}
+          onChange={event => {LBNLStore.setSenderCompany(event.target.value)}}
+          error = {LBNLStore.senderOrgError}
+          helperText = {LBNLStore.senderOrgHelperText}
           fullWidth
           />
         <TextField 
           className={classes.textField}
           label = "Principal Investigator E-mail"
-          onChange={event => {this.setState({senderEmail: event.target.value})}}
-          error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
-          helperText = {this.state.senderEmailErrorText}
+          value = {LBNLStore.senderEmail}
+          onChange={event => {LBNLStore.setSenderEmail(event.target.value)}}
+          error = {LBNLStore.senderEmailError}
+          helperText = {LBNLStore.senderEmailHelperText}
           fullWidth
           />
         <TextField 
           className={classes.textField}
           label = "Principal Investigator Address"
-          onChange={event => {this.setState({investigatorAddress: event.target.value})}}
-          error = {this.state.investigatorAddressErrorText !== "" && this.state.submitted}
-          helperText = {this.state.investigatorAddressErrorText}
+          vaue = {LBNLStore.senderAddress}
+          onChange={event => {LBNLStore.setSenderAddress(event.target.value)}}
+          error = {LBNLStore.senderAddressError}
+          helperText = {LBNLStore.senderAddressHelperText}
           fullWidth
           />
         <TextField 
           className={classes.textField}
           label = "Principal Investigator Office Phone"
-          onChange={event => {this.setState({investigatorOfficePhone: event.target.value})}}
-          error = {this.state.investigatorOfficePhoneErrorText !== "" && this.state.submitted}
-          helperText = {this.state.investigatorOfficePhoneErrorText}
+          value = {LBNLStore.senderOfficePhone}
+          onChange={event => {LBNLStore.setSenderOfficePhone(event.target.value)}}
+          error = {LBNLStore.senderOfficePhoneError}
+          helperText = {LBNLStore.senderOfficePhoneHelperText}
           fullWidth
           />
         <TextField 
           className={classes.textField}
           label = "Principal Investigator Cell Phone During Experiment"
-          onChange={event => {this.setState({investigatorCell: event.target.value})}}
-          error = {this.state.investigatorCellErrorText !== "" && this.state.submitted}
-          helperText = {this.state.investigatorCellErrorText}
+          value = {LBNLStore.senderCell}
+          onChange={event => {LBNLStore.setSenderCell(event.target.value)}}
+          error = {LBNLStore.senderCellError}
+          helperText = {LBNLStore.senderCellHelperText}
           fullWidth
           />
           <TextField 
@@ -603,7 +552,7 @@ class RequestFormLBNL extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-        <Button className={classes.submitButton} onClick={this.handleSubmit} variant='contained'>
+        <Button className={classes.submitButton} onClick={() => LBNLStore.setSubmitted(true)} variant='contained'>
           Submit  
           <SendIcon/>
         </Button>
@@ -613,4 +562,4 @@ class RequestFormLBNL extends React.Component {
   }
 }
 
-export default withRouter(withStyles(useStyles)(RequestFormLBNL));
+export default withRouter(withStyles(useStyles)(observer(RequestFormLBNL)));
