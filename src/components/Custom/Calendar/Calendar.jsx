@@ -12,8 +12,8 @@ import Row from '../../UIzard/Row';
 import Stack from '../../UIzard/Stack';
 import Title from '../../UIzard/Title';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { Checkbox, FormControlLabel } from '@material-ui/core';  
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
+import { Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem } from '@material-ui/core';  
 
 
 // Checkbox items
@@ -35,10 +35,47 @@ const beamTypes = [
   'Proton'
 ]; 
 
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
+  },
+  noLabel: {
+    marginTop: theme.spacing(3),
+  },
+  select: {
+    backgroundColor: '#000',
+  },
+}));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 
-
-export default class Calendar extends React.Component {
+class Calendar extends React.Component {
 
   /*** INITIALIZE STATE VARIABLES ***/
   calendarComponentRef = React.createRef();
@@ -46,6 +83,9 @@ export default class Calendar extends React.Component {
   constructor(props) {
     super(props);
     this.handleCheck = this.handleCheck.bind(this);
+    this.handleChangeFacilities = this.handleChangeFacilities.bind(this);
+    this.handleChangeIntegrators = this.handleChangeIntegrators.bind(this);
+    this.handleChangeBeamTypes = this.handleChangeBeamTypes.bind(this);
     
 
     /*** LIST OF DATES ***/
@@ -60,7 +100,10 @@ export default class Calendar extends React.Component {
       facilities: facilities,
       integrators: integrators,
       beamTypes: beamTypes,
-      checkedValues: ['TAMU'].concat(integrators.concat(beamTypes)),
+      checkedFacilities: ['TAMU'],
+      checkedIntegrators: integrators,
+      checkedBeamTypes: beamTypes,
+      checkedValues: ['TAMU'].concat(integrators).concat(beamTypes),
       calendarWeekends: true,
       calendarEvents: [ // initial event data
       ]
@@ -88,6 +131,7 @@ export default class Calendar extends React.Component {
           data.push(self.makeEvent(event.facility,event.integrator,event.startDate));
         })
         self.setState({calendarEvents : data});
+        //self.setState(state => ({checkedValues: self.state.checkedFacilities.concat(integrators.concat(beamTypes)),}));
       })
       .catch(error => {
       });
@@ -119,22 +163,24 @@ export default class Calendar extends React.Component {
     );
   }
 
-  handleChangeMultiple = (event) => {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    //setPersonName(value);
-  };
+  handleChangeFacilities(e) {
+    this.setState(state=> ({checkedFacilities: e.target.value}))
+  }
 
+  handleChangeIntegrators(e) {
+    this.setState(state=> ({checkedIntegrators: e.target.value}))
+  }
+
+  handleChangeBeamTypes(e) {
+    this.setState(state=> ({checkedBeamTypes: e.target.value}))
+  }
 
   
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
     var self = this;
+    const { classes, theme } = this.props;
+    
     
     this.state.calendarEvents.forEach(function(event) {
       var facility = event.extendedProps.facility; 
@@ -151,80 +197,73 @@ export default class Calendar extends React.Component {
           <Stack style={{ justifyContent: 'flex-end', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
 
             {/*** FILTER CARD ***/}
-            <CardNoShadow style={{ justifyContent: 'left', minWidth: '150px', minHeight: '100px', width: '100%', flexGrow: '0' }}>
+            <CardNoShadow style={{ justifyContent: 'left', minWidth: '300px', minHeight: '50px', width: '100%', flexGrow: '0' }}>
               
-              {/*** FACILITY CHECKBOXES ***/}
-              {/* Title */}
-              <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' }}>
-                <Title style={{ width: '120px', minHeight: '0px', textAlign: 'left', justifyContent: 'left', alignItems: 'flex-end' }}>
-                  Testing Site: 
-                </Title>
-                {/* Checkboxes */}
-                <Stack style={{ height: '100%', alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' , maxWidth: '100%'}}>
-                  <form onSubmit={this.handleFormSubmit}>
-                    { this.state.facilities.map(x =>
-                      <FormControlLabel
-                      control={<Checkbox 
-                        color="primary" 
-                        checked={this.state.checkedValues.includes(x)} 
-                        onChange={e => this.handleCheck(e,x)} 
-                        name={x} 
-                        />}
-                      label={x}
-                      />
-                    ) }
-                  </form>
-                </Stack>
-              </Row>
-              {/*** INTEGRATOR CHECKBOXES ***/}
-              {/* Title */}
-              <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' }}>
-                <Title style={{ width: '120px', minHeight: '0px', textAlign: 'center', justifyContent: 'left', alignItems: 'flex-end' }}>
-                  Integrator:
-                </Title>
-                {/* Checkboxes */}
-                <Stack style={{ alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' , maxWidth: '100%'}}>
-                  <form onSubmit={this.handleFormSubmit}>
-                    { this.state.integrators.map(x =>
-                      <FormControlLabel
-                      control={<Checkbox 
-                        color="primary" 
-                        checked={this.state.checkedValues.includes(x)} 
-                        onChange={e => this.handleCheck(e,x)} 
-                        name={x} 
-                        />}
-                      label={x}
-                      />
-                    ) }
-                  </form>
-                </Stack>
-              </Row>
-              
+              <Row>
+                {/*** FACILITY FILTER ***/}
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">Facility</InputLabel>
+                  <Select
+                    className={classes.select}
+                    labelId="demo-mutiple-name-label"
+                    id="demo-mutiple-name"
+                    multiple
+                    value={ this.state.checkedFacilities }
+                    onChange={ this.handleChangeFacilities }
+                    input={<Input />}
+                    MenuProps={MenuProps}
+                    style={{width:'200px',}}
+                  >
+                    {facilities.map((name) => (
+                      <MenuItem key={name} value={name} style={getStyles(name, facilities, theme)}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-              {/*** BEAM TYPE CHECKBOXES ***/}
-              {/* Title */}
-              <Row style={{ justifyContent: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '20px' }}>
-                <Title style={{ width: '120px', minHeight: '0px', textAlign: 'left', justifyContent: 'left', alignItems: 'flex-end' }}>
-                  Beam Type:
-                </Title>
-                {/* Checkboxes */}
-                <Stack style={{ alignItems: 'flex-start', flexGrow: '0', minWidth: '50px', minHeight: '0px' , maxWidth: '100%'}}>
-                  <form onSubmit={this.handleFormSubmit}>
-                    { this.state.beamTypes.map(x =>
-                      <FormControlLabel
-                      control={<Checkbox 
-                        color="primary" 
-                        checked={this.state.checkedValues.includes(x)} 
-                        onChange={e => this.handleCheck(e,x)} 
-                        name={x} 
-                        />}
-                      label={x}
-                      />
-                    ) }
-                  </form>
-                </Stack>
+                {/*** INTEGRATOR FILTER ***/}
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">Integrator</InputLabel>
+                  <Select
+                    labelId="demo-mutiple-name-label"
+                    id="demo-mutiple-name"
+                    multiple
+                    value={ this.state.checkedIntegrators }
+                    onChange={ this.handleChangeIntegrators }
+                    input={<Input />}
+                    MenuProps={MenuProps}
+                    style={{width:'200px',}}
+                  >
+                    {integrators.map((name) => (
+                      <MenuItem key={name} value={name} style={getStyles(name, integrators, theme)}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                {/*** BEAM TYPE FILTER ***/}
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">Integrator</InputLabel>
+                  <Select
+                    labelId="demo-mutiple-name-label"
+                    id="demo-mutiple-name"
+                    multiple
+                    value={ this.state.checkedBeamTypes }
+                    onChange={ this.handleChangeBeamTypes }
+                    input={<Input />}
+                    MenuProps={MenuProps}
+                    style={{width:'200px',}}
+                  >
+                    {beamTypes.map((name) => (
+                      <MenuItem key={name} value={name} style={getStyles(name, beamTypes, theme)}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Row>
-              
             </CardNoShadow>
             
 
@@ -246,18 +285,17 @@ export default class Calendar extends React.Component {
 
               /* Render Event Options */
               eventRender={ function(info) {
-                var arr = self.state.checkedValues;
+                var arr1 = self.state.checkedFacilities;
+                var arr2 = self.state.checkedIntegrators;
+                var arr3 = self.state.checkedBeamTypes;
                 //console.log(arr)
-                return (arr.indexOf(info.event.extendedProps.facility) >=0 
-                  && arr.indexOf(info.event.extendedProps.integrator) >=0
-                  && arr.indexOf(info.event.extendedProps.beamType) >=0
+                return (arr1.indexOf(info.event.extendedProps.facility) >=0
+                  && arr2.indexOf(info.event.extendedProps.integrator) >=0
+                  && arr3.indexOf(info.event.extendedProps.beamType) >=0
                 )  
               } }
               />
             </Row>
-
-
-          
 
         </Stack>
           
@@ -296,3 +334,5 @@ export default class Calendar extends React.Component {
   }
 
 }
+
+export default withStyles(useStyles, { withTheme: true })(Calendar)
