@@ -1,6 +1,5 @@
 import React from 'react';
 import {Button} from '@material-ui/core';
-import LBNLStore from '../../../../stores/LBNLStore';
 import ExperimentStore from '../../../../stores/ExpirementStore';
 import TesterStore from '../../../../stores/TesterStore';
 import axios from 'axios';
@@ -13,7 +12,7 @@ const useStyles = theme => ({
     },
   });
 
-class LBNLSubmit extends React.Component {
+class MSUSubmit extends React.Component {
 
   constructor(props) {
       super(props);
@@ -47,25 +46,11 @@ class LBNLSubmit extends React.Component {
           ions: ExperimentStore.ions,
           energies: ExperimentStore.energies,
           comments: ExperimentStore.comments,
-
-          address: LBNLStore.senderAddress,
-          officePhone: LBNLStore.senderOfficePhone,
-          abstract: LBNLStore.experimentAbstract,
-          alternateDate: LBNLStore.alternateDate,
-          targetMaterials: LBNLStore.targetMaterials,
-          safetyConcerns: LBNLStore.safetyConcerns,
-          beamType: LBNLStore.beamType,
-          specialIons: LBNLStore.specialIons,
-          specialEnergies: LBNLStore.specialEnergies,
-          desiredIntensity: LBNLStore.flux,
-          airOrVacuum: LBNLStore.airOrVacuum,
-          controlRestrictions: LBNLStore.controlRestrictions,
-          electricallySafe: LBNLStore.electricallySafe,
     
-          facility: "LBNL",
+          facility: "MSU",
           }).then(response => {
             if (response.data.success === true) {
-            alert("Form was sent to LBNL successfully. Please check your email!")
+            alert("Form was sent to MSU successfully. Please check your email!")
               this.props.history.push({
                 pathname: "/"
               });
@@ -91,4 +76,4 @@ class LBNLSubmit extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(LBNLSubmit);
+export default withStyles(useStyles)(MSUSubmit);

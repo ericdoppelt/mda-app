@@ -56,15 +56,16 @@ class ExpirementStore {
         else return "";
     }
 
-    particles = "";
-    setParticles(newParticles) {
-        this.particles = newParticles;
+    ions = "";
+    setIons(newParticles) {
+        this.ions = newParticles;
     }
-    get particlesError() {
-        return this.particles === "" && this.submitted;
+    get ionsError() {
+        return this.ions === "" && this.submitted;
     }
-    get particlesHelperText() {
-        if (this.particlesError) return "Please enter the particles for the experiment."
+    get ionsHelperText() {
+        if (this.ionsError) return "Please enter the particles for the experiment.";
+        return "";
     }
 
     energies = "";
@@ -75,17 +76,29 @@ class ExpirementStore {
         return this.energies === "" && this.submitted;
     }
     get energiesHelperText() {
-        if (this.energiesError) return "Please enter the energies for the experiment."
+        if (this.energiesError) return "Please enter the energies for the experiment.";
+        return "";
     }
 
+    continuous = "";
+    setContinuous(newCont) {
+        this.continuous = newCont;
+    }
+    get continuousError() {
+        return this.continuous === "" && this.submitted;
+    }
+    get continuousHelperText() {
+        if (this.continuousError) return "Please enter whether the experiment is continuous or interleaved.";
+        else return "";
+    }
     comments = "";
     setComments(newComment) {
         this.comments = newComment;
     }
 
     get validForm() {
-        return !this.titleError && !this.hoursError && !this.personnelError
-        && !this.startDateError && !this.particlesError && !this.energiesError && this.submitted;
+        return !this.titleError && !this.hoursError && !this.personnelError && !this.startDateError
+        && !this.ionsError && !this.energiesError && !this.continuousError && this.submitted;
     }
 }
 
@@ -113,16 +126,21 @@ decorate(ExpirementStore, {
     startDateError: computed,
     startDateHelperText: computed,
 
-    particles: observable,
-    setParticles: action,
-    particlesError: computed,
-    particlesHelperText: computed,
+    ions: observable,
+    setIons: action,
+    ionsError: computed,
+    ionsHelperText: computed,
 
     energies: observable,
     setEnergies: action,
     energiesError: computed,
     energiesHelperText: computed,
 
+    continuous: observable,
+    setContinuous: action,
+    continuousError: computed,
+    continuousHelperText: computed,
+    
     comments: observable,
     setComments: action,
 });

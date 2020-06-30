@@ -115,6 +115,11 @@ class TesterStore {
         else return "";
     }
 
+    billingPO = "";
+    setBillingPO(newPO) {
+        this.billingPO = newPO;
+    }
+    
     billingCity = "";
     setBillingCity(newCity) {
         this.billingCity = newCity;
@@ -207,6 +212,9 @@ decorate(TesterStore, {
     billingAddressError: computed,
     billingAddressHelperText: computed,
 
+    billingPO: observable,
+    setBillingPO: action,
+    
     billingCity: observable,
     setBillingCity: action,
     billingCityError: computed,

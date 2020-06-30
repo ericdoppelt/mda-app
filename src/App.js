@@ -2,12 +2,11 @@ import React from 'react';
 import { Router, Route} from 'react-router-dom';
 import UserMain from './containers/User/UserMain';
 import CalendarMain from './containers/Calendar/CalendarMain';
-import RequestFormMain from './containers/RequestForm/RequestFormMain';
-import RequestTAMU from './containers/RequestForm/RequestTAMU';
-import RequestLBNL from './containers/RequestForm/RequestLBNL';
-import RequestMSU from './containers/RequestForm/RequestMSU';
-import RequestNSRL from './containers/RequestForm/RequestNSRL';
-import RequestCommon from './containers/RequestForm/RequestCommon';
+import RequestTAMU from './containers/RequestForm/TAMU';
+import RequestLBNL from './containers/RequestForm/LBNL';
+import RequestMSU from './containers/RequestForm/MSU';
+import RequestNSRL from './containers/RequestForm/NSRL';
+import RequestCommon from './containers/RequestForm/Common';
 import axios from 'axios';
 
 import FacilityMain from './containers/Facility/FacilityMain';
@@ -21,7 +20,6 @@ import UserProfile from './containers/User/UserProfile';
 import ViewRequestsMain from './containers/ViewRequests/ViewRequestsMain';
 import UserRegistration from './containers/User/UserRegistration';
 import history from './history';
-import * as Constants from './constants'
 
 
 const App = () => (
@@ -34,7 +32,6 @@ const App = () => (
       <Route path="/facilities-nsrl" component={FacilityBNL}/>
       <Route path="/facilities-msu" component={FacilityMSU}/>
       <Route path="/calendar" component={CalendarMain} />
-      <Route path="/request-form" component={RequestFormMain} />
       <Route path="/request-common" component={RequestCommon}/>
       <Route path="/request-tamu" component={RequestTAMU}/>
       <Route path="/request-lbnl" component={RequestLBNL}/>
