@@ -27,7 +27,7 @@ export default function FacilityNSRL() {
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
             <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/MSULogo.png)' }} />
           </Row>
-          <h1><strong>Guide to Reserving Testing Time</strong></h1>
+          <h2>Guide to Reserving Testing Time</h2>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
             <ButtonMSU/>
           </Row>

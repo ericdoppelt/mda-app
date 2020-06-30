@@ -107,55 +107,59 @@ export default function TabsTAMU() {
       </Stack>
       </TabPanel>
       <TabPanel value={value} index={1}>
+      <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+      <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px'}}>
         <Paragraph>
-        <ul>
-      <li><strong>Location:</strong></li>
-      <ul>
-        <li>Physical address: 120 Spence St, College Station, TX</li>
-        <li>The Radiation Effects Facility is located within the Luedecke Cyclotron Institute building directly across Spence Street from the Zachary Engineering Education Complex and directly behind the Jack E. Brown Engineering Building</li>
-        <li><a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank" rel="noopener noreferrer">Building Entry</a></li>
-      </ul>
-      <li><strong>Transportation and Lodging</strong></li>
-      <ul>
-        <li>Airports: <a href="https://www.flyeasterwood.com/" target="_blank" rel="noopener noreferrer">Easterwood</a> (local),
-            <a href="https://www.fly2houston.com/iah/overview/" target="_blank" rel="noopener noreferrer">Houston</a> (1.5 hour drive),
-            <a href="http://www.austintexas.gov/airport" target="_blank" rel="noopener noreferrer">Austin</a> (2 hour drive)</li>
-        <li><a href="https://www.experiencebcs.com/hotels/" target="_blank" rel="noopener noreferrer">Hotels</a></li>
-        <li><a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank" rel="noopener noreferrer">Parking</a></li>
-      </ul>
-      <li><strong>Shipping equipment</strong></li>
-      <ul>
-        <li>Address: ATTN: H. Clark or B. Hyman, Cyclotron Institute, 120 Spence Street, Texas A&M University MS #3366, College Station, TX 77843-3366</li>
-        <li>For assistance contact Bruce Hyman</li>
-        <ul>
-          <li>Phone: 979-845-1411</li>
-          <li>Email: bhyman@tamu.edu</li>
-        </ul>
-      </ul>
-      <li><strong>**<a href="https://cyclotron.tamu.edu/ref/images/Safety%20Rules%202020.pdf" target="_blank" rel="noopener noreferrer">Safety</a>**</strong></li>
-      <ul>
-        <li><a href="https://cyclotron.tamu.edu/ref/images/safety_form_plus_map.pdf" target="_blank" rel="noopener noreferrer">Safety Orientation</a></li>
-        <li>Make sure each team member submits the following to Dr. Henry Clark (hyman@comp.tamu.edu) at least 3 days in advance of testing</li>
-        <ul>
-          <li>Watch Safety Orientation Training <a href="https://www.youtube.com/watch?v=MEAi0lLBp1s&feature=youtu.be" target="_blank" rel="noopener noreferrer">video</a></li>
-          <li>Take online Radiation Safety Test</li>
-          <li>Fill out the Radiation Badge Request Form</li>
-        </ul>
-      </ul>
-      <li>Fill out <a href="https://cyclotron.tamu.edu/ref/images/REF%20Cyclotron%20Health%20Questionnarie.pdf" target="_blank" rel="noopener noreferrer">Health Questionnaire</a></li>
-      <li>First time members and those without a dosimetry badge need to fill out the <a href="https://cyclotron.tamu.edu/ref/images/Request%20for%20Dosimetry%20Service%20%20march%202020.pdf" target="_blank" rel="noopener noreferrer">Dosimetry Request Form</a></li>
-      <li><a href="https://cyclotron.tamu.edu/ref/heavy_ions.html" target="_blank" rel="noopener noreferrer">Information on heavy ion testing</a> (details on testing and setup rooms)</li>
-      <li><a href="https://cyclotron.tamu.edu/ref/protons.html" target="_blank" rel="noopener noreferrer">Information on proton testing</a></li>
-      <li>Check the <a href="https://cyclotron.tamu.edu/wp-content/uploads/current_beam.pdf" target="_blank" rel="noopener noreferrer">two month beam schedule</a> as your testing time approaches</li>
-      <li>If you intend to use cryogenics, before you test you must:</li>
-      <ul>
-        <li>Submit a detailed description of the cryogenic setup and procedure</li>
-        <li>Provide written confirmation a member of the testing team has previous experience testing with cryogenic liquids/</li>
-        <li>Be thoroughly familiar with the information presented in the <a href="https://cyclotron.tamu.edu/ref/images/ci_ref_cryo_guidelines.pdf" target="_blank" rel="noopener noreferrer">cryogenic rules and regulation document</a></li>
-        <li>Inform an operator on duty before testing on test day</li>
-      </ul>
-    </ul>
+          <ul>
+            <li><strong>Location:</strong></li>
+            <ul>
+              <li>Physical address: 120 Spence St, College Station, TX</li>
+              <li>The Radiation Effects Facility is located within the Luedecke Cyclotron Institute building directly across Spence Street from the Zachary Engineering Education Complex and directly behind the Jack E. Brown Engineering Building</li>
+              <li><a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank" rel="noopener noreferrer">Building Entry</a></li>
+            </ul>
+            <li><strong>Transportation and Lodging</strong></li>
+            <ul>
+              <li>Airports: <a href="https://www.flyeasterwood.com/" target="_blank" rel="noopener noreferrer">Easterwood</a> (local),
+                  <a href="https://www.fly2houston.com/iah/overview/" target="_blank" rel="noopener noreferrer">Houston</a> (1.5 hour drive),
+                  <a href="http://www.austintexas.gov/airport" target="_blank" rel="noopener noreferrer">Austin</a> (2 hour drive)</li>
+              <li><a href="https://www.experiencebcs.com/hotels/" target="_blank" rel="noopener noreferrer">Hotels</a></li>
+              <li><a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank" rel="noopener noreferrer">Parking</a></li>
+            </ul>
+            <li><strong>Shipping equipment</strong></li>
+            <ul>
+              <li>Address: ATTN: H. Clark or B. Hyman, Cyclotron Institute, 120 Spence Street, Texas A&M University MS #3366, College Station, TX 77843-3366</li>
+              <li>For assistance contact Bruce Hyman</li>
+              <ul>
+                <li>Phone: 979-845-1411</li>
+                <li>Email: bhyman@tamu.edu</li>
+              </ul>
+            </ul>
+            <li><strong>**<a href="https://cyclotron.tamu.edu/ref/images/Safety%20Rules%202020.pdf" target="_blank" rel="noopener noreferrer">Safety</a>**</strong></li>
+            <ul>
+              <li><a href="https://cyclotron.tamu.edu/ref/images/safety_form_plus_map.pdf" target="_blank" rel="noopener noreferrer">Safety Orientation</a></li>
+              <li>Make sure each team member submits the following to Dr. Henry Clark (hyman@comp.tamu.edu) at least 3 days in advance of testing</li>
+              <ul>
+                <li>Watch Safety Orientation Training <a href="https://www.youtube.com/watch?v=MEAi0lLBp1s&feature=youtu.be" target="_blank" rel="noopener noreferrer">video</a></li>
+                <li>Take online Radiation Safety Test</li>
+                <li>Fill out the Radiation Badge Request Form</li>
+              </ul>
+            </ul>
+            <li>Fill out <a href="https://cyclotron.tamu.edu/ref/images/REF%20Cyclotron%20Health%20Questionnarie.pdf" target="_blank" rel="noopener noreferrer">Health Questionnaire</a></li>
+            <li>First time members and those without a dosimetry badge need to fill out the <a href="https://cyclotron.tamu.edu/ref/images/Request%20for%20Dosimetry%20Service%20%20march%202020.pdf" target="_blank" rel="noopener noreferrer">Dosimetry Request Form</a></li>
+            <li><a href="https://cyclotron.tamu.edu/ref/heavy_ions.html" target="_blank" rel="noopener noreferrer">Information on heavy ion testing</a> (details on testing and setup rooms)</li>
+            <li><a href="https://cyclotron.tamu.edu/ref/protons.html" target="_blank" rel="noopener noreferrer">Information on proton testing</a></li>
+            <li>Check the <a href="https://cyclotron.tamu.edu/wp-content/uploads/current_beam.pdf" target="_blank" rel="noopener noreferrer">two month beam schedule</a> as your testing time approaches</li>
+            <li>If you intend to use cryogenics, before you test you must:</li>
+            <ul>
+              <li>Submit a detailed description of the cryogenic setup and procedure</li>
+              <li>Provide written confirmation a member of the testing team has previous experience testing with cryogenic liquids/</li>
+              <li>Be thoroughly familiar with the information presented in the <a href="https://cyclotron.tamu.edu/ref/images/ci_ref_cryo_guidelines.pdf" target="_blank" rel="noopener noreferrer">cryogenic rules and regulation document</a></li>
+              <li>Inform an operator on duty before testing on test day</li>
+            </ul>
+          </ul>
         </Paragraph>
+      </Row>
+      </Stack>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Row>

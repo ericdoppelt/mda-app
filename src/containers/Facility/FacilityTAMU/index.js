@@ -25,7 +25,7 @@ export default function Home() {
             <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/1388bb77-92c9-4f33-843b-4978f4a94606.png)' }} />
             </Row>
-              <h1>Guide to Reserving Testing Time</h1>
+              <h2>Guide to Reserving Testing Time</h2>
               <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
                 <ButtonTAMU/>
               </Row>
