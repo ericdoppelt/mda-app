@@ -10,8 +10,6 @@ import Paragraph from '../../../../components/UIzard/Paragraph';
 import Row from '../../../../components/UIzard/Row';
 import Card from '../../../../components/UIzard/Card';
 import Stack from '../../../../components/UIzard/Stack';
-import HeaderTAMU from '../FacilityTAMU/header'
-
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -83,7 +81,8 @@ export default function TabsTAMU() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-      <HeaderTAMU/>
+      <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+      <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px'}}>
       <Paragraph>
           <ul>
             <li> <a href="https://cyclotron.tamu.edu/" target="_blank" rel="noopener noreferrer">Website</a></li>
@@ -103,9 +102,11 @@ export default function TabsTAMU() {
             </ul>
           </ul>
       </Paragraph>
+
+      </Row>
+      </Stack>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <HeaderTAMU/>
         <Paragraph>
         <ul>
       <li><strong>Location:</strong></li>
@@ -157,7 +158,6 @@ export default function TabsTAMU() {
         </Paragraph>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <HeaderTAMU/>
         <Row>
         <Stack>
         <strong>Facility Information</strong>
@@ -206,7 +206,6 @@ export default function TabsTAMU() {
           </Row>
       </TabPanel>
       <TabPanel value={value} index={3}>
-          <HeaderTAMU/>
           <strong>Physical Address</strong>
           <br/>
           Cyclotron Institute

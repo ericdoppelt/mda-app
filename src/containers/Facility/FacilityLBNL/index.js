@@ -6,7 +6,7 @@ import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import TabsLBNL from '../../../components/Custom/FacilityPages/FacilityLBNL';
+import ButtonLBNL from '../../../components/Custom/FacilityPages/FacilityLBNL/button';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
 
@@ -20,22 +20,18 @@ export default function Home() {
         <MDAHeader2/>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-            <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', flexGrow:'0'}}>
+            <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <h1>Lawrence Berkeley National Laboratory</h1>
               </Row>
-              <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-                <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+              <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                   <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/LBNLLogo.jpg)' }} />
-                </Row>
-              </Stack>
-
-
-              <h1>Guide to Reserving Testing Time</h1>
-              <TabsLBNL/>
-            </Card>
-          </Row>
+              </Row>
+                <h1>Guide to Reserving Testing Time</h1>
+              <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+                <ButtonLBNL/>
+              </Row>
+            </Stack>
         </main>
       </div>
     </ThemeProvider>
