@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
 import InfiniteCalendar from 'react-infinite-calendar';
-import ExperimentStore from '../../stores/ExpirementStore';
+import ExperimentStore from '../../../stores/ExpirementStore';
 
 const useStyles = theme => ({
     submitButton: {
@@ -74,10 +74,10 @@ const useStyles = theme => ({
             <TextField 
               className={classes.textField}
               label = "Particle"
-              value = {ExperimentStore.particles}
-              onChange={event => {ExperimentStore.setParticles(event.target.value)}}
-              error = {ExperimentStore.particlesError}
-              helperText = {ExperimentStore.particlesHelperText}
+              value = {ExperimentStore.ions}
+              onChange={event => {ExperimentStore.setIons(event.target.value)}}
+              error = {ExperimentStore.ionsError}
+              helperText = {ExperimentStore.ionsHelperText}
               fullWidth
             />
             <TextField 
@@ -89,6 +89,21 @@ const useStyles = theme => ({
               helperText = {ExperimentStore.energiesHelperText}
               fullWidth
             />
+            <FormControl 
+              className={classes.textField}
+              error = {ExperimentStore.continuousError}
+              fullWidth
+              > 
+              <InputLabel>Continuous or Interleaved?</InputLabel>
+              <Select
+                value={ExperimentStore.continuous}
+                onChange={event => {ExperimentStore.setContinuous(event.target.value)}}
+                >
+                <MenuItem value={"Continuous"}>Continuous</MenuItem>
+                <MenuItem value={"Interleaved"}>Interleaved</MenuItem>
+              </Select>
+              <FormHelperText>{ExperimentStore.continuousHelperText}</FormHelperText>
+            </FormControl>
             <TextField 
               className={classes.textField}
               label = "Comments"

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
 import InfiniteCalendar from 'react-infinite-calendar';
 
-import LBNLStore from '../../stores/LBNLStore';
+import LBNLStore from '../../../../stores/LBNLStore';
 
 const useStyles = theme => ({
     submitButton: {
@@ -87,8 +87,8 @@ const useStyles = theme => ({
             <TextField
               className={classes.textField}
               label = "Special Ions"
-              value = {LBNLStore.specialParticles}
-              onChange={event => {LBNLStore.setSpecialParticles(event.target.value)}}
+              value = {LBNLStore.specialIons}
+              onChange={event => {LBNLStore.setSpecialIons(event.target.value)}}
               fullWidth
             />
             <TextField
@@ -100,8 +100,8 @@ const useStyles = theme => ({
             />
             <TextField
               className={classes.textField}
-              label = "Special Ions"
-              value = {LBNLStore.setFlux}
+              label = "Flux"
+              value = {LBNLStore.flux}
               onChange={event => {LBNLStore.setFlux(event.target.value)}}
               fullWidth
             />
