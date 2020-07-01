@@ -6,23 +6,14 @@ import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
 import InfiniteCalendar from 'react-infinite-calendar';
 
-import LBNLStore from '../../stores/LBNLStore';
+import LBNLStore from '../../../../stores/LBNLStore';
 
 const useStyles = theme => ({
-    submitButton: {
-      backgroundColor: "#bfddff",
-      width: '100%',
-    },
-    startButton: {
-      backgroundColor: "#bfffc8",
-      width: '100%',
-      marginTop: '20px',
-      marginBottom: '20px',
-    },
     alternateButton: {
       backgroundColor: "#f5f5b8",
       width: '100%',
       marginTop: '20px',
+      marginBottom: '10px',
     },
     textField: {
       marginBottom: '2px',
@@ -44,14 +35,14 @@ const useStyles = theme => ({
           <Box>Please enter the following supplemental and optional information for LBNL.</Box>
             <TextField
               className={classes.textField}
-              label = "Tester's Address"
+              label = "Address"
               value = {LBNLStore.senderAddress}
               onChange={(event) => {LBNLStore.setSenderAddress(event.target.value)}}
               fullWidth
             />
             <TextField 
               className={classes.textField}
-              label = "Tester's Office Phone"
+              label = "Office Phone"
               value = {LBNLStore.senderOfficePhone}
               onChange={event => {LBNLStore.setSenderOfficePhone(event.target.value)}}
               fullWidth
@@ -87,8 +78,8 @@ const useStyles = theme => ({
             <TextField
               className={classes.textField}
               label = "Special Ions"
-              value = {LBNLStore.specialParticles}
-              onChange={event => {LBNLStore.setSpecialParticles(event.target.value)}}
+              value = {LBNLStore.specialIons}
+              onChange={event => {LBNLStore.setSpecialIons(event.target.value)}}
               fullWidth
             />
             <TextField
@@ -100,8 +91,8 @@ const useStyles = theme => ({
             />
             <TextField
               className={classes.textField}
-              label = "Special Ions"
-              value = {LBNLStore.setFlux}
+              label = "Flux"
+              value = {LBNLStore.flux}
               onChange={event => {LBNLStore.setFlux(event.target.value)}}
               fullWidth
             />

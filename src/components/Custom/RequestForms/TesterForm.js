@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
 
-import TesterStore from '../../stores/TesterStore';
+import TesterStore from '../../../stores/TesterStore';
 
 const useStyles = theme => ({
     submitButton: {
@@ -34,10 +34,10 @@ const useStyles = theme => ({
       const { classes } = this.props;
       return(
         <div>
-          <Box>Please enter the following information about yourself and your organization.</Box>
+          <Box>Please enter the following information about yourself.</Box>
             <TextField
               className={classes.textField}
-              label = "Tester's Name"
+              label = "Name"
               value = {TesterStore.senderName}
               onChange={(event) => {TesterStore.setName(event.target.value)}}
               error = {TesterStore.nameError}
@@ -46,7 +46,7 @@ const useStyles = theme => ({
             />
             <TextField 
               className={classes.textField}
-              label = "Tester's Email"
+              label = "Email"
               value = {TesterStore.email}
               onChange={event => {TesterStore.setEmail(event.target.value)}}
               error = {TesterStore.emailError}
@@ -55,7 +55,7 @@ const useStyles = theme => ({
             />
             <TextField 
               className={classes.textField}
-              label = "Tester's Cell #"
+              label = "Cell #"
               value = {TesterStore.cell}
               onChange={event => {TesterStore.setCell(event.target.value)}}
               error = {TesterStore.cellError}
@@ -64,7 +64,7 @@ const useStyles = theme => ({
             />
             <TextField 
               className={classes.textField}
-              label = "Tester's Company"
+              label = "Company"
               value = {TesterStore.company}
               onChange={event => {TesterStore.setCompany(event.target.value)}}
               error = {TesterStore.companyError}
@@ -73,7 +73,7 @@ const useStyles = theme => ({
             />
             <TextField 
               className={classes.textField}
-              label = "Tester's Integrator"
+              label = "Integrator"
               value = {TesterStore.integrator}
               onChange={event => {TesterStore.setIntegrator(event.target.value)}}
               error = {TesterStore.integratorError}
@@ -114,6 +114,13 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setBillingAddress(event.target.value)}}
               error = {TesterStore.billingAddressError}
               helperText = {TesterStore.billingAddressHelperText}
+              fullWidth
+            />
+            <TextField 
+              className={classes.textField}
+              label = "P.O. No."
+              value = {TesterStore.billingPO}
+              onChange={event => {TesterStore.setBillingPO(event.target.value)}}
               fullWidth
             />
             <TextField 

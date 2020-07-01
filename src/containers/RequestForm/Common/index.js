@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
-import RequestFormCommon from '../../../components/Custom/RequestFormCommon';
+import RequestFormCommon from '../../../components/Custom/RequestForms/Common';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';

@@ -3,13 +3,13 @@ import {TextField, Button, FormControl, InputLabel, Select, MenuItem, FormHelper
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import Stack from '../../UIzard/Stack';
-import './RequestFormTAMU.css'
+import Stack from '../../../UIzard/Stack';
+import './RequestFormCommon.css'
 import 'react-nice-dates/build/style.css'
 import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
 import 'react-infinite-calendar/styles.css';
 import axios from 'axios';
-import Image from '../../../components/UIzard/Image';
+import Image from '../../../UIzard/Image';
 import SendIcon from '@material-ui/icons/Send';
 
 const useStyles = theme => ({
@@ -39,7 +39,7 @@ const useStyles = theme => ({
   }
 });
 
-class RequestFormTAMU extends React.Component {
+class RequestFormCommon extends React.Component {
 
   constructor(props) {
     super(props);
@@ -98,7 +98,6 @@ class RequestFormTAMU extends React.Component {
       validForm: false,
       secondExperiment: false,
       render: false,
-      
     }
   }
 
@@ -165,7 +164,25 @@ class RequestFormTAMU extends React.Component {
     else this.state.senderNameErrorText = "";
 
     if (this.state.companyName === "") {
-      this.state.companyNameErrorText = "Please enter a company name.";
+      this.state.companyNameErrorText = "Please enter your phone number.";
+      sectionIsValid = false;
+    }
+    else this.state.companyNameErrorText = "";
+
+    if (this.state.companyName === "") {
+      this.state.companyNameErrorText = "Please enter the name of your funding source.";
+      sectionIsValid = false;
+    }
+    else this.state.companyNameErrorText = "";
+
+    if (this.state.companyName === "") {
+      this.state.companyNameErrorText = "Please enter an email for your funding source.";
+      sectionIsValid = false;
+    }
+    else this.state.companyNameErrorText = "";
+
+    if (this.state.companyName === "") {
+      this.state.companyNameErrorText = "Please enter a phone number for your funding source.";
       sectionIsValid = false;
     }
     else this.state.companyNameErrorText = "";
@@ -287,6 +304,38 @@ class RequestFormTAMU extends React.Component {
           />
         <TextField 
           className={classes.textField}
+          label = "Phone"
+          onChange={event => {this.setState({senderEmail: event.target.value})}}
+          error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
+          helperText = {this.state.senderEmailErrorText}
+          fullWidth
+          />
+        <TextField 
+          className={classes.textField}
+          label = "Funding Source"
+          onChange={event => {this.setState({companyName: event.target.value})}}
+          error = {this.state.companyNameErrorText !== "" && this.state.submitted}
+          helperText = {this.state.companyNameErrorText}
+          fullWidth
+          />
+        <TextField 
+          className={classes.textField}
+          label = "Funding Source Contact Email"
+          onChange={event => {this.setState({senderEmail: event.target.value})}}
+          error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
+          helperText = {this.state.senderEmailErrorText}
+          fullWidth
+          />
+        <TextField 
+          className={classes.textField}
+          label = "Funding Source Contact Phone"
+          onChange={event => {this.setState({senderEmail: event.target.value})}}
+          error = {this.state.senderEmailErrorText !== "" && this.state.submitted}
+          helperText = {this.state.senderEmailErrorText}
+          fullWidth
+          />
+        <TextField 
+          className={classes.textField}
           label = "Company Name"
           onChange={event => {this.setState({companyName: event.target.value})}}
           error = {this.state.companyNameErrorText !== "" && this.state.submitted}
@@ -377,6 +426,60 @@ class RequestFormTAMU extends React.Component {
               multiline
               fullWidth
             />
+            <TextField 
+              className={classes.textField}
+              label = "Specified Ion"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              helperText = {this.state["particlesErrorText" + experimentNumber]}
+              multiline
+              fullWidth
+              />
+            <TextField 
+              className={classes.textField}
+              label = "Beam Size"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              helperText = {this.state["particlesErrorText" + experimentNumber]}
+              multiline
+              fullWidth
+              />
+            <TextField 
+              className={classes.textField}
+              label = "Max Dose/Fluence"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              helperText = {this.state["particlesErrorText" + experimentNumber]}
+              multiline
+              fullWidth
+              />
+            <TextField 
+              className={classes.textField}
+              label = "Max Dose Rate/Flux"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              helperText = {this.state["particlesErrorText" + experimentNumber]}
+              multiline
+              fullWidth
+              />
+            <TextField 
+              className={classes.textField}
+              label = "Specified Ion"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              helperText = {this.state["particlesErrorText" + experimentNumber]}
+              multiline
+              fullWidth
+              />
+            <TextField 
+              className={classes.textField}
+              label = "Additional Information (safety concerns, export restrictions, etc)"
+              onChange={event => {this.setState({["particles" + experimentNumber]: event.target.value})}}
+              error = {this.state["particlesErrorText" + experimentNumber].length !== 0 && this.state.submitted}
+              helperText = {this.state["particlesErrorText" + experimentNumber]}
+              multiline
+              fullWidth
+              />
             <br/>
             <br/>
             <Button className={classes.startButton} onClick={() => this.setState({["openStartDate" + experimentNumber]: true})}>Select Start Date for Experiment #{experimentNumber}</Button>
@@ -424,8 +527,8 @@ class RequestFormTAMU extends React.Component {
     return (
       <div className="fullForm">
         <Stack>
-          <Image style={{ width: '210px', height: '150px', backgroundImage: 'url(/images/1388bb77-92c9-4f33-843b-4978f4a94606.png)' }} />
-          <h1 variant="h1" component="h2">Texas A&M Beam Request Form</h1>
+          <Image style={{ width: '150px', height: '150px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
+          <h1 variant="h1" component="h2">Common Beam Request Form</h1>
           {this.getAgreementForm()}
           <br/>
           {this.getExperimentForm(1)}
@@ -440,4 +543,4 @@ class RequestFormTAMU extends React.Component {
   }
 }
 
-export default withRouter(withStyles(useStyles)(RequestFormTAMU));
+export default withRouter(withStyles(useStyles)(RequestFormCommon));

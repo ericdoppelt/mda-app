@@ -1,4 +1,4 @@
-import {observable, action, decorate, computed} from 'mobx';
+import {observable, action, decorate} from 'mobx';
 
 class LBNLStore {
     
@@ -42,14 +42,14 @@ class LBNLStore {
         this.beamType = newBeam;
     }
 
-    specialParticles = "";
-    setSpecialParticles(newIons) {
-        this.specialParticles = newIons;
+    specialIons = "";
+    setSpecialIons(newIons) {
+        this.specialIons = newIons;
     }
 
     specialEnergies = "";
     setSpecialEnergies(newEnergy) {
-        this.specialEnergy = newEnergy;
+        this.specialEnergies = newEnergy;
     }
 
     flux = "";
@@ -98,8 +98,8 @@ decorate(LBNLStore, {
     beamType: observable,
     setBeamType: action,
 
-    specialParticles: observable,
-    setSpecialParticles: action,
+    specialIons: observable,
+    setSpecialIons: action,
 
     specialEnergies: observable,
     setSpecialEnergies: action,
