@@ -38,7 +38,7 @@ export default function Home() {
                     <ExpirementStore.Provider>
                       <NSRLStore.Provider>
                         <TesterForm/>
-                        <ExperimentForm/>
+                        <ExperimentForm facility="NSRL"/>
                         <NSRLForm/>
                         <NSRLSubmit/>
                       </NSRLStore.Provider>

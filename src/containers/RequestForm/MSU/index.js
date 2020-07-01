@@ -35,7 +35,7 @@ export default function Home() {
                   <TesterStore.Provider>
                     <ExpirementStore.Provider>
                       <TesterForm/>
-                      <ExperimentForm/>
+                      <ExperimentForm facility="MSU"/>
                       <MSUSubmit/>
                     </ExpirementStore.Provider>
                   </TesterStore.Provider> 

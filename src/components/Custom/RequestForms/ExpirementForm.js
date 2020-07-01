@@ -1,4 +1,5 @@
 import React from 'react';
+import Row from '../../UIzard/Row';
 import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
@@ -6,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
 import InfiniteCalendar from 'react-infinite-calendar';
 import ExperimentStore from '../../../stores/ExpirementStore';
+import axios from 'axios';
 
 const useStyles = theme => ({
     submitButton: {
@@ -36,8 +38,39 @@ const useStyles = theme => ({
         super(props);
         this.state = {
             open: false,
+            particles: [],
+            energies: {},
         }
     }
+
+    async componentDidMount() {
+      let url = 'https://mda-phoenix.herokuapp.com/beams';
+        await axios.post(url, {
+          facility: this.props.facility,
+          }).then(response => {
+            this.setState({particles: Object.keys(response.data)});
+            this.setState({energies: response.data});
+            })
+            .catch(error => {
+            alert(error);
+          });
+          console.log("d");
+          console.log(this.state.particles);
+          console.log(this.state.energies);
+        } 
+      
+    getEnergies() {
+      if (ExperimentStore.ions === "") {
+        return <MenuItem value={""}>{"Please enter an ion"}</MenuItem>
+        } else {
+        console.log("not blank");
+        let energies = this.state.energies[ExperimentStore.ions].map(function(energy) {
+          return <MenuItem value={energy}>{energy}</MenuItem>
+        });
+        return energies;
+      }
+    }
+    
 
     render() {
       const { classes } = this.props;
@@ -71,24 +104,39 @@ const useStyles = theme => ({
               helperText = {ExperimentStore.personnelHelperText}
               fullWidth
             />
-            <TextField 
+            <Row>
+            <FormControl 
               className={classes.textField}
-              label = "Particle"
-              value = {ExperimentStore.ions}
-              onChange={event => {ExperimentStore.setIons(event.target.value)}}
               error = {ExperimentStore.ionsError}
-              helperText = {ExperimentStore.ionsHelperText}
               fullWidth
-            />
-            <TextField 
+              > 
+              <InputLabel>Ion</InputLabel>
+              <Select
+                value={ExperimentStore.ions}
+                onChange={event => {ExperimentStore.setIons(event.target.value)}}
+                >
+                {this.state.particles.map(function(ion) {
+                  return <MenuItem value={ion}>{ion}</MenuItem>
+                })}
+              </Select>
+              <FormHelperText>{ExperimentStore.continuousHelperText}</FormHelperText>
+            </FormControl>
+
+            <FormControl 
               className={classes.textField}
-              label = "Energy"
-              value = {ExperimentStore.energies}
-              onChange={event => {ExperimentStore.setEnergies(event.target.value)}}
               error = {ExperimentStore.energiesError}
-              helperText = {ExperimentStore.energiesHelperText}
               fullWidth
-            />
+              > 
+              <InputLabel>Energy</InputLabel>
+              <Select
+                value={ExperimentStore.energies}
+                onChange={event => {ExperimentStore.setEnergies(event.target.value)}}
+                >
+                {this.getEnergies()}
+              </Select>
+              <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
+            </FormControl>
+            </Row>
             <FormControl 
               className={classes.textField}
               error = {ExperimentStore.continuousError}
