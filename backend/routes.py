@@ -1,11 +1,11 @@
 
 import copy
+from sqlalchemy import and_
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token, 
 create_refresh_token, jwt_required, 
 get_jwt_identity, get_jti)
-from sqlalchemy import func
 from datetime import timedelta, datetime
 
 from main import app, bcrypt, jwt, mail
@@ -103,8 +103,32 @@ def entries():
             myList.append(entry_info)
     return jsonify({'entries' : myList})
 
+@app.route('/filterion', methods=['POST'])
+def filterion():
+
+    req = request.get_json()
+    result = ""
+
+    try:
+        ion = req['ion']
+        energy = req['energy']
+        beams = Beams.query.filter(and_(Beams.ion.ilike('%' + ion + '%'), Beams.amev >= energy)).all()
+        myList = []
+        for beam in beams:
+            facility = Organization.query.filter_by(id=beam.org_id).one()
+            if facility.name not in myList:
+                myList.append(facility.name)
+        result = {'facilities' : myList}
+
+    except Exception as e:
+        print(e)
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+
 @app.route('/calendar-entry', methods=['POST'])
-@jwt_required
+# @jwt_required
 def create_entry():
 
     username = get_jwt_identity()
