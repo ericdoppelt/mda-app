@@ -94,7 +94,7 @@ const useStyles = theme => ({
               error = {ExperimentStore.continuousError}
               fullWidth
               > 
-              <InputLabel>Continuous or Interleaved?</InputLabel>
+              <InputLabel>Continuous or Interleaved</InputLabel>
               <Select
                 value={ExperimentStore.continuous}
                 onChange={event => {ExperimentStore.setContinuous(event.target.value)}}
