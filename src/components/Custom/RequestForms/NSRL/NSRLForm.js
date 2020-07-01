@@ -2,6 +2,8 @@ import React from 'react';
 import InfiniteCalendar from 'react-infinite-calendar';
 import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, TextField, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
+import { observer } from "mobx-react"
 import NSRLStore from '../../../../stores/NSRLStore';
 
 const useStyles = theme => ({
@@ -29,47 +31,47 @@ class NSRLForm extends React.Component {
         Select Preferred End Date
       </Button>
       <Dialog open={this.state.open} onClose={() => this.setState({open: false})}>
-      <DialogTitle>Please enter a desired end date.</DialogTitle>
-      <DialogContent>
-      <InfiniteCalendar
-        selected={NSRLStore.endDate}
-        onSelect={(event) => {NSRLStore.setEndDate(event)}}
-        minDate={new Date()}
-        min={new Date()}
-      />
-      </DialogContent>
-      <DialogActions>
-      <Button onClick={() => this.setState({open: false})}>
-        Select End Date
-      </Button>
-      </DialogActions>
-      </Dialog>
-      <TextField
-        className={classes.textField}
-        label = "Linear Energy Transfer"
-        value = {NSRLStore.let}
-        onChange={event => {NSRLStore.setLet(event.target.value)}}
-        fullWidth
-      />
-      <TextField
-        className={classes.textField}
-        label = "Beam Size"
-        value = {NSRLStore.beamSize}
-        onChange={event => {NSRLStore.setBeamSize(event.target.value)}}
-        fullWidth
-      />
-      <TextField
-        className={classes.textField}
-        label = "Max Dose"
-        value = {NSRLStore.maxDose}
-        onChange={event => {NSRLStore.setMaxDose(event.target.value)}}
-        fullWidth
-      />
-      <FormControl 
-        className={classes.textField}
-        fullWidth
+        <DialogTitle>Please enter a desired end date.</DialogTitle>
+        <DialogContent>
+        <InfiniteCalendar
+          selected={NSRLStore.endDate}
+          onSelect={(event) => {NSRLStore.setEndDate(event)}}
+          minDate={new Date()}
+          min={new Date()}
+        />
+        </DialogContent>
+        <DialogActions>
+        <Button onClick={() => this.setState({open: false})}>
+          Select End Date
+        </Button>
+        </DialogActions>
+        </Dialog>
+        <TextField
+          className={classes.textField}
+          label = "Linear Energy Transfer"
+          value = {NSRLStore.let}
+          onChange={event => {NSRLStore.setLet(event.target.value)}}
+          fullWidth
+        />
+        <TextField
+          className={classes.textField}
+          label = "Beam Size"
+          value = {NSRLStore.beamSize}
+          onChange={(event) => {NSRLStore.setBeamSize(event.target.value)}}
+          fullWidth
+        />
+        <TextField
+          className={classes.textField}
+          label = "Max Dose"
+          value = {NSRLStore.maxDose}
+          onChange={event => {NSRLStore.setMaxDose(event.target.value)}}
+          fullWidth
+        />
+        <FormControl 
+          className={classes.textField}
+          fullWidth
         > 
-        <InputLabel>Is this a NASA-funded experiment?</InputLabel>
+       <InputLabel>Is this a NASA-funded experiment?</InputLabel>
         <Select
           value={NSRLStore.isNasa}
           onChange={event => {NSRLStore.setIsNasa(event.target.value)}}
@@ -96,4 +98,4 @@ class NSRLForm extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(NSRLForm);
+export default withRouter(withStyles(useStyles)(observer(NSRLForm)));
