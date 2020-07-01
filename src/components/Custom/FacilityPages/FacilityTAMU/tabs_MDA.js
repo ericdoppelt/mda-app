@@ -73,7 +73,7 @@ export default function TabsTAMU() {
           centered="true"
 
         >
-          <Tab label="Initial Steps" {...a11yProps(0)} />
+          <Tab label="Facility Capabilities" {...a11yProps(0)} />
           <Tab label="Preparing for Visit" {...a11yProps(1)} />
           <Tab label="Additional Resources" {...a11yProps(2)} />
           <Tab label="Contact Info" {...a11yProps(3)} />
@@ -88,10 +88,6 @@ export default function TabsTAMU() {
             <li>Check the <a href="https://cyclotron.tamu.edu/ref/images/heavy_ion_beams.pdf" target="_blank" rel="noopener noreferrer">heavy ion beam list</a> to ensure the intended ion and necessary energy characteristics are available</li>
             <li>Determine <a href="https://cyclotron.tamu.edu/ref/images/Beam_Change_Time.PDF" target="_blank" rel="noopener noreferrer">beam charge time</a> to inform time request</li>
             <li>To schedule testing time, submit the <a href="https://cyclotron.tamu.edu/ref/images/btrf.pdf"  target="_blank" rel="noopener noreferrer">beam request form</a> by email or fax:</li>
-            <ul>
-              <li>Fax: 979-458-3213</li>
-              <li>Email: clark@comp.tamu.edu (Dr. Henry Clark)</li>
-            </ul>
           </ul>
       </Paragraph>
 
@@ -198,23 +194,29 @@ export default function TabsTAMU() {
           </Row>
       </TabPanel>
       <TabPanel value={value} index={3}>
-          <strong>Physical Address</strong>
+          <strong>Physical Address</strong><br/>
+          Cyclotron Institute<br/>
+          Texas A&M University<br/>
+          120 Spence St.<br/>
+          College Station, TX 77843-3366<br/>
           <br/>
-          Cyclotron Institute
-          <br/>
-          Texas A&M University
-          <br/>
-          120 Spence St.
-          <br/>
-          College Station, TX 77843-3366
-          <br/>
-          <br/>
-          <strong>Mailing Address</strong>
-          <br/>
+          <strong>Mailing Address</strong><br/>
           Cyclotron Institute<br/>
           Texas A&M University<br/>
           3366 TAMU<br/>
-          College Station, TX 77843-3366
+          College Station, TX 77843-3366<br/>
+          <br/>
+          <strong>Dr. Henry Clark</strong><br/>
+          <i>Main contact for beam time scheduling, billing, and general facility questions</i><br/>
+          Email: clark@comp.tamu.edu<br/>
+          Phone: 979-845-1411<br/>
+          Fax: 979-458-3213 <br/>
+          <br/>
+          <strong>Bruce Hyman</strong><br/>
+          <i>Main contact for beamline hardware, equipment receiving/shipping,<br/>
+          general facility and website related questions</i><br/>
+          Email: hyman@comp.tamu.edu<br/>
+
 
       </TabPanel>
     </div>

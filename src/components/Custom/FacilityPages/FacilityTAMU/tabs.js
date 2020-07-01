@@ -73,6 +73,7 @@ export default function TabsTAMU() {
           aria-label="scrollable auto tabs example"
           centered="true"
 
+
         >
           <Tab label="Initial Steps" {...a11yProps(0)} />
           <Tab label="Preparing for Visit" {...a11yProps(1)} />
