@@ -1,16 +1,16 @@
 
 import copy
+from sqlalchemy import and_
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token, 
 create_refresh_token, jwt_required, 
 get_jwt_identity, get_jti)
-from sqlalchemy import func
 from datetime import timedelta, datetime
 
 from main import app, bcrypt, jwt, mail
 from extensions import db
-from models import Test, Users, Calendar, TokenBlacklist, Beams, Organization
+from models import Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests
 from blacklist_helpers import (
     is_token_revoked, add_token_to_database, get_user_tokens,
     revoke_token, unrevoke_token, revoke_user_tokens,
@@ -103,6 +103,55 @@ def entries():
             myList.append(entry_info)
     return jsonify({'entries' : myList})
 
+@app.route('/filterion', methods=['POST'])
+def filterion():
+
+    req = request.get_json()
+    result = ""
+
+    try:
+        ion = req['ion']
+        energy = req['energy']
+        beams = Beams.query.filter(and_(Beams.ion.ilike('%' + ion + '%'), Beams.amev >= energy)).all()
+        myList = []
+        for beam in beams:
+            facility = Organization.query.filter_by(id=beam.org_id).one()
+            if facility.name not in myList:
+                myList.append(facility.name)
+        result = {'facilities' : myList}
+
+    except Exception as e:
+        print(e)
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+
+@app.route('/calendar-entry', methods=['POST'])
+# @jwt_required
+def create_entry():
+
+    username = get_jwt_identity()
+    req = request.get_json()
+    result = ""
+
+    try:
+        entry = Calendar(
+            username = username,
+            facility = req['facility'],
+            integrator = req['integrator'],
+            totalTime = req['totalTime'], 
+            startDate = req['startDate'],
+            cannotRun = req['cannotRun']
+        )
+        result = entry.create_entry()
+
+    except Exception as e:
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+
 @jwt.token_in_blacklist_loader
 def check_if_token_revoked(decoded_token):
     return is_token_revoked(decoded_token)
@@ -146,7 +195,28 @@ def beams():
         # 'max_flux': beam.max_flux, 'max_flux_units': beam.max_flux_units, 'let_material': beam.let_material, 'air': beam.air}
 
     return myList
-    
+
+@app.route('/getforms', methods=['POST'])
+#@jwt_required
+def getRequests():
+    username = get_jwt_identity()
+    req = request.get_json()
+    result = ""
+
+    try:
+        request_forms = requests.query.all()
+        myForms = []
+        for form in request_forms:
+            myForms.append({'name' : request_forms.name, 'integrator' : request_forms.integrator,
+            'facility' : request_forms.facility, 'company' : request_forms.company})
+        result = {'requests' : myForms}
+
+    except Exception as e:
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+
 
 # TODO make jwt required after development
 @app.route('/requestform', methods=['POST'])
@@ -155,58 +225,78 @@ def requestform():
     try:
         form = request.get_json()
         facility = form['facility']
-        form['date'] = datetime.today().strftime("%m/%d/%Y")
+        form['signDate'] = datetime.today().strftime("%m/%d/%Y")
         template = ""
         output = ""
         pdf = FormBuilder(form)
-        msg = Message("Send Request Form Demo", cc=[form['senderEmail']])
+        msg = Message("Send Request Form Demo", cc=[form['email']])
+        print(form['date'])
         # msg.recipients = ['edopp4182@gmail.com']
         if facility == 'TAMU': 
             # msg.recipients = ['clark@comp.tamu.edu']
-            form['signature'] = form['senderName']
-            if form['startDate1'] != "":
-                date = datetime.strptime(form['startDate1'], '%Y-%m-%dT%H:%M:%S.%fZ')
-                form['startDate1'] = date.strftime('%m/%d/%Y')
-            if form['startDate2'] != "":
-                date = datetime.strptime(form['startDate2'], '%Y-%m-%dT%H:%M:%S.%fZ')
-                form['startDate2'] = date.strftime('%m/%d/%Y')
-            badDates1 = copy.deepcopy(form['badDates1'])
-            for i, date in enumerate(badDates1):
+            form['signature'] = form['name']
+            if form['date'] != "":
+                date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                form['date'] = date.strftime('%m/%d/%Y')
+            # if form['startDate2'] != "":
+            #     date = datetime.strptime(form['startDate2'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            #     form['startDate2'] = date.strftime('%m/%d/%Y')
+            badDates = copy.deepcopy(form['badDates'])
+            for i, date in enumerate(badDates):
                 date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-                if i != 0 or i != len(badDates1) - 1:
-                    form['badDates1'] += ', '
+                if i != 0 or i != len(badDates) - 1:
+                    form['badDates'] += ', '
                 if i == 0:
-                    form['badDates1'] = date.strftime('%m/%d/%Y')
+                    form['badDates'] = date.strftime('%m/%d/%Y')
                 else:
-                    form['badDates1'] += date.strftime('%m/%d/%Y')
-            badDates2 = copy.deepcopy(form['badDates2'])
-            if form['badDates2']:
-                for i, date in enumerate(badDates2):
-                    date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-                    form['badDates2'] += date.strftime('%m/%d/%Y')
-                    if i == 0:
-                        form['badDates2'] = date.strftime('%m/%d/%Y')
-                    else:
-                        form['badDates2'] += date.strftime('%m/%d/%Y')
-                    if i != 0 or i != len(badDates2) - 1:
-                        form['badDates2'] += ', '
+                    form['badDates'] += date.strftime('%m/%d/%Y')
+            # badDates2 = copy.deepcopy(form['badDates2'])
+            # if form['badDates2']:
+            #     for i, date in enumerate(badDates2):
+            #         date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
+            #         form['badDates2'] += date.strftime('%m/%d/%Y')
+            #         if i == 0:
+            #             form['badDates2'] = date.strftime('%m/%d/%Y')
+            #         else:
+            #             form['badDates2'] += date.strftime('%m/%d/%Y')
+            #         if i != 0 or i != len(badDates2) - 1:
+            #             form['badDates2'] += ', '
             else:
                 form['badDates2'] = ""
             template = "TAMU_request_template.pdf"
             output = "TAMU_request.pdf"
             pdf.fill(template, output)
-            template = "Universal_request_template.pdf"
-            output = "Universal_request.pdf"
-            pdf.fill(template, output)
-            print("bah")
             msg.body = "Here is the request form for beam time"
             with app.open_resource("TAMU_request.pdf") as fp:
                 msg.attach("TAMU_request.pdf", "TAMU_request/pdf", fp.read())
         if facility == 'LBNL':
             # msg.recipients = ['88beamrequest@lbl.gov']
             msg.body = pdf.mail()
+        if facility == 'MSU':
+            # msg.recipients = ['88beamrequest@lbl.gov']
+            if form['date'] != "":
+                date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                form['date'] = date.strftime('%m/%d/%Y')
+            template = "Universal_request_template.pdf"
+            output = "Universal_request.pdf"
+            pdf.fill(template, output)
+            msg.body = "Here is the request form for beam time"
+            with app.open_resource("Universal_request.pdf") as fp:
+                msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
+        if facility == 'NSRL':
+            # msg.recipients = ['88beamrequest@lbl.gov']
+            if form['date'] != "":
+                date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                form['date'] = date.strftime('%m/%d/%Y')
+            template = "Universal_request_template.pdf"
+            output = "Universal_request.pdf"
+            pdf.fill(template, output)
+            msg.body = "Here is the request form for beam time"
+            with app.open_resource("Universal_request.pdf") as fp:
+                msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
         # mail.send(msg)
-        # print(msg)
+
+        print(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         print(e)

@@ -74,33 +74,33 @@ class FormBuilder():
         # if self.form['startDate2'] != "":
         #     date = datetime.strptime(self.form['startDate2'], '%Y-%m-%dT%H:%M:%S.%fZ')
         #     self.form['startDate2'] = date.strftime('%m/%d/%Y')
-        if self.form['desiredStartDate'] != "":
-            date = datetime.strptime(self.form['desiredStartDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
-            self.form['desiredStartDate'] = date.strftime('%m/%d/%Y')
-        if self.form['alternateStartDate'] != "":
-            date = datetime.strptime(self.form['alternateStartDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
-            self.form['alternateStartDate'] = date.strftime('%m/%d/%Y')
+        if self.form['date'] != "":
+            date = datetime.strptime(self.form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            self.form['date'] = date.strftime('%m/%d/%Y')
+        if self.form['alternateDate'] != "":
+            date = datetime.strptime(self.form['alternateDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            self.form['alternateDate'] = date.strftime('%m/%d/%Y')
 
-        body = "Principal Investigator Name: " + self.form['investigatorName'] + "\n\n\n"
-        body += "Principal Investigator Organization: " + self.form['investigatorOrg'] + "\n\n\n"
-        body += "Principal Investigator E-mail: " + self.form['senderEmail'] + "\n\n\n"
-        body += "Principal Investigator Address:" + self.form['investigatorAddress'] + "\n\n\n"
-        body += "Principal Investigator Office Phone: " + self.form['investigatorOfficePhone'] + "\n\n\n"
-        body += "Principal Investigator Cell Phone During Experiment: " + self.form['investigatorCell'] + "\n\n\n"
+        body = "Principal Investigator Name: " + self.form['name'] + "\n\n\n"
+        body += "Principal Investigator Organization: " + self.form['company'] + "\n\n\n"
+        body += "Principal Investigator E-mail: " + self.form['email'] + "\n\n\n"
+        body += "Principal Investigator Address:" + self.form['address'] + "\n\n\n"
+        body += "Principal Investigator Office Phone: " + self.form['officePhone'] + "\n\n\n"
+        body += "Principal Investigator Cell Phone During Experiment: " + self.form['cell'] + "\n\n\n"
         body += "Contract/Financial Point of Contact Name: " + self.form['financierName'] + "\n\n\n"
         body += "Contract/Financial Point of Contact E-mail: " + self.form['financierEmail'] + "\n\n\n"
-        body += "Contract/Financial Point of Contact Telephone: " + self.form['financierTelephone'] + "\n\n\n"
-        body += "Title of Experiment/Proposal: " + self.form['experimentTitle'] + "\n\n\n"
-        body += "Abstract of Experiment/Proposal: " + self.form['experimentAbstract'] + "\n\n\n"
-        body += "Desired Start Date of Run: " + self.form['desiredStartDate'] + "\n\n\n"
-        body += "Alternate Start Date of Run: " + self.form['alternateStartDate'] + "\n\n\n"
-        body += "Total Tune & Run Hours Needed: " + self.form['totalHours'] + "\n\n\n"
+        body += "Contract/Financial Point of Contact Telephone: " + self.form['financierPhone'] + "\n\n\n"
+        body += "Title of Experiment/Proposal: " + self.form['title'] + "\n\n\n"
+        body += "Abstract of Experiment/Proposal: " + self.form['abstract'] + "\n\n\n"
+        body += "Desired Start Date of Run: " + self.form['date'] + "\n\n\n"
+        body += "Alternate Start Date of Run: " + self.form['alternateDate'] + "\n\n\n"
+        body += "Total Tune & Run Hours Needed: " + self.form['hours'] + "\n\n\n"
         body += "Target Material(s) and Thickness: " + self.form['targetMaterials'] + "\n\n\n"
-        body += "Funding Source: " + self.form['fundingSource'] + "\n\n\n"
+        # body += "Funding Source: " + self.form['fundingSource'] + "\n\n\n"
         body += "Potential Safety Concerns: " + self.form['safetyConcerns'] + "\n\n\n"
         body += "Type of Beam Desired: " + self.form['beamType'] + "\n\n\n"
         body += "Special Request Ions: " + self.form['specialIons'] + "\n\n\n"
-        body += "Desired Energy: " + self.form['desiredEnergy'] + "\n\n\n"
+        body += "Desired Energy: " + self.form['energies'] + "\n\n\n"
         body += "Desired Intensity/Flux: " + self.form['desiredIntensity'] + "\n\n\n"
         body += "Will the run be conducted in air or vacuum?: " + self.form['airOrVacuum'] + "\n\n\n"
         body += "Does this work have export control restrictions?: " + self.form['controlRestrictions'] + "\n\n\n"
@@ -109,4 +109,3 @@ class FormBuilder():
         body += "Comments: " + self.form['comments'] + "\n\n\n"
 
         return body
-

@@ -3,6 +3,8 @@ import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterp
 import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Box} from '@material-ui/core';
 import TAMUStore from '../../../../stores/TAMUStore';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
+import { observer } from "mobx-react"
 
 const useStyles = theme => ({
     unavailableButton: {
@@ -49,4 +51,4 @@ class TAMUForm extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(TAMUForm);
+export default withRouter(withStyles(useStyles)(observer(TAMUForm)));

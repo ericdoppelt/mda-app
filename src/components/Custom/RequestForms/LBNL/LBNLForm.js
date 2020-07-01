@@ -99,7 +99,7 @@ const useStyles = theme => ({
             <TextField
               className={classes.textField}
               label = "Will the expirement be in air or vacuum?"
-              value = {LBNLStore.setAirOrVacuum}
+              value = {LBNLStore.airOrVacuum}
               onChange={event => {LBNLStore.setAirOrVacuum(event.target.value)}}
               fullWidth
             />

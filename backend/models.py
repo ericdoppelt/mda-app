@@ -92,6 +92,20 @@ class Calendar(db.Model):
     startDate = db.Column(db.DateTime())
     cannotRun = db.Column(db.DateTime())
 
+    def create_entry(self):
+        result = ""
+        try:
+            db.session.add(self)
+            db.session.commit()
+            result = {
+                'success' : True
+            }
+        except Exception as e:
+            print(e)
+            result = {'error' : "Unable to create calendar entry",
+            'success' : False}
+        return result
+
     def __repr__(self):
         return "<Calendar(username=%s)>" % (self.username)
 
@@ -113,6 +127,44 @@ class Beams(db.Model):
 
     def __repr__(self):
         return "<Beam(org_id=%s, ion=%s)>" % (self.org_id, self.ion)
+
+class requests(db.Model):
+    """Model for the Requests table"""
+    __tablename__ = 'requests'
+
+    name = db.Column(db.String(50))
+    email = db.Column(db.String(128))
+    cell = db.Column(db.String(15))
+    company = db.Column(db.String(30))
+    integrator = db.Column(db.String(30))
+    funding_source = db.Column(db.String(50))
+    address = db.Column(db.String(128))
+    city = db.Column(db.String(50))
+    state = db.Column(db.String(30))
+    zipcode = db.Column(db.Integer())
+    approved_integrator = db.Column(db.Boolean())
+    approved_facility = db.Column(db.Boolean())
+    facility = db.Column(db.String(30))
+    ion = db.Column(db.String(30))
+    energy = db.Column(db.Float())
+    id = db.Column(db.Integer(), primary_key = True)
+
+    def create_request(self):
+        result = ""
+        try:
+            db.session.add(self)
+            db.session.commit()
+            result = {
+                'success' : True
+            }
+        except Exception as e:
+            print(e)
+            result = {'error' : "Unable to submit request to database",
+            'success' : False}
+        return result
+
+    def __repr__(self):
+        return "<Beam(id=%s, name=%s, facility=%s)>" % (self.id, self.name, self.facility)
 
 class TokenBlacklist(db.Model):
     """Model for the token blacklist table"""
