@@ -238,13 +238,15 @@ def getRequests():
                 beam = Beams.query.filter_by(id=ion).one()
                 beams.append(beam.ion)
                 energies.append(beam.amev)
+            delta = timedelta(hours=12)
+            time = (form.start + delta).strftime('%Y-%m-%dT%H:%M')
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact, 
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address, 
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'ions' : beams, 'energies' : energies, 'start' : form.start.strftime('%m/%d/%Y')})
+            'ions' : beams, 'energies' : energies, 'start' : time})
         result = {'requests' : myForms}
 
     except Exception as e:
