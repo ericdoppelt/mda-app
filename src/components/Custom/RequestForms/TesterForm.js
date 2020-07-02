@@ -85,11 +85,11 @@ const useStyles = theme => ({
             />
             <TextField 
               className={classes.rightTextField}
-              label = "Cell"
-              value = {TesterStore.cell}
-              onChange={event => {TesterStore.setCell(event.target.value)}}
-              error = {TesterStore.cellError}
-              helperText = {TesterStore.cellHelperText}
+              label = "Phone"
+              value = {TesterStore.phone}
+              onChange={event => {TesterStore.setPhone(event.target.value)}}
+              error = {TesterStore.phoneError}
+              helperText = {TesterStore.phoneHelperText}
             />
             <br/>
             <br/>
