@@ -20,14 +20,9 @@ const useStyles = theme => ({
       marginTop: '20px',
       marginBottom: '10px',
     },
-    alternateButton: {
-      backgroundColor: "#f5f5b8",
-      width: '100%',
-      marginBottom: '30px',
-    },
     textField: {
-      marginBottom: '2px',
-      marginTop: '2px',
+      marginBottom: '20px',
+      marginTop: '5px',
     }
   });
 
