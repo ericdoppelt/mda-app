@@ -9,8 +9,14 @@ import { withStyles } from '@material-ui/core/styles';
 const useStyles = theme => ({
     submitButton: {
       backgroundColor: "#bfddff",
-      width: '100%',
+      marginTop: '15px',
+      marginLeft:'5%',
+      marginRight: '5%',
+      width: '90%',
     },
+    fullDiv: {
+      width: '100%',
+    }
   });
 
 class LBNLSubmit extends React.Component {
@@ -49,7 +55,7 @@ class LBNLSubmit extends React.Component {
           continuous: ExperimentStore.continuous,
           comments: ExperimentStore.comments,
 
-          address: LBNLStore.senderAddress,
+          address: LBNLStore.senderFullAddress,
           officePhone: LBNLStore.senderOfficePhone,
           abstract: LBNLStore.experimentAbstract,
           alternateDate: LBNLStore.alternateDate,
@@ -85,9 +91,12 @@ class LBNLSubmit extends React.Component {
   render() {
     const { classes } = this.props;
     return(
-      <Button className={classes.submitButton} onClick={this.submitForm}>
-        Submit Form
-      </Button>
+      <div className={classes.fullDiv}>
+        <br/>
+        <Button className={classes.submitButton} onClick={this.submitForm}>
+          Submit Form
+        </Button>
+      </div>
     );
   }
 }

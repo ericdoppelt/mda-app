@@ -1,4 +1,4 @@
-import {observable, action, decorate} from 'mobx';
+import {observable, action, decorate, computed} from 'mobx';
 
 class LBNLStore {
     
@@ -10,6 +10,25 @@ class LBNLStore {
     senderAddress = "";
     setSenderAddress(newAddress) {
         this.senderAddress = newAddress;
+    }
+
+    senderCity = "";
+    setSenderCity(newCity) {
+        this.senderCity = newCity;
+    }
+
+    senderState = "";
+    setSenderState(newState) {
+        this.senderState = newState;
+    }
+
+    senderZip = "";
+    setSenderZip(newZip) {
+        this.senderZip = newZip;
+    }
+
+    get senderFullAddress() {
+        return this.senderAddress + ", " + this.senderCity + ", " + this.senderState + " " + this.senderZip;
     }
 
     senderOfficePhone = "";
@@ -79,6 +98,17 @@ decorate(LBNLStore, {
 
     senderAddress: observable,
     setSenderAddress: action,
+
+    senderCity: observable,
+    setSenderCity: action,
+
+    senderState: observable,
+    setSenderState: action,
+
+    senderZip: observable,
+    setSenderZip: action,
+
+    senderFullAddress: computed,
 
     senderOfficePhone: observable,
     setSenderOfficePhone: action,

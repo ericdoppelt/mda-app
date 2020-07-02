@@ -8,9 +8,15 @@ import { withStyles } from '@material-ui/core/styles';
 import NSRLStore from '../../../../stores/NSRLStore';
 
 const useStyles = theme => ({
-    submitButton: {
-      backgroundColor: "#bfddff",
-      width: '100%',
+  submitButton: {
+    backgroundColor: "#bfddff",
+    marginTop: '15px',
+    marginLeft: '5%',
+    marginRight: '5%',
+    width: '90%',
+    },    
+  fullDiv: {
+    width: '100%',
     },
   });
 
@@ -79,9 +85,12 @@ class NSRLSubmit extends React.Component {
   render() {
     const { classes } = this.props;
     return(
+      <div className={classes.fullDiv}>
+      <br/>
       <Button className={classes.submitButton} onClick={this.submitForm}>
         Submit Form
       </Button>
+      </div>
     );
   }
 }

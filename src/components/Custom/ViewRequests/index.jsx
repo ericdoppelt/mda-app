@@ -11,10 +11,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { Link } from 'react-router-dom';
+import Row from '../../UIzard/Row'
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 130 },
-  { id: 'username', label: 'User ID', minWidth: 80 },
   {
     id: 'facility',
     label: 'Facility',
@@ -45,35 +48,81 @@ const columns = [
   },
 ];
 
-function createData(name, username, facility, integrator, company) {
+function createData(name, facility, integrator, company) {
   var viewMore = 'View More'
-  return { name, username, facility, integrator, company, viewMore };
+  return { name, facility, integrator, company, viewMore };
 }
 
-const rows = [
-  createData('James James', 'jj10', 'MSU', 'MDA', 'Boeing'),
-  createData('Jim Jim', 'jj76', 'TAMU', 'MDA', 'Boeing'),
-  createData('Kim Kim', 'kk15', 'TAMU', 'MDA', 'Aerospace Corp.'),
-  createData('Michael McKenna', 'mm92', 'NSRL', 'MDA', 'MDA'),
-  createData('Jodi Jansen', 'jj94', 'LBNL', 'MDA', 'MDA'),
-  createData('Sam Sam', 'ss35', 'LBNL', 'MDA', 'UTC'),
-  createData('Sam Sam', 'ss35', 'MSU', 'MDA', 'UTC'),
-  createData('Ken Ken', 'kk37', 'MSU', 'MDA', 'Aerospace Corp.'),
-  createData('Bridget Bridget', 'bb24', 'TAMU', 'MDA', 'Boeing'),
-  createData('Joan Joan', 'jj12', 'TAMU', 'MDA', 'Aerospace Corp.'),
-  createData('Tim Tim', 'tt77', 'NSRL', 'MDA', 'UTC'),
-  createData('Jamie Jamie', 'jj23', 'NSRL', 'MDA', 'MDA'),
-  createData('Anna Anna', 'aa89', 'NSRL', 'MDA', 'UTC'),
-  createData('Jane Jane', 'jj16', 'NSRL', 'MDA', 'Aerospace Corp.'),
-  createData('Jan Jan', 'jj25', 'NSRL', 'MDA', 'Aerospace Corp.'),
+const oldrows = [
+  createData('James James', 'MSU', 'MDA', 'Boeing'),
+  createData('Jim Jim', 'TAMU', 'MDA', 'Boeing'),
+  createData('Kim Kim', 'TAMU', 'MDA', 'Aerospace Corp.'),
+  createData('Michael McKenna', 'NSRL', 'MDA', 'MDA'),
+  createData('Jodi Jansen', 'LBNL', 'MDA', 'MDA'),
+  createData('Sam Sam', 'LBNL', 'MDA', 'UTC'),
+  createData('Sam Sam', 'MSU', 'MDA', 'UTC'),
+  createData('Ken Ken', 'MSU', 'MDA', 'Aerospace Corp.'),
+  createData('Bridget Bridget', 'TAMU', 'MDA', 'Boeing'),
+  createData('Joan Joan', 'TAMU', 'MDA', 'Aerospace Corp.'),
+  createData('Tim Tim', 'NSRL', 'MDA', 'UTC'),
+  createData('Jamie Jamie', 'NSRL', 'MDA', 'MDA'),
+  createData('Anna Anna', 'NSRL', 'MDA', 'UTC'),
+  createData('Jane Jane', 'NSRL', 'MDA', 'Aerospace Corp.'),
+  createData('Jan Jan', 'NSRL', 'MDA', 'Aerospace Corp.'),
 ];
 
+const rows = [];
+
+const MAXTABLEWIDTH = 650;
 const useStyles = theme => ({
   root: {
     width: '100%',
   },
   container: {
     maxHeight: 440,
+    maxWidth: MAXTABLEWIDTH,
+  },
+  leftTextField: {
+    marginLeft: '5%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '42%',
+  },
+  rightTextField: {
+    marginLeft: '3%',
+    marginRight: '5%',
+    marginTop: '2px',
+    width: '42%',
+  },
+  billingAddress: {
+    marginLeft: '5%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '64%',
+  },
+  poNumber: {
+    marginLeft: '3%',
+    marginRight: '5%',
+    marginTop: '2px',
+    width: '20%',
+  },
+  billingCity: {
+    marginLeft: '5%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '29%',
+  },
+  billingState: {
+    marginLeft: '3%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '29%',
+  },
+  billingZip: {
+    marginLeft: '3%',
+    marginRight: '5%',
+    marginTop: '2px',
+    width: '20%',
   },
 });
 
@@ -88,31 +137,78 @@ class ViewRequests extends React.Component {
 
     /*** LIST OF DATES ***/
     this.state = {
-      username: "",
+      name: "",
       facility: "",
       integrator: "",
+      company: "",
       totalTime: "",
       startDate: "",
       cannotRun: "",
       data: [],
+      oldrows: oldrows,
       page: 0,
-      rowsPerPage: 10
+      rowsPerPage: 10,
+      component: "table",
     }
   }
 
-  
+  newRows = [];
+  tester;
   
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
-    const url = "https://mda-phoenix.herokuapp.com/calendar";
-    await axios.post(url).then(response => {
-
+    const url = "https://mda-phoenix.herokuapp.com/getforms";
+    let self = this;
+    let result;
+    await axios.post(url, {"name": "Rob"}).then(response => {
+      result = response.data.requests;
+      //console.log(response.data);
     })
     .catch(error => {
       console.log(error);
     });
+    console.log(result);
+    result.forEach(function(entry) {
+      //console.log(entry);
+      self.setState(state=>({oldrows: [ 
+        createData(entry.name, entry.facility, entry.integrator, entry.company),
+        ...state.oldrows]}))
+      //self.state.oldrows.push(createData(entry.name, entry.facility, entry.integrator, entry.company))
+    });
+    console.log(self.state.oldrows);
   }
 
+  viewMore(row) {
+    return(
+      <Button 
+            id="button" 
+            variant="contained"
+            style={{width: '100px', height: '30px', fontSize: '12px'}}
+            onClick={(event) => this.handleViewMore(row)}
+          >
+            View More
+      </Button>
+    );
+  }
+
+  handleViewMore(row) {
+    this.setState(state=>({
+      name: row.name,
+      facility: row.facility,
+      company: row.company,
+      integrator: row.integrator,
+      component: "view",
+    }))
+    console.log(row)
+    console.log(row.name)
+    console.log(this.state.integrator)
+  }
+
+  handleBack() {
+    this.setState(state=>({
+      component: "table",
+    }))
+  }
 
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
@@ -129,7 +225,191 @@ class ViewRequests extends React.Component {
     const page = this.state.page;
     const rowsPerPage = this.state.rowsPerPage;
     
-    return (
+    if (this.state.component === 'view') {
+      return(
+        <div>
+          <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent:'flex-end'}}>
+            
+          </Row>
+          <br/>
+            <Row >
+              <TextField
+                label="Facility"
+                className={classes.leftTextField}
+                id="standard-read-only-input"
+                defaultValue={this.state.facility}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <Button 
+                className={classes.rightTextField}
+                id="button" 
+                variant="contained"
+                style={{width: '100px', height: '30px', fontSize: '12px'}}
+                onClick={(event) => this.handleBack()}
+              >
+                Return
+              </Button>
+            </Row>
+            <br/>
+            <TextField
+              label="Name"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.name}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Company"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.company}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Email"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue="testemail@email.com"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Phone"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue="999-999-9999"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br/>
+            <br/>
+            <TextField 
+              label = "Integrator"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.integrator}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Funding Contact"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue="Test Contact"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Funding Contact Phone"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue="999-999-9999"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Funding Contact Email"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue="testemail@email.com"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br/>
+            <br/>
+            <TextField 
+              label = "Billing Address"
+              className={classes.billingAddress}
+              id="standard-read-only-input"
+              defaultValue="111 Test Address"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "P.O. No."
+              className={classes.poNumber}
+              id="standard-read-only-input"
+              defaultValue="1"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "City"
+              className={classes.billingCity}
+              id="standard-read-only-input"
+              defaultValue="Test City"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "State"
+              className={classes.billingState}
+              id="standard-read-only-input"
+              defaultValue="New York"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Zip"
+              className={classes.billingZip}
+              id="standard-read-only-input"
+              defaultValue="99999"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br/>
+            <br/>
+            <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
+              <Button 
+                id="button" 
+                variant="contained"
+                style={{width: '100px', height: '30px', fontSize: '12px', margin:'0 30px'}}
+                onClick={(event) => this.handleBack()}
+                color="primary"
+              >
+                Approve
+              </Button>
+
+              <Button 
+                id="button" 
+                variant="contained"
+                style={{width: '100px', height: '30px', fontSize: '12px', margin:'0 30px'}}
+                onClick={(event) => this.handleBack()}
+              >
+                Modify
+              </Button>
+              <Button 
+                id="button" 
+                variant="contained"
+                style={{width: '100px', height: '30px', fontSize: '12px', margin:'0 30px'}}
+                onClick={(event) => this.handleBack()}
+                color="secondary"
+              >
+                Reject
+              </Button>
+            </Row>
+            <br/><br/><br/><br/>
+        </div>
+      );
+    } else {
+      return (
         <div className='view-requests'>
           <div className='view-requests-inner'>
             <Paper className={classes.root}>
@@ -149,16 +429,25 @@ class ViewRequests extends React.Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    {this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                       return (
+                        
                         <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
                           {columns.map((column) => {
                             const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === 'number' ? column.format(value) : value}
-                              </TableCell>
-                            );
+                            if(column.id === 'viewMore') {
+                              return (
+                                <TableCell key={column.id} align={column.align}>
+                                  {this.viewMore(row)}
+                                </TableCell>
+                              )
+                            } else {
+                              return (
+                                <TableCell key={column.id} align={column.align}>
+                                  {column.format && typeof value === 'number' ? column.format(value) : value}
+                                </TableCell>
+                              );
+                            }
                           })}
                         </TableRow>
                       );
@@ -177,9 +466,12 @@ class ViewRequests extends React.Component {
                 style={{ backgroundColor: 'white' }}
               />
             </Paper>
+            <br/><br/>
           </div>
         </div>
-    )
+      )
+    }
+    
   }
 
 }

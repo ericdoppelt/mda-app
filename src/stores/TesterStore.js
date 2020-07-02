@@ -31,15 +31,15 @@ class TesterStore {
         else return "";
     }
 
-    cell = "";
-    setCell(newCell) {
-        this.cell = newCell;
+    phone = "";
+    setPhone(newPhone) {
+        this.phone = newPhone;
     }
-    get cellError() {
-        return this.cell === "" && this.submitted;
+    get phoneError() {
+        return this.phone === "" && this.submitted;
     }
-    get cellHelperText() {
-        if (this.cellError) return "Please enter your cell number.";
+    get phoneHelperText() {
+        if (this.phoneError) return "Please enter your phone number.";
         else return "";
     }
     
@@ -157,7 +157,7 @@ class TesterStore {
     }
 
     get validForm() {
-        return !this.nameError && !this.emailError && !this.cellError && !this.companyError && !this.integratorError
+        return !this.nameError && !this.emailError && !this.phoneError && !this.companyError && !this.integratorError
         && !this.financierError && !this.financierPhoneError && !this.financierEmailError && !this.billingAddressError && !this.billingCityError
         && !this.billingStateError && !this.billingZipError && this.submitted;
     }
@@ -177,10 +177,10 @@ decorate(TesterStore, {
     emailError: computed,
     emailHelperText: computed,
 
-    cell: observable,
-    setCell: action,
-    cellError: computed,
-    cellHelperText: computed,
+    phone: observable,
+    setPhone: action,
+    phoneError: computed,
+    phoneHelperText: computed,
 
     company: observable,
     setCompany: action,
