@@ -8,8 +8,14 @@ import { withStyles } from '@material-ui/core/styles';
 const useStyles = theme => ({
     submitButton: {
       backgroundColor: "#bfddff",
-      width: '100%',
-    },
+      marginTop: '15px',
+      marginLeft:'5%',
+      marginRight: '5%',
+      width: '90%',
+      },
+      fullDiv: {
+        width: '100%',
+      }
   });
 
 class MSUSubmit extends React.Component {
@@ -70,9 +76,12 @@ class MSUSubmit extends React.Component {
   render() {
     const { classes } = this.props;
     return(
+      <div className={classes.fullDiv}>
+      <br/>
       <Button className={classes.submitButton} onClick={this.submitForm}>
         Submit Form
       </Button>
+      </div>
     );
   }
 }

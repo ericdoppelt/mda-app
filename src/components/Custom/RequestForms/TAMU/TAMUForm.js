@@ -7,10 +7,15 @@ import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
 
 const useStyles = theme => ({
+    fullDiv: {
+      width: '100%',
+    },
     unavailableButton: {
       backgroundColor: "#f5c1b8",
-      width: '100%',
-      marginBottom: '15px',
+      marginTop: '25px',
+      marginLeft: '5%',
+      marginRight: '5%',
+      width: '90%',
     },
   });
 
@@ -25,8 +30,10 @@ class TAMUForm extends React.Component {
   render() {
     const { classes } = this.props;
     return(
-    <div>
-      <Box>Please enter the following supplemental and optional information for TAMU.</Box>
+    <div className={classes.fullDiv}>
+      <br/>
+      <br/>
+      <Box>Please enter the following supplemental information for TAMU.</Box>
       <Button className={classes.unavailableButton} onClick={() => this.setState({open: true})}>Select Unavailable Dates</Button>
       <Dialog open={this.state.open} onClose={() => this.setState({open: false})}>
         <DialogTitle>Please enter dates you cannot run.</DialogTitle>

@@ -8,51 +8,47 @@ import Row from '../../../components/UIzard/Row';
 import TesterStore from '../../../stores/TesterStore';
 
 const useStyles = theme => ({
-    textField: {
-      width: '90%',
-      marginTop: '2px',
-    },
     leftTextField: {
-      width: '42%',
       marginLeft: '5%',
       marginRight: '3%',
-      marginTop: '1%',
+      marginTop: '2px',
+      width: '42%',
     },
     rightTextField: {
-      width: '42%',
-      marginRight: '5%',
       marginLeft: '3%',
+      marginRight: '5%',
       marginTop: '2px',
+      width: '42%',
     },
     billingAddress: {
       marginLeft: '5%',
-      width: '67%',
       marginRight: '3%',
       marginTop: '2px',
+      width: '64%',
     },
     poNumber: {
       marginLeft: '3%',
-      width: '17%',
       marginRight: '5%',
       marginTop: '2px',
+      width: '20%',
     },
     billingCity: {
       marginLeft: '5%',
-      width: '29%',
       marginRight: '3%',
       marginTop: '2px',
+      width: '29%',
     },
     billingState: {
       marginLeft: '3%',
-      width: '29%',
       marginRight: '3%',
       marginTop: '2px',
+      width: '29%',
     },
     billingZip: {
       marginLeft: '3%',
       marginRight: '5%',
-      width: '20%',
       marginTop: '2px',
+      width: '20%',
     }
   });
 
@@ -61,6 +57,7 @@ const useStyles = theme => ({
       const { classes } = this.props;
       return(
         <div>
+          <br/>
           <Box>Please enter the following information about yourself.</Box>
             <TextField
               className={classes.leftTextField}
@@ -85,16 +82,14 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setEmail(event.target.value)}}
               error = {TesterStore.emailError}
               helperText = {TesterStore.emailHelperText}
-              fullWidth
             />
             <TextField 
               className={classes.rightTextField}
-              label = "Cell #"
+              label = "Cell"
               value = {TesterStore.cell}
               onChange={event => {TesterStore.setCell(event.target.value)}}
               error = {TesterStore.cellError}
               helperText = {TesterStore.cellHelperText}
-              fullWidth
             />
             <br/>
             <br/>
@@ -105,7 +100,6 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setIntegrator(event.target.value)}}
               error = {TesterStore.integratorError}
               helperText = {TesterStore.integratorHelperText}
-              fullWidth
             />
             <TextField 
               className={classes.rightTextField}
@@ -114,16 +108,14 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setFinancier(event.target.value)}}
               error = {TesterStore.financierError}
               helperText = {TesterStore.financierHelperText}
-              fullWidth
             />
             <TextField 
               className={classes.leftTextField}
-              label = "Funding Contact Phone #"
+              label = "Funding Contact Phone"
               value = {TesterStore.financierPhone}
               onChange={event => {TesterStore.setFinancierPhone(event.target.value)}}
               error = {TesterStore.financierPhoneError}
               helperText = {TesterStore.financierPhoneHelperText}
-              fullWidth
             />
             <TextField 
               className={classes.rightTextField}
@@ -132,7 +124,6 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setFinancierEmail(event.target.value)}}
               error = {TesterStore.financierEmailError}
               helperText = {TesterStore.financierEmailHelperText}
-              fullWidth
             />
             <br/>
             <br/>
@@ -143,14 +134,12 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setBillingAddress(event.target.value)}}
               error = {TesterStore.billingAddressError}
               helperText = {TesterStore.billingAddressHelperText}
-              fullWidth
             />
             <TextField 
               className={classes.poNumber}
               label = "P.O. No."
               value = {TesterStore.billingPO}
               onChange={event => {TesterStore.setBillingPO(event.target.value)}}
-              fullWidth
             />
             <TextField 
               className={classes.billingCity}
@@ -159,7 +148,6 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setBillingCity(event.target.value)}}
               error = {TesterStore.billingCityError}
               helperText = {TesterStore.billingCityHelperText}
-              fullWidth
             />
             <TextField 
               className={classes.billingState}
@@ -168,7 +156,6 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setBillingState(event.target.value)}}
               error = {TesterStore.billingStateError}
               helperText = {TesterStore.billingStateHelperText}
-              fullWidth
             />
             <TextField 
               className={classes.billingZip}
@@ -177,7 +164,6 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setBillingZip(event.target.value)}}
               error = {TesterStore.billingZipError}
               helperText = {TesterStore.billingZipHelperText}
-              fullWidth
             />
             <br/>
             <br/>

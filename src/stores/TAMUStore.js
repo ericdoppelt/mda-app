@@ -1,6 +1,7 @@
 import {observable, action, decorate} from 'mobx';
 
 class TAMUStore {
+    
     badDates = [];
     setBadDates(newDates) {
         this.badDates.unshift(newDates);
