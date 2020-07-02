@@ -1,6 +1,6 @@
 
 import copy
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, between
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token, 
@@ -111,15 +111,39 @@ def filterion():
 
     try:
         ion = req['ion']
-        energy = req['energy']
-        beams = Beams.query.filter(or_(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= energy, Beams.org_id == 5), 
-        and_(Beams.ion.ilike(ion + '%'), Beams.amev == energy))).all()
-        myList = []
+        minEnergy = req['minEnergy']
+        maxEnergy = req['maxEnergy']
+        beams = Beams.query.filter(or_(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= minEnergy, Beams.org_id == 5), 
+        and_(Beams.ion.ilike(ion + '%'), Beams.amev.between(minEnergy, maxEnergy)))).all()
+        myList = {}
+        # myEnergies = []
         for beam in beams:
             facility = Organization.query.filter_by(id=beam.org_id).one()
-            if facility.name not in myList:
-                myList.append(facility.name)
-        result = {'facilities' : myList}
+            print(beam)
+            # if beam.amev not in myEnergies:
+            #     if beam.org_id == 5:
+            #         myEnergies.append()
+            #     else:
+            #         myEnergies.append(beam.amev)
+            # if facility.name not in myList:
+            #     if beam.org_id == 5:
+            #         pass
+            #     else:
+            #         energies = 
+            #         entry = {'facility' : facility.name, }
+            #     myList.append(facility.name)
+
+            if facility.name in myList:
+                if beam.org_id == 5:
+                    myList[facility.name].append(beam.ion + ' : ' + str(minEnergy) + '-' + str(beam.amev))
+                else:
+                    myList[facility.name].append(beam.ion + ' : ' + str(beam.amev))
+            else:
+                if beam.org_id == 5:
+                    myList[facility.name] = [beam.ion + ' : ' + (str(minEnergy) + '-' + str(beam.amev))]
+                else:
+                    myList[facility.name] = [beam.ion + ' : ' + str(beam.amev)]
+        result = jsonify(myList)
 
     except Exception as e:
         print(e)
