@@ -25,17 +25,12 @@ export default function Home() {
                 <Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/phoenix.png)' }} />
               </Row>
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-              <Title>
-                COMING SOON...
-              </Title>
               </Row>
-              <Card style={{ justifyContent: 'center', alignItems: 'auto', minWidth: '1000px', minHeight: '600px', flexGrow: '0' }}>
               <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <IonSearch/>
               </Row>
               </Stack>
-            </Card>
         </main>
       </div>
     </ThemeProvider>

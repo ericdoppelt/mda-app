@@ -51,7 +51,7 @@ class LoginForm extends React.Component {
           if (response.data.error === "Incorrect password") {
             self.setState({ passwordError: response.data.error });
           }
-        } 
+        }
       })
       .catch(error => {
         alert(error);
@@ -62,7 +62,7 @@ class LoginForm extends React.Component {
   render() {
     return (
       <div className="loginform">
-        <TextField 
+        <TextField
           id="outlined-error-helper-text"
           label = "Username"
           variant="outlined"
@@ -71,8 +71,8 @@ class LoginForm extends React.Component {
           onChange={event => {this.setState({username: event.target.value})}}
           />
         <br/><br/>
-        <TextField 
-          type="password" 
+        <TextField
+          type="password"
           label = "Password"
           variant="outlined"
           error = {this.state.passwordError.length !== 0 && this.state.submitted}
@@ -81,8 +81,8 @@ class LoginForm extends React.Component {
           />
         <br/><br/>
         <Row>
-          <Button 
-            id="button" 
+          <Button
+            id="button"
             variant="contained"
             style={{width: '100px'}}
             onClick={(event) => this.handleSubmit(event)}
