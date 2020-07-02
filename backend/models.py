@@ -137,7 +137,7 @@ class requests(db.Model):
     cell = db.Column(db.String(15))
     company = db.Column(db.String(30))
     integrator = db.Column(db.String(30))
-    funding_source = db.Column(db.String(50))
+    funding_contact = db.Column(db.String(50))
     address = db.Column(db.String(128))
     city = db.Column(db.String(50))
     state = db.Column(db.String(30))
@@ -148,6 +148,12 @@ class requests(db.Model):
     ion = db.Column(db.String(30))
     energy = db.Column(db.Float())
     id = db.Column(db.Integer(), primary_key = True)
+    funding_cell = db.Column(db.String(15))
+    funding_email = db.Column(db.String(128))
+    start = db.Column(db.DateTime, nullable=False)
+    ions = db.Column(db.ARRAY(db.Integer()))
+    comments = db.Column(db.String(200))
+    po_number = db.Column(db.Integer())
 
     def create_request(self):
         result = ""

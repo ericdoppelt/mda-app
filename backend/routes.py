@@ -1,6 +1,6 @@
 
 import copy
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token, 
@@ -112,7 +112,8 @@ def filterion():
     try:
         ion = req['ion']
         energy = req['energy']
-        beams = Beams.query.filter(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= energy)).all()
+        beams = Beams.query.filter(or_(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= energy, Beams.org_id == 5), 
+        and_(Beams.ion.ilike(ion + '%'), Beams.amev == energy))).all()
         myList = []
         for beam in beams:
             facility = Organization.query.filter_by(id=beam.org_id).one()
@@ -207,8 +208,19 @@ def getRequests():
         request_forms = requests.query.all()
         myForms = []
         for form in request_forms:
+            beams = []
+            energies = []
+            for ion in form.ions:
+                beam = Beams.query.filter_by(id=ion).one()
+                beams.append(beam.ion)
+                energies.append(beam.amev)
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
-            'facility' : form.facility, 'company' : form.company})
+            'facility' : form.facility, 'company' : form.company, 'email' : form.email,
+            'phone' : form.cell, 'funding_contact' : form.funding_contact, 
+            'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
+            'PO_number' : form.po_number, 'address' : form.address, 
+            'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
+            'ions' : beams, 'energies' : energies, 'start' : form.start.strftime('%m/%d/%Y')})
         result = {'requests' : myForms}
 
     except Exception as e:
