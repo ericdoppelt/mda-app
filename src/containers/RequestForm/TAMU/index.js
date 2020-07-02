@@ -39,7 +39,7 @@ export default function TAMU() {
                     <ExpirementStore.Provider>
                       <TAMUStore.Provider>
                         <TesterForm/>
-                        <ExperimentForm/>
+                        <ExperimentForm facility="TAMU"/>
                         <TAMUForm/>
                         <TAMUSubmit/>
                       </TAMUStore.Provider>

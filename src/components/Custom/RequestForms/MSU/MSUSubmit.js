@@ -37,7 +37,7 @@ class MSUSubmit extends React.Component {
           billingPO: TesterStore.billingPO,
           billingCity: TesterStore.billingCity,
           billingState: TesterStore.billingState,
-          billilngZip: TesterStore.billingZip,
+          billingZip: TesterStore.billingZip,
 
           title: ExperimentStore.title,
           hours: ExperimentStore.hours,
@@ -45,6 +45,7 @@ class MSUSubmit extends React.Component {
           date: ExperimentStore.startDate,
           ions: ExperimentStore.ions,
           energies: ExperimentStore.energies,
+          continuous: ExperimentStore.continuous,
           comments: ExperimentStore.comments,
     
           facility: "MSU",

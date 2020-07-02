@@ -32,14 +32,14 @@ class TAMUForm extends React.Component {
         <DialogTitle>Please enter dates you cannot run.</DialogTitle>
         <DialogContent>
           <InfiniteCalendar
-            Component={withMultipleDates(Calendar)}
+            Component={withMultipleDates(Calendar)}	
             selected={TAMUStore.badDates}
-            onSelect={(event) => TAMUStore.setBadDates(event.target.value)}
+            onSelect={(event) => TAMUStore.setBadDates(event.target)}
             minDate={new Date()}
             min={new Date()}
-            interpolateSelection={defaultMultipleDateInterpolation}
+            interpolateSelection={defaultMultipleDateInterpolation}	
           />
-          </DialogContent>
+        </DialogContent>
           <DialogActions>
             <Button onClick={() => {this.setState({open: false})}}>
               Select Dates

@@ -112,7 +112,7 @@ def filterion():
     try:
         ion = req['ion']
         energy = req['energy']
-        beams = Beams.query.filter(and_(Beams.ion.ilike('%' + ion + '%'), Beams.amev >= energy)).all()
+        beams = Beams.query.filter(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= energy)).all()
         myList = []
         for beam in beams:
             facility = Organization.query.filter_by(id=beam.org_id).one()
@@ -207,11 +207,12 @@ def getRequests():
         request_forms = requests.query.all()
         myForms = []
         for form in request_forms:
-            myForms.append({'name' : request_forms.name, 'integrator' : request_forms.integrator,
-            'facility' : request_forms.facility, 'company' : request_forms.company})
+            myForms.append({'name' : form.name, 'integrator' : form.integrator,
+            'facility' : form.facility, 'company' : form.company})
         result = {'requests' : myForms}
 
     except Exception as e:
+        print(e)
         result = {'error' : e,
         'success' : False}
 

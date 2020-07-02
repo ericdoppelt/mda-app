@@ -57,8 +57,8 @@ class ExpirementStore {
     }
 
     ions = "";
-    setIons(newParticles) {
-        this.ions = newParticles;
+    setIons(newIons) {
+        this.ions = newIons;
     }
     get ionsError() {
         return this.ions === "" && this.submitted;
@@ -140,7 +140,7 @@ decorate(ExpirementStore, {
     setContinuous: action,
     continuousError: computed,
     continuousHelperText: computed,
-    
+
     comments: observable,
     setComments: action,
 });

@@ -1,9 +1,9 @@
 import {observable, action, decorate} from 'mobx';
 
 class TAMUStore {
-    badDates = "";
+    badDates = [];
     setBadDates(newDates) {
-        this.badDates = newDates;
+        this.badDates.unshift(newDates);
     }
 }
 

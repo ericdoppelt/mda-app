@@ -39,7 +39,7 @@ export default function LBNL() {
                 <ExpirementStore.Provider>
                   <LBNLStore.Provider>
                     <TesterForm/>
-                    <ExperimentForm/>
+                    <ExperimentForm facility="LBNL"/>
                     <LBNLForm/>
                     <LBNLSubmit/>
                   </LBNLStore.Provider>
