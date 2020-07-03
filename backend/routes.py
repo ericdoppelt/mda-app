@@ -115,35 +115,27 @@ def filterion():
         maxEnergy = req['maxEnergy']
         beams = Beams.query.filter(or_(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= minEnergy, Beams.org_id == 5), 
         and_(Beams.ion.ilike(ion + '%'), Beams.amev.between(minEnergy, maxEnergy)))).all()
-        myList = {}
+        myDict = {}
         # myEnergies = []
         for beam in beams:
             facility = Organization.query.filter_by(id=beam.org_id).one()
-            print(beam)
-            # if beam.amev not in myEnergies:
-            #     if beam.org_id == 5:
-            #         myEnergies.append()
-            #     else:
-            #         myEnergies.append(beam.amev)
-            # if facility.name not in myList:
-            #     if beam.org_id == 5:
-            #         pass
-            #     else:
-            #         energies = 
-            #         entry = {'facility' : facility.name, }
-            #     myList.append(facility.name)
 
-            if facility.name in myList:
+            if facility.name in myDict:
                 if beam.org_id == 5:
-                    myList[facility.name].append(beam.ion + ' : ' + str(minEnergy) + '-' + str(beam.amev))
+                    myDict[facility.name].append(beam.ion + ' : ' + str(minEnergy) + '-' + str(beam.amev))
                 else:
-                    myList[facility.name].append(beam.ion + ' : ' + str(beam.amev))
+                    myDict[facility.name].append(beam.ion + ' : ' + str(beam.amev))
             else:
                 if beam.org_id == 5:
-                    myList[facility.name] = [beam.ion + ' : ' + (str(minEnergy) + '-' + str(beam.amev))]
+                    myDict[facility.name] = [beam.ion + ' : ' + (str(minEnergy) + '-' + str(beam.amev))]
                 else:
-                    myList[facility.name] = [beam.ion + ' : ' + str(beam.amev)]
-        result = jsonify(myList)
+                    myDict[facility.name] = [beam.ion + ' : ' + str(beam.amev)]
+        myList = []
+        for key in myDict.keys():
+            newDict = {'facility': key, 'ions' : myDict[key]}
+            myList.append(newDict)
+        result = {'result' : myList}
+        print(result)
 
     except Exception as e:
         print(e)
