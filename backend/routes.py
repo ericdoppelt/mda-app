@@ -3,8 +3,8 @@ import copy
 from sqlalchemy import and_, or_, between
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
-from flask_jwt_extended import (create_access_token, 
-create_refresh_token, jwt_required, 
+from flask_jwt_extended import (create_access_token,
+create_refresh_token, jwt_required,
 get_jwt_identity, get_jti)
 from datetime import timedelta, datetime
 
@@ -61,7 +61,7 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
-        
+
         expires = timedelta(hours=12)
         access_token = create_access_token(identity = username, expires_delta=expires)
         add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
@@ -81,8 +81,8 @@ def user():
     username = get_jwt_identity()
     if request.method == 'POST':
         user = Users.query.filter_by(username=username).first()
-        account_info = {'id': user.id, 'user': user.username, 
-        'password': user.password, 'first_name': user.first_name, 'last_name': user.last_name, 
+        account_info = {'id': user.id, 'user': user.username,
+        'password': user.password, 'first_name': user.first_name, 'last_name': user.last_name,
         'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
         'email': user.email}
     return account_info
@@ -97,7 +97,7 @@ def entries():
             cannotRun = ""
             if entry.cannotRun is not None:
                 cannotRun = entry.cannotRun.strftime("%Y-%m-%dT%H:%M")
-            entry_info = {'username': entry.username, 
+            entry_info = {'username': entry.username,
             'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
             'totalTime': entry.totalTime, 'cannotRun': cannotRun}
             myList.append(entry_info)
@@ -113,7 +113,7 @@ def filterion():
         ion = req['ion']
         minEnergy = req['minEnergy']
         maxEnergy = req['maxEnergy']
-        beams = Beams.query.filter(or_(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= minEnergy, Beams.org_id == 5), 
+        beams = Beams.query.filter(or_(and_(Beams.ion.ilike(ion + '%'), Beams.amev >= minEnergy, Beams.org_id == 5),
         and_(Beams.ion.ilike(ion + '%'), Beams.amev.between(minEnergy, maxEnergy)))).all()
         myDict = {}
         # myEnergies = []
@@ -157,7 +157,7 @@ def create_entry():
             username = username,
             facility = req['facility'],
             integrator = req['integrator'],
-            totalTime = req['totalTime'], 
+            totalTime = req['totalTime'],
             startDate = req['startDate'],
             cannotRun = req['cannotRun']
         )
@@ -205,9 +205,9 @@ def beams():
             myList[beam.ion].append(beam.amev)
         else:
             myList[beam.ion] = [beam.amev]
-        # beam_info = {'ion': beam.ion, 
+        # beam_info = {'ion': beam.ion,
         # 'mass': beam.mass, 'amev': beam.amev, 'max_energy': beam.max_energy,
-        # 'max_energy_units': beam.max_energy_units, 'let': beam.let, 'let_units': beam.let_units, 
+        # 'max_energy_units': beam.max_energy_units, 'let': beam.let, 'let_units': beam.let_units,
         # 'let_peak': beam.let_peak, 'beam_range': beam.beam_range, 'range_peak': beam.range_peak, 'range_units': beam.range_units,
         # 'max_flux': beam.max_flux, 'max_flux_units': beam.max_flux_units, 'let_material': beam.let_material, 'air': beam.air}
 
@@ -234,9 +234,9 @@ def getRequests():
             time = (form.start + delta).strftime('%Y-%m-%dT%H:%M')
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
-            'phone' : form.cell, 'funding_contact' : form.funding_contact, 
+            'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
-            'PO_number' : form.po_number, 'address' : form.address, 
+            'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
             'ions' : beams, 'energies' : energies, 'start' : time})
         result = {'requests' : myForms}
@@ -263,7 +263,7 @@ def requestform():
         msg = Message("Send Request Form Demo", cc=[form['email']])
         print(form['date'])
         # msg.recipients = ['edopp4182@gmail.com']
-        if facility == 'TAMU': 
+        if facility == 'TAMU':
             # msg.recipients = ['clark@comp.tamu.edu']
             form['signature'] = form['name']
             if form['date'] != "":

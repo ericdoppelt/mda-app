@@ -1,20 +1,33 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {Box, Button,List, ListItem, ListItemText, TextField, Typography, Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper} from '@material-ui/core';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import Row from '../../UIzard/Row';
 import Paragraph from '../../../components/UIzard/Paragraph';
 import Title from '../../../components/UIzard/Title';
 import Card from '../../../components/UIzard/Card';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
+import HomeIcon from '@material-ui/icons/Home';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: '#424242',
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
 
 const facilityLinks = {'':{info:'', request:''},
                        'Texas A&M': {info:'/facilities-tamu', 'request': '/request-tamu'},
@@ -33,7 +46,7 @@ class IonSearch extends React.Component {
       ion: "",
       minEnergy: "",
       maxEnergy: "",
-      facilities: {'Texas A&M': [], 'Lawrence Berkeley National Laboratory': [], 'NASA Space Radiation Laboratory': [], 'Michigan State University': []},
+      facilities: [],
       errorMessage: "",
       submitted: false,
     }
@@ -53,26 +66,26 @@ class IonSearch extends React.Component {
       maxEnergy: self.state.maxEnergy
     }).then(response => {
       console.log(response);
-      self.facilities.setState({'Texas A&M': response.data['Texas A&M']});
-      self.facilities.setState({'Lawrence Berkeley National Laboratory': response.data['Lawrence Berkeley National Laboratory']});
-      self.facilities.setState({'NASA Space Radiation Laboratory': response.data['NASA Space Radiation Laboratory']});
-      self.facilities.setState({'Michigan State University': response.data['Michigan State University']});
-
+      self.setState({facilities:response.data.result});
 
     }).catch(error => {
         alert(error);
         console.log(error)
     });
   }
-  var fac = this;
+
     render() {
       return (
 
       <div className="ionsearch">
-        <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '980px', flexGrow: '0' }}>
+        <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Title>Enter ion and energy to find matching facilities</Title>
+          <Typography><h1>Search Facilities by Energy and Ion</h1><br/><br/><br/></Typography>
         </Row>
+        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+          <Box>Enter ion and energy to find matching facilities</Box>
+        </Row>
+        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <TextField
             id="outlined-basic"
             label="Ion"
@@ -93,28 +106,54 @@ class IonSearch extends React.Component {
             variant="outlined"
             onChange={event => {this.setState({maxEnergy: event.target.value})}}
             />
-
+          </Row>
           <Button variant="contained" style={{height: '50px', width: '150px'}} onClick={(event) => this.handleSearch(event)}>
             Search
           </Button>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <Title>List of Matching Facilities</Title>
+            <Typography><h3>Matching Facilities</h3></Typography>
           </Row>
-          <List component="nav" aria-label="Matching Facilities List">
 
-                {Object.keys(this.state.facilities).map(function(facility){
-                  if(this.state.facilities[facility].length) {
-                  return(<ListItem>
-                  <ListItemText primary={facility + ":" + this.state.facilities[facility]}/>
-                  <Button color="primary" href={facilityLinks[facility].info}>
-                    Info
-                  </Button>
-                  <Button color="primary" href={facilityLinks[facility].request}>
-                    Request
-                  </Button>
-                  </ListItem>
-                )}})}
-          </List>
+          <TableContainer component={Paper}>
+            <Table aria-label="Matching Facilities List">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Facility</StyledTableCell>
+                  <StyledTableCell align="right">Ion : Energy (MeV)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</StyledTableCell>
+                  <StyledTableCell align="right">Homepage</StyledTableCell>
+                  <StyledTableCell align="right">Request Form</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {this.state.facilities.map(function(facDict){
+                return(  <StyledTableRow key={facDict.facility}>
+                    <StyledTableCell component="th" scope="row">{facDict.facility}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {facDict.ions.map(function(ion){
+                        return(
+                          <List>
+                            <ListItem>
+                              <ListItemText primary={ion}/>
+                            </ListItem>
+                          </List>
+                        )
+                      })}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <Button href={facilityLinks[facDict.facility].info}>
+                      <HomeIcon/>
+                      </Button>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <Button  href={facilityLinks[facDict.facility].request}>
+                      <ListAltIcon/>
+                      </Button>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                )})}
+              </TableBody>
+            </Table>
+          </TableContainer>
           </Card>
         </div>
           );

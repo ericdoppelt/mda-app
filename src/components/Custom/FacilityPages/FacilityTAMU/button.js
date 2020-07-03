@@ -59,13 +59,6 @@ export default function ButtonTAMU() {
     <div className={classes.root}>
               <div className={classes.actionsContainer}>
                   <Button
-                    disabled={activeStep === 0}
-                    onClick={handleReset}
-                    className={classes.button}
-                  >
-                    Reset
-                  </Button>
-                  <Button
                     variant="contained"
                     color="primary"
                     onClick={handle1}
