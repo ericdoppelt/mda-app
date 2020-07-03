@@ -31,8 +31,9 @@ class IonSearch extends React.Component {
 
     this.state = {
       ion: "",
-      energy: "",
-      facilities: [],
+      minEnergy: "",
+      maxEnergy: "",
+      facilities: {'Texas A&M': [], 'Lawrence Berkeley National Laboratory': [], 'NASA Space Radiation Laboratory': [], 'Michigan State University': []},
       errorMessage: "",
       submitted: false,
     }
@@ -48,18 +49,25 @@ class IonSearch extends React.Component {
     var self = this;
     await axios.post(url, {
       ion: self.state.ion,
-      energy: self.state.energy
+      minEnergy: self.state.minEnergy,
+      maxEnergy: self.state.maxEnergy
     }).then(response => {
       console.log(response);
-      self.setState({facilities: response.data.facilities});
+      self.facilities.setState({'Texas A&M': response.data['Texas A&M']});
+      self.facilities.setState({'Lawrence Berkeley National Laboratory': response.data['Lawrence Berkeley National Laboratory']});
+      self.facilities.setState({'NASA Space Radiation Laboratory': response.data['NASA Space Radiation Laboratory']});
+      self.facilities.setState({'Michigan State University': response.data['Michigan State University']});
+
+
     }).catch(error => {
         alert(error);
         console.log(error)
     });
   }
-
+  var fac = this;
     render() {
       return (
+
       <div className="ionsearch">
         <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '980px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
@@ -74,9 +82,16 @@ class IonSearch extends React.Component {
 
           <TextField
             id="outlined-basic"
-            label="Energy"
+            label="Min Energy"
             variant="outlined"
-            onChange={event => {this.setState({energy: event.target.value})}}
+            onChange={event => {this.setState({minEnergy: event.target.value})}}
+            />
+
+          <TextField
+            id="outlined-basic"
+            label="Max Energy"
+            variant="outlined"
+            onChange={event => {this.setState({maxEnergy: event.target.value})}}
             />
 
           <Button variant="contained" style={{height: '50px', width: '150px'}} onClick={(event) => this.handleSearch(event)}>
@@ -86,11 +101,11 @@ class IonSearch extends React.Component {
             <Title>List of Matching Facilities</Title>
           </Row>
           <List component="nav" aria-label="Matching Facilities List">
-              {this.state.facilities.map(function(facility) {
-                return (
-                  <div>
-                  <ListItem>
-                  <ListItemText primary={facility}/>
+
+                {Object.keys(this.state.facilities).map(function(facility){
+                  if(this.state.facilities[facility].length) {
+                  return(<ListItem>
+                  <ListItemText primary={facility + ":" + this.state.facilities[facility]}/>
                   <Button color="primary" href={facilityLinks[facility].info}>
                     Info
                   </Button>
@@ -98,8 +113,7 @@ class IonSearch extends React.Component {
                     Request
                   </Button>
                   </ListItem>
-                </div>)
-              })}
+                )}})}
           </List>
           </Card>
         </div>
