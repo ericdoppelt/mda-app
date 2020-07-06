@@ -23,11 +23,7 @@ export default function Home() {
               <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                   <Image style={{ width: '120px', height: '120px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
-                  
                 </Row>
-                <Title>
-                  <br/>Registration<br/><br/>
-                </Title>
                 <RegistrationForm/>
               </Stack>
             </Card>

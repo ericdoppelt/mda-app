@@ -4,7 +4,6 @@ import {TextField, Button, FormHelperText, FormControl, InputLabel, Select, Menu
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
@@ -186,10 +185,9 @@ class RegistrationForm extends React.Component {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label="toggle password visibility"
                   onClick={() => this.setState({showPassword: !this.state.showPassword})}
                 >
-                  {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             )
