@@ -225,14 +225,15 @@ def create_entry():
     req = request.get_json()
     result = ""
 
+    # date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+
     try:
         entry = Calendar(
             username = username,
             facility = req['facility'],
             integrator = req['integrator'],
             totalTime = req['totalTime'],
-            startDate = req['startDate'],
-            cannotRun = req['cannotRun']
+            startDate = req['startDate']
         )
         result = entry.create_entry()
 
