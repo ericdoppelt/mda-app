@@ -161,7 +161,7 @@ def personal_entries():
         myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-@app.route('/integrator', methods=['POST'])
+@app.route('/integrator', methods=['GET'])
 def get_integrators():
     myList = []
     
