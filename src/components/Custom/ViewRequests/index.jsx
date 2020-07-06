@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import { Link } from 'react-router-dom';
 import Row from '../../UIzard/Row'
@@ -48,14 +49,20 @@ const columns = [
   },
 ];
 
-function createData(name, facility, integrator, company) {
+function createData(name, facility, integrator, company, 
+    poNum, address, city, email, energies, funding_cell,
+    funding_contact, funding_email, ions, phone, start, state, zipCode) {
   var viewMore = 'View More'
-  return { name, facility, integrator, company, viewMore };
+  return { name, facility, integrator, company, viewMore, 
+    poNum, address, city, email, energies, funding_cell,
+    funding_contact, funding_email, ions, phone, start, state, zipCode };
 }
 
-const oldrows = [
-  createData('James James', 'MSU', 'MDA', 'Boeing'),
-  createData('Jim Jim', 'TAMU', 'MDA', 'Boeing'),
+const oldrows = [/*
+  createData('James James', 'MSU', 'MDA', 'Boeing',
+    'NA','NA','NA','NA','NA','NA','NA','NA','NA','NA','NA','NA','NA'),
+  createData('Jim Jim', 'TAMU', 'MDA', 'Boeing',
+    ),
   createData('Kim Kim', 'TAMU', 'MDA', 'Aerospace Corp.'),
   createData('Michael McKenna', 'NSRL', 'MDA', 'MDA'),
   createData('Jodi Jansen', 'LBNL', 'MDA', 'MDA'),
@@ -68,7 +75,7 @@ const oldrows = [
   createData('Jamie Jamie', 'NSRL', 'MDA', 'MDA'),
   createData('Anna Anna', 'NSRL', 'MDA', 'UTC'),
   createData('Jane Jane', 'NSRL', 'MDA', 'Aerospace Corp.'),
-  createData('Jan Jan', 'NSRL', 'MDA', 'Aerospace Corp.'),
+  createData('Jan Jan', 'NSRL', 'MDA', 'Aerospace Corp.'),*/
 ];
 
 const rows = [];
@@ -144,6 +151,19 @@ class ViewRequests extends React.Component {
       totalTime: "",
       startDate: "",
       cannotRun: "",
+      poNum: "",
+      address: "",
+      city: "",
+      email: "",
+      energies: "",
+      funding_cell: "",
+      funding_contact: "",
+      funding_email: "",
+      ions: "",
+      phone: "",
+      start: "",
+      state: "",
+      zipCode: "",
       data: [],
       oldrows: oldrows,
       page: 0,
@@ -171,7 +191,9 @@ class ViewRequests extends React.Component {
     result.forEach(function(entry) {
       //console.log(entry);
       self.setState(state=>({oldrows: [ 
-        createData(entry.name, entry.facility, entry.integrator, entry.company),
+        createData(entry.name, entry.facility, entry.integrator, entry.company,
+          entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
+          entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode),
         ...state.oldrows]}))
       //self.state.oldrows.push(createData(entry.name, entry.facility, entry.integrator, entry.company))
     });
@@ -197,6 +219,19 @@ class ViewRequests extends React.Component {
       facility: row.facility,
       company: row.company,
       integrator: row.integrator,
+      poNum: row.poNum,
+      address: row.address,
+      city: row.city,
+      email: row.email,
+      energies: row.energies,
+      funding_cell: row.funding_cell,
+      funding_contact: row.funding_contact,
+      funding_email: row.funding_email,
+      ions: row.ions,
+      phone: row.phone,
+      start: row.start,
+      state: row.state,
+      zipCode: row.zipCode,
       component: "view",
     }))
     console.log(row)
@@ -253,6 +288,8 @@ class ViewRequests extends React.Component {
               </Button>
             </Row>
             <br/>
+            <Box>Contact and Funding Information</Box>
+            <br/>
             <TextField
               label="Name"
               className={classes.leftTextField}
@@ -275,7 +312,7 @@ class ViewRequests extends React.Component {
               label = "Email"
               className={classes.leftTextField}
               id="standard-read-only-input"
-              defaultValue="testemail@email.com"
+              defaultValue={this.state.email}
               InputProps={{
                 readOnly: true,
               }}
@@ -284,7 +321,7 @@ class ViewRequests extends React.Component {
               label = "Phone"
               className={classes.rightTextField}
               id="standard-read-only-input"
-              defaultValue="999-999-9999"
+              defaultValue={this.state.phone}
               InputProps={{
                 readOnly: true,
               }}
@@ -304,7 +341,7 @@ class ViewRequests extends React.Component {
               label = "Funding Contact"
               className={classes.rightTextField}
               id="standard-read-only-input"
-              defaultValue="Test Contact"
+              defaultValue={this.state.funding_contact}
               InputProps={{
                 readOnly: true,
               }}
@@ -313,7 +350,7 @@ class ViewRequests extends React.Component {
               label = "Funding Contact Phone"
               className={classes.leftTextField}
               id="standard-read-only-input"
-              defaultValue="999-999-9999"
+              defaultValue={this.state.funding_cell}
               InputProps={{
                 readOnly: true,
               }}
@@ -322,7 +359,7 @@ class ViewRequests extends React.Component {
               label = "Funding Contact Email"
               className={classes.rightTextField}
               id="standard-read-only-input"
-              defaultValue="testemail@email.com"
+              defaultValue={this.state.funding_email}
               InputProps={{
                 readOnly: true,
               }}
@@ -333,7 +370,7 @@ class ViewRequests extends React.Component {
               label = "Billing Address"
               className={classes.billingAddress}
               id="standard-read-only-input"
-              defaultValue="111 Test Address"
+              defaultValue={this.state.address}
               InputProps={{
                 readOnly: true,
               }}
@@ -342,7 +379,7 @@ class ViewRequests extends React.Component {
               label = "P.O. No."
               className={classes.poNumber}
               id="standard-read-only-input"
-              defaultValue="1"
+              defaultValue={this.state.poNum}
               InputProps={{
                 readOnly: true,
               }}
@@ -351,7 +388,7 @@ class ViewRequests extends React.Component {
               label = "City"
               className={classes.billingCity}
               id="standard-read-only-input"
-              defaultValue="Test City"
+              defaultValue={this.state.city}
               InputProps={{
                 readOnly: true,
               }}
@@ -369,13 +406,43 @@ class ViewRequests extends React.Component {
               label = "Zip"
               className={classes.billingZip}
               id="standard-read-only-input"
-              defaultValue="99999"
+              defaultValue={this.state.zipCode}
               InputProps={{
                 readOnly: true,
               }}
             />
-            <br/>
-            <br/>
+            <br/><br/>
+            <Box>Experiment Information</Box>
+            <TextField 
+              label = "Energies"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.energies}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Ions"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.ions}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Start Date"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.start}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+
+            <br/><br/><br/>
+
             <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
               <Button 
                 id="button" 
