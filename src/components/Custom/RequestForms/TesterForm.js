@@ -124,6 +124,7 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setFinancierEmail(event.target.value)}}
               error = {TesterStore.financierEmailError}
               helperText = {TesterStore.financierEmailHelperText}
+             
             />
             <br/>
             <br/>
@@ -140,6 +141,7 @@ const useStyles = theme => ({
               label = "P.O. No."
               value = {TesterStore.billingPO}
               onChange={event => {TesterStore.setBillingPO(event.target.value)}}
+              type="number"
             />
             <TextField 
               className={classes.billingCity}

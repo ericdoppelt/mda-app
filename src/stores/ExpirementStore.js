@@ -56,24 +56,31 @@ class ExpirementStore {
         else return "";
     }
 
-    ions = "";
-    setIons(newIons) {
-        this.ions = newIons;
+    ions = observable.array([]);
+    setIons(newIons, index) {
+        if (this.ions.length < index + 1) {
+            this.ions.length = index + 1;
+        }
+        this.ions[index] = newIons;
     }
     get ionsError() {
-        return this.ions === "" && this.submitted;
+        return this.ions.length === 0 && this.submitted;
     }
     get ionsHelperText() {
         if (this.ionsError) return "Please enter the particles for the experiment.";
         return "";
     }
 
-    energies = "";
-    setEnergies(newEnergies) {
-        this.energies = newEnergies;
+    energies = observable.array([]);
+    setEnergies(newEnergies, index) {
+        console.log(newEnergies + ", " + index);
+        if (this.energies.length < index + 1) {
+            this.energies.length = index + 1;
+        }
+        this.energies[index] = newEnergies;
     }
     get energiesError() {
-        return this.energies === "" && this.submitted;
+        return this.energies.length === 0 && this.submitted;
     }
     get energiesHelperText() {
         if (this.energiesError) return "Please enter the energies for the experiment.";

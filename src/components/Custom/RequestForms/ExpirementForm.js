@@ -47,6 +47,16 @@ const useStyles = theme => ({
       marginRight: '5%',
       width: '90%',
     },
+    ionButton: {
+      backgroundColor: "#f5f5b8",
+      marginTop: '30px',
+      marginLeft:'5%',
+      marginRight: '5%',
+      width: '90%',
+    },
+    fullDiv: {
+      width: '100%',
+    }
   });
 
   
@@ -56,9 +66,9 @@ const useStyles = theme => ({
         super(props);
         this.state = {
             openCalendar: false,
-            selectedEnergy: false,
             particles: [],
             energies: {},
+            ionIterator: 0,
         }
 
         this.selectIon = this.selectIon.bind(this);
@@ -78,27 +88,74 @@ const useStyles = theme => ({
           });
         } 
       
-    getEnergies() {
-      if (ExperimentStore.ions === "") {
+    getEnergies(index) {
+      if (ExperimentStore.ions[index] === undefined) {
         return <MenuItem value={""}>{"Please enter an ion"}</MenuItem>
         } else {
-        console.log("not blank");
-        let energies = this.state.energies[ExperimentStore.ions].map(function(energy) {
+        let energies = this.state.energies[ExperimentStore.ions[index]].map(function(energy) {
           return <MenuItem value={energy}>{energy}</MenuItem>
         });
         return energies;
       }
     }
     
-    selectIon(ion) {
-      this.setState({selectedEnergy: true});
-      ExperimentStore.setIons(ion);
+    selectIon(ion, index) {
+      this.setState({selectedIon: true});
+      ExperimentStore.setIons(ion, index);
     }
 
+    incrementIonCounter() {
+      let numSelectors = this.state.ionIterator + 1;
+      this.setState({ionIterator: numSelectors});
+    }
+
+    getIonSelectors() {
+      const { classes } = this.props;
+      var returnedSelectors = [];
+      for (var i = 0; i <= this.state.ionIterator; i++) {      
+        const key = i;
+        returnedSelectors.push(
+          <div>
+          <FormControl 
+              className={classes.ions}
+              error = {ExperimentStore.ionsError}
+              > 
+              <InputLabel>Ion</InputLabel>
+              <Select
+                value={ExperimentStore.ions[i]}
+                onChange={event => this.selectIon(event.target.value, key)}
+                >
+                {this.state.particles.map(function(ion) {
+                  return <MenuItem value={ion}>{ion}</MenuItem>
+                })}
+              </Select>
+              <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
+            </FormControl>
+
+            <FormControl 
+              className={classes.energies}
+              error = {ExperimentStore.energiesError}
+              > 
+              <InputLabel>Energy</InputLabel>
+              <Select
+                value={ExperimentStore.energies[key]}
+                onChange={event => {ExperimentStore.setEnergies(event.target.value, key)}}
+                >
+                {this.getEnergies(key)}
+              </Select>
+              <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
+            </FormControl>
+            </div>
+        );
+        }
+        return returnedSelectors;
+      }
+    
+      
     render() {
       const { classes } = this.props;
       return(
-          <div>
+          <div className={classes.fullDiv}>
             <br/>
             <Box>Please enter the following information about your experiment.</Box>
             <TextField
@@ -116,6 +173,7 @@ const useStyles = theme => ({
               onChange={event => {ExperimentStore.setHours(event.target.value)}}
               error = {ExperimentStore.hoursError}
               helperText = {ExperimentStore.hoursHelperText}
+              type="number"
             />
             <TextField 
               className={classes.leftTextField}
@@ -141,36 +199,10 @@ const useStyles = theme => ({
               <FormHelperText>{ExperimentStore.continuousHelperText}</FormHelperText>
             </FormControl>
 
-            <FormControl 
-              className={classes.ions}
-              error = {ExperimentStore.ionsError}
-              > 
-              <InputLabel>Ion</InputLabel>
-              <Select
-                value={ExperimentStore.ions}
-                onChange={event => {this.selectIon(event.target.value)}}
-                >
-                {this.state.particles.map(function(ion) {
-                  return <MenuItem value={ion}>{ion}</MenuItem>
-                })}
-              </Select>
-              <FormHelperText>{ExperimentStore.continuousHelperText}</FormHelperText>
-            </FormControl>
-
-            <FormControl 
-              className={classes.energies}
-              error = {ExperimentStore.energiesError}
-              > 
-              <InputLabel>Energy</InputLabel>
-              <Select
-                value={ExperimentStore.energies}
-                onChange={event => {ExperimentStore.setEnergies(event.target.value)}}
-                >
-                {this.getEnergies()}
-              </Select>
-              <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
-            </FormControl>
-            
+            {this.getIonSelectors()}
+            <Button className={classes.ionButton} onClick={() => this.incrementIonCounter()}>
+            Add Another Ion
+            </Button>
             <TextField 
               className={classes.comments}
               label = "Comments"
