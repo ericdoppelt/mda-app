@@ -229,11 +229,13 @@ def create_entry():
 
     try:
         entry = Calendar(
-            username = username,
+            username = req['username'], # username
             facility = req['facility'],
             integrator = req['integrator'],
             totalTime = req['totalTime'],
-            startDate = req['startDate']
+            startDate = req['startDate'],
+            private = req['private'],
+            title = req['title']
         )
         result = entry.create_entry()
 

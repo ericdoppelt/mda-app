@@ -87,12 +87,13 @@ class Calendar(db.Model):
     __tablename__ = 'Calendar'
 
     id = db.Column(db.Integer(), primary_key = True)
-    username = db.Column(db.String())
-    facility = db.Column(db.String())
-    integrator = db.Column(db.String())
+    username = db.Column(db.String(50), nullable=False)
+    facility = db.Column(db.String(50))
+    integrator = db.Column(db.String(50))
     totalTime = db.Column(db.Integer())
-    startDate = db.Column(db.DateTime())
-    cannotRun = db.Column(db.DateTime())
+    startDate = db.Column(db.DateTime(), nullable=False)
+    private = db.Column(db.Boolean())
+    title = db.Column(db.String(50))
 
     def create_entry(self):
         result = ""
