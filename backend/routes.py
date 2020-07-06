@@ -168,7 +168,7 @@ def get_integrators():
     try:
         integrators = Organization.query.filter_by(org_type='integrator').all()
         for org in integrators:
-            myList.append(org.name)
+            myList.append(org.abbrv)
         print(myList)
     except Exception as e:
         print(e)
