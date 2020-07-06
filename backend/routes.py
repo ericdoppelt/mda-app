@@ -1,6 +1,6 @@
 
 import copy
-from sqlalchemy import and_, or_, between
+from sqlalchemy import and_, or_, between, func
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token,
@@ -68,8 +68,9 @@ def get_current_time():
 
 @app.route('/register', methods=['POST'])
 def register():
-    username = request.get_json()['username']
-    password = request.get_json()['password']
+    req = request.get_json()
+    username = req['username']
+    password = req['password']
     result = ""
 
     user = Users.query\
@@ -78,8 +79,12 @@ def register():
     if not user:
         user = Users(
             username = username,
-            first_name = request.get_json()['first_name'],
-            last_name = request.get_json()['last_name']
+            first_name = req['first_name'],
+            last_name = req['last_name'],
+            affiliation = req['affiliation'],
+            user_type = req['type'],
+            phone = req['phone'],
+            email = req['email']
         )
         user.set_password(password)
         result = user.register_user()
