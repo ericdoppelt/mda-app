@@ -87,21 +87,43 @@ def user():
         'email': user.email}
     return account_info
 
-@app.route('/calendar', methods=['GET', 'POST'])
+@app.route('/calendar', methods=['POST'])
 def entries():
     myList = []
-    if request.method == 'POST':
-        entries = Calendar.query.all()
-        for entry in entries:
-            startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
-            cannotRun = ""
-            if entry.cannotRun is not None:
-                cannotRun = entry.cannotRun.strftime("%Y-%m-%dT%H:%M")
-            entry_info = {'username': entry.username,
-            'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
-            'totalTime': entry.totalTime, 'cannotRun': cannotRun}
-            myList.append(entry_info)
+    entries = Calendar.query.all()
+    for entry in entries:
+        startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
+        cannotRun = ""
+        if entry.cannotRun is not None:
+            cannotRun = entry.cannotRun.strftime("%Y-%m-%dT%H:%M")
+        entry_info = {'username': entry.username,
+        'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
+        'totalTime': entry.totalTime, 'cannotRun': cannotRun}
+        myList.append(entry_info)
     return jsonify({'entries' : myList})
+
+@app.route('/calendar/personal', methods=['POST'])
+@jwt_required
+def personal_entries():
+    username = get_jwt_identity()
+
+    myList = []
+    entries = Calendar.query.filter_by(username=username).all()
+    for entry in entries:
+        startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
+        cannotRun = ""
+        if entry.cannotRun is not None:
+            cannotRun = entry.cannotRun.strftime("%Y-%m-%dT%H:%M")
+        entry_info = {'username': entry.username,
+        'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
+        'totalTime': entry.totalTime, 'cannotRun': cannotRun}
+        myList.append(entry_info)
+    return jsonify({'entries' : myList})
+
+@app.route('/integrator', methods=['POST'])
+def get_integrators():
+    integrators = Calendar.query.filter_by(username=username).all()
+
 
 @app.route('/filterion', methods=['POST'])
 def filterion():
