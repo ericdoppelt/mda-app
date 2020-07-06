@@ -19,6 +19,47 @@ from blacklist_helpers import (
 from exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
+
+
+
+def add_request(form):
+    result = ""
+
+    try:
+        if form['billingPO'] == "":
+            form['billingPO'] = None
+        ion_ids = []
+        for i, ion in enumerate(form['ions']):
+            beam = Beams.query.filter_by(ion=ion, amev=form['energies'][i])
+            ion_ids.append(beam.id)
+        entry = requests(name = form['name'],
+                        email = form['email'],
+                        cell = form['cell'],
+                        company = form['company'],
+                        integrator = form['integrator'],
+                        funding_contact = form['financierName'],
+                        address = form['billingAddress'],
+                        city = form['billingCity'],
+                        state = form['billingState'],
+                        zipcode = form['billingZip'],
+                        approved_integrator = False,
+                        approved_facility = False,
+                        facility = form['facility'],
+                        # energy = '',
+                        funding_cell = form['financierPhone'],
+                        funding_email = form['financierEmail'],
+                        start = form['date'],
+                        # ions = ion_ids,
+                        comments = form['comments'],
+                        po_number = form['billingPO'])
+        result = entry.create_request()
+
+    except Exception as e:
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+
 @app.route('/time', methods=['GET'])
 def get_current_time():
     sample = Test.query.first()
@@ -281,6 +322,7 @@ def getRequests():
     return result
 
 
+
 # TODO make jwt required after development
 @app.route('/requestform', methods=['POST'])
 #@jwt_required
@@ -293,7 +335,7 @@ def requestform():
         output = ""
         pdf = FormBuilder(form)
         msg = Message("Send Request Form Demo", cc=[form['email']])
-        print(form['date'])
+        print(form)
         # msg.recipients = ['edopp4182@gmail.com']
         if facility == 'TAMU':
             # msg.recipients = ['clark@comp.tamu.edu']
@@ -358,9 +400,12 @@ def requestform():
             with app.open_resource("Universal_request.pdf") as fp:
                 msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
         # mail.send(msg)
+        results = add_request(form)
+        print(results)
 
-        print(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         print(e)
         return jsonify({'success': False, 'msg': str(e)}), 404
+
+

@@ -52,8 +52,6 @@ class FormBuilder():
         """
 
     def fill(self, template, output):
-        print("blah")
-        print(output)
         template_pdf = pdfrw.PdfReader(template)
         annotations = template_pdf.pages[0][ANNOT_KEY]
         for annotation in annotations:
