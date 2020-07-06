@@ -122,7 +122,17 @@ def personal_entries():
 
 @app.route('/integrator', methods=['POST'])
 def get_integrators():
-    integrators = Calendar.query.filter_by(username=username).all()
+    myList = []
+    
+    try:
+        integrators = Organization.query.filter_by(org_type='integrator').all()
+        for org in integrators:
+            myList.append(org.name)
+        print(myList)
+    except Exception as e:
+        print(e)
+
+    return {'integrators' : myList}
 
 
 @app.route('/filterion', methods=['POST'])

@@ -65,6 +65,8 @@ class Organization(db.Model):
     state = db.Column(db.String(20))
     zipcode = db.Column(db.Integer)
     abbrv = db.Column(db.String(6))
+    org_type = db.Column(db.String(15))
+    type_id = db.Column(db.Integer)
 
     def __repr__(self):
         return "<Organization(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name, self.poc_name)
