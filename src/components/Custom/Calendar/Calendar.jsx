@@ -141,8 +141,10 @@ class Calendar extends React.Component {
   /*** EVENT CREATOR FOR UPDATE FROM DATABASE ***/
   makeEvent = (facility, integrator, startDate) => {
     var titleString = facility + " - " + integrator;
+    var endDate = new Date(startDate);
+    endDate.setHours(endDate.getHours() + 8);
     return { id: "1", extendedProps: {facility: facility, integrator: integrator, beamType: "Heavy Ion"}, 
-    title: titleString, start: new Date(startDate), backgroundColor: this.makeEventColor(facility)}
+    title: titleString, start: new Date(startDate), end: endDate, backgroundColor: this.makeEventColor(facility)}
   };
 
   makeEventColor = (facility) => {
@@ -282,6 +284,7 @@ class Calendar extends React.Component {
               weekends={ this.state.calendarWeekends }
               events={ this.state.calendarEvents }
               dateClick={ this.handleDateClick }
+              eventOrder="facility,start"
 
               /* Render Event Options */
               eventRender={ function(info) {
@@ -315,7 +318,7 @@ class Calendar extends React.Component {
     calendarApi.gotoDate('2000-01-01') // call a method on the Calendar object
   }
 
-  handleDateClick = (arg) => {
+  handleDateClick = (arg) => {/*
     var userStr = prompt('Enter username');
     var dateStr = prompt('Enter a date in YYYY-MM-DD format');
     var timeStr = prompt('Enter a time in HH:MM format');
@@ -330,7 +333,7 @@ class Calendar extends React.Component {
           allDay: arg.allDay
         })
       })
-    //}
+    //}*/
   }
 
 }
