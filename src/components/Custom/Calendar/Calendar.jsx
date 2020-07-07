@@ -12,9 +12,10 @@ import Row from '../../UIzard/Row';
 import Stack from '../../UIzard/Stack';
 import Title from '../../UIzard/Title';
 
+import { observer } from "mobx-react"
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import { Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem } from '@material-ui/core';  
-
+import UserProfileStore from '../../../stores/UserProfileStore';
 
 // Checkbox items
 const facilities = [
@@ -79,14 +80,24 @@ class Calendar extends React.Component {
 
   /*** INITIALIZE STATE VARIABLES ***/
   calendarComponentRef = React.createRef();
+
   
+  static defaultProps = {
+    personal: false,
+    facility: ['TAMU'],
+  }
   constructor(props) {
     super(props);
     this.handleCheck = this.handleCheck.bind(this);
+    this.handleCheckPersonal = this.handleCheckPersonal.bind(this);
     this.handleChangeFacilities = this.handleChangeFacilities.bind(this);
     this.handleChangeIntegrators = this.handleChangeIntegrators.bind(this);
     this.handleChangeBeamTypes = this.handleChangeBeamTypes.bind(this);
     
+    let sampleProp = "null";
+    if (this.props.samp !== null) {
+      sampleProp = "not null"
+    }
 
     /*** LIST OF DATES ***/
     this.state = {
@@ -96,17 +107,22 @@ class Calendar extends React.Component {
       totalTime: "",
       startDate: "",
       cannotRun: "",
+      sampleProp: sampleProp,
       data: [],
       facilities: facilities,
       integrators: integrators,
       beamTypes: beamTypes,
-      checkedFacilities: ['TAMU'],
+      checkedFacilities: this.props.personal
+        ? facilities
+        : ['TAMU'],
       checkedIntegrators: integrators,
       checkedBeamTypes: beamTypes,
+      checkedPersonal: this.props.personal,
       checkedValues: ['TAMU'].concat(integrators).concat(beamTypes),
       calendarWeekends: true,
       calendarEvents: [ // initial event data
-      ]
+      ],
+      personalEvents: ["hello"],
     }
   }
 
@@ -114,7 +130,7 @@ class Calendar extends React.Component {
   
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
-    const url = "https://mda-phoenix.herokuapp.com/calendar";
+    let url = "https://mda-phoenix.herokuapp.com/calendar";
     var self = this;
     await axios.post(url).then(response => {
       /*self.setState({
@@ -135,6 +151,29 @@ class Calendar extends React.Component {
       })
       .catch(error => {
       });
+
+      url = "https://mda-phoenix.herokuapp.com/calendar/personal";
+      await axios.post(url, null, {
+        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+        }).then(response => {
+          /*self.setState({
+          username: response.data.username,
+          facility: response.data.facility,
+          integrator: response.data.integrator,
+          totalTime: response.data.totalTime,
+          startDate: response.data.startDate,
+          cannotRun: response.data.cannotRun
+          });*/
+          console.log(response.data)
+          var data = [];
+          response.data.entries.forEach(function(event) {
+            data.push(self.makeEventPersonal(event.facility,event.integrator,event.startDate));
+          })
+          self.setState({personalEvents : data});
+          //self.setState(state => ({checkedValues: self.state.checkedFacilities.concat(integrators.concat(beamTypes)),}));
+        })
+        .catch(error => {
+        });
   }
 
 
@@ -145,6 +184,14 @@ class Calendar extends React.Component {
     endDate.setHours(endDate.getHours() + 8);
     return { id: "1", extendedProps: {facility: facility, integrator: integrator, beamType: "Heavy Ion"}, 
     title: titleString, start: new Date(startDate), end: endDate, backgroundColor: this.makeEventColor(facility)}
+  };
+
+  makeEventPersonal = (facility, integrator, startDate) => {
+    var titleString = facility + " - " + integrator;
+    var endDate = new Date(startDate);
+    endDate.setHours(endDate.getHours() + 8);
+    return { id: "1", extendedProps: {facility: facility, integrator: integrator, beamType: "Heavy Ion"}, 
+    title: titleString, start: new Date(startDate), end: endDate, backgroundColor: this.makeEventColor(facility), className: 'moreBorder'}
   };
 
   makeEventColor = (facility) => {
@@ -164,6 +211,10 @@ class Calendar extends React.Component {
       })
     );
   }
+
+  handleCheckPersonal(event) {
+    this.setState(state => ({checkedPersonal: !state.checkedPersonal}))
+  };
 
   handleChangeFacilities(e) {
     this.setState(state=> ({checkedFacilities: e.target.value}))
@@ -195,7 +246,6 @@ class Calendar extends React.Component {
     return (
       <div className='calendar'>
         <div className='calendar-inner'>
-        
           <Stack style={{ justifyContent: 'flex-end', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
 
             {/*** FILTER CARD ***/}
@@ -214,7 +264,7 @@ class Calendar extends React.Component {
                     onChange={ this.handleChangeFacilities }
                     input={<Input />}
                     MenuProps={MenuProps}
-                    style={{width:'200px',}}
+                    style={{width:'150px',}}
                   >
                     {facilities.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, facilities, theme)}>
@@ -235,7 +285,7 @@ class Calendar extends React.Component {
                     onChange={ this.handleChangeIntegrators }
                     input={<Input />}
                     MenuProps={MenuProps}
-                    style={{width:'200px',}}
+                    style={{width:'150px',}}
                   >
                     {integrators.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, integrators, theme)}>
@@ -256,7 +306,7 @@ class Calendar extends React.Component {
                     onChange={ this.handleChangeBeamTypes }
                     input={<Input />}
                     MenuProps={MenuProps}
-                    style={{width:'200px',}}
+                    style={{width:'150px',}}
                   >
                     {beamTypes.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, beamTypes, theme)}>
@@ -265,6 +315,18 @@ class Calendar extends React.Component {
                     ))}
                   </Select>
                 </FormControl>
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.checkedPersonal}
+                      onChange={this.handleCheckPersonal}
+                      name="checkedB"
+                      color="primary"
+                    />
+                  }
+                  label="Personal"
+                />
               </Row>
             </CardNoShadow>
             
@@ -282,7 +344,10 @@ class Calendar extends React.Component {
               plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
               ref={ this.calendarComponentRef }
               weekends={ this.state.calendarWeekends }
-              events={ this.state.calendarEvents }
+              events={ this.state.checkedPersonal
+                        ? this.state.personalEvents
+                        : this.state.calendarEvents
+                      }
               dateClick={ this.handleDateClick }
               eventOrder="facility,start"
 
