@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContext } from "react";
+import {Redirect} from 'react-router-dom';
 
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
@@ -16,12 +17,15 @@ import TAMUStorage from '../../../stores/TAMUStore';
 import TAMUForm from '../../../components/Custom/RequestForms/TAMU/TAMUForm';
 import TAMUHeader from '../../../components/Custom/RequestForms/TAMU/TAMUHeader';
 import TAMUSubmit from '../../../components/Custom/RequestForms/TAMU/TAMUSubmit';
+import DiscreteIons from '../../../components/Custom/RequestForms/DiscreteIons';
+import StartDatePicker from '../../../components/Custom/RequestForms/StartDatePicker';
 
 const TesterStore = createContext(TesterStorage);
 const ExpirementStore = createContext(ExpirementStorage);
 const TAMUStore = createContext(TAMUStorage);
  
 export default function TAMU() {
+  if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
 
   const classes = Constants.useStyles();
   return (
@@ -39,7 +43,9 @@ export default function TAMU() {
                     <ExpirementStore.Provider>
                       <TAMUStore.Provider>
                         <TesterForm/>
-                        <ExperimentForm facility="TAMU"/>
+                        <ExperimentForm/>
+                        <DiscreteIons/>
+                        <StartDatePicker/>
                         <TAMUForm/>
                         <TAMUSubmit/>
                       </TAMUStore.Provider>

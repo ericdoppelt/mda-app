@@ -1,9 +1,13 @@
 import React from 'react';
 
-import {TextField, Button, FormHelperText, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
+import {TextField, Button, FormHelperText, FormControl, InputLabel, Select, MenuItem, Typography} from '@material-ui/core';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 const useStyles = theme => ({
   left: {
@@ -20,11 +24,18 @@ const useStyles = theme => ({
   },
   submitButton: {
     backgroundColor: "#bfddff",
-      marginTop: '50px',
-      marginLeft:'5%',
-      marginRight: '5%',
-      marginBottom: '20px',
-      width: '90%',
+    marginTop: '50px',
+    marginLeft:'5%',
+    marginRight: '5%',
+    marginBottom: '20px',
+    width: '90%',
+  },
+  header: {
+    marginTop: '10px',
+  },
+  subheader: {
+    marginTop: '10px',
+    marginBottom: '10px',
   },
   fullDiv: {
     width: '100%',
@@ -32,7 +43,7 @@ const useStyles = theme => ({
 });
 
 class RegistrationForm extends React.Component {
-
+  
   constructor(props) {
     super(props);
 
@@ -44,11 +55,14 @@ class RegistrationForm extends React.Component {
       lastNameError: false,
 
       username: "",
-      userNameError: false,
-      userNameHelper: "",
+      usernameError: false,
+      usernameHelper: "",
 
       password: "",
-      passwordError: false,
+      passwordEmptyError: false,
+      passwordInvalidError: false,
+      passwordHelper: "",
+      showPassword: false,
 
       affiliation: "",
       affiliationError: false,
@@ -78,27 +92,37 @@ class RegistrationForm extends React.Component {
   }
   
 
+  validatePassword(password) {
+    let passwordRegex = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$');
+    console.log(passwordRegex.test(password));
+    return passwordRegex.test(password);
+  }
+
   submitForm() {
     this.setState({
       firstNameError: (this.state.firstName === ""),
       lastNameError: (this.state.lastName === ""),
-      userNameError: (this.state.username === ""),
-      passwordError: (this.state.password === ""),
+      usernameError: (this.state.username === ""),
+      passwordEmptyError: (this.state.password === ""),
+      passwordInvalidError: (!this.validatePassword(this.state.password)),
       affiliationError: (this.state.password === ""),
       typeError: (this.state.type === ""),
       phoneError: (this.state.phone === ""),
       emailError: (this.state.email === ""),
     }, () => {
-      if (this.state.userNameErro) this.setState({userNameHelper: "Please enter a username."})
+      if (this.state.usernameError) this.setState({usernameHelper: "Please enter a username."});
+      if (this.state.passwordEmptyError) this.setState({passwordHelper: "Please enter a password."});
+      else if (this.state.passwordInvalidError) this.setState({passwordHelper: "Please enter a password matching the criteria."});
+      else this.setState({passwordHelper: ""});
       this.postToAxios();
     });
   }
 
   async postToAxios() {
-    let formIsValid = !this.state.firstNameError && !this.state.lastNameError && !this.state.userNameError && !this.state.passwordError
+    let formIsValid = !this.state.firstNameError && !this.state.lastNameError && !this.state.usernameError && !this.state.passwordError
     && !this.affiliationError && !this.typeError && !this.phoneError && !this.emailError;
-
-    if (formIsValid) {
+    console.log(this.state);
+    /* if (formIsValid) {
       var self = this;
       await axios.post('https://mda-phoenix.herokuapp.com/register', {
         first_name: self.state.firstName,
@@ -119,13 +143,15 @@ class RegistrationForm extends React.Component {
       }).catch(error => {
         alert(error);
       });
-    }
+    } */
   }
 
   render() {
     const { classes } = this.props;
     return (
-      <div className="loginform">
+      <div>
+        <Typography className={classes.header} variant='h4'>Register an Account</Typography>
+        <Typography className={classes.subheader} variant='subtitle2'>Please note that passwords must be more than eight characters and include <br/> an uppercase letter, a lowercase letter, a number, and a special character.</Typography>
         <TextField
           className = {classes.left}
           label = "First Name"
@@ -144,16 +170,30 @@ class RegistrationForm extends React.Component {
           className = {classes.left}
           label = "Username"
           onChange={event => {this.setState({username: event.target.value})}}
-          error = {this.state.userNameError}
-          helperText = {this.state.userNameHelper}
+          error = {this.state.usernameError}
+          helperText = {this.state.usernameHelper}
         />
+
         <TextField 
           className = {classes.right}
           label = "Password"
           onChange={event => {this.setState({password: event.target.value})}}
+          type = {this.state.showPassword ? 'text' : 'password'}
           error = {this.state.passwordError}
-          helperText = {this.state.passwordError ? "Please enter a password." : ""}
+          helperText = {this.state.passwordHelper}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => this.setState({showPassword: !this.state.showPassword})}
+                >
+                {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
         />
+        
         <FormControl 
           className={classes.left}
           error = {this.state.typeError}
