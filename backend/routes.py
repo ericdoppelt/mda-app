@@ -154,12 +154,9 @@ def personal_entries():
     entries = Calendar.query.filter_by(username=username).all()
     for entry in entries:
         startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
-        cannotRun = ""
-        if entry.cannotRun is not None:
-            cannotRun = entry.cannotRun.strftime("%Y-%m-%dT%H:%M")
         entry_info = {'username': entry.username,
         'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
-        'totalTime': entry.totalTime, 'cannotRun': cannotRun}
+        'totalTime': entry.totalTime}
         myList.append(entry_info)
     return jsonify({'entries' : myList})
 
