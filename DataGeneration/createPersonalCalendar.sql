@@ -1,0 +1,12 @@
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 00:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 08:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 16:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 00:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 08:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 16:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 00:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 08:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 16:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 00:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 08:00', Null);
+INSERT INTO public."Calendar" (username, facility, integrator, "totalTime", "startDate", "cannotRun") Values ('mm92', Null, 'MDA', '8', '2020-07-01 16:00', Null);

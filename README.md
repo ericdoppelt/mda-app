@@ -15,8 +15,6 @@ npm i @date-io/date-fns
 npm install react-infinite-calendar --save
 npm install fontsource-roboto
 npm install mobx mobx-react --save
-npm install --save-dev @babel/plugin-proposal-decorators
-npm install --save-dev @babel/plugin-proposal-class-properties
 
 ```
 To initialize the virtual environment, cd in to the backend directory, and create the virtual environment by running 

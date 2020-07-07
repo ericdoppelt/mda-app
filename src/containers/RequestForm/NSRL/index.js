@@ -1,4 +1,5 @@
 import React from 'react';
+import {Redirect} from 'react-router-dom';
 import { createContext } from "react";
 
 import Card from '../../../components/UIzard/Card';
@@ -15,12 +16,15 @@ import ExperimentForm from '../../../components/Custom/RequestForms/ExpirementFo
 import TesterStorage from '../../../stores/TesterStore';
 import ExpirementStorage from '../../../stores/ExpirementStore';
 import NSRLSubmit from '../../../components/Custom/RequestForms/NSRL/NSRLSubmit';
+import ContinuousIons from '../../../components/Custom/RequestForms/ContinuousIons';
+import StartDatePicker from '../../../components/Custom/RequestForms/StartDatePicker';
 
 const TesterStore = createContext(TesterStorage);
 const ExpirementStore = createContext(ExpirementStorage);
 const NSRLStore = createContext(NSRLStorage);
 
 export default function Home() {
+  if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
 
   const classes = Constants.useStyles();
   return (
@@ -38,7 +42,9 @@ export default function Home() {
                     <ExpirementStore.Provider>
                       <NSRLStore.Provider>
                         <TesterForm/>
-                        <ExperimentForm facility="NSRL"/>
+                        <ExperimentForm/>
+                        <ContinuousIons facility="NSRL"/>
+                        <StartDatePicker/>
                         <NSRLForm/>
                         <NSRLSubmit/>
                       </NSRLStore.Provider>

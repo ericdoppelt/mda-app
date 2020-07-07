@@ -28,9 +28,6 @@ class LoginForm extends React.Component {
     event.preventDefault();
     this.setState({submitted: true});
     this.setState({ usernameError: "", passwordError: "" });
-    console.log("called");
-    console.log(this.state.username);
-    console.log(this.state.password);
 
     var self = this;
     let url = 'https://mda-phoenix.herokuapp.com/login';
@@ -40,10 +37,8 @@ class LoginForm extends React.Component {
     }).then(response => {
       console.log(response);
       if (response.data.success === true) {
-        window.sessionStorage.setItem("access_token", response.data.access_token)
-        this.props.history.push({
-          pathname: "/user-profile"
-        });
+        window.sessionStorage.setItem("access_token", response.data.access_token);
+        this.props.history.push('user-profile');
       } else {
           if (response.data.error === "Incorrect username") {
             self.setState({ usernameError: response.data.error });
@@ -92,7 +87,7 @@ class LoginForm extends React.Component {
           <Button 
             variant="contained"
             style={{width: '100px'}}
-            onClick={() => {this.props.history.push('/user-registration')}}
+            onClick={() => {this.props.history.go('/user-registration')}}
           >
             Register
           </Button>

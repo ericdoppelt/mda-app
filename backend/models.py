@@ -65,6 +65,8 @@ class Organization(db.Model):
     state = db.Column(db.String(20))
     zipcode = db.Column(db.Integer)
     abbrv = db.Column(db.String(6))
+    org_type = db.Column(db.String(15))
+    type_id = db.Column(db.Integer)
 
     def __repr__(self):
         return "<Organization(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name, self.poc_name)
@@ -85,12 +87,13 @@ class Calendar(db.Model):
     __tablename__ = 'Calendar'
 
     id = db.Column(db.Integer(), primary_key = True)
-    username = db.Column(db.String())
-    facility = db.Column(db.String())
-    integrator = db.Column(db.String())
+    username = db.Column(db.String(50), nullable=False)
+    facility = db.Column(db.String(50))
+    integrator = db.Column(db.String(50))
     totalTime = db.Column(db.Integer())
-    startDate = db.Column(db.DateTime())
-    cannotRun = db.Column(db.DateTime())
+    startDate = db.Column(db.DateTime(), nullable=False)
+    private = db.Column(db.Boolean())
+    title = db.Column(db.String(50))
 
     def create_entry(self):
         result = ""

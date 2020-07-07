@@ -1,6 +1,6 @@
 
 import copy
-from sqlalchemy import and_, or_, between
+from sqlalchemy import and_, or_, between, func
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token,
@@ -19,6 +19,47 @@ from blacklist_helpers import (
 from exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
+
+
+
+def add_request(form):
+    result = ""
+
+    try:
+        if form['billingPO'] == "":
+            form['billingPO'] = None
+        ion_ids = []
+        for i, ion in enumerate(form['ions']):
+            beam = Beams.query.filter_by(ion=ion, amev=form['energies'][i])
+            ion_ids.append(beam.id)
+        entry = requests(name = form['name'],
+                        email = form['email'],
+                        cell = form['cell'],
+                        company = form['company'],
+                        integrator = form['integrator'],
+                        funding_contact = form['financierName'],
+                        address = form['billingAddress'],
+                        city = form['billingCity'],
+                        state = form['billingState'],
+                        zipcode = form['billingZip'],
+                        approved_integrator = False,
+                        approved_facility = False,
+                        facility = form['facility'],
+                        # energy = '',
+                        funding_cell = form['financierPhone'],
+                        funding_email = form['financierEmail'],
+                        start = form['date'],
+                        # ions = ion_ids,
+                        comments = form['comments'],
+                        po_number = form['billingPO'])
+        result = entry.create_request()
+
+    except Exception as e:
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+
 @app.route('/time', methods=['GET'])
 def get_current_time():
     sample = Test.query.first()
@@ -27,8 +68,9 @@ def get_current_time():
 
 @app.route('/register', methods=['POST'])
 def register():
-    username = request.get_json()['username']
-    password = request.get_json()['password']
+    req = request.get_json()
+    username = req['username']
+    password = req['password']
     result = ""
 
     user = Users.query\
@@ -37,8 +79,12 @@ def register():
     if not user:
         user = Users(
             username = username,
-            first_name = request.get_json()['first_name'],
-            last_name = request.get_json()['last_name']
+            first_name = req['first_name'],
+            last_name = req['last_name'],
+            affiliation = req['affiliation'],
+            user_type = req['type'],
+            phone = req['phone'],
+            email = req['email']
         )
         user.set_password(password)
         result = user.register_user()
@@ -87,21 +133,47 @@ def user():
         'email': user.email}
     return account_info
 
-@app.route('/calendar', methods=['GET', 'POST'])
+@app.route('/calendar', methods=['POST'])
 def entries():
     myList = []
-    if request.method == 'POST':
-        entries = Calendar.query.all()
-        for entry in entries:
-            startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
-            cannotRun = ""
-            if entry.cannotRun is not None:
-                cannotRun = entry.cannotRun.strftime("%Y-%m-%dT%H:%M")
-            entry_info = {'username': entry.username,
-            'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
-            'totalTime': entry.totalTime, 'cannotRun': cannotRun}
-            myList.append(entry_info)
+    entries = Calendar.query.all()
+    for entry in entries:
+        startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
+        entry_info = {'username': entry.username,
+        'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
+        'totalTime': entry.totalTime}
+        myList.append(entry_info)
     return jsonify({'entries' : myList})
+
+@app.route('/calendar/personal', methods=['POST'])
+@jwt_required
+def personal_entries():
+    username = get_jwt_identity()
+
+    myList = []
+    entries = Calendar.query.filter_by(username=username).all()
+    for entry in entries:
+        startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
+        entry_info = {'username': entry.username,
+        'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
+        'totalTime': entry.totalTime}
+        myList.append(entry_info)
+    return jsonify({'entries' : myList})
+
+@app.route('/integrator', methods=['GET'])
+def get_integrators():
+    myList = []
+    
+    try:
+        integrators = Organization.query.filter_by(org_type='integrator').all()
+        for org in integrators:
+            myList.append(org.abbrv)
+        print(myList)
+    except Exception as e:
+        print(e)
+
+    return {'integrators' : myList}
+
 
 @app.route('/filterion', methods=['POST'])
 def filterion():
@@ -152,14 +224,17 @@ def create_entry():
     req = request.get_json()
     result = ""
 
+    # date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+
     try:
         entry = Calendar(
-            username = username,
+            username = req['username'], # username
             facility = req['facility'],
             integrator = req['integrator'],
             totalTime = req['totalTime'],
             startDate = req['startDate'],
-            cannotRun = req['cannotRun']
+            private = req['private'],
+            title = req['title']
         )
         result = entry.create_entry()
 
@@ -239,6 +314,7 @@ def getRequests():
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
             'ions' : beams, 'energies' : energies, 'start' : time})
+        print(myForms)
         result = {'requests' : myForms}
 
     except Exception as e:
@@ -247,6 +323,7 @@ def getRequests():
         'success' : False}
 
     return result
+
 
 
 # TODO make jwt required after development
@@ -261,7 +338,7 @@ def requestform():
         output = ""
         pdf = FormBuilder(form)
         msg = Message("Send Request Form Demo", cc=[form['email']])
-        print(form['date'])
+        print(form)
         # msg.recipients = ['edopp4182@gmail.com']
         if facility == 'TAMU':
             # msg.recipients = ['clark@comp.tamu.edu']
@@ -326,9 +403,12 @@ def requestform():
             with app.open_resource("Universal_request.pdf") as fp:
                 msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
         # mail.send(msg)
+        results = add_request(form)
+        print(results)
 
-        print(msg)
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         print(e)
         return jsonify({'success': False, 'msg': str(e)}), 404
+
+

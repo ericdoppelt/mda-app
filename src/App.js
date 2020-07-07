@@ -32,7 +32,6 @@ const App = () => (
       <Route path="/facilities-nsrl" component={FacilityBNL}/>
       <Route path="/facilities-msu" component={FacilityMSU}/>
       <Route path="/calendar" component={CalendarMain} />
-      <Route path="/request-common" component={RequestCommon}/>
       <Route path="/request-tamu" component={RequestTAMU}/>
       <Route path="/request-lbnl" component={RequestLBNL}/>
       <Route path="/request-msu" component={RequestMSU}/>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContext } from "react";
+import {Redirect} from 'react-router-dom';
 
 import Row from '../../../components/UIzard/Row';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
@@ -16,12 +17,15 @@ import LBNLStorage from '../../../stores/LBNLStore';
 import LBNLForm from '../../../components/Custom/RequestForms/LBNL/LBNLForm';
 import LBNLHeader from '../../../components/Custom/RequestForms/LBNL/LBNLHeader';
 import LBNLSubmit from '../../../components/Custom/RequestForms/LBNL/LBNLSubmit';
+import DiscreteIons from '../../../components/Custom/RequestForms/DiscreteIons';
+import StartDatePicker from '../../../components/Custom/RequestForms/StartDatePicker';
 
 const TesterStore = createContext(TesterStorage);
 const ExpirementStore = createContext(ExpirementStorage);
 const LBNLStore = createContext(LBNLStorage);
  
 export default function LBNL() {
+  if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
 
   const classes = Constants.useStyles();
   return (
@@ -39,7 +43,9 @@ export default function LBNL() {
                 <ExpirementStore.Provider>
                   <LBNLStore.Provider>
                     <TesterForm/>
-                    <ExperimentForm facility="LBNL"/>
+                    <ExperimentForm/>
+                    <DiscreteIons facility="LBNL"/>
+                    <StartDatePicker/>
                     <LBNLForm/>
                     <LBNLSubmit/>
                   </LBNLStore.Provider>

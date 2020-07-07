@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContext } from "react";
+import {Redirect} from 'react-router-dom';
 
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
@@ -14,11 +15,14 @@ import TesterStorage from '../../../stores/TesterStore';
 import ExpirementStorage from '../../../stores/ExpirementStore';
 import MSUHeader from '../../../components/Custom/RequestForms/MSU/MSUHeader';
 import MSUSubmit from '../../../components/Custom/RequestForms/MSU/MSUSubmit';
+import DiscreteIons from '../../../components/Custom/RequestForms/DiscreteIons';
+import StartDatePicker from '../../../components/Custom/RequestForms/StartDatePicker';
 
 const TesterStore = createContext(TesterStorage);
 const ExpirementStore = createContext(ExpirementStorage);
 
 export default function Home() {
+  if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
 
   const classes = Constants.useStyles();
   return (
@@ -36,6 +40,8 @@ export default function Home() {
                     <ExpirementStore.Provider>
                       <TesterForm/>
                       <ExperimentForm facility="MSU"/>
+                      <DiscreteIons/>
+                      <StartDatePicker/>
                       <MSUSubmit/>
                     </ExpirementStore.Provider>
                   </TesterStore.Provider> 
