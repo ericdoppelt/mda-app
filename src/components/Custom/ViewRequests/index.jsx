@@ -14,7 +14,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
-import { Link } from 'react-router-dom';
 import Row from '../../UIzard/Row'
 
 const columns = [
@@ -141,7 +140,6 @@ class ViewRequests extends React.Component {
   
   constructor(props) {
     super(props);
-
     /*** LIST OF DATES ***/
     this.state = {
       name: "",

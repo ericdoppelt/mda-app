@@ -64,6 +64,8 @@ class ExpirementStore {
         this.ions[index] = newIons;
     }
     get ionsError() {
+        let errors = [];
+        errors[2] = true;
         return this.ions.length === 0 && this.submitted;
     }
     get ionsHelperText() {
@@ -71,7 +73,7 @@ class ExpirementStore {
         return "";
     }
 
-    energies = observable.array([]);
+    energies = observable.array([""]);
     setEnergies(newEnergies, index) {
         console.log(newEnergies + ", " + index);
         if (this.energies.length < index + 1) {

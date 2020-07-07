@@ -1,7 +1,6 @@
 import React from 'react';
-import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, Slider, Typography} from '@material-ui/core';
+import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, InputAdornment, TextField} from '@material-ui/core';
 import Row from '../../UIzard/Row';
-import Stack from '../../UIzard/Stack';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import ExperimentStore from '../../../stores/ExpirementStore';
@@ -10,19 +9,22 @@ import axios from 'axios';
 
 const useStyles = theme => ({
     ions: {
-      marginTop: '2px',
+      marginTop: '4px',
       marginLeft: '5%',
       marginRight: '3%',
       width: '42%',
     },
-    energiesText: {
-        marginTop: '8px',
-    },
-    energies: {
-      marginTop: '5px',
+    energySlider: {
+      marginTop: '40px',
       marginLeft: '3%',
       marginRight: '5%',
       width: '42%',
+    },
+    energyText: {
+        marginTop: '4px',
+        marginLeft: '3%',
+        marginRight: '5%',
+        width: '42%',
     },
     ionButton: {
       backgroundColor: "#f5f5b8",
@@ -46,7 +48,6 @@ class ContinuousIons extends React.Component {
         }
 
         this.selectIon = this.selectIon.bind(this);
-        this.getEnergies = this.getEnergies.bind(this);
     }
 
     async componentDidMount() {
@@ -66,18 +67,23 @@ class ContinuousIons extends React.Component {
         let numSelectors = this.state.ionIterator + 1;
         this.setState({ionIterator: numSelectors});
     }
-    
-    getEnergies(index) {
-        if (ExperimentStore.ions[index] === undefined) {
-          return 0;
-          } else {
-          return this.state.energies[ExperimentStore.ions[index]][0];
-        }
-    }
 
     selectIon(ion, index) {
         this.setState({selectedIon: true});
         ExperimentStore.setIons(ion, index);
+    }
+
+    getLabel(index) {
+        if (ExperimentStore.ions[index] === undefined) {
+            return "Energy";
+        } else {
+            return "Max Value: " + this.state.energies[ExperimentStore.ions[index]][0];
+        }
+    }
+
+    updateEnergy(value, index) {
+        let max = this.state.energies[ExperimentStore.ions[index]][0];
+        if (value >=  0 && value <= max) ExperimentStore.setEnergies(value, index);
     }
 
     getIonSelectors() {
@@ -102,21 +108,25 @@ class ContinuousIons extends React.Component {
                 </Select>
                 <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
               </FormControl>
-              <Stack className = {classes.energies}>
-              <Typography className = {classes.energiesText} gutterBottom>
-                Custom marks
-              </Typography>
-              <Slider 
-                className={classes.energies}
-                //error = {ExperimentStore.energiesError}
-                label = {"Energy"}
+              <TextField 
+                className={classes.energyText}
+                label = {this.getLabel(key)}
+                type = "number"
+                value = {ExperimentStore.energies[key]}
+                disabled = {ExperimentStore.ions[key] === undefined}
+                onChange={event => {this.updateEnergy(event.target.value, key)}}
+                InputProps={{
+                  endAdornment: <InputAdornment>{'\xa0\xa0\xa0'}MeV</InputAdornment>,
+                }}
+              />
+              {/* <Slider 
+                className={classes.energySlider}
                 value={ExperimentStore.energies[key]}
                 onChange={event => {ExperimentStore.setEnergies(event.target.value, key)}}
                 min = {0}
-                max = {this.getEnergies()}
+                max = {this.getEnergies(key)}
                 valueLabelDisplay="auto"
-                /> 
-                </Stack>
+                />  */}
             </Row>
           );
           }

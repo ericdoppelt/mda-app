@@ -67,7 +67,7 @@ class DiscreteIons extends React.Component {
           return <MenuItem value={""}>{"Please enter an ion"}</MenuItem>
           } else {
           let energies = this.state.energies[ExperimentStore.ions[index]].map(function(energy) {
-            return <MenuItem value={energy}>{energy}</MenuItem>
+            return <MenuItem value={energy}>{energy} MeV</MenuItem>
           });
           return energies;
         }
@@ -104,6 +104,7 @@ class DiscreteIons extends React.Component {
               <FormControl 
                 className={classes.energies}
                 error = {ExperimentStore.energiesError}
+                disabled = {ExperimentStore.ions[key] === undefined}
                 > 
                 <InputLabel>Energy</InputLabel>
                 <Select
@@ -112,6 +113,7 @@ class DiscreteIons extends React.Component {
                   >
                   {this.getEnergies(key)}
                 </Select>
+                
                 <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
               </FormControl>
               </div>

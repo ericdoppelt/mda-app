@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {Redirect} from 'react-router-dom';
 import Image from '../../../components/UIzard/Image';
 import Stack from '../../../components/UIzard/Stack';
 import Title from '../../../components/UIzard/Title';
@@ -12,6 +12,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 
 
 export default function Home() {
+  if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
 
   const classes = Constants.useStyles();
   return (

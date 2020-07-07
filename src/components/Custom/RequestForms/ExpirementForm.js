@@ -38,20 +38,6 @@ const useStyles = theme => ({
       marginRight: '5%',
       width: '90%',
     },
-    startButton: {
-      backgroundColor: "#bfffc8",
-      marginTop: '30px',
-      marginLeft:'5%',
-      marginRight: '5%',
-      width: '90%',
-    },
-    ionButton: {
-      backgroundColor: "#f5f5b8",
-      marginTop: '30px',
-      marginLeft:'5%',
-      marginRight: '5%',
-      width: '90%',
-    },
     fullDiv: {
       width: '100%',
     }
@@ -59,13 +45,6 @@ const useStyles = theme => ({
 
   
   class ExperimentForm extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            openCalendar: false,
-        }
-    }
       
     render() {
       const { classes } = this.props;
@@ -120,26 +99,6 @@ const useStyles = theme => ({
               value = {ExperimentStore.comments}
               onChange={event => {ExperimentStore.setComments(event.target.value)}}
             />
-            
-            <Button className={classes.startButton} onClick={() => this.setState({open: true})}>
-            Select Start Date
-            </Button>
-            <Dialog open={this.state.openCalendar} onClose={() => this.setState({open: false})}>
-              <DialogTitle>Please enter a desired start date.</DialogTitle>
-              <DialogContent>
-              <InfiniteCalendar
-                selected={ExperimentStore.startDate}
-                onSelect={(event) => {ExperimentStore.setStartDate(event)}}
-                minDate={new Date()}
-                min={new Date()}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => this.setState({open: false})}>
-                  Select Start Date
-                </Button>
-              </DialogActions>
-            </Dialog>
           </div>
       );
     }
