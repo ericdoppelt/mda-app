@@ -39,8 +39,8 @@ export default function Home() {
                   <TesterStore.Provider>
                     <ExpirementStore.Provider>
                       <TesterForm/>
-                      <ExperimentForm facility="MSU"/>
-                      <DiscreteIons/>
+                      <ExperimentForm/>
+                      <DiscreteIons facility="MSU"/>
                       <StartDatePicker/>
                       <MSUSubmit/>
                     </ExpirementStore.Provider>
