@@ -207,6 +207,7 @@ def create_entry():
 
 @jwt.token_in_blacklist_loader
 def check_if_token_revoked(decoded_token):
+    print(request)
     return is_token_revoked(decoded_token)
 
 # Endpoint for revoking the current users access token
@@ -363,13 +364,13 @@ def getRequests():
 @app.route('/getforms/integrator', methods=['POST'])
 @jwt_required
 def getRequests_integrators():
+    print(request)
     username = get_jwt_identity()
     req = request.get_json()
     result = ""
 
     try:
         user = Users.query.filter_by(username=username).first()
-        print(username)
         if user.user_type != 'integrator':
             raise Exception("You must be an integrator to view this page!")
         request_forms = requests.query.filter_by(integrator=user.affiliation).all()
@@ -390,7 +391,6 @@ def getRequests_integrators():
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
             'ions' : beams, 'energies' : energies, 'start' : time})
-        print(myForms)
         result = {'requests' : myForms}
 
     except Exception as e:
