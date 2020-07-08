@@ -30,7 +30,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const facilityLinks = {'':{info:'', request:''},
-                       'Texas A&M': {info:'/facilities-tamu', 'request': '/request-tamu'},
+                       'Texas A&M': {info:'https://iseeu.netlify.app/facilities-tamu', request: '/request-tamu'},
                        'Lawrence Berkeley National Laboratory': {info:'/facilities-LBNL', request: '/request-LBNL'},
                        'NASA Space Radiation Laboratory': {info:'/facilities-NSRL', request: '/request-NSRL'},
                        'Michigan State University': {info:'/facilities-MSU', request: '/request-MSU'}}
@@ -83,7 +83,7 @@ class IonSearch extends React.Component {
           <Typography><h1>Search Facilities by Energy and Ion</h1><br/><br/><br/></Typography>
         </Row>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Box>Enter ion and energy to find matching facilities</Box>
+          <Box>Enter ion atomic symbol and energy in MeV/amu to find matching facilities</Box>
         </Row>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <TextField
@@ -119,7 +119,7 @@ class IonSearch extends React.Component {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Facility</StyledTableCell>
-                  <StyledTableCell align="right">Ion : Energy (MeV)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</StyledTableCell>
+                  <StyledTableCell align="right">Ion : Energy <small>(MeV/amu)</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</StyledTableCell>
                   <StyledTableCell align="right">Homepage</StyledTableCell>
                   <StyledTableCell align="right">Request Form</StyledTableCell>
                 </TableRow>
