@@ -207,7 +207,6 @@ def create_entry():
 
 @jwt.token_in_blacklist_loader
 def check_if_token_revoked(decoded_token):
-    print(request)
     return is_token_revoked(decoded_token)
 
 # Endpoint for revoking the current users access token
@@ -364,7 +363,6 @@ def getRequests():
 @app.route('/getforms/integrator', methods=['POST'])
 @jwt_required
 def getRequests_integrators():
-    print(request)
     username = get_jwt_identity()
     req = request.get_json()
     result = ""
