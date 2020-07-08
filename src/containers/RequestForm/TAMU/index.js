@@ -12,7 +12,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import TesterForm from '../../../components/Custom/RequestForms/TesterForm';
 import ExperimentForm from '../../../components/Custom/RequestForms/ExpirementForm';
 import TesterStorage from '../../../stores/TesterStore';
-import ExpirementStorage from '../../../stores/ExpirementStore';
+import ExpirementStore from '../../../stores/ExpirementStore';
 import TAMUStorage from '../../../stores/TAMUStore';
 import TAMUForm from '../../../components/Custom/RequestForms/TAMU/TAMUForm';
 import TAMUHeader from '../../../components/Custom/RequestForms/TAMU/TAMUHeader';
@@ -21,7 +21,7 @@ import DiscreteIons from '../../../components/Custom/RequestForms/DiscreteIons';
 import StartDatePicker from '../../../components/Custom/RequestForms/StartDatePicker';
 
 const TesterStore = createContext(TesterStorage);
-const ExpirementStore = createContext(ExpirementStorage);
+const ExpirementStorage = createContext(ExpirementStore);
 const TAMUStore = createContext(TAMUStorage);
  
 export default function TAMU() {
@@ -40,16 +40,16 @@ export default function TAMU() {
                 <Stack>
                   <TAMUHeader/>
                   <TesterStore.Provider>
-                    <ExpirementStore.Provider>
+                    <ExpirementStorage.Provider>
                       <TAMUStore.Provider>
                         <TesterForm/>
                         <ExperimentForm/>
-                        <DiscreteIons/>
+                        <DiscreteIons facility="TAMU"/>
                         <StartDatePicker/>
                         <TAMUForm/>
                         <TAMUSubmit/>
                       </TAMUStore.Provider>
-                    </ExpirementStore.Provider>
+                    </ExpirementStorage.Provider>
                   </TesterStore.Provider> 
                 </Stack>
               </Row>

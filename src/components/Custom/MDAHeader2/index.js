@@ -113,8 +113,8 @@ class MDAHeader2 extends React.Component {
   }
 
   LoginButtons = () => {
-    console.log("Logged in state:");
-    console.log(this.state.loggedIn);
+    //console.log("Logged in state:");
+    //console.log(this.state.loggedIn);
     if (this.state.loggedIn) {
       return (
         <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
@@ -151,7 +151,7 @@ class MDAHeader2 extends React.Component {
     await axios.post(url, null, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
-      console.log(response);
+      //console.log(response);
       self.setState({
         name: response.data.first_name + " " + response.data.last_name,
         username: response.data.user,

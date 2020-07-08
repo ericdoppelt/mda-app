@@ -12,7 +12,7 @@ import Stack from '../../../components/UIzard/Stack';
 import TesterForm from '../../../components/Custom/RequestForms/TesterForm';
 import ExperimentForm from '../../../components/Custom/RequestForms/ExpirementForm';
 import TesterStorage from '../../../stores/TesterStore';
-import ExpirementStorage from '../../../stores/ExpirementStore';
+import ExpirementStore from '../../../stores/ExpirementStore';
 import LBNLStorage from '../../../stores/LBNLStore';
 import LBNLForm from '../../../components/Custom/RequestForms/LBNL/LBNLForm';
 import LBNLHeader from '../../../components/Custom/RequestForms/LBNL/LBNLHeader';
@@ -21,7 +21,7 @@ import DiscreteIons from '../../../components/Custom/RequestForms/DiscreteIons';
 import StartDatePicker from '../../../components/Custom/RequestForms/StartDatePicker';
 
 const TesterStore = createContext(TesterStorage);
-const ExpirementStore = createContext(ExpirementStorage);
+const ExpirementStorage = createContext(ExpirementStore);
 const LBNLStore = createContext(LBNLStorage);
  
 export default function LBNL() {
@@ -40,7 +40,7 @@ export default function LBNL() {
               <Stack>
               <LBNLHeader/>
               <TesterStore.Provider>
-                <ExpirementStore.Provider>
+                <ExpirementStorage.Provider>
                   <LBNLStore.Provider>
                     <TesterForm/>
                     <ExperimentForm/>
@@ -49,7 +49,7 @@ export default function LBNL() {
                     <LBNLForm/>
                     <LBNLSubmit/>
                   </LBNLStore.Provider>
-                </ExpirementStore.Provider>
+                </ExpirementStorage.Provider>
               </TesterStore.Provider>   
               </Stack>    
               </Row>

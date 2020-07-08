@@ -42,6 +42,7 @@ class DiscreteIons extends React.Component {
 
         this.selectIon = this.selectIon.bind(this);
         this.getEnergies = this.getEnergies.bind(this);
+        ExperimentStore.clearBeams();
     }
 
     async componentDidMount() {
@@ -60,12 +61,14 @@ class DiscreteIons extends React.Component {
     incrementIonCounter() {
         let numSelectors = this.state.ionIterator + 1;
         this.setState({ionIterator: numSelectors});
+        ExperimentStore.addBeam();
     }
     
     getEnergies(index) {
-        if (ExperimentStore.ions[index] === undefined) {
+        let ion = ExperimentStore.ions[index];
+        if (ion === "" || ion === undefined || this.state.energies[ion] == undefined) {
           return <MenuItem value={""}>{"Please enter an ion"}</MenuItem>
-          } else {
+          } else if (this.state.energies[ExperimentStore.ions[index]] != undefined) {
           let energies = this.state.energies[ExperimentStore.ions[index]].map(function(energy) {
             return <MenuItem value={energy}>{energy} MeV</MenuItem>
           });
@@ -104,7 +107,7 @@ class DiscreteIons extends React.Component {
               <FormControl 
                 className={classes.energies}
                 error = {ExperimentStore.energiesError}
-                disabled = {ExperimentStore.ions[key] === undefined}
+                disabled = {ExperimentStore.ions[key] === ""}
                 > 
                 <InputLabel>Energy</InputLabel>
                 <Select

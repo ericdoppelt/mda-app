@@ -46,8 +46,8 @@ class ContinuousIons extends React.Component {
             energies: {},
             ionIterator: 0,
         }
-
         this.selectIon = this.selectIon.bind(this);
+        ExperimentStore.clearBeams();
     }
 
     async componentDidMount() {
@@ -66,6 +66,7 @@ class ContinuousIons extends React.Component {
     incrementIonCounter() {
         let numSelectors = this.state.ionIterator + 1;
         this.setState({ionIterator: numSelectors});
+        ExperimentStore.addBeam();
     }
 
     selectIon(ion, index) {
@@ -74,7 +75,8 @@ class ContinuousIons extends React.Component {
     }
 
     getLabel(index) {
-        if (ExperimentStore.ions[index] === undefined) {
+        let ion = ExperimentStore.ions[index];
+        if (ion === "" || ion === undefined || this.state.energies[ion] == undefined) {
             return "Energy";
         } else {
             return "Max Value: " + this.state.energies[ExperimentStore.ions[index]][0];
@@ -92,7 +94,7 @@ class ContinuousIons extends React.Component {
         for (var i = 0; i <= this.state.ionIterator; i++) {      
           const key = i;
           returnedSelectors.push(
-            <Row className = {classes.fullDiv}>
+            <div className = {classes.fullDiv}>
             <FormControl 
                 className={classes.ions}
                 error = {ExperimentStore.ionsError}
@@ -113,27 +115,20 @@ class ContinuousIons extends React.Component {
                 label = {this.getLabel(key)}
                 type = "number"
                 value = {ExperimentStore.energies[key]}
-                disabled = {ExperimentStore.ions[key] === undefined}
+                disabled = {ExperimentStore.ions[key] === ""}
                 onChange={event => {this.updateEnergy(event.target.value, key)}}
                 InputProps={{
                   endAdornment: <InputAdornment>{'\xa0\xa0\xa0'}MeV</InputAdornment>,
                 }}
               />
-              {/* <Slider 
-                className={classes.energySlider}
-                value={ExperimentStore.energies[key]}
-                onChange={event => {ExperimentStore.setEnergies(event.target.value, key)}}
-                min = {0}
-                max = {this.getEnergies(key)}
-                valueLabelDisplay="auto"
-                />  */}
-            </Row>
+              </div>
           );
           }
           return returnedSelectors;
         }
 
         render() {
+            console.log(ExperimentStore.ions);
             const { classes } = this.props;
             return(
                 <div className={classes.fullDiv}>

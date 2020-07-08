@@ -12,14 +12,14 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import TesterForm from '../../../components/Custom/RequestForms/TesterForm';
 import ExperimentForm from '../../../components/Custom/RequestForms/ExpirementForm';
 import TesterStorage from '../../../stores/TesterStore';
-import ExpirementStorage from '../../../stores/ExpirementStore';
+import ExpirementStore from '../../../stores/ExpirementStore';
 import MSUHeader from '../../../components/Custom/RequestForms/MSU/MSUHeader';
 import MSUSubmit from '../../../components/Custom/RequestForms/MSU/MSUSubmit';
 import DiscreteIons from '../../../components/Custom/RequestForms/DiscreteIons';
 import StartDatePicker from '../../../components/Custom/RequestForms/StartDatePicker';
 
 const TesterStore = createContext(TesterStorage);
-const ExpirementStore = createContext(ExpirementStorage);
+const ExpirementStorage = createContext(ExpirementStore);
 
 export default function Home() {
   if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
@@ -37,13 +37,13 @@ export default function Home() {
               <Stack>
                   <MSUHeader/>
                   <TesterStore.Provider>
-                    <ExpirementStore.Provider>
+                    <ExpirementStorage.Provider>
                       <TesterForm/>
-                      <ExperimentForm facility="MSU"/>
-                      <DiscreteIons/>
+                      <ExperimentForm/>
+                      <DiscreteIons facility="MSU"/>
                       <StartDatePicker/>
                       <MSUSubmit/>
-                    </ExpirementStore.Provider>
+                    </ExpirementStorage.Provider>
                   </TesterStore.Provider> 
                 </Stack>
               </Row>
