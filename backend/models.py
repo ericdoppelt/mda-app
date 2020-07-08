@@ -157,6 +157,8 @@ class requests(db.Model):
     ions = db.Column(db.ARRAY(db.Integer()))
     comments = db.Column(db.String(200))
     po_number = db.Column(db.Integer())
+    username = db.Column(db.String(200))
+    beam_time = db.Column(db.Integer())
 
     def create_request(self):
         db.session.add(self)

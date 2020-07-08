@@ -98,11 +98,12 @@ def entries():
     myList = []
     entries = Calendar.query.all()
     for entry in entries:
-        startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
-        entry_info = {'username': entry.username,
-        'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
-        'totalTime': entry.totalTime}
-        myList.append(entry_info)
+        if entry.private != True:
+            startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
+            entry_info = {'username': entry.username,
+            'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
+            'totalTime': entry.totalTime}
+            myList.append(entry_info)
     return jsonify({'entries' : myList})
 
 @app.route('/calendar/personal', methods=['POST'])
@@ -253,11 +254,13 @@ def add_calendar(beam_request):
     result = ""
 
     try:
+        print(beam_request.facility)
+        print(beam_request.username)
         entry = Calendar(
-            # username = req['username'], # username
+            username = beam_request.username,
             facility = beam_request.facility,
             integrator = beam_request.integrator,
-            # totalTime = beam_request.hours,
+            totalTime = beam_request.hours,
             startDate = beam_request.start,
             private = False,
             title = beam_request.title
@@ -267,6 +270,7 @@ def add_calendar(beam_request):
     except Exception as e:
         result = {'error' : e,
         'success' : False}
+    print(result)
 
     return result
 
@@ -298,7 +302,6 @@ def approve_integrator():
 @app.route('/getforms', methods=['POST'])
 #@jwt_required
 def getRequests():
-    username = get_jwt_identity()
     req = request.get_json()
     result = ""
 
@@ -332,7 +335,45 @@ def getRequests():
     return result
 
 
-def add_request(form):
+@app.route('/getforms/integrator', methods=['POST'])
+#@jwt_required
+def getRequests_integrators():
+    req = request.get_json()
+    integrator = req['integrator']
+    result = ""
+
+    try:
+        request_forms = requests.query.filter_by(integrator=integrator).all()
+        myForms = []
+        for form in request_forms:
+            beams = []
+            energies = []
+            for ion in form.ions:
+                beam = Beams.query.filter_by(id=ion).one()
+                beams.append(beam.ion)
+                energies.append(beam.amev)
+            delta = timedelta(hours=12)
+            time = (form.start + delta).strftime('%Y-%m-%dT%H:%M')
+            myForms.append({'name' : form.name, 'integrator' : form.integrator,
+            'facility' : form.facility, 'company' : form.company, 'email' : form.email,
+            'phone' : form.cell, 'funding_contact' : form.funding_contact,
+            'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
+            'PO_number' : form.po_number, 'address' : form.address,
+            'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
+            'ions' : beams, 'energies' : energies, 'start' : time})
+        print(myForms)
+        result = {'requests' : myForms}
+
+    except Exception as e:
+        print(e)
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+    
+
+
+def add_request(form, username):
 
     if form['billingPO'] == "":
         form['billingPO'] = None
@@ -344,7 +385,7 @@ def add_request(form):
     print(ion_ids)
     entry = requests(name = form['name'],
                     email = form['email'],
-                    cell = None, #form['cell'],
+                    cell = form['cell'],
                     company = form['company'],
                     integrator = form['integrator'],
                     funding_contact = form['financierName'],
@@ -361,12 +402,13 @@ def add_request(form):
                     start = form['date'],
                     ions = ion_ids,
                     comments = form['comments'],
-                    po_number = form['billingPO'])
+                    po_number = form['billingPO'],
+                    beam_time = form['hours'],
+                    username = username)
     entry.create_request()
 
-# TODO make jwt required after development
 @app.route('/requestform', methods=['POST'])
-#@jwt_required
+# @jwt_required
 def requestform():
     try:
         form = request.get_json()
@@ -426,7 +468,8 @@ def requestform():
                 msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
         # mail.send(msg)
         print(form)
-        add_request(form)
+        username = form['username'] # TODO change get_jwt_identity()
+        add_request(form, username)
 
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
