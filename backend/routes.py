@@ -277,7 +277,7 @@ def add_calendar(beam_request):
 
 @app.route('/approve', methods=['POST'])
 #@jwt_required
-def approve_integrator():
+def approve():
     result = ""
     try:
         req = request.get_json()
@@ -291,6 +291,31 @@ def approve_integrator():
         db.session.commit()
         if beam_request.approved_facility and beam_request.approved_integrator:
             # add_calendar()
+            pass
+        result = {'success' : True}
+    except Exception as e:
+        print(e)
+        result = {'error' : e,
+        'success' : False}
+    return result
+
+@app.route('/request/modify', methods=['POST'])
+#@jwt_required
+def request_modify():
+    result = ""
+    try:
+        req = request.get_json()
+        beam_request = requests.query.filter_by(id=req['id']).first()
+        for key in req.keys():
+            pass
+        if req['approval'] == 'integrator':
+            beam_request.approved_integrator = True
+        if req['approval'] == 'facility':
+            beam_request.approved_facility = True
+        else:
+            raise Exception("No approval key found")
+        db.session.commit()
+        if beam_request.approved_facility and beam_request.approved_integrator:
             pass
         result = {'success' : True}
     except Exception as e:
@@ -336,14 +361,18 @@ def getRequests():
 
 
 @app.route('/getforms/integrator', methods=['POST'])
-#@jwt_required
+@jwt_required
 def getRequests_integrators():
+    username = get_jwt_identity()
     req = request.get_json()
-    integrator = req['integrator']
     result = ""
 
     try:
-        request_forms = requests.query.filter_by(integrator=integrator).all()
+        user = Users.query.filter_by(username=username).first()
+        print(username)
+        if user.user_type != 'integrator':
+            raise Exception("You must be an integrator to view this page!")
+        request_forms = requests.query.filter_by(integrator=user.affiliation).all()
         myForms = []
         for form in request_forms:
             beams = []
