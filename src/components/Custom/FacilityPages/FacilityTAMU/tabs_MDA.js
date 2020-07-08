@@ -4,7 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Divider from '@material-ui/core/Divider';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
 import Paragraph from '../../../../components/UIzard/Paragraph';
 import Row from '../../../../components/UIzard/Row';
@@ -43,13 +48,19 @@ function a11yProps(index) {
   };
 }
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  }
 }));
+
 
 export default function TabsTAMU() {
   const classes = useStyles();
@@ -107,54 +118,100 @@ export default function TabsTAMU() {
       </Stack>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Paragraph>
-        <ul>
-          <li><strong>6 Weeks Ahead</strong></li>
-          <ul>
-            <li>Send request for <a href="https://cyclotron.tamu.edu/ref/images/btrf.pdf"  target="_blank" rel="noopener noreferrer">beam time</a></li>
-            <li>Establish funding contract</li>
-          </ul>
-          <li><strong>3 Weeks Ahead</strong></li>
-          <ul>
-            <li>Complete the following training requirements</li>
-            <li><strong>**<a href="https://cyclotron.tamu.edu/ref/images/Safety%20Rules%202020.pdf" target="_blank" rel="noopener noreferrer">Safety</a>**</strong></li>
-            <ul>
-              <li><a href="https://cyclotron.tamu.edu/ref/images/safety_form_plus_map.pdf" target="_blank" rel="noopener noreferrer">Safety Orientation</a></li>
-              <li>Make sure each team member submits the following to Dr. Henry Clark (hyman@comp.tamu.edu) at least 3 days in advance of testing</li>
-              <ul>
-                <li>Watch Safety Orientation Training <a href="https://www.youtube.com/watch?v=MEAi0lLBp1s&feature=youtu.be" target="_blank" rel="noopener noreferrer">video</a></li>
-                <li>Take online Radiation Safety Test</li>
-                <li>Fill out the Radiation Badge Request Form</li>
-              </ul>
-            </ul>
-            <li>Fill out <a href="https://cyclotron.tamu.edu/ref/images/REF%20Cyclotron%20Health%20Questionnarie.pdf" target="_blank" rel="noopener noreferrer">Health Questionnaire</a></li>
-            <li>First time members and those without a dosimetry badge need to fill out the <a href="https://cyclotron.tamu.edu/ref/images/Request%20for%20Dosimetry%20Service%20%20march%202020.pdf" target="_blank" rel="noopener noreferrer">Dosimetry Request Form</a></li>
-          </ul>
-          <li><strong>2 Weeks Ahead</strong></li>
-          <ul>
-            <li>Prepare your items for shipping. Please ship to the following address</li>
-            <ul>
-              <li>Address: ATTN: H. Clark or B. Hyman, Cyclotron Institute, 120 Spence Street, Texas A&M University MS #3366, College Station, TX 77843-3366</li>
-              <li>For assistance contact Bruce Hyman</li>
-              <ul>
-                <li>Phone: 979-845-1411</li>
-                <li>Email: bhyman@tamu.edu</li>
-              </ul>
-            </ul>
-          </ul>
-          <li><strong>Arrival</strong></li>
-          <ul>
-            <li>Physical address: 120 Spence St, College Station, TX</li>
-            <li>The Radiation Effects Facility is located within the Luedecke Cyclotron Institute building directly across Spence Street from the Zachary Engineering Education Complex and directly behind the Jack E. Brown Engineering Building</li>
-            <li>For detailed maps concerning Parking, Building Entry, and the Building, please follow the below links:</li>
-            <ul>
-              <li><a href="https://cyclotron.tamu.edu/ref/images/SEE%20K500%20customer%20map%202020.pdf" target="_blank" rel="noopener noreferrer">Building Map</a></li>
-              <li><a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank" rel="noopener noreferrer">Parking Map</a></li>
-              <li><a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank" rel="noopener noreferrer">Building Entry</a></li>
-            </ul>
-          </ul>
-      </ul>
-      </Paragraph>
+        <div className={classes.root}>
+          <Accordion>
+             <AccordionSummary
+               expandIcon={<ExpandMoreIcon />}
+               aria-controls="panel1a-content"
+               id="panel1a-header"
+             >
+               <Typography className={classes.heading}>6 Weeks Ahead</Typography>
+             </AccordionSummary>
+             <AccordionDetails>
+               <Paragraph>
+               <ul>
+                 <li>Send request for <a href="https://cyclotron.tamu.edu/ref/images/btrf.pdf"  target="_blank" rel="noopener noreferrer">beam time</a></li>
+                 <li>Establish funding contract</li>
+               </ul>
+               </Paragraph>
+             </AccordionDetails>
+           </Accordion>
+           <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>3 Weeks Ahead</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Paragraph>
+                  <ul>
+                    <li>Complete the following training requirements</li>
+                    <li><strong><a href="https://cyclotron.tamu.edu/ref/images/Safety%20Rules%202020.pdf" target="_blank" rel="noopener noreferrer">Safety</a></strong></li>
+                    <ul>
+                      <li><a href="https://cyclotron.tamu.edu/ref/images/safety_form_plus_map.pdf" target="_blank" rel="noopener noreferrer">Safety Orientation</a></li>
+                      <li>Make sure each team member submits the following to Dr. Henry Clark (hyman@comp.tamu.edu) at least 3 days in advance of testing</li>
+                      <ul>
+                        <li>Watch Safety Orientation Training <a href="https://www.youtube.com/watch?v=MEAi0lLBp1s&feature=youtu.be" target="_blank" rel="noopener noreferrer">video</a></li>
+                        <li>Take online Radiation Safety Test</li>
+                        <li>Fill out the Radiation Badge Request Form</li>
+                      </ul>
+                    </ul>
+                    <li>Fill out <a href="https://cyclotron.tamu.edu/ref/images/REF%20Cyclotron%20Health%20Questionnarie.pdf" target="_blank" rel="noopener noreferrer">Health Questionnaire</a></li>
+                    <li>First time members and those without a dosimetry badge need to fill out the <a href="https://cyclotron.tamu.edu/ref/images/Request%20for%20Dosimetry%20Service%20%20march%202020.pdf" target="_blank" rel="noopener noreferrer">Dosimetry Request Form</a></li>
+                  </ul>
+                </Paragraph>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+               <AccordionSummary
+                 expandIcon={<ExpandMoreIcon />}
+                 aria-controls="panel1a-content"
+                 id="panel1a-header"
+               >
+                 <Typography className={classes.heading}>2 Weeks Ahead</Typography>
+               </AccordionSummary>
+               <AccordionDetails>
+                 <Paragraph>
+                 <ul>
+                   <li>Prepare your items for shipping. Please ship to the following address</li>
+                   <ul>
+                     <li>Address: ATTN: H. Clark or B. Hyman, Cyclotron Institute, 120 Spence Street, Texas A&M University MS #3366, College Station, TX 77843-3366</li>
+                     <li>For assistance contact Bruce Hyman</li>
+                     <ul>
+                       <li>Phone: 979-845-1411</li>
+                       <li>Email: bhyman@tamu.edu</li>
+                     </ul>
+                   </ul>
+                 </ul>
+                 </Paragraph>
+               </AccordionDetails>
+             </Accordion>
+             <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>Arrival</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Paragraph>
+                  <ul>
+                    <li>Physical address: 120 Spence St, College Station, TX</li>
+                    <li>The Radiation Effects Facility is located within the Luedecke Cyclotron Institute building directly across Spence Street from the Zachary Engineering Education Complex and directly behind the Jack E. Brown Engineering Building</li>
+                    <li>For detailed maps concerning Parking, Building Entry, and the Building, please follow the below links:</li>
+                    <ul>
+                      <li><a href="https://cyclotron.tamu.edu/ref/images/SEE%20K500%20customer%20map%202020.pdf" target="_blank" rel="noopener noreferrer">Building Map</a></li>
+                      <li><a href="https://cyclotron.tamu.edu/ref/images/parking_map.pdf" target="_blank" rel="noopener noreferrer">Parking Map</a></li>
+                      <li><a href="https://cyclotron.tamu.edu/ref/images/cyclotron_entry.pdf" target="_blank" rel="noopener noreferrer">Building Entry</a></li>
+                    </ul>
+                  </ul>
+                  </Paragraph>
+                </AccordionDetails>
+              </Accordion>
+      </div>
       </TabPanel>
       <TabPanel value={value} index={2}>
           <strong>Physical Address</strong><br/>

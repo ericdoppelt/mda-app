@@ -20,46 +20,6 @@ from exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
 
-
-
-def add_request(form):
-    result = ""
-
-    try:
-        if form['billingPO'] == "":
-            form['billingPO'] = None
-        ion_ids = []
-        for i, ion in enumerate(form['ions']):
-            beam = Beams.query.filter_by(ion=ion, amev=form['energies'][i])
-            ion_ids.append(beam.id)
-        entry = requests(name = form['name'],
-                        email = form['email'],
-                        cell = form['cell'],
-                        company = form['company'],
-                        integrator = form['integrator'],
-                        funding_contact = form['financierName'],
-                        address = form['billingAddress'],
-                        city = form['billingCity'],
-                        state = form['billingState'],
-                        zipcode = form['billingZip'],
-                        approved_integrator = False,
-                        approved_facility = False,
-                        facility = form['facility'],
-                        # energy = '',
-                        funding_cell = form['financierPhone'],
-                        funding_email = form['financierEmail'],
-                        start = form['date'],
-                        # ions = ion_ids,
-                        comments = form['comments'],
-                        po_number = form['billingPO'])
-        result = entry.create_request()
-
-    except Exception as e:
-        result = {'error' : e,
-        'success' : False}
-
-    return result
-
 @app.route('/time', methods=['GET'])
 def get_current_time():
     sample = Test.query.first()
@@ -273,6 +233,7 @@ def delete(username):
 def beams():
     myList = {}
     req = request.get_json()
+    print(req)
     facility = Organization.query.filter_by(abbrv=req['facility']).one()
     beams = Beams.query.filter_by(org_id=facility.id).all()
     for beam in beams:
@@ -287,6 +248,52 @@ def beams():
         # 'max_flux': beam.max_flux, 'max_flux_units': beam.max_flux_units, 'let_material': beam.let_material, 'air': beam.air}
 
     return myList
+
+def add_calendar(beam_request):
+    result = ""
+
+    try:
+        entry = Calendar(
+            # username = req['username'], # username
+            facility = beam_request.facility,
+            integrator = beam_request.integrator,
+            # totalTime = beam_request.hours,
+            startDate = beam_request.start,
+            private = False,
+            title = beam_request.title
+        )
+        result = entry.create_entry()
+
+    except Exception as e:
+        result = {'error' : e,
+        'success' : False}
+
+    return result
+
+
+@app.route('/approve', methods=['POST'])
+#@jwt_required
+def approve_integrator():
+    result = ""
+    try:
+        req = request.get_json()
+        beam_request = requests.query.filter_by(id=req['id']).first()
+        if req['approval'] == 'integrator':
+            beam_request.approved_integrator = True
+        if req['approval'] == 'facility':
+            beam_request.approved_facility = True
+        else:
+            raise Exception("No approval key found")
+        db.session.commit()
+        if beam_request.approved_facility and beam_request.approved_integrator:
+            # add_calendar()
+            pass
+        result = {'success' : True}
+    except Exception as e:
+        print(e)
+        result = {'error' : e,
+        'success' : False}
+    return result
 
 @app.route('/getforms', methods=['POST'])
 #@jwt_required
@@ -325,6 +332,37 @@ def getRequests():
     return result
 
 
+def add_request(form):
+
+    if form['billingPO'] == "":
+        form['billingPO'] = None
+    ion_ids = []
+    print(form)
+    for i, ion in enumerate(form['ions']):
+        beam = Beams.query.filter_by(ion=ion, amev=form['energies'][i]).one()
+        ion_ids.append(beam.id)
+    print(ion_ids)
+    entry = requests(name = form['name'],
+                    email = form['email'],
+                    cell = None, #form['cell'],
+                    company = form['company'],
+                    integrator = form['integrator'],
+                    funding_contact = form['financierName'],
+                    address = form['billingAddress'],
+                    city = form['billingCity'],
+                    state = form['billingState'],
+                    zipcode = form['billingZip'],
+                    approved_integrator = False,
+                    approved_facility = True,
+                    facility = form['facility'],
+                    # energy = '',
+                    funding_cell = form['financierPhone'],
+                    funding_email = form['financierEmail'],
+                    start = form['date'],
+                    ions = ion_ids,
+                    comments = form['comments'],
+                    po_number = form['billingPO'])
+    entry.create_request()
 
 # TODO make jwt required after development
 @app.route('/requestform', methods=['POST'])
@@ -338,7 +376,6 @@ def requestform():
         output = ""
         pdf = FormBuilder(form)
         msg = Message("Send Request Form Demo", cc=[form['email']])
-        print(form)
         # msg.recipients = ['edopp4182@gmail.com']
         if facility == 'TAMU':
             # msg.recipients = ['clark@comp.tamu.edu']
@@ -346,31 +383,16 @@ def requestform():
             if form['date'] != "":
                 date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
                 form['date'] = date.strftime('%m/%d/%Y')
-            # if form['startDate2'] != "":
-            #     date = datetime.strptime(form['startDate2'], '%Y-%m-%dT%H:%M:%S.%fZ')
-            #     form['startDate2'] = date.strftime('%m/%d/%Y')
             badDates = copy.deepcopy(form['badDates'])
-            for i, date in enumerate(badDates):
-                date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-                if i != 0 or i != len(badDates) - 1:
-                    form['badDates'] += ', '
-                if i == 0:
-                    form['badDates'] = date.strftime('%m/%d/%Y')
-                else:
-                    form['badDates'] += date.strftime('%m/%d/%Y')
-            # badDates2 = copy.deepcopy(form['badDates2'])
-            # if form['badDates2']:
-            #     for i, date in enumerate(badDates2):
-            #         date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-            #         form['badDates2'] += date.strftime('%m/%d/%Y')
-            #         if i == 0:
-            #             form['badDates2'] = date.strftime('%m/%d/%Y')
-            #         else:
-            #             form['badDates2'] += date.strftime('%m/%d/%Y')
-            #         if i != 0 or i != len(badDates2) - 1:
-            #             form['badDates2'] += ', '
-            else:
-                form['badDates2'] = ""
+            if badDates[0] != None:
+                for i, date in enumerate(badDates):
+                    date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
+                    if i != 0 or i != len(badDates) - 1:
+                        form['badDates'] += ', '
+                    if i == 0:
+                        form['badDates'] = date.strftime('%m/%d/%Y')
+                    else:
+                        form['badDates'] += date.strftime('%m/%d/%Y')
             template = "TAMU_request_template.pdf"
             output = "TAMU_request.pdf"
             pdf.fill(template, output)
@@ -403,8 +425,8 @@ def requestform():
             with app.open_resource("Universal_request.pdf") as fp:
                 msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
         # mail.send(msg)
-        results = add_request(form)
-        print(results)
+        print(form)
+        add_request(form)
 
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
