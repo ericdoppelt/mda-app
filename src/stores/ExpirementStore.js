@@ -56,11 +56,8 @@ class ExpirementStore {
         else return "";
     }
 
-    ions = observable.array([]);
+    ions = observable.array([""]);
     setIons(newIons, index) {
-        if (this.ions.length < index + 1) {
-            this.ions.length = index + 1;
-        }
         this.ions[index] = newIons;
     }
     get ionsError() {
@@ -75,10 +72,6 @@ class ExpirementStore {
 
     energies = observable.array([""]);
     setEnergies(newEnergies, index) {
-        console.log(newEnergies + ", " + index);
-        if (this.energies.length < index + 1) {
-            this.energies.length = index + 1;
-        }
         this.energies[index] = newEnergies;
     }
     get energiesError() {
@@ -87,6 +80,15 @@ class ExpirementStore {
     get energiesHelperText() {
         if (this.energiesError) return "Please enter the energies for the experiment.";
         return "";
+    }
+
+    addBeam() {
+        this.ions.push("");
+        this.energies.push("");
+    }
+    clearBeams() {
+        this.ions = observable.array([""]);;
+        this.energies = observable.array([""]);;
     }
 
     continuous = "";
@@ -145,6 +147,9 @@ decorate(ExpirementStore, {
     energiesError: computed,
     energiesHelperText: computed,
 
+    addBeam: action,
+    clearBeams: action,
+    
     continuous: observable,
     setContinuous: action,
     continuousError: computed,
