@@ -79,7 +79,6 @@ class MDAHeader2 extends React.Component {
     this.openFacilitiesMenu = this.openFacilitiesMenu.bind(this);
     this.openFormsMenu = this.openFormsMenu.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
-    this.handleUserProfile = this.handleUserProfile.bind(this);
     this.state = {
       menuAnchor: null,
       facilitiesOpen: false,
@@ -119,28 +118,6 @@ class MDAHeader2 extends React.Component {
     if (window.sessionStorage !== null) {
       window.sessionStorage.clear();
       this.setState({loggedIn: false})
-    }
-  }
-
-  handleUserProfile() {
-    if (window.sessionStorage.getItem('access_token') !== null) {
-      return (
-        <Link to='user-profile' style={{ color: '#FFF' }}>
-          <ListItem button key='User'>
-            <ListItemIcon>{icons[4]}</ListItemIcon>
-            <ListItemText primary='User' />
-          </ListItem>
-        </Link>
-      )
-    } else {
-      return (
-        <Link to='user-login' style={{ color: '#FFF' }}>
-          <ListItem button key='User'>
-            <ListItemIcon>{icons[4]}</ListItemIcon>
-            <ListItemText primary='User' />
-          </ListItem>
-        </Link>
-      )
     }
   }
 
