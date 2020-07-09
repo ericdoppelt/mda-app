@@ -348,7 +348,7 @@ def getRequests():
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'ions' : beams, 'energies' : energies, 'start' : time})
+            'ions' : beams, 'energies' : energies, 'start' : time, 'id' : form.id})
         print(myForms)
         result = {'requests' : myForms}
 
@@ -388,7 +388,7 @@ def getRequests_integrators():
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'ions' : beams, 'energies' : energies, 'start' : time})
+            'ions' : beams, 'energies' : energies, 'start' : time, 'id' : form.id})
         result = {'requests' : myForms}
 
     except Exception as e:
