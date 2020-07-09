@@ -30,7 +30,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const facilityLinks = {'':{info:'', request:''},
-                       'Texas A&M': {info:'https://iseeu.netlify.app/facilities-tamu', request: '/request-tamu'},
+                       'Texas A&M': {info:'/facilities-tamu', request: '/request-tamu'},
                        'Lawrence Berkeley National Laboratory': {info:'/facilities-LBNL', request: '/request-LBNL'},
                        'NASA Space Radiation Laboratory': {info:'/facilities-NSRL', request: '/request-NSRL'},
                        'Michigan State University': {info:'/facilities-MSU', request: '/request-MSU'}}

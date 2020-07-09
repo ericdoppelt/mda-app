@@ -25,7 +25,7 @@ class UserProfile extends React.Component {
     }
   }
 
-  
+
   async componentDidMount() {
     var self = this;
 
