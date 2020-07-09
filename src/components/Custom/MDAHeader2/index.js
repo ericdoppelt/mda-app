@@ -78,6 +78,7 @@ class MDAHeader2 extends React.Component {
     super(props);
     this.openFacilitiesMenu = this.openFacilitiesMenu.bind(this);
     this.openFormsMenu = this.openFormsMenu.bind(this);
+    this.handleLogOut = this.handleLogOut.bind(this);
     this.state = {
       menuAnchor: null,
       facilitiesOpen: false,
@@ -112,13 +113,22 @@ class MDAHeader2 extends React.Component {
     })
   }
 
+  handleLogOut() {
+    console.log('logg out')
+    var self = this;
+    if (window.window.sessionStorage != null) {
+      window.sessionStorage.clear();
+      this.setState({loggedIn: false})
+    }
+  }
+
   LoginButtons = () => {
     //console.log("Logged in state:");
     //console.log(this.state.loggedIn);
     if (this.state.loggedIn) {
       return (
         <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Link to='user-login' style={{ color: '#FFF' }}>
+          <Link to='user-login' onClick={this.handleLogOut} style={{ color: '#FFF' }}>
             <ListItem button key='Log Out'>
               <ListItemText primary='Log Out'/>
             </ListItem>
