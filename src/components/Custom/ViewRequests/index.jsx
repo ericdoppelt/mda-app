@@ -17,32 +17,39 @@ import TextField from '@material-ui/core/TextField';
 import Row from '../../UIzard/Row'
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 130 },
+  { id: 'name', label: 'Name', width: 200 },
   {
     id: 'facility',
     label: 'Facility',
-    minWidth: 120,
+    width: 80,
     align: 'right',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'integrator',
     label: 'Integrator',
-    minWidth: 120,
+    width: 80,
     align: 'right',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'company',
     label: 'Company',
-    minWidth: 120,
+    width: 80,
+    align: 'right',
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    width: 80,
     align: 'right',
     format: (value) => value.toFixed(2),
   },
   {
     id: 'viewMore',
     label: '',
-    minWidth: 120,
+    width: 80,
     align: 'right',
     format: (value) => value.toFixed(2),
   },
@@ -52,7 +59,8 @@ function createData(name, facility, integrator, company,
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode) {
   var viewMore = 'View More'
-  return { name, facility, integrator, company, viewMore, 
+  var status = 'Pending'
+  return { name, facility, integrator, company, status, viewMore, 
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode };
 }
