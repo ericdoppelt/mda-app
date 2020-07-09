@@ -6,3 +6,7 @@ INSERT INTO public."Organization" (name, poc_name, poc_email, poc_phone, address
 VALUES ('NASA Space Radiation Laboratory', 'Joe', 'Joe@NASA.com', '1234567890', '123 fake st', 'Durham', 'NC', 27701, 'NSRL');
 INSERT INTO public."Organization" (name, poc_name, poc_email, poc_phone, address, city, state, zipcode, abbrv)
 VALUES ('Michigan State University', 'Bob', 'Bob@fake.com', '1234567890', '123 fake st', 'Durham', 'NC', 27701, 'MSU');
+INSERT INTO public."Organization" (name, poc_name, poc_email, poc_phone, address, city, state, zipcode, abbrv, type)
+VALUES ('Michigan State University', 'Bob', 'Bob@fake.com', '1234567890', '123 fake st', 'Durham', 'NC', 27701, 'MDA', 'integrator');
+INSERT INTO public."Organization" (name, poc_name, poc_email, poc_phone, address, city, state, zipcode, abbrv, type)
+VALUES ('Michigan State University', 'Bob', 'Bob@fake.com', '1234567890', '123 fake st', 'Durham', 'NC', 27701, 'NASA', 'integrator');

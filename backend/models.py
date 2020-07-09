@@ -157,20 +157,12 @@ class requests(db.Model):
     ions = db.Column(db.ARRAY(db.Integer()))
     comments = db.Column(db.String(200))
     po_number = db.Column(db.Integer())
+    username = db.Column(db.String(200))
+    beam_time = db.Column(db.Integer())
 
     def create_request(self):
-        result = ""
-        try:
-            db.session.add(self)
-            db.session.commit()
-            result = {
-                'success' : True
-            }
-        except Exception as e:
-            print(e)
-            result = {'error' : "Unable to submit request to database",
-            'success' : False}
-        return result
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return "<Beam(id=%s, name=%s, facility=%s)>" % (self.id, self.name, self.facility)

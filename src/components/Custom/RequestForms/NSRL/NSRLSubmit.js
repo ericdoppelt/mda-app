@@ -35,7 +35,7 @@ class NSRLSubmit extends React.Component {
         await axios.post(url, {
           name: TesterStore.senderName,
           email: TesterStore.email,
-          cell: TesterStore.cell,
+          cell: TesterStore.phone,
           company: TesterStore.company,
           integrator: TesterStore.integrator,
           financierName: TesterStore.financier,
