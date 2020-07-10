@@ -128,7 +128,7 @@ def tasks():
         req = request.get_json()
         modifyEntry = Calendar.query.filter_by(id=req['id']).first()
         modifyEntry.steps = req['steps']
-        # db.session.commit()
+        db.session.commit()
     
     eventArray = []
     username = get_jwt_identity()
@@ -143,7 +143,7 @@ def tasks():
         time = entry.startDate.strftime("%I %p")
         adder = {"site" : entry.facility, "date" : date,
                 "time" : time, "integrator" : entry.integrator,
-                "steps" : entry.steps}
+                "steps" : entry.steps, "id" : entry.id}
         eventArray.append(adder)
     return jsonify({'eventArray' : eventArray})
 
