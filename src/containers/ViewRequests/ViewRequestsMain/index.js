@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom';
 import Image from '../../../components/UIzard/Image';
 import Stack from '../../../components/UIzard/Stack';
 import Title from '../../../components/UIzard/Title';
+import {Typography} from '@material-ui/core';
 import ViewRequests from '../../../components/Custom/ViewRequests';
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
@@ -10,6 +11,7 @@ import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
 import Scheduler from '../../../components/Custom/Scheduling/Scheduler';
+import RangeButton from '../../../components/Custom/Scheduling/RangeButton';
 
 
 export default function Home() {
@@ -30,6 +32,10 @@ export default function Home() {
                   Beam Request Forms
                 </Title>
                 <ViewRequests/>
+                <Typography variant="h3">
+                  Scheduling
+                </Typography>
+                <RangeButton/>
                 <Scheduler/>
               </Stack>
             </Card>
