@@ -93,6 +93,16 @@ def user():
         'email': user.email}
     return account_info
 
+@app.route('/facility', methods=['GET'])
+def facilities():
+    myList = []
+    facilities = Organization.query.filter_by(org_type='facility').all()
+    for entry in facilities:
+            entry_info = {'name': entry.name,
+            'abbreviation': entry.abbrv, 'id': entry.id}
+            myList.append(entry_info)
+    return jsonify({'entries' : myList})
+
 @app.route('/calendar', methods=['POST'])
 def entries():
     myList = []
