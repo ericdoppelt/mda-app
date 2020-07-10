@@ -11,7 +11,7 @@ npm install --save redux react-redux
 npm install @material-ui/core
 npm install @material-ui/icons
 npm i @material-ui/pickers
-npm i @date-io/date-fns
+npm i @date-io/date-fns@1.3.13
 npm install react-infinite-calendar --save
 npm install fontsource-roboto
 npm install mobx mobx-react --save

@@ -56,13 +56,13 @@ class RangeButton extends React.Component {
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
             <TimePicker
-              autoOk
+              
               variant="static"
               openTo="hours"
               value={this.state.startTime}
-              onChange={(event) => console.log(event)}
+              onChange={(event) => this.setState({startTime: event})}
             />
-        </MuiPickersUtilsProvider>
+          </MuiPickersUtilsProvider>
 
           </DialogContent>
 
