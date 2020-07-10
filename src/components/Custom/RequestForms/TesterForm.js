@@ -4,7 +4,6 @@ import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
-import Row from '../../../components/UIzard/Row';
 import TesterStore from '../../../stores/TesterStore';
 
 const useStyles = theme => ({
