@@ -9,7 +9,7 @@ import Row from '../../../components/UIzard/Row';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import Schedule from '../../../components/Custom/Scheduling/Schedule';
+import Scheduler from '../../../components/Custom/Scheduling/Scheduler';
 
 
 export default function Home() {
@@ -30,7 +30,7 @@ export default function Home() {
                   Beam Request Forms
                 </Title>
                 <ViewRequests/>
-                <Schedule/>
+                <Scheduler/>
               </Stack>
             </Card>
           </Row>

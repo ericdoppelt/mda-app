@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Paper, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText} from '@material-ui/core';
+import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 
@@ -9,9 +9,9 @@ import { withStyles } from '@material-ui/core/styles';
         margin: 'auto',
         width: '100%',
       },
-      paper: {
-        width: 250,
-        height: 230,
+      card: {
+        width: 280,
+        height: 300,
         overflow: 'auto',
       },
       button: {
@@ -63,10 +63,19 @@ toggleChecked(request) {
     this.setState({checked: newState});
 }
 
-getList(listArray) {
+getList(listArray, title) {
     const {classes} = this.props;
+    var numChecked = 0;
+    for (var i = 0; i < listArray.length; i++) {
+      if (this.state.checked[listArray[i].checkedIndex]) numChecked++;
+    }
     return(
-    <Paper className={classes.paper}>
+    <Card className={classes.card}>
+      <CardHeader
+        title={title}
+        subheader={`${numChecked}/${listArray.length} selected`}
+        >
+      </CardHeader>
       <List dense component="div" role="list">
         {listArray.map((value, index) => {
           const i = index;
@@ -85,7 +94,7 @@ getList(listArray) {
         })}
         <ListItem />
       </List>
-    </Paper>
+    </Card>
     );
 }
 
@@ -133,7 +142,6 @@ getList(listArray) {
         let tempRequest = this.state.scheduled[i];
         newUnscheduled.push(tempRequest);
         let removedIndex = newScheduled.indexOf(this.state.scheduled[i]);
-
         newScheduled.splice(removedIndex, 1);
       }
     }
@@ -159,7 +167,7 @@ getList(listArray) {
     return(
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>
           <Grid item>
-          {this.getList(this.state.unscheduled)}
+          {this.getList(this.state.unscheduled, "Unscheduled")}
           </Grid>
           <Grid item>
           <Grid container direction="column" alignItems="center">
@@ -202,7 +210,7 @@ getList(listArray) {
             </Grid>
           </Grid>
           <Grid item>
-          {this.getList(this.state.scheduled)}
+          {this.getList(this.state.scheduled, "Scheduled")}
           </Grid>
         </Grid>
     );
