@@ -6,7 +6,7 @@ import FaceRoundedIcon from '@material-ui/icons/FaceRounded';
 import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded';
 import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Row from '../../UIzard/Row';
 
 import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -78,6 +78,7 @@ class MDAHeader2 extends React.Component {
     super(props);
     this.openFacilitiesMenu = this.openFacilitiesMenu.bind(this);
     this.openFormsMenu = this.openFormsMenu.bind(this);
+    this.handleLogOut = this.handleLogOut.bind(this);
     this.state = {
       menuAnchor: null,
       facilitiesOpen: false,
@@ -112,13 +113,21 @@ class MDAHeader2 extends React.Component {
     })
   }
 
+  handleLogOut() {
+    var self = this;
+    if (window.sessionStorage !== null) {
+      window.sessionStorage.clear();
+      this.setState({loggedIn: false})
+    }
+  }
+
   LoginButtons = () => {
     //console.log("Logged in state:");
     //console.log(this.state.loggedIn);
-    if (this.state.loggedIn) {
+    if (window.sessionStorage.getItem('access_token') !== null) {
       return (
         <Row style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Link to='user-login' style={{ color: '#FFF' }}>
+          <Link to='user-login' onClick={this.handleLogOut} style={{ color: '#FFF' }}>
             <ListItem button key='Log Out'>
               <ListItemText primary='Log Out'/>
             </ListItem>
@@ -233,14 +242,22 @@ class MDAHeader2 extends React.Component {
             <Divider />
             {/*----USER AND VIEW REQUESTS----*/}
             <List>
-              {['User', 'View Requests'].map((text, index) => (
-                <Link to={links[index+4]} style={{ color: '#FFF' }}>
-                  <ListItem button key={text}>
-                    <ListItemIcon>{icons[index+4]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                </Link>
-              ))}
+              <Link to={
+                window.sessionStorage.getItem('access_token')
+                ? 'user-profile'
+                : 'user-login'} 
+                style={{ color: '#FFF' }}>
+                <ListItem button key='User'>
+                  <ListItemIcon>{icons[4]}</ListItemIcon>
+                  <ListItemText primary='User' />
+                </ListItem>
+              </Link>
+              <Link to={links[5]} style={{ color: '#FFF' }}>
+                <ListItem button key='View Requests'>
+                  <ListItemIcon>{icons[5]}</ListItemIcon>
+                  <ListItemText primary='View Requests' />
+                </ListItem>
+              </Link>
               {/*----REQUEST FORMS----*/}
               <ListItem button onClick={() => this.handleFormsClick()} style={{ color: '#FFF' }}>
                 <ListItemIcon>{icons[3]}</ListItemIcon>

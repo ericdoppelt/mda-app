@@ -164,7 +164,6 @@ class Calendar extends React.Component {
           startDate: response.data.startDate,
           cannotRun: response.data.cannotRun
           });*/
-          console.log(response.data)
           var data = [];
           response.data.entries.forEach(function(event) {
             data.push(self.makeEventPersonal(event.facility,event.integrator,event.startDate));

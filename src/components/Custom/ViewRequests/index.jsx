@@ -17,32 +17,39 @@ import TextField from '@material-ui/core/TextField';
 import Row from '../../UIzard/Row'
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 130 },
+  { id: 'name', label: 'Name', width: 200 },
   {
     id: 'facility',
     label: 'Facility',
-    minWidth: 120,
+    width: 80,
     align: 'right',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'integrator',
     label: 'Integrator',
-    minWidth: 120,
+    width: 80,
     align: 'right',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'company',
     label: 'Company',
-    minWidth: 120,
+    width: 80,
+    align: 'right',
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    width: 80,
     align: 'right',
     format: (value) => value.toFixed(2),
   },
   {
     id: 'viewMore',
     label: '',
-    minWidth: 120,
+    width: 80,
     align: 'right',
     format: (value) => value.toFixed(2),
   },
@@ -50,11 +57,12 @@ const columns = [
 
 function createData(name, facility, integrator, company, 
     poNum, address, city, email, energies, funding_cell,
-    funding_contact, funding_email, ions, phone, start, state, zipCode) {
+    funding_contact, funding_email, ions, phone, startDate, state, zipCode) {
   var viewMore = 'View More'
-  return { name, facility, integrator, company, viewMore, 
+  var status = 'Pending'
+  return { name, facility, integrator, company, status, viewMore, 
     poNum, address, city, email, energies, funding_cell,
-    funding_contact, funding_email, ions, phone, start, state, zipCode };
+    funding_contact, funding_email, ions, phone, startDate, state, zipCode };
 }
 
 const oldrows = [/*
@@ -159,9 +167,9 @@ class ViewRequests extends React.Component {
       funding_email: "",
       ions: "",
       phone: "",
-      start: "",
       state: "",
       zipCode: "",
+      message: "",
       data: [],
       oldrows: oldrows,
       page: 0,
@@ -227,7 +235,7 @@ class ViewRequests extends React.Component {
       funding_email: row.funding_email,
       ions: row.ions,
       phone: row.phone,
-      start: row.start,
+      startDate: row.startDate,
       state: row.state,
       zipCode: row.zipCode,
       component: "view",
@@ -240,6 +248,38 @@ class ViewRequests extends React.Component {
   handleBack() {
     this.setState(state=>({
       component: "table",
+    }))
+  }
+
+  async handleApprove() {
+    const url = "https://mda-phoenix.herokuapp.com/calendar-entry";
+    let self = this;
+    let result;
+
+    console.log('checking state')
+    console.log(self.state.facility)
+    console.log(self.state.integrator)
+    console.log(self.state.startDate)
+
+    await axios.post(url, {
+      "username" : "test123",
+      "facility" : self.state.facility,
+      "integrator" : self.state.integrator,
+      "totalTime" : 8,
+      "startDate" : self.state.startDate,
+      "title" : "",
+      "private" : false,
+      headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
+      }).then(response => {
+        result = response.data.requests;
+        console.log(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+    this.setState(state=>({
+      //component: "table",
+      message: "The form has been approved and added to the calendar.",
     }))
   }
 
@@ -262,7 +302,7 @@ class ViewRequests extends React.Component {
       return(
         <div>
           <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent:'flex-end'}}>
-            
+            {this.state.message}
           </Row>
           <br/>
             <Row >
@@ -433,7 +473,7 @@ class ViewRequests extends React.Component {
               label = "Start Date"
               className={classes.leftTextField}
               id="standard-read-only-input"
-              defaultValue={this.state.start}
+              defaultValue={this.state.startDate}
               InputProps={{
                 readOnly: true,
               }}
@@ -446,7 +486,7 @@ class ViewRequests extends React.Component {
                 id="button" 
                 variant="contained"
                 style={{width: '100px', height: '30px', fontSize: '12px', margin:'0 30px'}}
-                onClick={(event) => this.handleBack()}
+                onClick={(event) => this.handleApprove()}
                 color="primary"
               >
                 Approve
