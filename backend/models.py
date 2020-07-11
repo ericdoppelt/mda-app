@@ -1,6 +1,7 @@
 from main import db, bcrypt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_login import UserMixin
+from sqlalchemy_utils import DateTimeRangeType
 
 
 class Test(db.Model):
@@ -166,6 +167,9 @@ class requests(db.Model):
     date_of_request = db.Column(db.DateTime)
     status = db.Column(db.String(40))
     rejected = db.Column(db.Boolean())
+    order = db.Column(db.Integer())
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
 
 
     def create_request(self):

@@ -476,6 +476,36 @@ def getRequests():
 
     return result
 
+@app.route('/getforms/set-dates', methods=['POST'])
+@jwt_required
+def set_dates_request():
+    username = get_jwt_identity()
+    req = request.get_json()
+    result = ""
+
+    try:
+        user = Users.query.filter_by(username=username).first()
+        if user.user_type != 'integrator':
+            raise Exception("You must be an integrator to view this page!")
+        request_form = requests.query.filter_by(id=req["id"]).first()
+        print(request_form.start_date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+
+
+        request_form.start_date = datetime.strptime(req['startDate'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        if req["endDate"] != "":
+            request_form.end_date = datetime.strptime(req['endDate'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        if req["order"] != "":
+            request_form.order = req["order"]
+        db.session.commit()
+
+        return jsonify({'success': True}), 200
+
+    except Exception as e:
+        print(e)
+        result = {'error' : e,
+        'success' : False}
+
+    return jsonify(result)
 
 @app.route('/getforms/integrator', methods=['POST'])
 @jwt_required
@@ -496,14 +526,28 @@ def getRequests_integrators():
                 beam = Beams.query.filter_by(id=ion).one()
                 ions[beam.ion] = beam.amev
             delta = timedelta(hours=12)
-            time = (form.start + delta).strftime('%Y-%m-%dT%H:%M')
+            time = (form.start + delta).strftime('%Y-%m-%d')
+            if form.start_date is not None:
+                start_date = form.start_date.strftime('%m/%d/%Y')
+                start_time= form.start_date.strftime('%I %p')
+            else:
+                start_date = None
+                start_time = None
+            if form.end_date is not None:
+                end_date = form.start_date.strftime('%m/%d/%Y')
+                end_time= form.start_date.strftime('%I %p')
+            else:
+                end_date = None
+                end_time = None
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'beams' : ions, 'start' : time, 'id' : form.id})
+            'beams' : ions, 'start' : time, 'id' : form.id, "startDate" : start_date,
+            "startTime" : start_time, "endDate" : end_date, "endTime" : end_time,
+            'order' : form.order})
         result = {'requests' : myForms}
 
     except Exception as e:
