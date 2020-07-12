@@ -1,6 +1,7 @@
 from main import db, bcrypt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_login import UserMixin
+from sqlalchemy_utils import DateTimeRangeType
 
 
 class Test(db.Model):
@@ -94,6 +95,7 @@ class Calendar(db.Model):
     startDate = db.Column(db.DateTime(), nullable=False)
     private = db.Column(db.Boolean())
     title = db.Column(db.String(50))
+    steps = db.Column(db.ARRAY(db.Boolean()))
 
     def create_entry(self):
         result = ""
@@ -159,6 +161,16 @@ class requests(db.Model):
     po_number = db.Column(db.Integer())
     username = db.Column(db.String(200))
     beam_time = db.Column(db.Integer())
+    approval_date = db.Column(db.DateTime)
+    integrator_comment = db.Column(db.String(200))
+    modified = db.Column(db.Boolean())
+    date_of_request = db.Column(db.DateTime)
+    status = db.Column(db.String(40))
+    rejected = db.Column(db.Boolean())
+    order = db.Column(db.Integer())
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
+
 
     def create_request(self):
         db.session.add(self)

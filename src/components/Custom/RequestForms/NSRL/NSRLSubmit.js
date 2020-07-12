@@ -88,7 +88,11 @@ class NSRLSubmit extends React.Component {
       <div className={classes.fullDiv}>
       <br/>
       <Button className={classes.submitButton} onClick={this.submitForm}>
-        Submit Form
+        Submit to Integrator
+      </Button>
+
+      <Button className={classes.submitButton} onClick={this.submitForm}>
+        Email Form to Facility
       </Button>
       </div>
     );
