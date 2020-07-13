@@ -17,5 +17,5 @@ mail.init_app(app)
 # from . import routes
 from routes import beam_request, scheduler, the_rest
 
-if __name__ == '__main__':
-    app.run(debug=False)
+# if __name__ == '__main__':
+#     app.run(debug=False)
