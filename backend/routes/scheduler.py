@@ -7,12 +7,12 @@ create_refresh_token, jwt_required,
 get_jwt_identity, get_jti)
 from datetime import timedelta, datetime
 
-from backend.main import app, bcrypt, jwt, mail
-from backend.extensions import db
-from backend.models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
+from ..main import app, bcrypt, jwt, mail
+from ..extensions import db
+from ..models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
                     Integrator, Ranges)
-from backend.exceptions import TokenNotFound
-from backend.pdf_builder import FormBuilder
+from ..exceptions import TokenNotFound
+from ..pdf_builder import FormBuilder
 
 
 @app.route('/integrator/set-range', methods=['POST'])

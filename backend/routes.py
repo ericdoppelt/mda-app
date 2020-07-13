@@ -146,7 +146,6 @@ def tasks():
     entries = Calendar.query.filter(and_(Calendar.username==username, Calendar.startDate >= datetime.now())).all()
     # entries = Calendar.query.filter(Calendar.username==username).all()
     for entry in entries:
-        print(entry.startDate)
         date = entry.startDate.strftime("%m/%d/%Y")
         time = entry.startDate.strftime("%I %p")
         adder = {"site" : entry.facility, "date" : date,
@@ -163,7 +162,6 @@ def get_integrators():
         integrators = Organization.query.filter_by(org_type='integrator').all()
         for org in integrators:
             myList.append(org.abbrv)
-        print(myList)
     except Exception as e:
         print(e)
 
@@ -202,7 +200,6 @@ def filterion():
             newDict = {'facility': key, 'ions' : myDict[key]}
             myList.append(newDict)
         result = {'result' : myList}
-        print(result)
 
     except Exception as e:
         print(e)

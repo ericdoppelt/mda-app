@@ -4,13 +4,13 @@ from flask_mail import Message
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from datetime import timedelta, datetime
 
-from backend.main import app, jwt, mail
-from backend.extensions import db
-from backend.models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
+from ..main import app, jwt, mail
+from ..extensions import db
+from ..models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
                     Integrator, Ranges)
 
-from backend.exceptions import TokenNotFound
-from backend.routes.request_helper import FormBuilder
+from ..exceptions import TokenNotFound
+from .request_helper import FormBuilder
 
 
 def add_request(form, username):

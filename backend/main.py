@@ -1,6 +1,6 @@
 import time
 from flask import Flask
-from backend.extensions import db, bcrypt, jwt, mail
+from .extensions import db, bcrypt, jwt, mail
 from flask_cors import CORS
 from datetime import datetime
 
@@ -16,5 +16,5 @@ bcrypt.init_app(app)
 jwt.init_app(app)
 mail.init_app(app)
 
-from backend import routes
-from backend.routes import *
+# from . import routes
+from .routes import *
