@@ -8,7 +8,7 @@ get_jwt_identity, get_jti)
 from datetime import timedelta, datetime
 
 from ..main import app, bcrypt, jwt, mail
-from ..extensions import db
+from ..setup.extensions import db
 from ..models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
                     Integrator, Ranges)
 from ..blacklist_helpers import (
@@ -16,7 +16,7 @@ from ..blacklist_helpers import (
     revoke_token, unrevoke_token, revoke_user_tokens,
     prune_database
 )
-from ..exceptions import TokenNotFound
+from ..setup.exceptions import TokenNotFound
 from ..pdf_builder import FormBuilder
 
 

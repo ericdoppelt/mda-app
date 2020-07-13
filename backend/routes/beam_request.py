@@ -5,11 +5,10 @@ from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from datetime import timedelta, datetime
 
 from ..main import app, jwt, mail
-from ..extensions import db
+from ..setup.extensions import db
 from ..models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
                     Integrator, Ranges)
 
-from ..exceptions import TokenNotFound
 from .request_helper import FormBuilder
 
 
