@@ -146,15 +146,13 @@ def tasks():
     # today = datetime.now().strftime('%Y-%m-%d')
     entries = Calendar.query.filter(and_(Calendar.username==username, Calendar.startDate >= datetime.now())).all()
     # entries = Calendar.query.filter(Calendar.username==username).all()
-    print(entries)
     for entry in entries:
         print(entry.startDate)
-        print()
-        date = entry.startDate.strftime("%m/%m/%Y")
+        date = entry.startDate.strftime("%m/%d/%Y")
         time = entry.startDate.strftime("%I %p")
         adder = {"site" : entry.facility, "date" : date,
                 "time" : time, "integrator" : entry.integrator,
-                "steps" : entry.steps, "id" : entry.id}
+                "steps" : entry.steps, "id" : entry.id, "startDate" : entry.startDate}
         eventArray.append(adder)
     return jsonify({'eventArray' : eventArray})
 
