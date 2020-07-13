@@ -70,7 +70,7 @@ def get_range():
             # endDate = end.strftime("%m/%d/%Y")
             # endTime = end.strftime("%I %p")
             entry = {"facility" : rang.facility, "hours" : rang.hours,
-            "startDate" : rang.start, "endDate" : end}
+            "startDate" : rang.start_date, "endDate" : end}
             myList.append(entry)
 
         return {"ranges" : myList}, 200
