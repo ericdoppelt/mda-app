@@ -4,9 +4,9 @@ from flask_mail import Message
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from datetime import timedelta, datetime
 
-from ..main import app, jwt, mail
-from ..setup.extensions import db
-from ..models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
+from main import app, jwt, mail
+from setup.extensions import db
+from models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
                     Integrator, Ranges)
 
 from .request_helper import FormBuilder

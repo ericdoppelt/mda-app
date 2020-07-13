@@ -1,6 +1,6 @@
 import time
 from flask import Flask
-from .setup.extensions import db, bcrypt, jwt, mail
+from setup.extensions import db, bcrypt, jwt, mail
 from flask_cors import CORS
 from datetime import datetime
 
@@ -15,4 +15,4 @@ jwt.init_app(app)
 mail.init_app(app)
 
 # from . import routes
-from .routes import *
+from routes import beam_request, scheduler, the_rest

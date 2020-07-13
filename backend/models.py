@@ -1,4 +1,4 @@
-from .main import db, bcrypt
+from main import db, bcrypt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_login import UserMixin
 from sqlalchemy_utils import DateTimeRangeType

@@ -7,17 +7,17 @@ create_refresh_token, jwt_required,
 get_jwt_identity, get_jti)
 from datetime import timedelta, datetime
 
-from ..main import app, bcrypt, jwt, mail
-from ..setup.extensions import db
-from ..models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
+from main import app, bcrypt, jwt, mail
+from setup.extensions import db
+from models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
                     Integrator, Ranges)
-from ..blacklist_helpers import (
+from blacklist_helpers import (
     is_token_revoked, add_token_to_database, get_user_tokens,
     revoke_token, unrevoke_token, revoke_user_tokens,
     prune_database
 )
-from ..setup.exceptions import TokenNotFound
-from ..pdf_builder import FormBuilder
+from setup.exceptions import TokenNotFound
+from pdf_builder import FormBuilder
 
 
 @app.route('/time', methods=['GET'])
