@@ -20,8 +20,8 @@ export default function Home() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-                {//<Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/MDALogo.png)' }} />}
-                <Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
+                {/* <Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/MDALogo.png)' }} />} */}
+                 <Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
                 <Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/phoenix.png)' }} />
               </Row>
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
