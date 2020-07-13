@@ -5,6 +5,7 @@ import CalendarTodayRoundedIcon from '@material-ui/icons/CalendarTodayRounded';
 import FaceRoundedIcon from '@material-ui/icons/FaceRounded';
 import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded';
 import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
 import { Link, Redirect } from 'react-router-dom';
 import Row from '../../UIzard/Row';
@@ -28,9 +29,10 @@ const icons = [<HomeRoundedIcon />,
                <AccountBalanceRoundedIcon />,
                <AssignmentRoundedIcon />,
                <FaceRoundedIcon />,
-               <DvrRoundedIcon />]
+               <DvrRoundedIcon />,
+               <ImportContactsIcon />,]
 
-const links = ['/', '/calendar', '/facilities','/request-form','/user-login','/view-requests']
+const links = ['/', '/calendar', '/facilities','/request-form','/user-login','/view-requests','/scheduler']
 const facilityLinks = ['facilities-tamu', 'facilities-MSU', 'facilities-LBNL', 'facilities-NSRL']
 const formLinks = ['request-tamu', 'request-MSU', 'request-LBNL', 'request-NSRL']
 
@@ -256,6 +258,12 @@ class MDAHeader2 extends React.Component {
                 <ListItem button key='View Requests'>
                   <ListItemIcon>{icons[5]}</ListItemIcon>
                   <ListItemText primary='View Requests' />
+                </ListItem>
+              </Link>
+              <Link to={links[6]} style={{ color: '#FFF' }}>
+                <ListItem button key='Scheduler'>
+                  <ListItemIcon>{icons[6]}</ListItemIcon>
+                  <ListItemText primary='Scheduler' />
                 </ListItem>
               </Link>
               {/*----REQUEST FORMS----*/}

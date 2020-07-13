@@ -18,6 +18,7 @@ import FacilityMSU from './containers/Facility/FacilityMSU';
 import Home from './containers/Home';
 import UserProfile from './containers/User/UserProfile';
 import ViewRequestsMain from './containers/ViewRequests/ViewRequestsMain';
+import SchedulerMain from './containers/Scheduler/SchedulerMain';
 import UserRegistration from './containers/User/UserRegistration';
 import history from './history';
 
@@ -36,6 +37,7 @@ const App = () => (
       <Route path="/request-lbnl" component={RequestLBNL}/>
       <Route path="/request-msu" component={RequestMSU}/>
       <Route path="/request-nsrl" component={RequestNSRL}/>
+      <Route path="/scheduler" component={SchedulerMain} />
       <Route path="/view-requests" component={ViewRequestsMain} />
       <Route path="/user-login" component={UserMain} />
       <Route path="/user-profile" component={UserProfile} />
