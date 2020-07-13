@@ -24,8 +24,8 @@ class Schedule extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-          scheduled: [],
-          unscheduled: [],
+          priority: [],
+          general: [],
           checked: [],
       }
   }
@@ -39,6 +39,7 @@ class Schedule extends React.Component {
     await axios.post(url, null, {
         headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
+        console.log(response);
         var i = 0;
         var requestsChecked = response.data.requests.map(function(request) {
             var request = Object.assign({}, request);
@@ -47,7 +48,7 @@ class Schedule extends React.Component {
             i++;
             return request;
         });
-        self.setState({ unscheduled : requestsChecked});
+        self.setState({ general : requestsChecked});
         })
         .catch(error => {
         alert(error);
@@ -96,76 +97,69 @@ getList(listArray, title) {
     );
 }
 
-  pushAllScheduled() {
-    let newScheduled = this.state.scheduled.concat(this.state.unscheduled);
+  pushAllPriority() {
+    let newPriority = this.state.priority.concat(this.state.general);
     this.setState({
-      scheduled: newScheduled,
-      unscheduled: [],
+      priority: newPriority,
+      general: [],
     });
   }
 
-  pushCheckedScheduled() {
+  pushCheckedPriority() {
 
-    var newUnscheduled = this.state.unscheduled.slice(0);
-    var newScheduled = this.state.scheduled.slice(0);
+    var newGeneral = this.state.general.slice(0);
+    var newPriority = this.state.priority.slice(0);
 
-    for (var i = 0; i < this.state.unscheduled.length; i++) {
-      let tempIndex = this.state.unscheduled[i].checkedIndex;
+    for (var i = 0; i < this.state.general.length; i++) {
+      let tempIndex = this.state.general[i].checkedIndex;
       console.log(tempIndex);
       if (this.state.checked[tempIndex]) {
-        let tempRequest = this.state.unscheduled[i];
-        newScheduled.push(tempRequest);
-        let removedIndex = newUnscheduled.indexOf(this.state.unscheduled[i]);
-        console.log("before");
-        console.log(removedIndex);
-        console.log(newUnscheduled);
-        newUnscheduled.splice(removedIndex, 1);
-        console.log(newUnscheduled);
+        let tempRequest = this.state.general[i];
+        newPriority.push(tempRequest);
+        let removedIndex = newGeneral.indexOf(this.state.general[i]);
+        newGeneral.splice(removedIndex, 1);
       }
     }
     this.setState({
-      unscheduled: newUnscheduled,
-      scheduled: newScheduled,
+      general: newGeneral,
+      priority: newPriority,
     });
   }
 
-  pushCheckedUnscheduled() {
+  pushCheckedGeneral() {
 
-    var newUnscheduled = this.state.unscheduled.slice(0);
-    var newScheduled = this.state.scheduled.slice(0);
+    var newGeneral = this.state.general.slice(0);
+    var newPriority = this.state.priority.slice(0);
 
-    for (var i = 0; i < this.state.scheduled.length; i++) {
-      let tempIndex = this.state.scheduled[i].checkedIndex;
+    for (var i = 0; i < this.state.priority.length; i++) {
+      let tempIndex = this.state.priority[i].checkedIndex;
       if (this.state.checked[tempIndex]) {
-        let tempRequest = this.state.scheduled[i];
-        newUnscheduled.push(tempRequest);
-        let removedIndex = newScheduled.indexOf(this.state.scheduled[i]);
-        newScheduled.splice(removedIndex, 1);
+        let tempRequest = this.state.priority[i];
+        newGeneral.push(tempRequest);
+        let removedIndex = newPriority.indexOf(this.state.priority[i]);
+        newPriority.splice(removedIndex, 1);
       }
     }
     this.setState({
-      unscheduled: newUnscheduled,
-      scheduled: newScheduled,
+      general: newGeneral,
+      priority: newPriority,
     });
   }
 
-  pushAllUnscheduled() {
-    let newUnscheduled = this.state.unscheduled.concat(this.state.scheduled);
+  pushAllGeneral() {
+    let newGeneral = this.state.general.concat(this.state.priority);
     this.setState({
-      unscheduled: newUnscheduled,
-      scheduled: [],
+      general: newGeneral,
+      priority: [],
     });
   }
 
-  pushCheckedUnscheduled
-
-  
   render() {
     const {classes} = this.props;
     return(
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>
           <Grid item>
-          {this.getList(this.state.unscheduled, "Unscheduled")}
+          {this.getList(this.state.general, "General")}
           </Grid>
           <Grid item>
           <Grid container direction="column" alignItems="center">
@@ -173,8 +167,8 @@ getList(listArray, title) {
               variant="outlined"
               size="small"
               className={classes.button}
-              onClick={() => this.pushAllScheduled()}
-              disabled={this.state.unscheduled.length === 0}
+              onClick={() => this.pushAllPriority()}
+              disabled={this.state.general.length === 0}
             >
               ≫
             </Button>
@@ -182,8 +176,8 @@ getList(listArray, title) {
               variant="outlined"
               size="small"
               className={classes.button}
-              onClick={() => this.pushCheckedScheduled()}
-              disabled={this.state.unscheduled.length === 0}
+              onClick={() => this.pushCheckedPriority()}
+              disabled={this.state.general.length === 0}
             >
               &gt;
             </Button>
@@ -191,8 +185,8 @@ getList(listArray, title) {
               variant="outlined"
               size="small"
               className={classes.button}
-              onClick={() => this.pushCheckedUnscheduled()}
-              disabled={this.state.scheduled.length === 0}
+              onClick={() => this.pushCheckedGeneral()}
+              disabled={this.state.priority.length === 0}
             >
               &lt;
             </Button>
@@ -200,15 +194,15 @@ getList(listArray, title) {
               variant="outlined"
               size="small"
               className={classes.button}
-              onClick={() => this.pushAllUnscheduled()}
-              disabled={this.state.scheduled.length === 0}
+              onClick={() => this.pushAllGeneral()}
+              disabled={this.state.priority.length === 0}
             >
               ≪
             </Button>
             </Grid>
           </Grid>
           <Grid item>
-          {this.getList(this.state.scheduled, "Scheduled")}
+          {this.getList(this.state.priority, "Priority")}
           </Grid>
         </Grid>
     );
