@@ -80,7 +80,45 @@ class Facility(db.Model):
     name = db.Column(db.String())
 
     def __repr__(self):
-        return "<Organization(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name, self.poc_name)
+        return "<Facility(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name)
+
+class Integrator(db.Model):
+    """Model for the facility table"""
+    __tablename__ = 'Integrator'
+
+    org_id = db.Column(db.Integer(), primary_key = True)
+    range = db.Column(db.ARRAY(db.DateTime()))
+    facility = db.Column(db.ARRAY(db.String()))
+    hours = db.Column(db.ARRAY(db.Integer()))
+
+    def __repr__(self):
+        return "<Integrator(id=%s)>" % (self.org_id)
+
+class Ranges(db.Model):
+    """Model for the facility table"""
+    __tablename__ = 'Ranges'
+
+    org_id = db.Column(db.Integer(), primary_key = True)
+    start_date = db.Column(db.DateTime())
+    facility = db.Column(db.String())
+    hours = db.Column(db.Integer())
+
+    def create_range(self):
+        result = ""
+        try:
+            db.session.add(self)
+            db.session.commit()
+            result = {
+                'success' : True
+            }
+        except Exception as e:
+            print(e)
+            result = {'error' : "Unable to create range entry",
+            'success' : False}
+        return result
+
+    def __repr__(self):
+        return "<Range(id=%s, facility=%s)>" % (self.org_id, self.facility)
 
 
 class Calendar(db.Model):
