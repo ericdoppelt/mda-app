@@ -98,7 +98,8 @@ class Ranges(db.Model):
     """Model for the facility table"""
     __tablename__ = 'Ranges'
 
-    org_id = db.Column(db.Integer(), primary_key = True)
+    id = db.Column(db.Integer(), primary_key = True)
+    org_id = db.Column(db.Integer())
     start_date = db.Column(db.DateTime())
     facility = db.Column(db.String())
     hours = db.Column(db.Integer())

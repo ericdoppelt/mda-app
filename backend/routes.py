@@ -207,7 +207,7 @@ def filterion():
 
     except Exception as e:
         print(e)
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
 
     return result
@@ -235,7 +235,7 @@ def create_entry():
         result = entry.create_entry()
 
     except Exception as e:
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
 
     return result
@@ -303,7 +303,7 @@ def add_calendar(beam_request):
         result = entry.create_entry()
 
     except Exception as e:
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
     print(result)
 
@@ -330,7 +330,7 @@ def approve():
         result = {'success' : True}
     except Exception as e:
         print(e)
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
     return result
 
@@ -394,7 +394,7 @@ def request_modify():
         result = {'success' : True}
     except Exception as e:
         print(e)
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
     return jsonify(result)
 
@@ -436,7 +436,7 @@ def reject_form():
         result = {'success' : True}
     except Exception as e:
         print(e)
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
     return result
 
@@ -470,7 +470,7 @@ def getRequests():
 
     except Exception as e:
         print(e)
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
 
     return result
@@ -499,6 +499,37 @@ def set_range():
         result = entry.create_range()
 
         return jsonify({'success': True}), 200
+
+    except Exception as e:
+        print(e)
+        result = {'error' : str(e),
+        'success' : False}
+
+    return jsonify(result)
+
+@app.route('/integrator/get-range', methods=['GET'])
+@jwt_required
+def get_range():
+    username = get_jwt_identity()
+    req = request.get_json()
+    result = ""
+
+    try:
+        user = Users.query.filter_by(username=username).first()
+        if user.user_type != 'integrator':
+            raise Exception("You must be an integrator to view this page!")
+        myOrg = Organization.query.filter_by(abbrv=user.affiliation).first()
+        myList = []
+        ranges = Ranges.query.filter_by(org_id=myOrg.id).all()
+        for rang in ranges:
+            print(rang.id)
+            date = rang.start_date.strftime("%m/%d/%Y")
+            time = rang.start_date.strftime("%I %p")
+            entry = {"facility" : rang.facility, "hours" : rang.hours,
+            "date" : date, "time" : time}
+            myList.append(entry)
+
+        return {"ranges" : myList}, 200
 
     except Exception as e:
         print(e)
@@ -552,7 +583,7 @@ def getRequests_integrators():
 
     except Exception as e:
         print(e)
-        result = {'error' : e,
+        result = {'error' : str(e),
         'success' : False}
 
     return result
@@ -659,7 +690,8 @@ def requestform():
                 msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
         # mail.send(msg)
         print(form)
-        username = form['username'] # TODO change get_jwt_identity()
+        # username = form['username'] # TODO change get_jwt_identity()
+        username = 'test123'
         add_request(form, username)
 
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
