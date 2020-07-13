@@ -36,14 +36,7 @@ export default function Home() {
             </UserProfileStore.Provider>
           </Card>
           </Row>
-          <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-          <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
-          <h1>To-do List</h1>
-          <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <UsertodoList/>
-          </Row>
-          </Card>
-          </Row>
+
         </main>
       </div>
     </ThemeProvider>
