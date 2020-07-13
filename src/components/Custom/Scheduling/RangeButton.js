@@ -45,6 +45,8 @@ class RangeButton extends React.Component {
         hoursError: false,
         hoursHelper: '',
 
+        submitSuccess: false,
+        submitError: false,
         facilities: [],
     }
   }
@@ -206,13 +208,53 @@ class RangeButton extends React.Component {
         dialog: '',
         startTimeError: false,
       });
-
-      // SUBMIT HERE
-      console.log(this.state);
+      this.submit();
     } else {
       this.setState({startTimeError: true});
     }
   }
+
+  async submit() {
+      let self = this;
+      let url = 'https://mda-phoenix.herokuapp.com/integrator/set-range';
+      await axios.post(url, {
+        startDate: self.state.startDate,
+        startTime: self.state.startTime,
+        facility: self.state.facility,
+        hours: self.state.hours,
+      }, {
+        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+      }).then(response => {
+        if (response.data.success === true) {
+          this.setState({
+            dialog: '',
+
+            startDate: '',
+            startDateError: false,
+
+            startTime: '',
+            startTimeError: false,
+
+            facility: '',
+            facilityError: false,
+            facilityHelper: '',
+
+            hours: '',
+            hoursError: false,
+            hoursHelper: '',
+
+            submitSuccess: true,
+          });
+        } else {
+          this.setState({
+            submitError: true,
+          });
+        }
+      }).catch(error => {
+        alert(error);
+    });
+  }
+  
 
   getDialogue() {
       var returnedDialogue;
@@ -263,6 +305,40 @@ class RangeButton extends React.Component {
             </Alert>
           </Snackbar>
       );
+    }
+    else if (this.state.submitSuccess) {
+      return(
+        <Snackbar 
+          open={this.state.submitSuccess}
+          autoHideDuration={6000}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          onClose={() => {this.setState({submitSuccess: false})}}
+          >
+          <Alert severity="success">
+            Range submitted.
+          </Alert>
+        </Snackbar>
+    );
+    }
+    else  if (this.state.submitError) {
+      return(
+        <Snackbar 
+          open={this.state.submitError}
+          autoHideDuration={6000}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          onClose={() => {this.setState({submitError: false})}}
+          >
+          <Alert severity="error">
+            Please try submitting again.
+          </Alert>
+        </Snackbar>
+    );
     }
   }
 
