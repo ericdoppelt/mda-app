@@ -339,8 +339,17 @@ class Calendar extends React.Component {
               header={{
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                right: 'dayGridMonth,timeGridTwoWeeks,timeGridWeek,timeGridDay,listWeek'
               }}
+              views= {{
+                timeGridTwoWeeks: {
+                  type: 'timeGrid',
+                  duration: { weeks: 2 },
+                  rows: 2,
+                  buttonText: '2 weeks'
+                }
+              }}
+              height='500'
               plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
               ref={ this.calendarComponentRef }
               weekends={ this.state.calendarWeekends }
@@ -348,6 +357,7 @@ class Calendar extends React.Component {
                         ? this.state.personalEvents
                         : this.state.calendarEvents
                       }
+              slotDuration='04:00:00'
               dateClick={ this.handleDateClick }
               eventOrder="facility,start"
 
