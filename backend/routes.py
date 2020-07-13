@@ -132,7 +132,7 @@ def personal_entries():
         myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-@app.route('/calendar/tasks', methods=['Get', 'POST'])
+@app.route('/calendar/tasks', methods=['GET', 'POST'])
 @jwt_required
 def tasks():
     if request.method == 'POST':
@@ -140,7 +140,7 @@ def tasks():
         modifyEntry = Calendar.query.filter_by(id=req['id']).first()
         modifyEntry.steps = req['steps']
         db.session.commit()
-    
+
     eventArray = []
     username = get_jwt_identity()
     # today = datetime.now().strftime('%Y-%m-%d')
@@ -159,7 +159,7 @@ def tasks():
 @app.route('/integrator', methods=['GET'])
 def get_integrators():
     myList = []
-    
+
     try:
         integrators = Organization.query.filter_by(org_type='integrator').all()
         for org in integrators:
@@ -557,7 +557,7 @@ def getRequests_integrators():
 
     return result
 
-    
+
 
 
 def add_request(form, username):
@@ -666,5 +666,3 @@ def requestform():
     except Exception as e:
         print(e)
         return jsonify({'success': False, 'msg': str(e)}), 404
-
-
