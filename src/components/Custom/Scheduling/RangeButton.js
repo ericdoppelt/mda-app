@@ -279,7 +279,9 @@ class RangeButton extends React.Component {
     if (this.state.startDateError) {
       return(
           <Snackbar 
-            open={this.state.startDate === ""}
+            open={this.state.startDateError}
+            onClose={() => this.setState({startDateError: false})}
+            autoHideDuration={6000}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'left',
@@ -294,7 +296,9 @@ class RangeButton extends React.Component {
     else if (this.state.startTimeError) {
       return(
           <Snackbar 
-            open={this.state.startTime === ""}
+            open={this.state.startTimeError}
+            onClose={() => this.setState({startTimeError: false})}
+            autoHideDuration={6000}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'left',
