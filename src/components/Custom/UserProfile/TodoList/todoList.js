@@ -20,6 +20,7 @@ import Button from '@material-ui/core/Button';
 
 
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -52,6 +53,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function TodoList() {
+
+
     TodoList.filterArrays = function (array1,array2) {
       var ret = [];
       for(var i=0;i<array1.length;i++){
