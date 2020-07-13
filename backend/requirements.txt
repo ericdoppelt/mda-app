@@ -12,6 +12,8 @@ Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.4.3
 fpdf==1.7.2
 gunicorn==20.0.4
+infinity==1.5
+intervals==0.8.1
 itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
@@ -23,5 +25,6 @@ python-dotenv==0.13.0
 pytz==2020.1
 six==1.15.0
 SQLAlchemy==1.3.17
+SQLAlchemy-Utils==0.36.8
 Werkzeug==1.0.1
 zope.interface==5.1.0

@@ -1,6 +1,7 @@
 from main import db, bcrypt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_login import UserMixin
+from sqlalchemy_utils import DateTimeRangeType
 
 
 class Test(db.Model):
@@ -79,7 +80,45 @@ class Facility(db.Model):
     name = db.Column(db.String())
 
     def __repr__(self):
-        return "<Organization(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name, self.poc_name)
+        return "<Facility(id=%s, name=%s, poc_name=%s)>" % (self.id, self.name)
+
+class Integrator(db.Model):
+    """Model for the facility table"""
+    __tablename__ = 'Integrator'
+
+    org_id = db.Column(db.Integer(), primary_key = True)
+    range = db.Column(db.ARRAY(db.DateTime()))
+    facility = db.Column(db.ARRAY(db.String()))
+    hours = db.Column(db.ARRAY(db.Integer()))
+
+    def __repr__(self):
+        return "<Integrator(id=%s)>" % (self.org_id)
+
+class Ranges(db.Model):
+    """Model for the facility table"""
+    __tablename__ = 'Ranges'
+
+    org_id = db.Column(db.Integer(), primary_key = True)
+    start_date = db.Column(db.DateTime())
+    facility = db.Column(db.String())
+    hours = db.Column(db.Integer())
+
+    def create_range(self):
+        result = ""
+        try:
+            db.session.add(self)
+            db.session.commit()
+            result = {
+                'success' : True
+            }
+        except Exception as e:
+            print(e)
+            result = {'error' : "Unable to create range entry",
+            'success' : False}
+        return result
+
+    def __repr__(self):
+        return "<Range(id=%s, facility=%s)>" % (self.org_id, self.facility)
 
 
 class Calendar(db.Model):
@@ -94,6 +133,7 @@ class Calendar(db.Model):
     startDate = db.Column(db.DateTime(), nullable=False)
     private = db.Column(db.Boolean())
     title = db.Column(db.String(50))
+    steps = db.Column(db.ARRAY(db.Boolean()))
 
     def create_entry(self):
         result = ""
@@ -159,6 +199,16 @@ class requests(db.Model):
     po_number = db.Column(db.Integer())
     username = db.Column(db.String(200))
     beam_time = db.Column(db.Integer())
+    approval_date = db.Column(db.DateTime)
+    integrator_comment = db.Column(db.String(200))
+    modified = db.Column(db.Boolean())
+    date_of_request = db.Column(db.DateTime)
+    status = db.Column(db.String(40))
+    rejected = db.Column(db.Boolean())
+    order = db.Column(db.Integer())
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
+
 
     def create_request(self):
         db.session.add(self)

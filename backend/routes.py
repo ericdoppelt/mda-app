@@ -1,6 +1,6 @@
 
 import copy
-from sqlalchemy import and_, or_, between, func
+from sqlalchemy import and_, or_, between, func, inspect
 from flask import jsonify, request, json, make_response
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token,
@@ -10,7 +10,8 @@ from datetime import timedelta, datetime
 
 from main import app, bcrypt, jwt, mail
 from extensions import db
-from models import Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests
+from models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
+                    Integrator, Ranges)
 from blacklist_helpers import (
     is_token_revoked, add_token_to_database, get_user_tokens,
     revoke_token, unrevoke_token, revoke_user_tokens,
@@ -93,6 +94,16 @@ def user():
         'email': user.email}
     return account_info
 
+@app.route('/facility', methods=['GET'])
+def facilities():
+    myList = []
+    facilities = Organization.query.filter_by(org_type='facility').all()
+    for entry in facilities:
+            entry_info = {'name': entry.name,
+            'abbreviation': entry.abbrv, 'id': entry.id}
+            myList.append(entry_info)
+    return jsonify({'entries' : myList})
+
 @app.route('/calendar', methods=['POST'])
 def entries():
     myList = []
@@ -120,6 +131,32 @@ def personal_entries():
         'totalTime': entry.totalTime}
         myList.append(entry_info)
     return jsonify({'entries' : myList})
+
+@app.route('/calendar/tasks', methods=['Get', 'POST'])
+@jwt_required
+def tasks():
+    if request.method == 'POST':
+        req = request.get_json()
+        modifyEntry = Calendar.query.filter_by(id=req['id']).first()
+        modifyEntry.steps = req['steps']
+        db.session.commit()
+    
+    eventArray = []
+    username = get_jwt_identity()
+    # today = datetime.now().strftime('%Y-%m-%d')
+    entries = Calendar.query.filter(and_(Calendar.username==username, Calendar.startDate >= datetime.now())).all()
+    # entries = Calendar.query.filter(Calendar.username==username).all()
+    print(entries)
+    for entry in entries:
+        print(entry.startDate)
+        print()
+        date = entry.startDate.strftime("%m/%m/%Y")
+        time = entry.startDate.strftime("%I %p")
+        adder = {"site" : entry.facility, "date" : date,
+                "time" : time, "integrator" : entry.integrator,
+                "steps" : entry.steps, "id" : entry.id}
+        eventArray.append(adder)
+    return jsonify({'eventArray' : eventArray})
 
 @app.route('/integrator', methods=['GET'])
 def get_integrators():
@@ -303,20 +340,101 @@ def approve():
 #@jwt_required
 def request_modify():
     result = ""
+
     try:
         req = request.get_json()
         beam_request = requests.query.filter_by(id=req['id']).first()
+
+        msg = Message("Beam Time Request Modified") #, cc=[req['email']])
+        msg.recipients = [beam_request.email]
+
+        msg.body = "Your beam time request was modified with the following: \n\n"
         for key in req.keys():
-            pass
-        if req['approval'] == 'integrator':
-            beam_request.approved_integrator = True
-        if req['approval'] == 'facility':
-            beam_request.approved_facility = True
-        else:
-            raise Exception("No approval key found")
+            if req[key] != "" and key != "id":
+                msg.body += key + ": " + req[key] + "\n\n"
+        iterable = copy.deepcopy(req)
+        for (key, value) in iterable.items():
+            if value != "":
+                if key == "financierName":
+                    req["funding_contact"] = value
+                if key == "billingAddress":
+                    req["address"] = value
+                if key == "billingCity":
+                    req["city"] = value
+                if key == "billingState":
+                    req["state"] = value
+                if key == "billingZip":
+                    req["zipcode"] = value
+                if key == "financierPhone":
+                    req["funding_cell"] = value
+                if key == "financierEmail":
+                    req["funding_email"] = value
+                if key == "date":
+                    req["start"] = value
+                if key == "billingPO":
+                    req["po_number"] = value
+                if key == "hours":
+                    req["beam_time"] = value
+        ion_ids = []
+        if req["ions"] is not "":
+            for i, ion in enumerate(req['ions']):
+                beam = Beams.query.filter_by(ion=ion, amev=req['energies'][i]).one()
+                ion_ids.append(beam.id)
+
+        for attr, value in beam_request.__dict__.items():
+            if attr in req and req[attr] != "":
+                setattr(beam_request, attr, req[attr])
+
+        beam_request.ions = ion_ids
+        beam_request.modified = True
+        beam_request.approved_integrator = True
+        beam_request.status = "Modified"
+
+        # mail.send(msg)
         db.session.commit()
-        if beam_request.approved_facility and beam_request.approved_integrator:
-            pass
+
+        result = {'success' : True}
+    except Exception as e:
+        print(e)
+        result = {'error' : e,
+        'success' : False}
+    return jsonify(result)
+
+@app.route('/request/reject', methods=['POST'])
+# @jwt_required
+def reject_form():
+    result = ""
+    try:
+        req = request.get_json()
+        beam_request = requests.query.filter_by(id=req['id']).first()
+        pdf = FormBuilder(req)
+        msg = Message("Beam Time Request Rejected") #, cc=[req['email']])
+        msg.recipients = [beam_request.email]
+        # template = "Universal_request_template.pdf"
+        # output = "Universal_request.pdf"
+        # pdf.fill(template, output)
+        msg.body = "Your beam time request was rejected for the following reason: \n\n"
+        msg.body += req['integrator_comment'] + "\n\n"
+        # with app.open_resource("TAMU_request.pdf") as fp:
+        #     msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
+
+        # mapper = inspect(requests)
+        # for column in mapper.attrs:
+        #     form[column.key] = beam_request.column.key
+        # form = {}
+        # for attr, value in beam_request.__dict__.items():
+        #     if attr == 'start':
+        #         attr = 'date'
+        #     form[attr] = value
+        #     print(attr, value)
+        # print(form)
+        beam_request.integrator_comment =req['integrator_comment']
+        beam_request.status = "Rejected"
+        beam_request.approved_facility = False
+        beam_request.approved_integrator = False
+        beam_request.rejected = True
+        db.session.commit()
+        # mail.send(msg)
         result = {'success' : True}
     except Exception as e:
         print(e)
@@ -359,6 +477,37 @@ def getRequests():
 
     return result
 
+@app.route('/integrator/set-range', methods=['POST'])
+@jwt_required
+def set_range():
+    username = get_jwt_identity()
+    req = request.get_json()
+    result = ""
+
+    try:
+        user = Users.query.filter_by(username=username).first()
+        if user.user_type != 'integrator':
+            raise Exception("You must be an integrator to view this page!")
+        myOrg = Organization.query.filter_by(abbrv=user.affiliation).first()
+        startDate = req['startDate']
+        startTime = req['startTime']
+        date = datetime.strptime(startDate, "%Y-%m-%dT%H:%M:%S.%fZ")
+        time = datetime.strptime(startTime, "%Y-%m-%dT%H:%M:%S.%fZ")
+        timeDelta = timedelta(hours = time.hour, minutes = time.minute)
+        date = date + timeDelta
+        print(date)
+        entry = Ranges(org_id=myOrg.id, start_date=date, hours=req['hours'],
+                        facility=req['facility'])
+        result = entry.create_range()
+
+        return jsonify({'success': True}), 200
+
+    except Exception as e:
+        print(e)
+        result = {'error' : str(e),
+        'success' : False}
+
+    return jsonify(result)
 
 @app.route('/getforms/integrator', methods=['POST'])
 @jwt_required
@@ -374,21 +523,33 @@ def getRequests_integrators():
         request_forms = requests.query.filter_by(integrator=user.affiliation).all()
         myForms = []
         for form in request_forms:
-            beams = []
-            energies = []
+            ions = {}
             for ion in form.ions:
                 beam = Beams.query.filter_by(id=ion).one()
-                beams.append(beam.ion)
-                energies.append(beam.amev)
+                ions[beam.ion] = beam.amev
             delta = timedelta(hours=12)
-            time = (form.start + delta).strftime('%Y-%m-%dT%H:%M')
+            time = (form.start + delta).strftime('%Y-%m-%d')
+            if form.start_date is not None:
+                start_date = form.start_date.strftime('%m/%d/%Y')
+                start_time= form.start_date.strftime('%I %p')
+            else:
+                start_date = None
+                start_time = None
+            if form.end_date is not None:
+                end_date = form.start_date.strftime('%m/%d/%Y')
+                end_time= form.start_date.strftime('%I %p')
+            else:
+                end_date = None
+                end_time = None
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'ions' : beams, 'energies' : energies, 'start' : time, 'id' : form.id})
+            'beams' : ions, 'start' : time, 'id' : form.id, "startDate" : start_date,
+            "startTime" : start_time, "endDate" : end_date, "endTime" : end_time,
+            'order' : form.order})
         result = {'requests' : myForms}
 
     except Exception as e:
@@ -397,6 +558,7 @@ def getRequests_integrators():
         'success' : False}
 
     return result
+
     
 
 
@@ -431,7 +593,11 @@ def add_request(form, username):
                     comments = form['comments'],
                     po_number = form['billingPO'],
                     beam_time = form['hours'],
-                    username = username)
+                    username = username,
+                    date_of_request = datetime.now(),
+                    modified = False,
+                    status = "Awaiting approval from integrator",
+                    rejected = False)
     entry.create_request()
 
 @app.route('/requestform', methods=['POST'])
