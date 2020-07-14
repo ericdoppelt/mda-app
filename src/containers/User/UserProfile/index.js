@@ -32,7 +32,7 @@ export default function Home() {
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <UserProfile samp={samp}/>
               </Row>
-              <Calendar personal={true}/>
+              {/* <Calendar personal={true}/> */}
             </UserProfileStore.Provider>
           </Card>
           </Row>

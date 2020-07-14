@@ -86,9 +86,10 @@ class TAMUSubmit extends React.Component {
         Submit to Integrator
       </Button>
 
+      {/*
       <Button className={classes.submitButton} onClick={this.submitForm}>
         Email Form to Facility
-      </Button>
+      </Button> */}
       </div>
     );
   }
