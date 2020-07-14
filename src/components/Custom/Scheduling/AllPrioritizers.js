@@ -23,29 +23,50 @@ class AllPrioritizers extends React.Component {
       super(props);
       this.state = {
           ranges: [],
+          requests: []
       }
     }
 
   async componentDidMount() {
+    if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
+    else {
     let url = 'https://mda-phoenix.herokuapp.com/integrator/get-range';
+    let self = this;
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
-      this.setState({ranges: response.data.ranges});
-      console.log(this.state.ranges);
+      self.setState({ranges: response.data.ranges});
     }).catch(error => {
         alert(error);
     });
-  }
+      
+    url = 'https://mda-phoenix.herokuapp.com/getforms/integrator';
+    await axios.post(url, null, {
+      headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+    }).then(response => {
+      self.setState({ requests : response.data.requests});
+      }).catch(error => {
+        alert(error);
+      });
+      }
+
+      console.log(this.state.ranges);
+      console.log(this.state.requests);
+    }
+  
   
   getPrioritizers() {
     return this.state.ranges.map(function(range) {
         return(
             <div>
-                <Prioritizer start={range.startDate} end={range.endDate} facility={range.facility}/>
+                <Prioritizer start={new Date(range.startDate)} end={new Date(range.endDate)} facility={range.facility}/>
             </div>
         );
     });
+  }
+
+  getRequests(facility, startDate, endDate) {
+
   }
   
   render() {

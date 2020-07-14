@@ -33,7 +33,8 @@ class Prioritizer extends React.Component {
   }
 
   async componentDidMount() {
-      
+    console.log("break");
+    console.log(this.props.start);
     if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
     else {
     let url = 'https://mda-phoenix.herokuapp.com/getforms/integrator';
