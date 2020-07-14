@@ -69,7 +69,8 @@ class LBNLSubmit extends React.Component {
           controlRestrictions: LBNLStore.controlRestrictions,
           electricallySafe: LBNLStore.electricallySafe,
     
-          facility: "LBNL",
+          facility: "LBNL"},
+          {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
           }).then(response => {
             if (response.data.success === true) {
             alert("Form was sent to LBNL successfully. Please check your email!")
@@ -96,9 +97,11 @@ class LBNLSubmit extends React.Component {
         <Button className={classes.submitButton} onClick={this.submitForm}>
           Submit to Integrator
         </Button>
+
+        {/*
         <Button className={classes.submitButton} onClick={this.submitForm}>
           Email Form to Facility
-        </Button>
+        </Button>*/}
       </div>
     );
   }

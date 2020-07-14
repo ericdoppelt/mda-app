@@ -58,7 +58,8 @@ class TAMUSubmit extends React.Component {
 
           badDates: TAMUStore.badDates,
     
-          facility: "TAMU",
+          facility: "TAMU"},
+          {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
           }).then(response => {
             if (response.data.success === true) {
             alert("Form was sent to TAMU successfully. Please check your email!")
@@ -86,9 +87,10 @@ class TAMUSubmit extends React.Component {
         Submit to Integrator
       </Button>
 
+      {/*
       <Button className={classes.submitButton} onClick={this.submitForm}>
         Email Form to Facility
-      </Button>
+      </Button> */}
       </div>
     );
   }

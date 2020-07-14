@@ -55,12 +55,12 @@ const columns = [
   },
 ];
 
-function createData(name, facility, integrator, company, 
+function createData(name, status, facility, integrator, company, 
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode) {
   var viewMore = 'View More'
-  var status = 'Pending'
-  return { name, facility, integrator, company, status, viewMore, 
+  //var status = 'Pending'
+  return { name, status, facility, integrator, company, status, viewMore, 
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode };
 }
@@ -169,6 +169,7 @@ class ViewRequests extends React.Component {
       phone: "",
       state: "",
       zipCode: "",
+      status: "",
       message: "",
       data: [],
       oldrows: oldrows,
@@ -197,7 +198,7 @@ class ViewRequests extends React.Component {
     result.forEach(function(entry) {
       //console.log(entry);
       self.setState(state=>({oldrows: [ 
-        createData(entry.name, entry.facility, entry.integrator, entry.company,
+        createData(entry.name, entry.status, entry.facility, entry.integrator, entry.company,
           entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
           entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode),
         ...state.oldrows]}))
@@ -238,6 +239,7 @@ class ViewRequests extends React.Component {
       startDate: row.startDate,
       state: row.state,
       zipCode: row.zipCode,
+      status: row.status,
       component: "view",
     }))
     console.log(row)
