@@ -65,12 +65,14 @@ def get_range():
             print(rang.id)
             timeDelta = timedelta(hours = rang.hours)
             end = rang.start_date + timeDelta
+            start = rang.start_date.strftime("%Y-%m-%dT%H:%M:%S")
+            end = end.strftime("%Y-%m-%dT%H:%M:%S")
             # startDate = rang.start_date.strftime("%m/%d/%Y")
             # startTime = rang.start_date.strftime("%I %p")
             # endDate = end.strftime("%m/%d/%Y")
             # endTime = end.strftime("%I %p")
             entry = {"facility" : rang.facility, "hours" : rang.hours,
-            "startDate" : rang.start_date, "endDate" : end}
+            "startDate" : start, "endDate" : end}
             myList.append(entry)
 
         return {"ranges" : myList}, 200
