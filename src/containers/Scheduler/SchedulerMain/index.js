@@ -1,18 +1,19 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import Image from '../../../components/UIzard/Image';
-import Stack from '../../../components/UIzard/Stack';
-import Title from '../../../components/UIzard/Title';
 import {Typography} from '@material-ui/core';
-import ViewRequests from '../../../components/Custom/ViewRequests';
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import Scheduler from '../../../components/Custom/Scheduling/Scheduler';
+import Prioritizer from '../../../components/Custom/Scheduling/Prioritizer';
 import RangeButton from '../../../components/Custom/Scheduling/RangeButton';
+import ScheduleStorage from '../../../stores/SchedulingStore';
+import { createContext } from "react";
+import Stack from '../../../components/UIzard/Stack';
+import AllPrioritizers from '../../../components/Custom/Scheduling/AllPrioritizers';
 
+const ScheduleStore = createContext(ScheduleStorage);
 
 export default function Home() {
   if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
@@ -31,7 +32,9 @@ export default function Home() {
                   Scheduling
                 </Typography>
                 <RangeButton/>
-                <Scheduler/>
+                <ScheduleStore.Provider>
+                  <AllPrioritizers/>
+                </ScheduleStore.Provider>
               </Stack>
             </Card>
           </Row>

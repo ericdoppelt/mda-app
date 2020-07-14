@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
+import SchedulingStore from '../../../stores/SchedulingStore';
 
   const useStyles = theme => ({
     root: {
@@ -19,7 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
       },
     });
 
-class Schedule extends React.Component {
+class Prioritizer extends React.Component {
 
   constructor(props) {
       super(props);
@@ -27,6 +27,8 @@ class Schedule extends React.Component {
           priority: [],
           general: [],
           checked: [],
+          startDateTime: '',
+          endDateTime: '',
       }
   }
 
@@ -84,7 +86,6 @@ getList(listArray, title) {
                 <Checkbox
                   disableRipple
                   checked = {this.state.checked[value.checkedIndex]}
-                  onClick = {() => console.log(this.state.checked[value.checkedIndex])}
                 />
               </ListItemIcon>
               <ListItemText primary={value.name + " for "  + value.company} secondary={"Start: ION | End: ION"} />
@@ -154,9 +155,21 @@ getList(listArray, title) {
     });
   }
 
+  moveToScheduling() {
+    SchedulingStore.setFacility(this.props.facility);
+    SchedulingStore.setPriorities(this.state.priority);
+    SchedulingStore.setGenerals(this.state.general);
+    // ADD SUGGEGSTION HERE
+    SchedulingStore.setSuggestion(null);
+    SchedulingStore.setStartDateTime(this.state.star)
+    SchedulingStore.setEndDateTime(this.state.endDateTime);
+    console.log(SchedulingStore);
+  }
+
   render() {
     const {classes} = this.props;
     return(
+      <div>
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>
           <Grid item>
           {this.getList(this.state.general, "General")}
@@ -205,9 +218,17 @@ getList(listArray, title) {
           {this.getList(this.state.priority, "Priority")}
           </Grid>
         </Grid>
+        <Button 
+          variant="contained"
+          onClick={(event) => this.moveToScheduling()}
+          style={{margin: 'auto', marginTop: '10px', marginBottom: '10px', width: '96%', height: '60px'}}
+          >
+          Move to Scheduling
+      </Button>
+      </div>
     );
   }
 }
 
 
-export default withStyles(useStyles)(Schedule);
+export default withStyles(useStyles)(Prioritizer);

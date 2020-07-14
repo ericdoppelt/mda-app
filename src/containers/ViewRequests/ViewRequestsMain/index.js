@@ -10,9 +10,6 @@ import Row from '../../../components/UIzard/Row';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import Scheduler from '../../../components/Custom/Scheduling/Scheduler';
-import RangeButton from '../../../components/Custom/Scheduling/RangeButton';
-
 
 export default function Home() {
   if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;
@@ -32,11 +29,6 @@ export default function Home() {
                   Beam Request Forms
                 </Title>
                 <ViewRequests/>
-                <Typography variant="h3">
-                  Scheduling
-                </Typography>
-                <RangeButton/>
-                <Scheduler/>
               </Stack>
             </Card>
           </Row>
