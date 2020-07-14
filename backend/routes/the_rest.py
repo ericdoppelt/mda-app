@@ -474,11 +474,10 @@ def getRequests():
 
     return result
 
-@app.route('/getforms/integrator', methods=['POST'])
+@app.route('/getforms/integrator', methods=['GET'])
 @jwt_required
 def getRequests_integrators():
     username = get_jwt_identity()
-    req = request.get_json()
     result = ""
 
     try:
@@ -495,26 +494,21 @@ def getRequests_integrators():
             delta = timedelta(hours=12)
             time = (form.start + delta).strftime('%Y-%m-%d')
             if form.start_date is not None:
-                start_date = form.start_date.strftime('%m/%d/%Y')
-                start_time= form.start_date.strftime('%I %p')
+                start = form.start_date.strftime('%Y-%m-%dT%H:%M:%S')
             else:
-                start_date = None
-                start_time = None
+                start = None
             if form.end_date is not None:
-                end_date = form.start_date.strftime('%m/%d/%Y')
-                end_time= form.start_date.strftime('%I %p')
+                end = form.start_date.strftime('%Y-%m-%dT%H:%M:%S')
             else:
-                end_date = None
-                end_time = None
+                end = None
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'beams' : ions, 'start' : time, 'id' : form.id, "startDate" : start_date,
-            "startTime" : start_time, "endDate" : end_date, "endTime" : end_time,
-            'order' : form.order})
+            'beams' : ions, 'start' : time, 'id' : form.id, "startDate" : start,
+            "endDate" : end, 'order' : form.order})
         result = {'requests' : myForms}
 
     except Exception as e:

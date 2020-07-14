@@ -43,8 +43,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-api": "cd backend && venv/bin/flask run --no-debugger",
-    "start-windows": "cd backend && venv\\Scripts\\flask run --no-debugger",
+    "start-api": "cd backend && venv/bin/python3 --no-debugger",
+    "start-windows": "cd backend && venv\\Scripts\\python run.py",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test-api": "cd backend && flask test",
