@@ -33,29 +33,19 @@ class Prioritizer extends React.Component {
   }
 
   async componentDidMount() {
-    console.log("break");
-    console.log(this.props.start);
     if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
     else {
-    let url = 'https://mda-phoenix.herokuapp.com/getforms/integrator';
-    let self = this;
-    await axios.post(url, null, {
-        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
-      }).then(response => {
-        console.log(response);
-        var i = 0;
-        var requestsChecked = response.data.requests.map(function(request) {
-            var request = Object.assign({}, request);
-            request.checkedIndex = i;
-            self.state.checked[i] = false;
-            i++;
-            return request;
-        });
-        self.setState({ general : requestsChecked});
-        })
-        .catch(error => {
-        alert(error);
+    var i = 0;
+    console.log(this.props.requests);
+    var requestsChecked = this.props.requests.map(function(request) {
+      var request = Object.assign({}, request);
+      request.checkedIndex = i;
+      this.state.checked[i] = false;
+      i++;
+      return request;
     });
+
+    this.setState({ general : requestsChecked});
   }
 }
 

@@ -37,11 +37,12 @@ class AllPrioritizers extends React.Component {
     }).then(response => {
       self.setState({ranges: response.data.ranges});
     }).catch(error => {
+        console.log("ranges");
         alert(error);
     });
       
     url = 'https://mda-phoenix.herokuapp.com/getforms/integrator';
-    await axios.post(url, null, {
+    await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
       self.setState({ requests : response.data.requests});
@@ -56,17 +57,40 @@ class AllPrioritizers extends React.Component {
   
   
   getPrioritizers() {
+    let self = this;
     return this.state.ranges.map(function(range) {
         return(
             <div>
-                <Prioritizer start={new Date(range.startDate)} end={new Date(range.endDate)} facility={range.facility}/>
+                {self.createPrioritizer(range.startDate, range.endDate, range.facility)}
             </div>
         );
     });
   }
 
-  getRequests(facility, startDate, endDate) {
+  createPrioritizer(start, end, facility) {
+    let requestStartDate = new Date(start);
+    let requestEndDate =  new Date(end);
+    let possibleRequests = this.getRequests(facility, start);
+    return <Prioritizer
+      start={requestStartDate} 
+      end={requestEndDate} 
+      facility={facility}
+      requests={possibleRequests}
+      />
+  }
 
+  getRequests(facility, startDate) {
+    let returnedRequests = [];
+    for (let i = 0; i < this.state.requests.length; i++) {
+        let tempRequest = this.state.requests[i];
+        let tempStart = new Date(tempRequest.startDate);
+        let tempFacility = tempRequest.facility;
+
+        if (tempFacility === facility && tempStart < startDate) {
+            returnedRequests.unshift(tempRequest);
+        }
+    }
+    return returnedRequests;
   }
   
   render() {
