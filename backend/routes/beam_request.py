@@ -51,7 +51,7 @@ def add_request(form, username):
     entry.create_request()
 
 @app.route('/requestform', methods=['POST'])
-# @jwt_required
+@jwt_required
 def requestform():
     try:
         form = request.get_json()
@@ -110,9 +110,7 @@ def requestform():
             with app.open_resource("Universal_request.pdf") as fp:
                 msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
         # mail.send(msg)
-        print(form)
-        # username = form['username'] # TODO change get_jwt_identity()
-        username = 'test123'
+        username = get_jwt_identity()
         add_request(form, username)
 
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200

@@ -54,7 +54,8 @@ class MSUSubmit extends React.Component {
           continuous: ExperimentStore.continuous,
           comments: ExperimentStore.comments,
     
-          facility: "MSU",
+          facility: "MSU"},
+          {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
           }).then(response => {
             if (response.data.success === true) {
             alert("Form was sent to MSU successfully. Please check your email!")
