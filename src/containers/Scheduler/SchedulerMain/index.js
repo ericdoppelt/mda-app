@@ -31,10 +31,10 @@ export default function Home() {
                 <Typography variant="h3">
                   Scheduling
                 </Typography>
-                <RangeButton/>
                 <ScheduleStore.Provider>
                   <AllPrioritizers/>
                 </ScheduleStore.Provider>
+                <RangeButton/>
               </Stack>
             </Card>
           </Row>
