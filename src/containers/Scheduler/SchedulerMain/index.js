@@ -33,9 +33,9 @@ export default function Home() {
                 </Typography>
                 <ScheduleStore.Provider>
                   <AllPrioritizers/>
+                  <RangeButton/>
+                  <CalendarSched/>
                 </ScheduleStore.Provider>
-                <RangeButton/>
-                <CalendarSched/>
               </Stack>
             </Card>
           </Row>
