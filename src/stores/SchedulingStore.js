@@ -24,7 +24,7 @@ class SchedulingStore {
 
     startDateTime = '';
     setStartDateTime(newStartDate) {
-        this.startDate = newStartDate;
+        this.startDateTime = newStartDate;
     }
 
     endDateTime = '';
