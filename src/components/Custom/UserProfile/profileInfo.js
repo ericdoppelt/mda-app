@@ -17,15 +17,26 @@ const useStyles = theme => ({
     marginTop: '20%',
     width: '100%',
   },
-
+  left: {
+    marginTop: '2px',
+    marginLeft: '5%',
+    marginRight: '3%',
+    width: '42%',
+  },
+  right: {
+    marginTop: '2px',
+    marginLeft: '3%',
+    marginRight: '5%',
+    width: '42%',
+  },
 });
 
 const rows = [
-  {key:'first_name', value:'First Name'},
-  {key:'last_name', value:'Last Name'},
-  {key:'affiliation', value:'Affiliation'},
-  {key:'phone', value:'Phone Number'},
-  {key:'email', value:'Email'}
+  {key:'first_name', value:'First Name', class:'left'},
+  {key:'last_name', value:'Last Name', class:'right'},
+  {key:'affiliation', value:'Affiliation',class:'left'},
+  {key:'phone', value:'Phone Number',class:'right'},
+  {key:'email', value:'Email',class:''}
 ];
 
 class ProfileInfo extends React.Component {
@@ -174,6 +185,7 @@ class ProfileInfo extends React.Component {
           ))}
           </TableBody>
         </Table>
+
         <Button color="primary" variant='contained' onClick={(event) => this.submit()}>
           Update
         </Button>
