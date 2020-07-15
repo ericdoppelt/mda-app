@@ -165,6 +165,7 @@ const useStyles = theme => ({
               onChange={event => {TesterStore.setBillingZip(event.target.value)}}
               error = {TesterStore.billingZipError}
               helperText = {TesterStore.billingZipHelperText}
+              type = 'number'
             />
             <br/>
             <br/>

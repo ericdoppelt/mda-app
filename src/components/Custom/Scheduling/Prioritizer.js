@@ -23,20 +23,22 @@ class Prioritizer extends React.Component {
 
   constructor(props) {
       super(props);
+      console.log("constructor");
+      console.log(this.props.requests);
       this.state = {
           priority: [],
           general: [],
           checked: [],
-          startDateTime: '',
-          endDateTime: '',
+          startDateTime: this.props.start,
+          endDateTime: this.props.end,
       }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+
     if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
     else {
     var i = 0;
-    console.log(this.props.requests);
     var requestsChecked = this.props.requests.map(function(request) {
       var request = Object.assign({}, request);
       request.checkedIndex = i;
@@ -152,13 +154,17 @@ getList(listArray, title) {
     SchedulingStore.setGenerals(this.state.general);
     // ADD SUGGEGSTION HERE
     SchedulingStore.setSuggestion(null);
-    SchedulingStore.setStartDateTime(this.state.star)
+    SchedulingStore.setStartDateTime(this.state.startDateTime)
     SchedulingStore.setEndDateTime(this.state.endDateTime);
     console.log(SchedulingStore);
   }
 
   render() {
+    console.log("render");
+    console.log(this.props.requests);
+
     const {classes} = this.props;
+ 
     return(
       <div>
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>
