@@ -1,21 +1,6 @@
 import React from 'react';
-import {Button} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Prioritizer from './Prioritizer';
-
-const useStyles = theme => ({
-    priotizer: {
-      backgroundColor: "#bfddff",
-      marginTop: '15px',
-      marginLeft:'5%',
-      marginRight: '5%',
-      width: '90%',
-    },
-    fullDiv: {
-      width: '100%',
-    }
-  });
 
 class AllPrioritizers extends React.Component {
 
@@ -37,7 +22,6 @@ class AllPrioritizers extends React.Component {
     }).then(response => {
       self.setState({ranges: response.data.ranges});
     }).catch(error => {
-        console.log("ranges");
         alert(error);
     });
       
@@ -50,7 +34,7 @@ class AllPrioritizers extends React.Component {
         alert(error);
       });
       }
-
+      console.log("info");
       console.log(this.state.ranges);
       console.log(this.state.requests);
     }
@@ -68,12 +52,12 @@ class AllPrioritizers extends React.Component {
   }
 
   createPrioritizer(start, end, facility) {
-    let requestStartDate = new Date(start);
-    let requestEndDate =  new Date(end);
-    let possibleRequests = this.getRequests(facility, start);
+    let rangeStart = new Date(start);
+    let rangeEnd =  new Date(end);
+    let possibleRequests = this.getRequests(facility, rangeStart);
     return <Prioritizer
-      start={requestStartDate} 
-      end={requestEndDate} 
+      start={rangeStart} 
+      end={rangeEnd} 
       facility={facility}
       requests={possibleRequests}
       />
@@ -85,7 +69,6 @@ class AllPrioritizers extends React.Component {
         let tempRequest = this.state.requests[i];
         let tempStart = new Date(tempRequest.startDate);
         let tempFacility = tempRequest.facility;
-
         if (tempFacility === facility && tempStart < startDate) {
             returnedRequests.unshift(tempRequest);
         }
@@ -94,7 +77,6 @@ class AllPrioritizers extends React.Component {
   }
   
   render() {
-    const { classes } = this.props;
     return(
         <div>
             {this.getPrioritizers()}
@@ -104,4 +86,4 @@ class AllPrioritizers extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(AllPrioritizers);
+export default AllPrioritizers;
