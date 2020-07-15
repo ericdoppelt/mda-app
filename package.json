@@ -39,7 +39,9 @@
     "react-sizeme": "^2.6.12",
     "redux": "^4.0.5",
     "save": "^2.4.0",
-    "yarn": "^1.22.4"
+    "yarn": "^1.22.4",
+    "devextreme": "20.1-stable",
+    "devextreme-react": "20.1-stable"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -70,6 +72,7 @@
     "@babel/core": "^7.10.2",
     "@babel/plugin-proposal-class-properties": "^7.10.1",
     "@babel/plugin-proposal-decorators": "^7.10.3",
-    "babel-preset-mobx": "^2.0.0"
+    "babel-preset-mobx": "^2.0.0",
+    "devextreme-themebuilder": "20.1-stable"
   }
 }

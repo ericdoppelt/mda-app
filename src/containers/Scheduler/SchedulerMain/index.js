@@ -4,6 +4,7 @@ import {Typography} from '@material-ui/core';
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import CalendarSched from '../../../components/Custom/CalendarSched/CalendarSched';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
 import Prioritizer from '../../../components/Custom/Scheduling/Prioritizer';
@@ -35,6 +36,7 @@ export default function Home() {
                 <ScheduleStore.Provider>
                   <AllPrioritizers/>
                 </ScheduleStore.Provider>
+                <CalendarSched/>
               </Stack>
             </Card>
           </Row>
