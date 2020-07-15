@@ -57,6 +57,7 @@ class UserProfile extends React.Component {
     return (
       <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
       <TabsProfile/>
+
       </Stack>
     )
   }
