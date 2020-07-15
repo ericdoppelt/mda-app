@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader} from '@material-ui/core';
+import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader, Typography} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import SchedulingStore from '../../../stores/SchedulingStore';
 
@@ -23,8 +23,6 @@ class Prioritizer extends React.Component {
 
   constructor(props) {
       super(props);
-      console.log("constructor");
-      console.log(this.props.requests);
       this.state = {
           priority: [],
           general: [],
@@ -35,18 +33,19 @@ class Prioritizer extends React.Component {
   }
 
   componentDidMount() {
-
+    
     if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
     else {
-    var i = 0;
-    var requestsChecked = this.props.requests.map(function(request) {
+    let i = 0;
+    let possibleRequests = SchedulingStore.rangeRequests(this.props.start, this.props.end, this.props.facility); 
+    let self = this;
+    var requestsChecked = possibleRequests.map(function(request) {
       var request = Object.assign({}, request);
       request.checkedIndex = i;
-      this.state.checked[i] = false;
+      self.state.checked[i] = false;
       i++;
       return request;
     });
-
     this.setState({ general : requestsChecked});
   }
 }
@@ -156,17 +155,27 @@ getList(listArray, title) {
     SchedulingStore.setSuggestion(null);
     SchedulingStore.setStartDateTime(this.state.startDateTime)
     SchedulingStore.setEndDateTime(this.state.endDateTime);
+    
     console.log(SchedulingStore);
   }
 
-  render() {
-    console.log("render");
-    console.log(this.props.requests);
+  getHeader() {
+    let start = new Date(this.props.start);
+    let startDisplay = start.toDateString();
 
+    let end = new Date(this.props.end);
+    let endDisplay = end.toDateString();
+    return startDisplay + " to " + endDisplay + " @ " + this.props.facility;
+  }
+  render() {
     const {classes} = this.props;
  
     return(
       <div>
+        <Typography
+        variant="h6">
+          {this.getHeader()}
+        </Typography>
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>
           <Grid item>
           {this.getList(this.state.general, "General")}

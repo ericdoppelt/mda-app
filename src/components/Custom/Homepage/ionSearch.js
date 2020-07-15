@@ -11,6 +11,11 @@ import HomeIcon from '@material-ui/icons/Home';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 
 
+const useStyles = theme => ({
+  header: {
+    marginTop: '10px',
+  },
+});
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -20,6 +25,7 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: 14,
   },
+
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
@@ -76,12 +82,14 @@ class IonSearch extends React.Component {
   }
 
     render() {
+      const { classes } = this.props;
       return (
 
       <div className="ionsearch">
         <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-          <Typography><h1>Search Facilities by Energy and Ion</h1><br/><br/><br/></Typography>
+          <Typography className={classes.header} variant='h4'>Search Facilities by Energy and Ion</Typography>
+
         </Row>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Box>Enter ion atomic symbol and energy in MeV/amu to find matching facilities</Box>
@@ -161,4 +169,4 @@ class IonSearch extends React.Component {
   }
 }
 
-export default withRouter(IonSearch);
+export default withStyles(useStyles, { withTheme: true })(IonSearch);

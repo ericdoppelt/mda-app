@@ -54,7 +54,7 @@ class ProfileInfo extends React.Component {
       userType: '',
       phone: '1234567890',
       email: 'Mike@mda.mil',
-      affiliation: 'MDA',
+      affiliation: '',
 
       submitError: '',
     }
@@ -124,7 +124,7 @@ class ProfileInfo extends React.Component {
               <TableCell>
                 <TextField
                 defaultValue = {this.state[row.key]}
-                onChange={event => {this.setState({[row.value]: event.target.value})}}
+                onChange={event => {this.setState({[row.key]: event.target.value})}}
                 type="TextField"
                 />
               </TableCell>
