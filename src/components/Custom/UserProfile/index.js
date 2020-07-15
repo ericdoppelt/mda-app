@@ -9,6 +9,8 @@ import { observer } from "mobx-react"
 import { observable } from "mobx"
 import UserProfileStore from '../../../stores/UserProfileStore';
 import ProfileInfo from '../UserProfile/profileInfo';
+import TabsProfile from '../UserProfile/tabs';
+
 
 class UserProfile extends React.Component {
 
@@ -54,7 +56,7 @@ class UserProfile extends React.Component {
   render() {
     return (
       <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
-        <ProfileInfo/>
+      <TabsProfile/>
       </Stack>
     )
   }

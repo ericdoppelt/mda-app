@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Box, Button, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
-import {FormControl, InputLabel, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, FormHelperText, TextField, Typography, Snackbar} from '@material-ui/core';
+import {FormControl, InputLabel, List, ListItem, ListItemText, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, FormHelperText, TextField, Typography, Snackbar} from '@material-ui/core';
 import { MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
 import Alert from '@material-ui/lab/Alert';
@@ -11,8 +11,8 @@ import Stack from '../../../components/UIzard/Stack';
 
 const useStyles = theme => ({
    table: {
-    marginLeft: '5%',
-    marginRight: '5%',
+    marginLeft: '25%',
+    marginRight: '25%',
     marginBottom: '10%',
     marginTop: '20%',
     width: '100%',
@@ -46,14 +46,14 @@ class ProfileInfo extends React.Component {
     this.state = {
       dialog: '',
       name: '',
-      first_name: '',
+      first_name: 'Mike',
       first_nameError: '',
-      last_name: '',
+      last_name: 'McKenna',
       last_nameError: '',
       username: '',
       userType: '',
-      phone: '',
-      email: '',
+      phone: '1234567890',
+      email: props.email,
       affiliation: '',
 
       submitError: '',
@@ -64,14 +64,14 @@ class ProfileInfo extends React.Component {
     var self = this;
 
     let url = "https://mda-phoenix.herokuapp.com/user";
-    await axios.post(url, null, {
+    await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
       //console.log(response);
       self.setState({
         name: response.data.first_name + " " + response.data.last_name,
-        first_name: response.data.first_name,
         last_name: response.data.last_name,
+        first_name: response.data.first_name,
         username: response.data.user,
         affiliation: response.data.affiliation,
         userType: response.data.user_type,
@@ -83,87 +83,35 @@ class ProfileInfo extends React.Component {
         console.log("error");
         console.log(error);
     });
+
   }
-
-  getInfoEditer() {
-    return(
-      <Dialog open={this.state.dialog === 'edit'} onClose={() => this.setState({dialog:''})}>
-        <DialogTitle>Update profile information</DialogTitle>
-          <DialogContent>
-            <TextField
-              label= "First Name"
-              value = {this.state.first_name}
-              onChange={event => {this.setState({first_name: event.target.value})}}
-              error={this.state.first_nameError}
-              type="TextField"
-              />
-            <TextField
-              label= "Last Name"
-              value = {this.state.last_name}
-              onChange={event => {this.setState({last_name: event.target.value})}}
-              error={this.state.last_nameError}
-              type="TextField"
-              />
-            <TextField
-              label= "Last Name"
-              value = {this.state.last_name}
-              onChange={event => {this.setState({last_name: event.target.value})}}
-              error={this.state.last_nameError}
-              type="TextField"
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button color='secondary' variant='outlined' onClick={() => this.setState({dialog: ''})}>
-                Cancel
-              </Button>
-              <Button variant='outlined' onClick={(event) => this.submit()}>
-                Submit
-              </Button>
-            </DialogActions>
-          </Dialog>
-        );
-      }
-
-
 
     async submit() {
-      let self = this;
-      let url = 'https://mda-phoenix.herokuapp.com/integrator/profile';
-      await axios.post(url, {
-        first_name: self.state.first_name,
-        last_name: self.state.last_name,
-        email: self.state.email,
-        phone: self.state.phone,
-      }, {
-        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
-      }).then(response => {
-        if (response.data.success === true) {
-          this.setState({
-            submitError: false,
-          });
-        } else {
-          this.setState({
-            submitError: true,
-          });
-        }
-      }).catch(error => {
-        alert(error);
-    });
+        let self = this;
+        let url = 'https://mda-phoenix.herokuapp.com/integrator/user';
+        await axios.post(url, {
+          first_name: self.state.first_name,
+          last_name: self.state.last_name,
+          email: self.state.email,
+          phone: self.state.phone,
+          affiliation: self.state.affiliation
+        }, {
+          headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+        }).then(response => {
+          if (response.data.success === true) {
+            this.setState({
+              dialog: '',
+              submitError: false,
+            });
+          } else {
+            this.setState({
+              submitError: true,
+            });
+          }
+        }).catch(error => {
+          alert(error);
+      });
     }
-
-
-  getDialogue() {
-      var returnedDialogue;
-        switch(this.state.dialog) {
-            case 'edit':
-              returnedDialogue = this.getInfoEditer();
-            break;
-          default:
-            returnedDialogue = null;
-            break;
-      }
-    return returnedDialogue;
-  }
 
   render() {
     const {classes} = this.props;
@@ -185,17 +133,11 @@ class ProfileInfo extends React.Component {
           ))}
           </TableBody>
         </Table>
-
         <Button color="primary" variant='contained' onClick={(event) => this.submit()}>
           Update
         </Button>
-
-        {this.getDialogue()}
       </div>
-
     )
   }
-
 }
-
 export default withStyles(useStyles, { withTheme: true })(ProfileInfo);
