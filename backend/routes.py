@@ -86,19 +86,19 @@ def user():
     account_info = ""
     username = get_jwt_identity()
     user = Users.query.filter_by(username=username).first()
-    account_info = {'id': user.id, 'user': user.username,
-    'password': user.password, 'first_name': user.first_name, 'last_name': user.last_name,
-    'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
-    'email': user.email}
     if request.method == 'POST':
-
         req = request.get_json()
         user.first_name = req['first_name']
         user.last_name = req['last_name']
         user.affiliation = req['affiliation']
         user.phone = req['phone']
         user.email = req['email']
+        db.session.commit()
 
+    account_info = {'id': user.id, 'user': user.username,
+    'password': user.password, 'first_name': user.first_name, 'last_name': user.last_name,
+    'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
+    'email': user.email}
     return account_info
 
 @app.route('/facility', methods=['GET'])

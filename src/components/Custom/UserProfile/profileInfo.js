@@ -13,9 +13,9 @@ const useStyles = theme => ({
    table: {
     marginLeft: '25%',
     marginRight: '25%',
-    marginBottom: '10%',
-    marginTop: '20%',
-    width: '100%',
+    marginBottom: '5%',
+    marginTop: '5%',
+    width: '50%',
   },
   left: {
     marginTop: '2px',
@@ -53,8 +53,8 @@ class ProfileInfo extends React.Component {
       username: '',
       userType: '',
       phone: '1234567890',
-      email: props.email,
-      affiliation: '',
+      email: 'Mike@mda.mil',
+      affiliation: 'MDA',
 
       submitError: '',
     }
@@ -62,12 +62,11 @@ class ProfileInfo extends React.Component {
 
   async componentDidMount() {
     var self = this;
-
-    let url = "https://mda-phoenix.herokuapp.com/user";
+    let url = 'https://mda-phoenix.herokuapp.com/user';
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
-      //console.log(response);
+      console.log(response.data.first_name);
       self.setState({
         name: response.data.first_name + " " + response.data.last_name,
         last_name: response.data.last_name,
@@ -88,7 +87,7 @@ class ProfileInfo extends React.Component {
 
     async submit() {
         let self = this;
-        let url = 'https://mda-phoenix.herokuapp.com/integrator/user';
+        let url = 'https://mda-phoenix.herokuapp.com/user';
         await axios.post(url, {
           first_name: self.state.first_name,
           last_name: self.state.last_name,
