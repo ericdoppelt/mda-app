@@ -15,7 +15,8 @@ jwt.init_app(app)
 mail.init_app(app)
 
 # from . import routes
-from routes import beam_request, scheduler, user, the_rest
+from routes import (beam_request, scheduler, user, calendar, requests, 
+            beams, integrator, facility, the_rest)
 
 # if __name__ == '__main__':
 #     app.run(debug=False)
