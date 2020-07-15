@@ -23,8 +23,6 @@ class Prioritizer extends React.Component {
 
   constructor(props) {
       super(props);
-      console.log("constructor");
-      console.log(this.props.requests);
       this.state = {
           priority: [],
           general: [],
@@ -35,14 +33,16 @@ class Prioritizer extends React.Component {
   }
 
   componentDidMount() {
-
+    
     if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
     else {
-    var i = 0;
-    var requestsChecked = this.props.requests.map(function(request) {
+    let i = 0;
+    let possibleRequests = SchedulingStore.rangeRequests(this.props.start, this.props.end, this.props.facility); 
+    let self = this;
+    var requestsChecked = possibleRequests.map(function(request) {
       var request = Object.assign({}, request);
       request.checkedIndex = i;
-      this.state.checked[i] = false;
+      self.state.checked[i] = false;
       i++;
       return request;
     });
@@ -160,9 +160,6 @@ getList(listArray, title) {
   }
 
   render() {
-    console.log("render");
-    console.log(this.props.requests);
-
     const {classes} = this.props;
  
     return(

@@ -1,4 +1,4 @@
-import {observable, action, decorate} from 'mobx';
+import {observable, action, computed, decorate} from 'mobx';
 
 class SchedulingStore {
     
@@ -20,6 +20,31 @@ class SchedulingStore {
     suggestion = [];
     setSuggestion(newSuggestion) {
         this.suggestion = newSuggestion;
+    }
+
+    requests = [];
+    setRequests(newRequests) {
+        this.requests = newRequests;
+        console.log("set");
+        console.log(newRequests);
+    }
+
+    rangeRequests(startDate, endDate, facility) {
+        let start = new Date(startDate);
+        let end = new Date(endDate);
+        let returnedRequests = [];
+
+        for (let i = 0; i < this.requests.length; i++) {
+            let tempRequest = this.requests[i];
+            let tempStart = new Date(tempRequest.startDate);
+            let tempFacility = tempRequest.facility;
+            if (tempFacility === facility && tempStart < start) {
+                returnedRequests.unshift(tempRequest);
+            }
+        }
+        console.log("returned");
+        console.log(returnedRequests);
+        return returnedRequests;
     }
 
     startDateTime = '';
@@ -45,6 +70,9 @@ decorate(SchedulingStore, {
 
   suggestion: observable,
   setSuggestion: action,
+
+  requests: observable,
+  setRequests: action,
 
   startDateTime: observable,
   setStartDateTime: action,
