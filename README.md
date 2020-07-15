@@ -17,6 +17,7 @@ npm install fontsource-roboto
 npm install mobx mobx-react --save
 npm i @material-ui/pickers
 npm i @material-ui/lab
+npx -p devextreme-cli devextreme add devextreme-react
 
 ```
 To initialize the virtual environment, cd in to the backend directory, and create the virtual environment by running 

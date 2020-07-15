@@ -4,9 +4,9 @@ import {Typography} from '@material-ui/core';
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import CalendarSched from '../../../components/Custom/CalendarSched/CalendarSched';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import Prioritizer from '../../../components/Custom/Scheduling/Prioritizer';
 import RangeButton from '../../../components/Custom/Scheduling/RangeButton';
 import ScheduleStorage from '../../../stores/SchedulingStore';
 import { createContext } from "react";
@@ -35,6 +35,7 @@ export default function Home() {
                   <AllPrioritizers/>
                 </ScheduleStore.Provider>
                 <RangeButton/>
+                <CalendarSched/>
               </Stack>
             </Card>
           </Row>

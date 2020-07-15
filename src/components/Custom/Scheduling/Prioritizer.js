@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader} from '@material-ui/core';
+import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader, Typography} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import SchedulingStore from '../../../stores/SchedulingStore';
 
@@ -159,11 +159,23 @@ getList(listArray, title) {
     console.log(SchedulingStore);
   }
 
+  getHeader() {
+    let start = new Date(this.props.start);
+    let startDisplay = start.toDateString();
+
+    let end = new Date(this.props.end);
+    let endDisplay = end.toDateString();
+    return startDisplay + " to " + endDisplay + " @ " + this.props.facility;
+  }
   render() {
     const {classes} = this.props;
  
     return(
       <div>
+        <Typography
+        variant="h6">
+          {this.getHeader()}
+        </Typography>
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>
           <Grid item>
           {this.getList(this.state.general, "General")}

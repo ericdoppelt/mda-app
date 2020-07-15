@@ -26,17 +26,9 @@ export default function Home() {
         <MDAHeader2/>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-        <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-          <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
-            <UserProfileStore.Provider>
-              <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-                <UserProfile samp={samp}/>
-              </Row>
-              {/* <Calendar personal={true}/> */}
-            </UserProfileStore.Provider>
-          </Card>
+          <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+            <UserProfile samp={samp}/>
           </Row>
-
         </main>
       </div>
     </ThemeProvider>

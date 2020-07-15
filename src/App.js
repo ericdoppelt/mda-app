@@ -1,3 +1,7 @@
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.light.css';
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.light.css';
 import React from 'react';
 import { Router, Route} from 'react-router-dom';
 import UserMain from './containers/User/UserMain';
