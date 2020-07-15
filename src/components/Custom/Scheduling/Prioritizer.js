@@ -46,7 +46,6 @@ class Prioritizer extends React.Component {
       i++;
       return request;
     });
-
     this.setState({ general : requestsChecked});
   }
 }
@@ -156,6 +155,7 @@ getList(listArray, title) {
     SchedulingStore.setSuggestion(null);
     SchedulingStore.setStartDateTime(this.state.startDateTime)
     SchedulingStore.setEndDateTime(this.state.endDateTime);
+    
     console.log(SchedulingStore);
   }
 

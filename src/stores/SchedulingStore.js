@@ -2,6 +2,11 @@ import {observable, action, computed, decorate} from 'mobx';
 
 class SchedulingStore {
     
+    calendar = false;
+    toggleCalendar() {
+        this.calendar = !this.calendar;
+    }
+
     facility = '';
     setFacility(newFacility) {
         this.facility = newFacility;
@@ -59,6 +64,10 @@ class SchedulingStore {
 }
 
 decorate(SchedulingStore, {
+
+  calendar: observable,
+  toggleCalendar: action,
+  
   facility: observable,
   setFacility: action,
 
