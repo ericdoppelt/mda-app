@@ -162,6 +162,7 @@ class CalendarSched extends React.Component {
   
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
+    this.loadPrioritizerData();
     let url = "https://mda-phoenix.herokuapp.com/calendar";
     var self = this;
     await axios.post(url).then(response => {
@@ -178,6 +179,7 @@ class CalendarSched extends React.Component {
         response.data.entries.forEach(function(event) {
           //data.push(self.makeEvent(event.facility,event.integrator,event.startDate));
         })
+        /*
         console.log('Generating Events')
         eventSample.forEach(function(event) {
           uniqueEnergies.push(event[3]);
@@ -190,6 +192,7 @@ class CalendarSched extends React.Component {
         self.state.colorsReady = true;
         console.log(data)
         self.setState({calendarEvents : data});
+        */
       })
       .catch(error => {
       });
@@ -273,11 +276,46 @@ class CalendarSched extends React.Component {
     console.log(data)
   }
 
+  loadPrioritizerData() {
+    console.log("Retrieving list of events")
+    console.log(SchedulingStore.generals)
+    SchedulingStore.generals.forEach(function(event) {
+      console.log(event.start)
+    })
+
+    console.log('Generating Events')
+    SchedulingStore.generals.forEach(function(event) {
+      //Add beam energies to uniques
+      for (let key in event.beams) {
+        uniqueEnergies.push(event.beams[key]);
+      }
+    })
+    uniqueEnergies = uniqueEnergies.filter((v, i, a) => a.indexOf(v) === i).sort(); //make energies unique
+
+    var data = [];
+    var self = this;
+    SchedulingStore.generals.forEach(function(event) {
+      let theColor = "";
+      for (let key in event.beams) {
+        theColor = colors[uniqueEnergies.indexOf(event.beams[key])]
+      }
+      //
+      data.push(self.makeEvent(event.facility,event.integrator,event.start,theColor));
+    })
+
+    this.state.colorsReady = true;
+    console.log(data)
+    this.setState({calendarEvents : data});
+  }
+
   
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
     var self = this;
     const { classes, theme } = this.props;
+
+    
+    
     
     
     this.state.calendarEvents.forEach(function(event) {
