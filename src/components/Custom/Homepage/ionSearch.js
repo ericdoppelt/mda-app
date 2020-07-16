@@ -13,7 +13,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 
 const useStyles = theme => ({
   header: {
-    marginTop: '10px',
+    marginTop: '5%',
   },
 });
 
@@ -21,9 +21,11 @@ const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: '#424242',
     color: theme.palette.common.white,
+    marginBottom: '5%',
   },
   body: {
     fontSize: 14,
+    marginBottom: '5%',
   },
 
 }))(TableCell);
@@ -86,7 +88,6 @@ class IonSearch extends React.Component {
       return (
 
       <div className="ionsearch">
-        <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
         <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Typography className={classes.header} variant='h4'>Search Facilities by Energy and Ion</Typography>
 
@@ -163,7 +164,7 @@ class IonSearch extends React.Component {
               </TableBody>
             </Table>
           </TableContainer>
-          </Card>
+          <br/><br/>
         </div>
           );
   }

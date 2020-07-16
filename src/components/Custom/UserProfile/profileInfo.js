@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Box, Button, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
-import {FormControl, InputLabel, List, ListItem, ListItemText, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, FormHelperText, TextField, Typography, Snackbar} from '@material-ui/core';
+import {FormControl, InputLabel, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, FormHelperText, TextField, Typography, Snackbar} from '@material-ui/core';
 import { MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
 import Alert from '@material-ui/lab/Alert';
@@ -11,11 +11,13 @@ import Stack from '../../../components/UIzard/Stack';
 
 const useStyles = theme => ({
    table: {
-    marginLeft: '25%',
+    marginLeft: '35%',
     marginRight: '25%',
     marginBottom: '5%',
     marginTop: '5%',
     width: '50%',
+    display: 'flex',
+
   },
   left: {
     marginTop: '2px',
@@ -29,6 +31,12 @@ const useStyles = theme => ({
     marginRight: '5%',
     width: '42%',
   },
+  dialog: {
+    marginLeft: '3%',
+    marginRight: '5%',
+    marginBottom: '10px',
+    width: '75%',
+  }
 });
 
 const rows = [
@@ -36,7 +44,7 @@ const rows = [
   {key:'last_name', value:'Last Name', class:'right'},
   {key:'affiliation', value:'Affiliation',class:'left'},
   {key:'phone', value:'Phone Number',class:'right'},
-  {key:'email', value:'Email',class:''}
+  {key:'email', value:'Email',class:'left'}
 ];
 
 class ProfileInfo extends React.Component {
@@ -46,17 +54,17 @@ class ProfileInfo extends React.Component {
     this.state = {
       dialog: '',
       name: '',
-      first_name: 'Mike',
+      first_name: '',
       first_nameError: '',
-      last_name: 'McKenna',
+      last_name: '',
       last_nameError: '',
       username: '',
       userType: '',
-      phone: '1234567890',
-      email: 'Mike@mda.mil',
+      phone: '',
+      email: '',
       affiliation: '',
 
-      submitError: '',
+      integrators: [],
     }
   }
 
@@ -66,7 +74,7 @@ class ProfileInfo extends React.Component {
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
-      console.log(response.data.first_name);
+      console.log(response.data);
       self.setState({
         name: response.data.first_name + " " + response.data.last_name,
         last_name: response.data.last_name,
@@ -77,17 +85,25 @@ class ProfileInfo extends React.Component {
         phone: response.data.phone,
         email: response.data.email,
       });
-      })
-      .catch(error => {
+      }).catch(error => {
         console.log("error");
         console.log(error);
     });
+
+    let urlInt = 'https://mda-phoenix.herokuapp.com/integrator';
+    await axios.get(urlInt, {
+      }).then(response => {
+        this.state.integrators = response.data.integrators;
+        })
+        .catch(error => {
+        alert(error);
+      });
 
   }
 
     async submit() {
         let self = this;
-        let url = 'https://mda-phoenix.herokuapp.com/user';
+        let url = 'https://mda-phoenix.herokuapp.com/user/modify';
         await axios.post(url, {
           first_name: self.state.first_name,
           last_name: self.state.last_name,
@@ -98,13 +114,9 @@ class ProfileInfo extends React.Component {
           headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
         }).then(response => {
           if (response.data.success === true) {
+            console.log(response.data);
             this.setState({
               dialog: '',
-              submitError: false,
-            });
-          } else {
-            this.setState({
-              submitError: true,
             });
           }
         }).catch(error => {
@@ -112,6 +124,169 @@ class ProfileInfo extends React.Component {
       });
     }
 
+    getFirst_NamePicker() {
+      let {classes} = this.props;
+      return(
+          <Dialog open={this.state.dialog === 'first_name'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle>Please update your first name</DialogTitle>
+            <DialogContent>
+              <TextField
+                className={classes.dialog}
+                label = "First Name"
+                value = {this.state.first_name}
+                onChange={event => {this.setState({first_name: event.target.value})}}
+                type="TextField"
+              />
+            </DialogContent>
+
+            <DialogActions>
+              <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
+                Cancel
+              </Button>
+              <Button color='primary' variant="outlined" onClick={() => this.submit()}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
+      );
+    }
+
+    getLast_NamePicker() {
+      let {classes} = this.props;
+      return(
+          <Dialog open={this.state.dialog === 'last_name'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle>Please update your last name</DialogTitle>
+            <DialogContent>
+              <TextField
+                className={classes.dialog}
+                label = "Last Name"
+                value = {this.state.last_name}
+                onChange={event => {this.setState({last_name: event.target.value})}}
+                type="TextField"
+              />
+            </DialogContent>
+
+            <DialogActions>
+              <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
+                Cancel
+              </Button>
+              <Button color='primary' variant="outlined" onClick={() => this.submit()}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
+      );
+    }
+
+    getEmailPicker() {
+      let {classes} = this.props;
+      return(
+          <Dialog open={this.state.dialog === 'email'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle>Please update your email</DialogTitle>
+            <DialogContent>
+              <TextField
+                className={classes.dialog}
+                label = "Email"
+                value = {this.state.email}
+                onChange={event => {this.setState({email: event.target.value})}}
+                type="TextField"
+              />
+            </DialogContent>
+
+            <DialogActions>
+              <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
+                Cancel
+              </Button>
+              <Button color='primary' variant="outlined" onClick={() => this.submit()}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
+      );
+    }
+    getPhonePicker() {
+      let {classes} = this.props;
+      return(
+          <Dialog open={this.state.dialog === 'phone'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle>Please update your phone number</DialogTitle>
+            <DialogContent>
+              <TextField
+                className={classes.dialog}
+                label = "Phone Number"
+                value = {this.state.phone}
+                onChange={event => {this.setState({phone: event.target.value})}}
+                type="TextField"
+              />
+            </DialogContent>
+
+            <DialogActions>
+              <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
+                Cancel
+              </Button>
+              <Button color='primary' variant="outlined" onClick={() => this.submit()}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
+      );
+    }
+
+    getAffiliationPicker() {
+      let {classes} = this.props;
+      return(
+        <Dialog open={this.state.dialog === 'affiliation'} onClose={() => this.setState({dialog: ''})}>
+        <DialogTitle>Please update your affiliation</DialogTitle>
+        <DialogContent>
+        <FormControl
+          className={classes.dialog}
+          >
+          <InputLabel>Affiliation</InputLabel>
+          <Select
+            value={this.state.affiliation}
+            onChange={event => {this.setState({affiliation: event.target.value})}}
+            >
+            {this.state.integrators.map(function(integrator) {
+              return <MenuItem value={integrator}>{integrator}</MenuItem>
+            })}
+          </Select>
+          <FormHelperText>{this.state.affiliationError ? "Please enter your affiliation." : ""}</FormHelperText>
+        </FormControl>
+        </DialogContent>
+        <DialogActions>
+            <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
+              Cancel
+            </Button>
+            <Button color='primary' variant="outlined" onClick={() => this.submit()}>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      );
+    }
+    getDialogue() {
+        var returnedDialogue;
+        switch(this.state.dialog) {
+            case 'first_name':
+              returnedDialogue = this.getFirst_NamePicker();
+              break;
+            case 'last_name':
+              returnedDialogue = this.getLast_NamePicker();
+              break;
+            case 'email':
+              returnedDialogue = this.getEmailPicker();
+              break;
+            case 'phone':
+              returnedDialogue = this.getPhonePicker();
+              break;
+            case 'affiliation':
+              returnedDialogue = this.getAffiliationPicker();
+              break;
+            default:
+              returnedDialogue = null;
+              break;
+        }
+      return returnedDialogue;
+    }
   render() {
     const {classes} = this.props;
     return(
@@ -123,19 +298,20 @@ class ProfileInfo extends React.Component {
               <TableCell><strong>{row.value}</strong></TableCell>
               <TableCell>
                 <TextField
-                defaultValue = {this.state[row.key]}
-                onChange={event => {this.setState({[row.key]: event.target.value})}}
-                type="TextField"
+                value = {this.state[row.key]}
+                onClick={event => {this.setState({dialog: row.key})}}
+                type="text"
                 />
               </TableCell>
             </TableRow>
           ))}
           </TableBody>
         </Table>
-        <Button color="primary" variant='contained' onClick={(event) => this.submit()}>
-          Update
-        </Button>
+        {this.getDialogue()}
+
       </div>
+
+
     )
   }
 }
