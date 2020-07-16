@@ -7,7 +7,6 @@ import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import CalendarSched from '../../../components/Custom/CalendarSched/CalendarSched';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import Prioritizer from '../../../components/Custom/Scheduling/Prioritizer';
 import RangeButton from '../../../components/Custom/Scheduling/RangeButton';
 import ScheduleStorage from '../../../stores/SchedulingStore';
 import { createContext } from "react";
@@ -32,11 +31,11 @@ export default function Home() {
                 <Typography variant="h3">
                   Scheduling
                 </Typography>
-                <RangeButton/>
                 <ScheduleStore.Provider>
                   <AllPrioritizers/>
+                  <RangeButton/>
+                  <CalendarSched/>
                 </ScheduleStore.Provider>
-                <CalendarSched/>
               </Stack>
             </Card>
           </Row>

@@ -106,7 +106,7 @@ def modify_user():
 
         for attr, value in user.__dict__.items():
             if attr in req and req[attr] != "":
-                setattr(Users, attr, req[attr])
+                setattr(user, attr, req[attr])
 
         db.session.commit()
 

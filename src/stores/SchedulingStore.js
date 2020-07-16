@@ -1,7 +1,12 @@
-import {observable, action, decorate} from 'mobx';
+import {observable, action, computed, decorate} from 'mobx';
 
 class SchedulingStore {
     
+    calendar = false;
+    toggleCalendar() {
+        this.calendar = !this.calendar;
+    }
+
     facility = '';
     setFacility(newFacility) {
         this.facility = newFacility;
@@ -22,6 +27,31 @@ class SchedulingStore {
         this.suggestion = newSuggestion;
     }
 
+    requests = [];
+    setRequests(newRequests) {
+        this.requests = newRequests;
+        console.log("set");
+        console.log(newRequests);
+    }
+
+    rangeRequests(startDate, endDate, facility) {
+        let start = new Date(startDate);
+        let end = new Date(endDate);
+        let returnedRequests = [];
+
+        for (let i = 0; i < this.requests.length; i++) {
+            let tempRequest = this.requests[i];
+            let tempStart = new Date(tempRequest.startDate);
+            let tempFacility = tempRequest.facility;
+            if (tempFacility === facility && tempStart < start) {
+                returnedRequests.unshift(tempRequest);
+            }
+        }
+        console.log("returned");
+        console.log(returnedRequests);
+        return returnedRequests;
+    }
+
     startDateTime = '';
     setStartDateTime(newStartDate) {
         this.startDateTime = newStartDate;
@@ -34,6 +64,10 @@ class SchedulingStore {
 }
 
 decorate(SchedulingStore, {
+
+  calendar: observable,
+  toggleCalendar: action,
+  
   facility: observable,
   setFacility: action,
 
@@ -45,6 +79,9 @@ decorate(SchedulingStore, {
 
   suggestion: observable,
   setSuggestion: action,
+
+  requests: observable,
+  setRequests: action,
 
   startDateTime: observable,
   setStartDateTime: action,

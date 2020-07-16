@@ -27,6 +27,11 @@ class TAMUForm extends React.Component {
       }
   }
 
+  setBadDate(date) {
+    TAMUStore.setBadDates(date);
+    this.forceUpdate();
+  }
+
   render() {
     const { classes } = this.props;
     return(
@@ -41,7 +46,7 @@ class TAMUForm extends React.Component {
           <InfiniteCalendar
             Component={withMultipleDates(Calendar)}	
             selected={TAMUStore.badDates}
-            onSelect={(event) => TAMUStore.setBadDates(event)}
+            onSelect={(event) => this.setBadDate(event)}
             minDate={new Date()}
             min={new Date()}
             interpolateSelection={defaultMultipleDateInterpolation}	
