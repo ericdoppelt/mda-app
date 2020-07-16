@@ -7,15 +7,15 @@ import axios from 'axios';
 import "fullcalendar"
 import './CalendarSched.scss'
 
-import CardNoShadow from '../../UIzard/CardNoShadow';
-import Row from '../../UIzard/Row';
-import Stack from '../../UIzard/Stack';
-import Title from '../../UIzard/Title';
+import CardNoShadow from '../../../UIzard/CardNoShadow';
+import Row from '../../../UIzard/Row';
+import Stack from '../../../UIzard/Stack';
+import Title from '../../../UIzard/Title';
 
 import { observer } from "mobx-react"
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
-import { Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Button, Avatar } from '@material-ui/core';  
-import UserProfileStore from '../../../stores/UserProfileStore';
+import { Box, Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Button, Avatar } from '@material-ui/core';  
+import SchedulingStore from '../../../../stores/SchedulingStore';
 
 // Checkbox items
 const facilities = [
@@ -436,8 +436,10 @@ class CalendarSched extends React.Component {
               >
                 Submit Schedule
               </Button>
-            </Row>
 
+              
+            </Row>
+            <Box></Box>
         </Stack>
           
         </div>
@@ -476,4 +478,4 @@ class CalendarSched extends React.Component {
 
 }
 
-export default withStyles(useStyles, { withTheme: true })(CalendarSched)
+export default withStyles(useStyles, { withTheme: true })(observer(CalendarSched))

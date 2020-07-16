@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import Prioritizer from './Prioritizer';
-import SchedulingStore from '../../../stores/SchedulingStore';
+import SchedulingStore from '../../../../stores/SchedulingStore';
+import {Button} from '@material-ui/core'
 
 class AllPrioritizers extends React.Component {
 
