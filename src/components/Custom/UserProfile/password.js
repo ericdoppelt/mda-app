@@ -1,12 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, TextField, Typography} from '@material-ui/core';
+import {Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, TextField, Typography} from '@material-ui/core';
 import {Button, FormHelperText, FormControl, InputLabel, Select} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { withStyles } from '@material-ui/core/styles';
+import {Alert, AlertTitle} from '@material-ui/lab';
+
 
   const useStyles = theme => ({
     table: {
@@ -44,6 +46,8 @@ import { withStyles } from '@material-ui/core/styles';
         oldPasswordHelper: '',
         responseError: '',
         showPassword: true,
+
+        submitSuccess: false,
       }
     }
 
@@ -84,6 +88,10 @@ import { withStyles } from '@material-ui/core/styles';
                        passwordHelper: '',
                        oldPasswordError: false,
                        oldPasswordHelper: '',
+                       oldPassword: '',
+                       newPassword: '',
+                       confirmPassword: '',
+                       submitSuccess: true,
                      });
         console.log(response.data.success);
       }
@@ -99,6 +107,26 @@ import { withStyles } from '@material-ui/core/styles';
 
   }
 
+  getAlert() {
+      if (this.state.submitSuccess) {
+        return(
+          <Snackbar
+            open={this.state.submitSuccess}
+            autoHideDuration={6000}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            onClose={() => {this.setState({submitSuccess: false})}}
+            >
+            <Alert severity="success">
+              Changed Password
+            </Alert>
+          </Snackbar>
+      );
+      }
+  }
+
   render () {
     const {classes} = this.props;
     return(
@@ -111,6 +139,7 @@ import { withStyles } from '@material-ui/core/styles';
               <TableCell><strong>{row.value}</strong></TableCell>
               <TableCell>
                 <TextField
+                value = {this.state[row.key]}
                 onChange={event => {this.setState({[row.key]: event.target.value})}}
                 type = {this.state.showPassword ? 'text' : 'password'}
                 error = {this.state.passwordError}
@@ -132,9 +161,10 @@ import { withStyles } from '@material-ui/core/styles';
           ))}
           </TableBody>
         </Table>
-        <Button color="primary" variant='contained'onClick={() => this.commitChange()}>
-          Submit
+        <Button color="primary" variant={(this.state.newPassword=='' || this.state.confirmPassword=='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
+          Change Password
         </Button>
+        {this.getAlert()}
       </div>
     )
   }
