@@ -24,6 +24,8 @@ import UserProfile from './containers/User/UserProfile';
 import ViewRequestsMain from './containers/ViewRequests/ViewRequestsMain';
 import SchedulerMain from './containers/Scheduler/SchedulerMain';
 import UserRegistration from './containers/User/UserRegistration';
+import ForgotPassword from  './containers/User/ForgotPassword';
+import ForgotUsername from './containers/User/ForgotUsername';
 import history from './history';
 
 
@@ -46,6 +48,8 @@ const App = () => (
       <Route path="/user-login" component={UserMain} />
       <Route path="/user-profile" component={UserProfile} />
       <Route path="/user-registration" component={UserRegistration}/>
+      <Route path="/forgot-password" component={ForgotPassword}/>
+      <Route path="/forgot-username" component={ForgotUsername}/>
     </div>
   </Router>
 );

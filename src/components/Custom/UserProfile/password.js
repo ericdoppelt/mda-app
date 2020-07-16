@@ -7,6 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import {Alert, AlertTitle} from '@material-ui/lab';
 
 
@@ -164,9 +165,13 @@ import {Alert, AlertTitle} from '@material-ui/lab';
         <Button color="primary" variant={(this.state.newPassword=='' || this.state.confirmPassword=='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
           Change Password
         </Button>
+        <br/>
+        <Button className={classes.subheader} onClick={() => {this.props.history.push('/forgot-password')}}>
+          <br/><br/><small>Forgot Password?</small>
+        </Button>
         {this.getAlert()}
       </div>
     )
   }
 }
-export default withStyles(useStyles, { withTheme: true })(PasswordChanger);
+export default withRouter(withStyles(useStyles, { withTheme: true })(PasswordChanger));
