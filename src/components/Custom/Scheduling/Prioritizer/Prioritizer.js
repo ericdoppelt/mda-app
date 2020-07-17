@@ -162,7 +162,7 @@ getList(listArray, title) {
   }
 
   getHeader() {
-    let start = new Date(this.props.s2tart);
+    let start = new Date(this.props.start);
     let startDisplay = start.toDateString();
 
     let end = new Date(this.props.end);
