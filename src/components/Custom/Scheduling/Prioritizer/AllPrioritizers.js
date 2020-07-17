@@ -23,6 +23,8 @@ class AllPrioritizers extends React.Component {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
       SchedulingStore.setRequests(response.data.requests);
+      console.log('checking prioritizer response')
+      console.log(response.data)
     }).catch(error => {
       alert(error);
     });
