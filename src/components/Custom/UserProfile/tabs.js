@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ProfileInfo from '../UserProfile/profileInfo';
+import PasswordChanger from '../UserProfile/password';
 import Calendar from '../../../components/Custom/Calendar/Calendar';
 import Card from '../../../components/UIzard/Card';
 
@@ -86,7 +87,7 @@ export default function TabsProfile() {
           <ProfileInfo/>
         </TabPanel>
         <TabPanel value={value} index={1}>
-            Coming Soon
+            <PasswordChanger/>
         </TabPanel>
         <TabPanel value={value} index={2}>
            <Calendar personal={true}/>

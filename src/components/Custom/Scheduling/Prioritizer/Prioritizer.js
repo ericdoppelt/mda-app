@@ -2,7 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader, Typography} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import SchedulingStore from '../../../stores/SchedulingStore';
+import SchedulingStore from '../../../../stores/SchedulingStore';
+import { observer } from "mobx-react"
 
   const useStyles = theme => ({
     root: {
@@ -147,6 +148,7 @@ getList(listArray, title) {
     });
   }
 
+
   moveToScheduling() {
     SchedulingStore.setFacility(this.props.facility);
     SchedulingStore.setPriorities(this.state.priority);
@@ -155,12 +157,12 @@ getList(listArray, title) {
     SchedulingStore.setSuggestion(null);
     SchedulingStore.setStartDateTime(this.state.startDateTime)
     SchedulingStore.setEndDateTime(this.state.endDateTime);
-    
     console.log(SchedulingStore);
+    SchedulingStore.toggleCalendar();
   }
 
   getHeader() {
-    let start = new Date(this.props.start);
+    let start = new Date(this.props.s2tart);
     let startDisplay = start.toDateString();
 
     let end = new Date(this.props.end);
@@ -237,4 +239,4 @@ getList(listArray, title) {
 }
 
 
-export default withStyles(useStyles)(Prioritizer);
+export default withStyles(useStyles)(observer(Prioritizer));
