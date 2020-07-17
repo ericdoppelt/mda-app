@@ -114,7 +114,7 @@ class ForgotUsername extends React.Component {
           <Typography className={classes.subheader} variant='subtitle2'>Please enter the email associated with your account<br/> We will email you the matching usename </Typography>
           <TextField
           className={classes.textfield}
-          label="Username"
+          label="Email"
           variant="outlined"
           onChange={event => {this.setState({email: event.target.value})}}
           type = 'text'
