@@ -46,7 +46,7 @@ class AllPrioritizers extends React.Component {
     return this.state.ranges.map(function(range) {
         return(
             <div>
-                {self.createPrioritizer(range.startDate, range.endDate, range.facility)}
+                {self.createPrioritizer(range.rangeStart, range.rangeEnd, range.facility)}
             </div>
         );
     });
