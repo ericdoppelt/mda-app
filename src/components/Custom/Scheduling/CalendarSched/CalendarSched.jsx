@@ -14,8 +14,14 @@ import Title from '../../../UIzard/Title';
 
 import { observer } from "mobx-react"
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
-import { Box, Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Button, Avatar } from '@material-ui/core';  
+import { Box, TextField, Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Button, Avatar, List, ListItem } from '@material-ui/core';  
 import SchedulingStore from '../../../../stores/SchedulingStore';
+
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
 
 // Checkbox items
 const facilities = [
@@ -66,7 +72,7 @@ const eventSample = [
   ['TAMU','MDA','2020-07-24T00:00','20'],
 ]
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (theme) => ({
   formControl: {
     margin: theme.spacing(1),
   },
@@ -83,7 +89,66 @@ const useStyles = makeStyles((theme) => ({
   select: {
     backgroundColor: '#000',
   },
-}));
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+  dialogPaper: {
+    minHeight: '80vh',
+    maxHeight: '80vh',
+    minWidth: '50vw',
+    maxWidth: '1000',
+  },
+  leftTextField: {
+    marginLeft: '5%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '42%',
+  },
+  rightTextField: {
+    marginLeft: '3%',
+    marginRight: '5%',
+    marginTop: '2px',
+    width: '42%',
+  },
+  billingAddress: {
+    marginLeft: '5%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '64%',
+  },
+  poNumber: {
+    marginLeft: '3%',
+    marginRight: '5%',
+    marginTop: '2px',
+    width: '20%',
+  },
+  billingCity: {
+    marginLeft: '5%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '29%',
+  },
+  billingState: {
+    marginLeft: '3%',
+    marginRight: '3%',
+    marginTop: '2px',
+    width: '29%',
+  },
+  billingZip: {
+    marginLeft: '3%',
+    marginRight: '5%',
+    marginTop: '2px',
+    width: '20%',
+  },
+});
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -124,6 +189,8 @@ class CalendarSched extends React.Component {
     this.handleChangeIntegrators = this.handleChangeIntegrators.bind(this);
     this.handleChangeBeamTypes = this.handleChangeBeamTypes.bind(this);
     this.handleDateSubmit = this.handleDateSubmit.bind(this);
+    this.handleModal = this.handleModal.bind(this);
+    this.handleEventClick = this.handleEventClick.bind(this);
     
     let sampleProp = "null";
     if (this.props.samp !== null) {
@@ -155,6 +222,7 @@ class CalendarSched extends React.Component {
       calendarEvents: [ // initial event data
       ],
       personalEvents: ["hello"],
+      modalOpen: false,
     }
   }
 
@@ -308,6 +376,18 @@ class CalendarSched extends React.Component {
     this.setState({calendarEvents : data});
   }
 
+  handleModal() {
+    this.setState({
+      modalOpen: !this.state.modalOpen
+    })
+  }
+
+  handleEventClick(event) {
+    console.log("Event clicked");
+    console.log(event);
+    this.handleModal();
+  }
+
   
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
@@ -339,7 +419,6 @@ class CalendarSched extends React.Component {
                 <FormControl className={classes.formControl}>
                   <InputLabel id="demo-mutiple-name-label">Facility</InputLabel>
                   <Select
-                    className={classes.select}
                     labelId="demo-mutiple-name-label"
                     id="demo-mutiple-name"
                     multiple
@@ -441,7 +520,8 @@ class CalendarSched extends React.Component {
                         : this.state.calendarEvents
                       }
               slotDuration='04:00:00'
-              dateClick={ this.handleDateClick }
+              dateClick={(info) => {this.handleDateClick(info.event)} }
+              eventClick={ this.handleEventClick }
               eventOrder="facility,start"
               eventStartEditable='true'
 
@@ -479,8 +559,178 @@ class CalendarSched extends React.Component {
             </Row>
             <Box></Box>
         </Stack>
+
+        
           
         </div>
+
+        {/*** Popup for events ***/}
+        <Dialog classes={{paper: classes.dialogPaper}} onClose={this.handleModal} aria-labelledby="simple-dialog-title" open={this.state.modalOpen}>
+          {/*<DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>*/}
+          <CardNoShadow style={{display: 'inline'}}>
+            <DialogTitle id="simple-dialog-title" style={{textAlign: 'center'}}>Contact and Funding Information</DialogTitle>
+            <TextField
+              label="Name"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              //defaultValue={this.state.name}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Company"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              //defaultValue={this.state.company}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Email"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              //defaultValue={this.state.email}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Phone"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              //defaultValue={this.state.phone}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+
+            <br/>
+            <TextField 
+              label = "Integrator"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.integrator}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Funding Contact"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.funding_contact}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Funding Contact Phone"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.funding_cell}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Funding Contact Email"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.funding_email}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br/>
+            <br/>
+            <TextField 
+              label = "Billing Address"
+              className={classes.billingAddress}
+              id="standard-read-only-input"
+              defaultValue={this.state.address}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "P.O. No."
+              className={classes.poNumber}
+              id="standard-read-only-input"
+              defaultValue={this.state.poNum}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "City"
+              className={classes.billingCity}
+              id="standard-read-only-input"
+              defaultValue={this.state.city}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "State"
+              className={classes.billingState}
+              id="standard-read-only-input"
+              defaultValue="New York"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Zip"
+              className={classes.billingZip}
+              id="standard-read-only-input"
+              defaultValue={this.state.zipCode}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br/><br/>
+            <DialogTitle id="simple-dialog-title" style={{textAlign: 'center'}}>Experiment Information</DialogTitle>
+            <TextField 
+              label = "Energies"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.energies}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Ions"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.ions}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <TextField 
+              label = "Start Date"
+              className={classes.leftTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.startDate}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </CardNoShadow>
+          <Row style={{justifyContent: 'flex-end'}}>
+            <Button 
+              onClick={this.handleModal} 
+              variant="contained"
+              color="primary"
+              style={{maxWidth:'150px', margin:'25px 25px 25px 25px'}}
+            >
+              Return
+            </Button>
+          </Row>
+        </Dialog>
       </div>
     )
   }
@@ -516,4 +766,4 @@ class CalendarSched extends React.Component {
 
 }
 
-export default withStyles(useStyles, { withTheme: true })(observer(CalendarSched))
+export default withStyles(useStyles, { withTheme: true })(CalendarSched)
