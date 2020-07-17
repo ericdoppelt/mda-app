@@ -209,6 +209,8 @@ class requests(db.Model):
     order = db.Column(db.Integer())
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
+    request_range = db.Column(db.Integer())
+    priority = db.Column(db.Boolean())
 
 
     def create_request(self):

@@ -1,10 +1,14 @@
 import {observable, action, computed, decorate} from 'mobx';
 
 class SchedulingStore {
+
+    constructor(){
+        this.toggleCalendar = this.toggleCalendar.bind(this);
+      }
     
-    calendar = false;
+    viewCalendar = true;
     toggleCalendar() {
-        this.calendar = !this.calendar;
+        this.viewCalendar = !this.viewCalendar;
     }
 
     facility = '';
@@ -65,7 +69,7 @@ class SchedulingStore {
 
 decorate(SchedulingStore, {
 
-  calendar: observable,
+  viewCalendar: observable,
   toggleCalendar: action,
   
   facility: observable,

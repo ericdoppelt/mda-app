@@ -2,10 +2,19 @@
 
 import React from 'react';
 import './LoginForm.css'
-import {TextField, Button} from '@material-ui/core';
+import {TextField, Button, Typography} from '@material-ui/core';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import Row from '../../UIzard/Row'
+
+const useStyles = theme => ({
+
+ subheader: {
+   marginLeft: '25%',
+   marginright:'25%',
+ },
+});
 
 class LoginForm extends React.Component {
 
@@ -55,6 +64,7 @@ class LoginForm extends React.Component {
   }
 
   render() {
+    var { classes} = this.props;
     return (
       <div className="loginform">
         <TextField
@@ -84,7 +94,7 @@ class LoginForm extends React.Component {
           >
             Login
           </Button>
-          <Button 
+          <Button
             variant="contained"
             style={{width: '100px'}}
             onClick={() => {this.props.history.go('/user-registration')}}
@@ -92,10 +102,20 @@ class LoginForm extends React.Component {
             Register
           </Button>
         </Row>
+        <Row>
+        <Button className={classes.subheader} color='primary' onClick={() => {this.props.history.push('/forgot-password')}}>
+          <br/><br/><small>Forgot Password?</small>
+        </Button>
+        </Row>
+        <Row>
+        <Button className={classes.subheader} color='primary' onClick={() => {this.props.history.push('/forgot-username')}}>
+        <small>Forgot Username?</small>
+        </Button>
+        </Row>
          {this.state.displayedText}
       </div>
   );
   }
 }
 
-export default withRouter(LoginForm);
+export default withRouter(withStyles(useStyles)(LoginForm));

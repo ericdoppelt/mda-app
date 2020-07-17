@@ -159,7 +159,7 @@ class MDAHeader2 extends React.Component {
 
     var self = this;
     this.setState(state => ({loggedIn: false}));
-    await axios.post(url, null, {
+    await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
       //console.log(response);
@@ -239,7 +239,7 @@ class MDAHeader2 extends React.Component {
                   ))}
                 </List>
               </Collapse>
-              
+
             </List>
             <Divider />
             {/*----USER AND VIEW REQUESTS----*/}
@@ -247,7 +247,7 @@ class MDAHeader2 extends React.Component {
               <Link to={
                 window.sessionStorage.getItem('access_token')
                 ? 'user-profile'
-                : 'user-login'} 
+                : 'user-login'}
                 style={{ color: '#FFF' }}>
                 <ListItem button key='User'>
                   <ListItemIcon>{icons[4]}</ListItemIcon>

@@ -33,7 +33,7 @@ class UserProfile extends React.Component {
     var self = this;
 
     let url = "https://mda-phoenix.herokuapp.com/user";
-    await axios.post(url, null, {
+    await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
       console.log(response);
@@ -57,7 +57,6 @@ class UserProfile extends React.Component {
     return (
       <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
       <TabsProfile/>
-
       </Stack>
     )
   }

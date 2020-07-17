@@ -43,7 +43,7 @@ const useStyles = theme => ({
 });
 
 class RegistrationForm extends React.Component {
-  
+
   constructor(props) {
     super(props);
 
@@ -90,7 +90,7 @@ class RegistrationForm extends React.Component {
         alert(error);
   });
   }
-  
+
 
   validatePassword(password) {
     let passwordRegex = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$');
@@ -159,14 +159,14 @@ class RegistrationForm extends React.Component {
           error = {this.state.firstNameError}
           helperText = {this.state.firstNameError ? "Please enter a first name.": ""}
         />
-        <TextField 
+        <TextField
           className = {classes.right}
           label = "Last Name"
           onChange={event => {this.setState({lastName: event.target.value})}}
           error = {this.state.lastNameError}
           helperText = {this.state.lastNameError ? "Please enter a last name." : ""}
         />
-        <TextField 
+        <TextField
           className = {classes.left}
           label = "Username"
           onChange={event => {this.setState({username: event.target.value})}}
@@ -174,7 +174,7 @@ class RegistrationForm extends React.Component {
           helperText = {this.state.usernameHelper}
         />
 
-        <TextField 
+        <TextField
           className = {classes.right}
           label = "Password"
           onChange={event => {this.setState({password: event.target.value})}}
@@ -193,11 +193,11 @@ class RegistrationForm extends React.Component {
             )
           }}
         />
-        
-        <FormControl 
+
+        <FormControl
           className={classes.left}
           error = {this.state.typeError}
-          > 
+          >
           <InputLabel>User Type</InputLabel>
           <Select
             value={this.state.type}
@@ -208,11 +208,11 @@ class RegistrationForm extends React.Component {
           </Select>
           <FormHelperText>{this.state.typeError ? "Please enter your user type." : ""}</FormHelperText>
         </FormControl>
-      
-        <FormControl 
+
+        <FormControl
           className={classes.right}
           error = {this.state.affiliationError}
-          > 
+          >
           <InputLabel>Affiliation</InputLabel>
           <Select
             value={this.state.affiliation}
@@ -225,14 +225,14 @@ class RegistrationForm extends React.Component {
           <FormHelperText>{this.state.affiliationError ? "Please enter your affiliation." : ""}</FormHelperText>
         </FormControl>
 
-        <TextField 
+        <TextField
           className = {classes.left}
           label = "Phone"
           onChange={event => {this.setState({phone: event.target.value})}}
           error = {this.state.phoneError}
           helperText = {this.state.phoneError ? "Please enter your primary phone number." : ""}
         />
-        <TextField 
+        <TextField
           className = {classes.right}
           label = "Email"
           onChange={event => {this.setState({email: event.target.value})}}

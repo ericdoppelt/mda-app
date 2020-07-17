@@ -46,7 +46,7 @@ def add_request(form, username):
                     username = username,
                     date_of_request = datetime.now(),
                     modified = False,
-                    status = "Awaiting approval from integrator",
+                    status = "Pending",
                     rejected = False)
     entry.create_request()
 
