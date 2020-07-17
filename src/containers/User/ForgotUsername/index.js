@@ -8,6 +8,8 @@ import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
 import Image from '../../../components/UIzard/Image';
 import Title from '../../../components/UIzard/Title';
+import ForgotUsername from '../../../components/Custom/UserReset/forgotusername';
+
 
 export default function Home() {
 
@@ -19,10 +21,13 @@ export default function Home() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-            <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '570px', width: '720px', flexGrow: '0' }}>
+            <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '500px', width: '500px', flexGrow: '0' }}>
               <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                   <Image style={{ width: '120px', height: '120px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
+                </Row>
+                <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+                  <ForgotUsername/>
                 </Row>
               </Stack>
             </Card>
