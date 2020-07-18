@@ -70,7 +70,7 @@ def requestform():
                 date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
                 form['date'] = date.strftime('%m/%d/%Y')
             badDates = copy.deepcopy(form['badDates'])
-            if badDates[0] != None:
+            if badDates is not []:
                 for i, date in enumerate(badDates):
                     date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
                     if i != 0 or i != len(badDates) - 1:
