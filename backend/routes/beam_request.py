@@ -47,7 +47,8 @@ def add_request(form, username):
                     date_of_request = datetime.now(),
                     modified = False,
                     status = "Pending",
-                    rejected = False)
+                    rejected = False,
+                    ion_hours = form['ionHours'])
     entry.create_request()
 
 @app.route('/requestform', methods=['POST'])

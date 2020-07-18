@@ -209,6 +209,7 @@ class requests(db.Model):
     order = db.Column(db.Integer())
     request_range = db.Column(db.Integer())
     priority = db.Column(db.Boolean())
+    ion_hours = db.Column(db.ARRAY(db.Integer()))
 
 
     def create_request(self):
