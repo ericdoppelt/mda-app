@@ -86,10 +86,11 @@ def request_modify():
                 if key == "hours":
                     req["beam_time"] = value
         ion_ids = []
-        if req["ions"] is not "":
-            for i, ion in enumerate(req['ions']):
-                beam = Beams.query.filter_by(ion=ion, amev=req['energies'][i]).one()
-                ion_ids.append(beam.id)
+        if "ions" in req:
+            if req["ions"] is not []:
+                for i, ion in enumerate(req['ions']):
+                    beam = Beams.query.filter_by(ion=ion, amev=req['energies'][i]).one()
+                    ion_ids.append(beam.id)
 
         for attr, value in beam_request.__dict__.items():
             if attr in req and req[attr] != "":
