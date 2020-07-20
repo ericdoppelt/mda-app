@@ -55,7 +55,7 @@ def request_modify():
         req = request.get_json()
         beam_request = requests.query.filter_by(id=req['id']).first()
 
-        msg = Message("Beam Time Request Modified") #, cc=[req['email']])
+        msg = Message("Beam Time Request Modified")
         msg.recipients = [beam_request.email]
 
         msg.body = "Your beam time request was modified with the following: \n\n"
@@ -106,7 +106,7 @@ def request_modify():
         if modified:
             beam_request.modified = True
             beam_request.ions = ion_ids
-            mail.send(msg)
+            # mail.send(msg)
         db.session.commit()
 
         result = {'success' : True}
@@ -126,25 +126,11 @@ def reject_form():
         pdf = FormBuilder(req)
         msg = Message("Beam Time Request Rejected") #, cc=[req['email']])
         msg.recipients = [beam_request.email]
-        # template = "Universal_request_template.pdf"
-        # output = "Universal_request.pdf"
-        # pdf.fill(template, output)
+        
         msg.body = "Your beam time request was rejected for the following reason: \n\n"
-        msg.body += req['integrator_comment'] + "\n\n"
-        # with app.open_resource("TAMU_request.pdf") as fp:
-        #     msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
+        msg.body += req['rejectNote'] + "\n\n"
 
-        # mapper = inspect(requests)
-        # for column in mapper.attrs:
-        #     form[column.key] = beam_request.column.key
-        # form = {}
-        # for attr, value in beam_request.__dict__.items():
-        #     if attr == 'start':
-        #         attr = 'date'
-        #     form[attr] = value
-        #     print(attr, value)
-        # print(form)
-        beam_request.integrator_comment =req['integrator_comment']
+        beam_request.integrator_comment =req['rejectNote']
         beam_request.status = "Rejected"
         beam_request.approved_facility = False
         beam_request.approved_integrator = False
