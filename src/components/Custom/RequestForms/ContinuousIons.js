@@ -12,19 +12,19 @@ const useStyles = theme => ({
       marginTop: '4px',
       marginLeft: '5%',
       marginRight: '3%',
-      width: '42%',
-    },
-    energySlider: {
-      marginTop: '40px',
-      marginLeft: '3%',
-      marginRight: '5%',
-      width: '42%',
+      width: '26%',
     },
     energyText: {
-        marginTop: '4px',
-        marginLeft: '3%',
-        marginRight: '5%',
-        width: '42%',
+      marginTop: '4px',
+      marginLeft: '3%',
+      marginRight: '3%',
+      width: '26%',
+    },
+    energyHours: {
+      marginTop: '4px',
+      marginLeft: '3%',
+      marginRight: '5%',
+      width: '26%'
     },
     ionButton: {
       backgroundColor: "#f5f5b8",
@@ -46,7 +46,6 @@ class ContinuousIons extends React.Component {
             energies: {},
             ionIterator: 0,
         }
-        this.selectIon = this.selectIon.bind(this);
         ExperimentStore.clearBeams();
     }
 
@@ -67,11 +66,6 @@ class ContinuousIons extends React.Component {
         let numSelectors = this.state.ionIterator + 1;
         this.setState({ionIterator: numSelectors});
         ExperimentStore.addBeam();
-    }
-
-    selectIon(ion, index) {
-        this.setState({selectedIon: true});
-        ExperimentStore.setIons(ion, index);
     }
 
     getLabel(index) {
@@ -97,18 +91,18 @@ class ContinuousIons extends React.Component {
             <div className = {classes.fullDiv}>
             <FormControl 
                 className={classes.ions}
-                error = {ExperimentStore.ionsError}
+                error = {ExperimentStore.ionsError(key)}
                 > 
                 <InputLabel>Ion</InputLabel>
                 <Select
                   value={ExperimentStore.ions[i]}
-                  onChange={event => this.selectIon(event.target.value, key)}
+                  onChange={event => ExperimentStore.setIons(event.target.value, key)}
                   >
                   {this.state.particles.map(function(ion) {
                     return <MenuItem value={ion}>{ion}</MenuItem>
                   })}
                 </Select>
-                <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
+                <FormHelperText>{ExperimentStore.ionsHelperText(key)}</FormHelperText>
               </FormControl>
               <TextField 
                 className={classes.energyText}
@@ -116,10 +110,22 @@ class ContinuousIons extends React.Component {
                 type = "number"
                 value = {ExperimentStore.energies[key]}
                 disabled = {ExperimentStore.ions[key] === ""}
+                error = {ExperimentStore.energiesError(key)}
+                helperText = {ExperimentStore.energiesHelperText(key)}
                 onChange={event => {this.updateEnergy(event.target.value, key)}}
                 InputProps={{
                   endAdornment: <InputAdornment>{'\xa0\xa0\xa0'}MeV</InputAdornment>,
                 }}
+              />
+              <TextField 
+                className={classes.energyHours}
+                label = "Hours Testing"
+                type = "number"
+                value = {ExperimentStore.energyHours[key]}
+                disabled = {ExperimentStore.ions[key] === ""}
+                error = {ExperimentStore.energyHoursError(key)}
+                helperText = {ExperimentStore.energyHoursHelperText(key)}
+                onChange={event => {ExperimentStore.setEnergyHours(event.target.value, key)}}
               />
               </div>
           );

@@ -161,6 +161,10 @@ getList(listArray, title) {
     SchedulingStore.toggleCalendar();
   }
 
+  getSuggested() {
+    
+  }
+
   getHeader() {
     let start = new Date(this.props.start);
     let startDisplay = start.toDateString();
@@ -169,6 +173,7 @@ getList(listArray, title) {
     let endDisplay = end.toDateString();
     return startDisplay + " to " + endDisplay + " @ " + this.props.facility;
   }
+
   render() {
     const {classes} = this.props;
  

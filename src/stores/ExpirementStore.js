@@ -60,13 +60,11 @@ class ExpirementStore {
     setIons(newIons, index) {
         this.ions[index] = newIons;
     }
-    get ionsError() {
-        let errors = [];
-        errors[2] = true;
-        return this.ions.length === 0 && this.submitted;
+    ionsError(index) {
+        return this.ions[index] === "" && this.submitted;
     }
-    get ionsHelperText() {
-        if (this.ionsError) return "Please enter the particles for the experiment.";
+    ionsHelperText(index) {
+        if (this.ionsError(index)) return "Please enter the ion..";
         return "";
     }
 
@@ -74,17 +72,31 @@ class ExpirementStore {
     setEnergies(newEnergies, index) {
         this.energies[index] = newEnergies;
     }
-    get energiesError() {
-        return this.energies.length === 0 && this.submitted;
+    energiesError(index) {
+        console.log(index);
+        return (this.energies[index] === ""  || this.energies[index] === undefined) && this.submitted;
     }
-    get energiesHelperText() {
-        if (this.energiesError) return "Please enter the energies for the experiment.";
+    energiesHelperText(index) {
+        if (this.energiesError(index)) return "Please enter the energy level.";
+        return "";
+    }
+
+    energyHours = observable.array([""]);
+    setEnergyHours(newHour, index) {
+        this.energyHours[index] = newHour;
+    }
+    energyHoursError(index) {
+        return this.energyHours[index] === "" && this.submitted;
+    }
+    energyHoursHelperText(index) {
+        if (this.energyHoursError(index)) return "Please enter the hours.";
         return "";
     }
 
     addBeam() {
         this.ions.push("");
         this.energies.push("");
+        this.energyHours.push("");
     }
     clearBeams() {
         this.ions = observable.array([""]);;
@@ -139,13 +151,11 @@ decorate(ExpirementStore, {
 
     ions: observable,
     setIons: action,
-    ionsError: computed,
-    ionsHelperText: computed,
 
+    energyHours: observable,
+    setEnergyHours: action,
     energies: observable,
     setEnergies: action,
-    energiesError: computed,
-    energiesHelperText: computed,
 
     addBeam: action,
     clearBeams: action,

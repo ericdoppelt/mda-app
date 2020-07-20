@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import Prioritizer from './Prioritizer';
 import SchedulingStore from '../../../../stores/SchedulingStore';
-import {Button} from '@material-ui/core'
 
 class AllPrioritizers extends React.Component {
 
@@ -22,6 +21,7 @@ class AllPrioritizers extends React.Component {
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
+      console.log(response);
       SchedulingStore.setRequests(response.data.requests);
     }).catch(error => {
       alert(error);
@@ -36,8 +36,6 @@ class AllPrioritizers extends React.Component {
     }).catch(error => {
         alert(error);
     });
-      
-    
       }
     }
   
