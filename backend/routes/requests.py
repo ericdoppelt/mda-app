@@ -163,22 +163,34 @@ def getRequests():
         request_forms = requests.query.all()
         myForms = []
         for form in request_forms:
-            beams = []
-            energies = []
+            ions = {}
             for ion in form.ions:
                 beam = Beams.query.filter_by(id=ion).one()
-                beams.append(beam.ion)
-                energies.append(beam.amev)
-            delta = timedelta(hours=12)
-            time = (form.start + delta).strftime('%Y-%m-%dT%H:%M')
+                ions[beam.ion] = beam.amev
+            if form.request_range is not None:
+                request_range = Ranges.query.filter_by(id=form.request_range).first()
+                timeDelta = timedelta(hours = request_range.hours)
+                range_end = request_range.start_date + timeDelta
+                range_start = request_range.start_date.strftime("%Y-%m-%dT%H:%M:%S")
+                range_end = range_end.strftime("%Y-%m-%dT%H:%M:%S")
+                totalHours = request_range.hours
+            else:
+                range_start = None
+                range_end = None
+                totalHours = None
+            start_date = form.start.strftime('%Y-%m-%d')
+            if form.scheduled_start is not None:
+                form.scheduled_start = form.scheduled_start.strftime("%Y-%m-%dT%H:%M:%S")
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'ions' : beams, 'energies' : energies, 'start' : time, 'id' : form.id})
-        print(myForms)
+            'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
+            "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
+            'rangeId' : form.request_range, 'totalHours' : totalHours, 
+            'ionHours' : form.ion_hours, 'status' : form.status})
         result = {'requests' : myForms}
 
     except Exception as e:
