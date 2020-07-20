@@ -91,17 +91,22 @@ def request_modify():
                 for i, ion in enumerate(req['ions']):
                     beam = Beams.query.filter_by(ion=ion, amev=req['energies'][i]).one()
                     ion_ids.append(beam.id)
+        else:
+            ion_ids = beam_request.ions
 
+        modified = False
         for attr, value in beam_request.__dict__.items():
             if attr in req and req[attr] != "":
+                modified = True
                 setattr(beam_request, attr, req[attr])
 
-        beam_request.ions = ion_ids
-        beam_request.modified = True
         beam_request.approved_integrator = True
-        beam_request.status = "Modified"
+        beam_request.status = "Approved"
 
-        # mail.send(msg)
+        if modified:
+            beam_request.modified = True
+            beam_request.ions = ion_ids
+            mail.send(msg)
         db.session.commit()
 
         result = {'success' : True}
