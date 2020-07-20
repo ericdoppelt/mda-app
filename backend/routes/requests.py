@@ -96,7 +96,7 @@ def request_modify():
 
         modified = False
         for attr, value in beam_request.__dict__.items():
-            if attr in req and req[attr] != "":
+            if attr in req and req[attr] != "" and attr != 'id':
                 modified = True
                 setattr(beam_request, attr, req[attr])
 
@@ -181,7 +181,7 @@ def getRequests():
             'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
             "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
             'rangeId' : form.request_range, 'totalHours' : totalHours, 
-            'ionHours' : form.ion_hours, 'status' : form.status})
+            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment})
         result = {'requests' : myForms}
 
     except Exception as e:
@@ -231,7 +231,7 @@ def getRequests_integrators():
             'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
             "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
             'rangeId' : form.request_range, 'totalHours' : totalHours, 
-            'ionHours' : form.ion_hours, 'status' : form.status})
+            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_commen})
         result = {'requests' : myForms}
 
     except Exception as e:
