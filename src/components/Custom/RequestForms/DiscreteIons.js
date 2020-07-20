@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
+import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import ExperimentStore from '../../../stores/ExpirementStore';
@@ -7,28 +7,34 @@ import axios from 'axios';
 
 
 const useStyles = theme => ({
-    ions: {
-      marginTop: '2px',
-      marginLeft: '5%',
-      marginRight: '3%',
-      width: '42%',
-    },
-    energies: {
-      marginTop: '2px',
-      marginLeft: '3%',
-      marginRight: '5%',
-      width: '42%',
-    },
-    ionButton: {
-      backgroundColor: "#f5f5b8",
-      marginTop: '30px',
-      marginLeft:'5%',
-      marginRight: '5%',
-      width: '90%',
-    },
-    fullDiv: {
-      width: '100%',
-    }
+  ions: {
+    marginTop: '4px',
+    marginLeft: '5%',
+    marginRight: '3%',
+    width: '26%',
+  },
+  energies: {
+    marginTop: '4px',
+    marginLeft: '3%',
+    marginRight: '3%',
+    width: '26%',
+  },
+  energyHours: {
+    marginTop: '4px',
+    marginLeft: '3%',
+    marginRight: '5%',
+    width: '26%'
+  },
+  ionButton: {
+    backgroundColor: "#f5f5b8",
+    marginTop: '30px',
+    marginLeft:'5%',
+    marginRight: '5%',
+    width: '90%',
+  },
+  fullDiv: {
+    width: '100%',
+  }
   });
 
 class DiscreteIons extends React.Component {
@@ -90,7 +96,7 @@ class DiscreteIons extends React.Component {
             <div>
             <FormControl 
                 className={classes.ions}
-                error = {ExperimentStore.ionsError}
+                error = {ExperimentStore.ionsError(key)}
                 > 
                 <InputLabel>Ion</InputLabel>
                 <Select
@@ -101,12 +107,12 @@ class DiscreteIons extends React.Component {
                     return <MenuItem value={ion}>{ion}</MenuItem>
                   })}
                 </Select>
-                <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
+                <FormHelperText>{ExperimentStore.ionsHelperText(key)}</FormHelperText>
               </FormControl>
   
               <FormControl 
                 className={classes.energies}
-                error = {ExperimentStore.energiesError}
+                error = {ExperimentStore.energiesError(key)}
                 disabled = {ExperimentStore.ions[key] === ""}
                 > 
                 <InputLabel>Energy</InputLabel>
@@ -117,8 +123,20 @@ class DiscreteIons extends React.Component {
                   {this.getEnergies(key)}
                 </Select>
                 
-                <FormHelperText>{ExperimentStore.ionsHelperText}</FormHelperText>
+                <FormHelperText>{ExperimentStore.ionsHelperText(key)}</FormHelperText>
               </FormControl>
+
+              <TextField 
+                className={classes.energyHours}
+                label = "Hours Testing"
+                type = "number"
+                value = {ExperimentStore.energyHours[key]}
+                disabled = {ExperimentStore.ions[key] === ""}
+                error = {ExperimentStore.energyHoursError(key)}
+                helperText = {ExperimentStore.energyHoursHelperText(key)}
+                onChange={event => {ExperimentStore.setEnergyHours(event.target.value, key)}}
+              />
+              
               </div>
           );
           }

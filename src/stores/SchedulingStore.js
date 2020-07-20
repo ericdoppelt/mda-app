@@ -71,7 +71,7 @@ decorate(SchedulingStore, {
 
   viewCalendar: observable,
   toggleCalendar: action,
-  
+
   facility: observable,
   setFacility: action,
 
