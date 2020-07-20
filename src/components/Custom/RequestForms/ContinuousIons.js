@@ -14,7 +14,7 @@ const useStyles = theme => ({
       marginRight: '3%',
       width: '26%',
     },
-    energyText: {
+    energies: {
       marginTop: '4px',
       marginLeft: '3%',
       marginRight: '3%',
@@ -105,7 +105,7 @@ class ContinuousIons extends React.Component {
                 <FormHelperText>{ExperimentStore.ionsHelperText(key)}</FormHelperText>
               </FormControl>
               <TextField 
-                className={classes.energyText}
+                className={classes.energies}
                 label = {this.getLabel(key)}
                 type = "number"
                 value = {ExperimentStore.energies[key]}
