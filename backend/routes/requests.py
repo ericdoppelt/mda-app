@@ -153,7 +153,7 @@ def reject_form():
         'success' : False}
     return result
 
-@app.route('/getforms', methods=['POST'])
+@app.route('/getforms', methods=['GET'])
 #@jwt_required
 def getRequests():
     req = request.get_json()
