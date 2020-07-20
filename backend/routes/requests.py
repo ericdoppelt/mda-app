@@ -210,9 +210,11 @@ def getRequests_integrators():
                 range_end = request_range.start_date + timeDelta
                 range_start = request_range.start_date.strftime("%Y-%m-%dT%H:%M:%S")
                 range_end = range_end.strftime("%Y-%m-%dT%H:%M:%S")
+                totalHours = request_range.hours
             else:
                 range_start = None
                 range_end = None
+                totalHours = None
             start_date = form.start.strftime('%Y-%m-%d')
             if form.scheduled_start is not None:
                 form.scheduled_start = form.scheduled_start.strftime("%Y-%m-%dT%H:%M:%S")
@@ -224,7 +226,7 @@ def getRequests_integrators():
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
             'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
             "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
-            'rangeId' : form.request_range, 'totalHours' : request_range.hours, 
+            'rangeId' : form.request_range, 'totalHours' : totalHours, 
             'ionHours' : form.ion_hours})
         result = {'requests' : myForms}
 
