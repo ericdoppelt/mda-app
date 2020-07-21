@@ -231,7 +231,7 @@ def getRequests_integrators():
             'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
             "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
             'rangeId' : form.request_range, 'totalHours' : totalHours, 
-            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_commen})
+            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment})
         result = {'requests' : myForms}
 
     except Exception as e:
