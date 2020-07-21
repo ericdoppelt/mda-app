@@ -8,9 +8,10 @@ import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
 import Image from '../../../components/UIzard/Image';
 import Title from '../../../components/UIzard/Title';
-import ForgotPassword from '../../../components/Custom/UserReset/forgotpassword';
+import ResetPassword from '../../../components/Custom/UserReset/resetpassword';
 
 export default function Home() {
+
   const classes = Constants.useStyles();
   return (
     <ThemeProvider theme={Constants.darkTheme}>
@@ -25,7 +26,7 @@ export default function Home() {
                   <Image style={{ width: '120px', height: '120px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
                 </Row>
                 <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-                  <ForgotPassword/>
+                  <ResetPassword/>
                 </Row>
               </Stack>
             </Card>
