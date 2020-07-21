@@ -32,7 +32,7 @@ const useStyles = theme => ({
       marginRight: '5%',
       width: '42%',
     },
-    comments: {
+    fullText: {
       marginTop: '2px',
       marginLeft:'5%',
       marginRight: '5%',
@@ -53,21 +53,12 @@ const useStyles = theme => ({
             <br/>
             <Box>Please enter the following information about your experiment.</Box>
             <TextField
-              className={classes.leftTextField}
+              className={classes.fullText}
               label = "Experiment Title"
               value = {ExperimentStore.title}
               onChange={(event) => {ExperimentStore.setTitle(event.target.value)}}
               error = {ExperimentStore.titleError}
               helperText = {ExperimentStore.titleHelperText}
-            />
-            <TextField 
-              className={classes.rightTextField}
-              label = "Total Hours"
-              value = {ExperimentStore.hours}
-              onChange={event => {ExperimentStore.setHours(event.target.value)}}
-              error = {ExperimentStore.hoursError}
-              helperText = {ExperimentStore.hoursHelperText}
-              type="number"
             />
             <TextField 
               className={classes.leftTextField}
@@ -94,7 +85,7 @@ const useStyles = theme => ({
             </FormControl>
 
             <TextField 
-              className={classes.comments}
+              className={classes.fullText}
               label = "Comments"
               value = {ExperimentStore.comments}
               onChange={event => {ExperimentStore.setComments(event.target.value)}}

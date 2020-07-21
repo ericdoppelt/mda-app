@@ -46,11 +46,11 @@ class MSUSubmit extends React.Component {
           billingZip: TesterStore.billingZip,
 
           title: ExperimentStore.title,
-          hours: ExperimentStore.hours,
           personnel: ExperimentStore.personnel,
           date: ExperimentStore.startDate,
           ions: ExperimentStore.ions,
           energies: ExperimentStore.energies,
+          hours: ExperimentStore.hours,
           continuous: ExperimentStore.continuous,
           comments: ExperimentStore.comments,
     
