@@ -97,7 +97,7 @@ class LoginForm extends React.Component {
           <Button
             variant="contained"
             style={{width: '100px'}}
-            onClick={() => {this.props.history.go('/user-registration')}}
+            onClick={() => {this.props.history.push('/user-registration')}}
           >
             Register
           </Button>

@@ -1,18 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import {AppBar, Box,Tab, Tabs, Typography} from '@material-ui/core';
 import ProfileInfo from '../UserProfile/profileInfo';
 import PasswordChanger from '../UserProfile/password';
 import Calendar from '../../../components/Custom/Calendar/Calendar';
 import Card from '../../../components/UIzard/Card';
 
-
-
+/* Define style and function of TabPanel to be used in the exported function*/
+//From material-ui Tab source code
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -53,6 +49,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+/*Exports function that displays tabs and selected tab content*/
 export default function TabsProfile() {
   const classes = useStyles();
   const theme = useTheme();
@@ -77,6 +75,7 @@ export default function TabsProfile() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
+          /*Tab header labels*/
           <Tab label="Update Profile Info" {...a11yProps(0)} />
           <Tab label="Change Password" {...a11yProps(1)} />
           <Tab label="Personal Calendar" {...a11yProps(2)} />
@@ -90,7 +89,7 @@ export default function TabsProfile() {
             <PasswordChanger/>
         </TabPanel>
         <TabPanel value={value} index={2}>
-           <Calendar personal={true}/>
+           <Calendar personal={true}/> 
         </TabPanel>
     </div>
   );

@@ -55,7 +55,7 @@ def request_modify():
         req = request.get_json()
         beam_request = requests.query.filter_by(id=req['id']).first()
 
-        msg = Message("Beam Time Request Modified") #, cc=[req['email']])
+        msg = Message("Beam Time Request Modified")
         msg.recipients = [beam_request.email]
 
         msg.body = "Your beam time request was modified with the following: \n\n"
@@ -86,21 +86,27 @@ def request_modify():
                 if key == "hours":
                     req["beam_time"] = value
         ion_ids = []
-        if req["ions"] is not "":
-            for i, ion in enumerate(req['ions']):
-                beam = Beams.query.filter_by(ion=ion, amev=req['energies'][i]).one()
-                ion_ids.append(beam.id)
+        if "ions" in req:
+            if req["ions"] is not []:
+                for i, ion in enumerate(req['ions']):
+                    beam = Beams.query.filter_by(ion=ion, amev=req['energies'][i]).one()
+                    ion_ids.append(beam.id)
+        else:
+            ion_ids = beam_request.ions
 
+        modified = False
         for attr, value in beam_request.__dict__.items():
-            if attr in req and req[attr] != "":
+            if attr in req and req[attr] != "" and attr != 'id':
+                modified = True
                 setattr(beam_request, attr, req[attr])
 
-        beam_request.ions = ion_ids
-        beam_request.modified = True
         beam_request.approved_integrator = True
-        beam_request.status = "Modified"
+        beam_request.status = "Approved"
 
-        # mail.send(msg)
+        if modified:
+            beam_request.modified = True
+            beam_request.ions = ion_ids
+            # mail.send(msg)
         db.session.commit()
 
         result = {'success' : True}
@@ -120,25 +126,11 @@ def reject_form():
         pdf = FormBuilder(req)
         msg = Message("Beam Time Request Rejected") #, cc=[req['email']])
         msg.recipients = [beam_request.email]
-        # template = "Universal_request_template.pdf"
-        # output = "Universal_request.pdf"
-        # pdf.fill(template, output)
+        
         msg.body = "Your beam time request was rejected for the following reason: \n\n"
-        msg.body += req['integrator_comment'] + "\n\n"
-        # with app.open_resource("TAMU_request.pdf") as fp:
-        #     msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
+        msg.body += req['rejectNote'] + "\n\n"
 
-        # mapper = inspect(requests)
-        # for column in mapper.attrs:
-        #     form[column.key] = beam_request.column.key
-        # form = {}
-        # for attr, value in beam_request.__dict__.items():
-        #     if attr == 'start':
-        #         attr = 'date'
-        #     form[attr] = value
-        #     print(attr, value)
-        # print(form)
-        beam_request.integrator_comment =req['integrator_comment']
+        beam_request.integrator_comment =req['rejectNote']
         beam_request.status = "Rejected"
         beam_request.approved_facility = False
         beam_request.approved_integrator = False
@@ -152,7 +144,7 @@ def reject_form():
         'success' : False}
     return result
 
-@app.route('/getforms', methods=['POST'])
+@app.route('/getforms', methods=['GET'])
 #@jwt_required
 def getRequests():
     req = request.get_json()
@@ -162,22 +154,34 @@ def getRequests():
         request_forms = requests.query.all()
         myForms = []
         for form in request_forms:
-            beams = []
-            energies = []
+            ions = {}
             for ion in form.ions:
                 beam = Beams.query.filter_by(id=ion).one()
-                beams.append(beam.ion)
-                energies.append(beam.amev)
-            delta = timedelta(hours=12)
-            time = (form.start + delta).strftime('%Y-%m-%dT%H:%M')
+                ions[beam.ion] = beam.amev
+            if form.request_range is not None:
+                request_range = Ranges.query.filter_by(id=form.request_range).first()
+                timeDelta = timedelta(hours = request_range.hours)
+                range_end = request_range.start_date + timeDelta
+                range_start = request_range.start_date.strftime("%Y-%m-%dT%H:%M:%S")
+                range_end = range_end.strftime("%Y-%m-%dT%H:%M:%S")
+                totalHours = request_range.hours
+            else:
+                range_start = None
+                range_end = None
+                totalHours = None
+            start_date = form.start.strftime('%Y-%m-%d')
+            if form.scheduled_start is not None:
+                form.scheduled_start = form.scheduled_start.strftime("%Y-%m-%dT%H:%M:%S")
             myForms.append({'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
             'PO_number' : form.po_number, 'address' : form.address,
             'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
-            'ions' : beams, 'energies' : energies, 'start' : time, 'id' : form.id})
-        print(myForms)
+            'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
+            "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
+            'rangeId' : form.request_range, 'totalHours' : totalHours, 
+            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment})
         result = {'requests' : myForms}
 
     except Exception as e:
@@ -227,7 +231,7 @@ def getRequests_integrators():
             'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
             "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
             'rangeId' : form.request_range, 'totalHours' : totalHours, 
-            'ionHours' : form.ion_hours})
+            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment})
         result = {'requests' : myForms}
 
     except Exception as e:

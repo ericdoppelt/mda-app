@@ -1,16 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import {Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, TextField, Typography} from '@material-ui/core';
-import {Button, FormHelperText, FormControl, InputLabel, Select} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import {Snackbar, Table, TableBody, TableCell, TableRow, TextField, Typography} from '@material-ui/core';
+import {Button, IconButton, InputAdornment, InputLabel} from '@material-ui/core';
+import {Visibility, VisibilityOff} from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import {Alert, AlertTitle} from '@material-ui/lab';
 
-
+  /*Define class themes */
   const useStyles = theme => ({
     table: {
      marginLeft: '25%',
@@ -28,11 +25,12 @@ import {Alert, AlertTitle} from '@material-ui/lab';
      marginBottom: '5%',
    }
   });
-
+  //Generate Class
 class ForgotUsername extends React.Component {
 
     constructor(props) {
       super(props);
+      //State variables
       this.state = {
         email: '',
 
@@ -42,6 +40,9 @@ class ForgotUsername extends React.Component {
       }
     }
 
+    /*Submits forgot username request to database*/
+    //Includes email state variable and JWT
+    //Updates state variables, including errors in response
     async submit() {
       let self = this;
       let url = 'https://mda-phoenix.herokuapp.com/user/forgot-username';
@@ -69,6 +70,7 @@ class ForgotUsername extends React.Component {
     });
     }
 
+    //Displays alert based on submit success/failure state variables
     getAlert() {
         if (this.state.submitSuccess) {
           return(
@@ -106,9 +108,9 @@ class ForgotUsername extends React.Component {
         }
     }
 
-
+    //This is what displays when page is rendered
     render() {
-      const {classes} = this.props;
+      const {classes} = this.props; //Allows access to class styles defined above
       return (
         <div>
           <Typography className={classes.subheader} variant='subtitle2'>Please enter the email associated with your account<br/> We will email you the matching usename </Typography>
@@ -134,12 +136,5 @@ class ForgotUsername extends React.Component {
         </div>
       )
     }
-
-
-
-
-
-
 }
-
 export default withRouter(withStyles(useStyles)(ForgotUsername));
