@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Typography} from '@material-ui/core';
 import CalendarSched from './CalendarSched/CalendarSched';
 import RangeButton from './Prioritizer/RangeButton';
@@ -13,10 +13,6 @@ import {Button} from '@material-ui/core'
 const ScheduleStore = createContext(ScheduleStorage);
 
 class ScheduleContainer extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

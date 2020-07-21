@@ -81,22 +81,22 @@ class ExpirementStore {
         return "";
     }
 
-    energyHours = observable.array([""]);
-    setEnergyHours(newHour, index) {
-        this.energyHours[index] = newHour;
+    hours = observable.array([""]);
+    setHours(newHour, index) {
+        this.hours[index] = newHour;
     }
-    energyHoursError(index) {
-        return this.energyHours[index] === "" && this.submitted;
+    hoursError(index) {
+        return this.hours[index] === "" && this.submitted;
     }
-    energyHoursHelperText(index) {
-        if (this.energyHoursError(index)) return "Please enter the hours.";
+    hoursHelperText(index) {
+        if (this.hoursError(index)) return "Please enter the hours.";
         return "";
     }
 
     addBeam() {
         this.ions.push("");
         this.energies.push("");
-        this.energyHours.push("");
+        this.hours.push("");
     }
     clearBeams() {
         this.ions = observable.array([""]);;
@@ -134,11 +134,6 @@ decorate(ExpirementStore, {
     titleError: computed,
     titleHelperText: computed,
 
-    hours: observable,
-    setHours: action,
-    hoursError: computed,
-    hoursHelperText: computed,
-
     personnel: observable,
     setPersonnel: action,
     personnelError: computed,
@@ -152,10 +147,11 @@ decorate(ExpirementStore, {
     ions: observable,
     setIons: action,
 
-    energyHours: observable,
-    setEnergyHours: action,
     energies: observable,
     setEnergies: action,
+
+    hours: observable,
+    setHours: action,
 
     addBeam: action,
     clearBeams: action,

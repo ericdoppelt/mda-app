@@ -1,14 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Redirect} from 'react-router-dom';
-import {Typography} from '@material-ui/core';
 import Card from '../../../components/UIzard/Card';
 import Row from '../../../components/UIzard/Row';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import { createContext } from "react";
 import Stack from '../../../components/UIzard/Stack';
-import { observer } from "mobx-react"
 import ScheduleContainer from '../../../components/Custom/Scheduling/ScheduleContainer';
 
 

@@ -1,6 +1,4 @@
-import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import React from 'react';
-import Drawer from '@material-ui/core/Drawer';
+import { makeStyles, createMuiTheme} from '@material-ui/core/styles';
 
 export const darkTheme = createMuiTheme({
     palette: {

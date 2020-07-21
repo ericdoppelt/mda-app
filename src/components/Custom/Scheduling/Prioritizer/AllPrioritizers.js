@@ -21,6 +21,7 @@ class AllPrioritizers extends React.Component {
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
+      console.log("response");
       console.log(response);
       SchedulingStore.setRequests(response.data.requests);
     }).catch(error => {

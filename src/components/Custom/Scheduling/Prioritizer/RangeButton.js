@@ -159,7 +159,7 @@ class RangeButton extends React.Component {
   }
 
   moveToTimePicker() {
-    if (this.state.startDate != '') {
+    if (this.state.startDate !== '') {
       this.setState({
         dialog: 'time',
         startDateError: false,
@@ -203,7 +203,7 @@ class RangeButton extends React.Component {
   }
 
   moveToSubmit() {
-    if (this.state.startTime != '') {
+    if (this.state.startTime !== '') {
       this.setState({
         dialog: '',
         startTimeError: false,

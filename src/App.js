@@ -10,7 +10,6 @@ import RequestTAMU from './containers/RequestForm/TAMU';
 import RequestLBNL from './containers/RequestForm/LBNL';
 import RequestMSU from './containers/RequestForm/MSU';
 import RequestNSRL from './containers/RequestForm/NSRL';
-import RequestCommon from './containers/RequestForm/Common';
 import axios from 'axios';
 
 import FacilityMain from './containers/Facility/FacilityMain';

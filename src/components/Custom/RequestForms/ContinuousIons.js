@@ -121,11 +121,11 @@ class ContinuousIons extends React.Component {
                 className={classes.energyHours}
                 label = "Hours Testing"
                 type = "number"
-                value = {ExperimentStore.energyHours[key]}
+                value = {ExperimentStore.hours[key]}
                 disabled = {ExperimentStore.ions[key] === ""}
-                error = {ExperimentStore.energyHoursError(key)}
-                helperText = {ExperimentStore.energyHoursHelperText(key)}
-                onChange={event => {ExperimentStore.setEnergyHours(event.target.value, key)}}
+                error = {ExperimentStore.hoursError(key)}
+                helperText = {ExperimentStore.hoursHelperText(key)}
+                onChange={event => {ExperimentStore.setHours(event.target.value, key)}}
               />
               </div>
           );

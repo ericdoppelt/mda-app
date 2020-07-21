@@ -10,16 +10,11 @@ import './CalendarSched.scss'
 import CardNoShadow from '../../../UIzard/CardNoShadow';
 import Row from '../../../UIzard/Row';
 import Stack from '../../../UIzard/Stack';
-import Title from '../../../UIzard/Title';
 
-import { observer } from "mobx-react"
-import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
-import { Box, TextField, Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Button, Avatar, List, ListItem } from '@material-ui/core';  
+import {withStyles} from '@material-ui/core/styles';
+import { Box, TextField, Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Button, Avatar} from '@material-ui/core';  
 import SchedulingStore from '../../../../stores/SchedulingStore';
 
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
@@ -64,13 +59,13 @@ const colors = [
 
 var uniqueEnergies = [];
 
-const eventSample = [
+/* const eventSample = [
   ['TAMU','MDA','2020-07-20T00:00','10'],
   ['TAMU','MDA','2020-07-21T00:00','10'],
   ['TAMU','MDA','2020-07-22T00:00','15'],
   ['TAMU','MDA','2020-07-23T00:00','15'],
   ['TAMU','MDA','2020-07-24T00:00','20'],
-]
+] */
 
 const useStyles = (theme) => ({
   formControl: {
@@ -232,7 +227,7 @@ class CalendarSched extends React.Component {
   async componentDidMount(username) {
     this.loadPrioritizerData();
     let url = "https://mda-phoenix.herokuapp.com/calendar";
-    var self = this;
+    /* var self = this; */
     await axios.post(url).then(response => {
       /*self.setState({
         username: response.data.username,
@@ -243,10 +238,10 @@ class CalendarSched extends React.Component {
         cannotRun: response.data.cannotRun
         });*/
         //console.log(response.data)
-        var data = [];
-        response.data.entries.forEach(function(event) {
+        /* var data = []; */
+        /* response.data.entries.forEach(function(event) {
           //data.push(self.makeEvent(event.facility,event.integrator,event.startDate));
-        })
+        }) */
         /*
         console.log('Generating Events')
         eventSample.forEach(function(event) {
@@ -277,10 +272,10 @@ class CalendarSched extends React.Component {
           startDate: response.data.startDate,
           cannotRun: response.data.cannotRun
           });*/
-          var data = [];
+          /* var data = [];
           response.data.entries.forEach(function(event) {
             //data.push(self.makeEventPersonal(event.facility,event.integrator,event.startDate));
-          })
+          }) */
           //self.setState({personalEvents : data});
         })
         .catch(error => {

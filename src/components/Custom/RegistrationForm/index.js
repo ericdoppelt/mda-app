@@ -122,7 +122,7 @@ class RegistrationForm extends React.Component {
     let formIsValid = !this.state.firstNameError && !this.state.lastNameError && !this.state.usernameError && !this.state.passwordError
     && !this.affiliationError && !this.typeError && !this.phoneError && !this.emailError;
     console.log(this.state);
-    /* if (formIsValid) {
+    if (formIsValid) {
       var self = this;
       await axios.post('https://mda-phoenix.herokuapp.com/register', {
         first_name: self.state.firstName,
@@ -143,7 +143,7 @@ class RegistrationForm extends React.Component {
       }).catch(error => {
         alert(error);
       });
-    } */
+    }
   }
 
   render() {
@@ -179,7 +179,7 @@ class RegistrationForm extends React.Component {
           label = "Password"
           onChange={event => {this.setState({password: event.target.value})}}
           type = {this.state.showPassword ? 'text' : 'password'}
-          error = {this.state.passwordError}
+          error = {(this.state.passwordEmptyError | this.passwordInvalidError)}
           helperText = {this.state.passwordHelper}
           InputProps={{
             endAdornment: (

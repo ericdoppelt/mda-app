@@ -10,7 +10,7 @@ class TAMUStore {
             if (date.getTime() === newDate.getTime()) index = i;
         });
 
-        if (index == -1) this.badDates.unshift(newDate);
+        if (index === -1) this.badDates.unshift(newDate);
         else this.badDates.splice(index, 1);
         console.log(this.badDates);
     }

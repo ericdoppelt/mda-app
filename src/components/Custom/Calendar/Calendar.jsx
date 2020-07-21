@@ -10,12 +10,9 @@ import './Calendar.scss'
 import CardNoShadow from '../../UIzard/CardNoShadow';
 import Row from '../../UIzard/Row';
 import Stack from '../../UIzard/Stack';
-import Title from '../../UIzard/Title';
 
-import { observer } from "mobx-react"
-import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, withStyles} from '@material-ui/core/styles';
 import { Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem } from '@material-ui/core';  
-import UserProfileStore from '../../../stores/UserProfileStore';
 
 // Checkbox items
 const facilities = [
@@ -238,7 +235,7 @@ class Calendar extends React.Component {
       var facility = event.extendedProps.facility; 
       var integrator = event.extendedProps.integrator; 
       var beamType = event.extendedProps.beamType; 
-      var titleString = facility + " - " + integrator + ": " + beamType;
+      /* var titleString = facility + " - " + integrator + ": " + beamType; */
       //console.log(event);
       //event.setProp('title', titleString);
     })

@@ -1,4 +1,4 @@
-import {observable, action, computed, decorate} from 'mobx';
+import {observable, action, decorate} from 'mobx';
 
 class SchedulingStore {
 
@@ -39,8 +39,9 @@ class SchedulingStore {
     }
 
     rangeRequests(startDate, endDate, facility) {
+
         let start = new Date(startDate);
-        let end = new Date(endDate);
+        // let end = new Date(endDate);
         let returnedRequests = [];
 
         for (let i = 0; i < this.requests.length; i++) {
