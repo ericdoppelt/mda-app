@@ -7,7 +7,7 @@ from datetime import timedelta, datetime
 from main import app, jwt, mail
 from setup.extensions import db
 from models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
-                    Integrator, Ranges)
+                    Integrator, Ranges, LBNL, TAMU, NSRL)
 
 from .request_helper import FormBuilder
 
@@ -17,11 +17,15 @@ def add_request(form, username):
     if form['billingPO'] == "":
         form['billingPO'] = None
     ion_ids = []
-    print(form)
     for i, ion in enumerate(form['ions']):
         beam = Beams.query.filter_by(ion=ion, amev=form['energies'][i]).one()
         ion_ids.append(beam.id)
-    print(ion_ids)
+
+    ionHours = []
+    totalHours = 0
+    for i in form['hours']:
+        ionHours.append(int(i))
+        totalHours += int(i)
     entry = requests(name = form['name'],
                     email = form['email'],
                     cell = form['cell'],
@@ -42,14 +46,46 @@ def add_request(form, username):
                     ions = ion_ids,
                     comments = form['comments'],
                     po_number = form['billingPO'],
-                    beam_time = form['hours'],
+                    beam_time = totalHours,
                     username = username,
                     date_of_request = datetime.now(),
                     modified = False,
                     status = "Pending",
                     rejected = False,
-                    ion_hours = form['ionHours'])
+                    ion_hours = ionHours)
     entry.create_request()
+    # request_id = entry.id
+    # if form['facility'] == 'TAMU':
+    #     facility_form = TAMU(request_id = request_id,
+    #                         bad_dates = form['badDates'])
+    #     facility_form.create_request()
+
+    # if form['facility'] == 'LBNL':
+    #     facility_form = LBNL(request_id = request_id,
+    #                         address = form['address'],
+    #                         officePhone = form['officePhone'],
+    #                         abstract = form['abstract'],
+    #                         alternateDate = form['alternateDate'],
+    #                         targetMaterials = form['targetMaterials'],
+    #                         safetyConcerns = form['safetyConcerns'],
+    #                         beamType = form['beamType'],
+    #                         specialIons = form['specialIons'],
+    #                         specialEnergies = form['specialEnergies'],
+    #                         desiredIntensity = form['desiredIntensity'],
+    #                         airOrVacuum = form['airOrVacuum'],
+    #                         controlRestrictions = form['controlRestrictions'],
+    #                         electricallySafe = form['electricallySafe'])
+    #     facility_form.create_request()
+
+    # if form['facility'] == 'NSRL':
+    #     facility_form = NSRL(request_id = request_id,
+    #                         endDate = form['endDate'],
+    #                         experimentType = form['experimentType'],
+    #                         isNasa = form['isNasa'],
+    #                         let = form['let'],
+    #                         beamSize = form['beamSize'],
+    #                         maxDose = form['maxDose'])
+    #     facility_form.create_request()
 
 @app.route('/requestform', methods=['POST'])
 @jwt_required

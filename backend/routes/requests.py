@@ -147,7 +147,6 @@ def reject_form():
 @app.route('/getforms', methods=['GET'])
 #@jwt_required
 def getRequests():
-    req = request.get_json()
     result = ""
 
     try:

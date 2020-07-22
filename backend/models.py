@@ -172,6 +172,59 @@ class Beams(db.Model):
     def __repr__(self):
         return "<Beam(org_id=%s, ion=%s)>" % (self.org_id, self.ion)
 
+class TAMU(db.Model):
+    """Model for the Requests table"""
+    __tablename__ = 'TAMU'
+
+    id = db.Column(db.Integer(), primary_key = True)
+    bad_date = db.Column(db.ARRAY(db.Date()))
+    request_id = db.Column(db.Integer())
+
+    def create_request(self):
+        db.session.add(self)
+        db.session.commit()
+
+class LBNL(db.Model):
+    """Model for the Requests table"""
+    __tablename__ = 'LBNL'
+
+    id = db.Column(db.Integer(), primary_key = True)
+    request_id = db.Column(db.Integer())
+    address = db.Column(db.String(128))
+    officePhone = db.Column(db.String(15))
+    abstract = db.Column(db.String(200))
+    alternateDate = db.Column(db.Date())
+    targetMaterials = db.Column(db.String(100))
+    safetyConcerns = db.Column(db.String(200))
+    beamType = db.Column(db.String(50))
+    specialIons = db.Column(db.String(50))
+    specialEnergies = db.Column(db.String(50))
+    desiredIntensity = db.Column(db.String(50))
+    airOrVacuum = db.Column(db.String(20))
+    controlRestrictions = db.Column(db.String(200))
+    electricallySafe = db.Column(db.String(25))
+
+    def create_request(self):
+        db.session.add(self)
+        db.session.commit()
+
+class NSRL(db.Model):
+    """Model for the Requests table"""
+    __tablename__ = 'NSRL'
+
+    id = db.Column(db.Integer(), primary_key = True)
+    request_id = db.Column(db.Integer())
+    endDate = db.Column(db.Date())
+    experimentType = db.Column(db.String(50))
+    isNasa = db.Column(db.Boolean())
+    let = db.Column(db.String(100))
+    beamSize = db.Column(db.String(100))
+    maxDose = db.Column(db.String(100))
+
+    def create_request(self):
+        db.session.add(self)
+        db.session.commit()
+
 class requests(db.Model):
     """Model for the Requests table"""
     __tablename__ = 'requests'
