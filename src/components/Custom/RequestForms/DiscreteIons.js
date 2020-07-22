@@ -132,7 +132,7 @@ class DiscreteIons extends React.Component {
                 type = "number"
                 value = {ExperimentStore.hours[key]}
                 disabled = {ExperimentStore.ions[key] === ""}
-                //error = {ExperimentStore.hoursError(key)}
+                error = {ExperimentStore.hoursError(key)}
                 helperText = {ExperimentStore.hoursHelperText(key)}
                 onChange={event => {ExperimentStore.setHours(event.target.value, key)}}
               />

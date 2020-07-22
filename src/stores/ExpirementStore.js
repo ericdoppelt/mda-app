@@ -19,18 +19,6 @@ class ExpirementStore {
         else return "";
     }
 
-    hours = "";
-    setHours(newHours) {
-        this.hours = newHours;
-    }
-    get hoursError() {
-        return this.hours === "" && this.submitted;
-    }
-    get hoursHelperText() {
-        if (this.hoursError) return "Please enter the total hours for the experiment.";
-        else return "";
-    }
-
     personnel = "";
     setPersonnel(newPersonnel) {
         this.personnel = newPersonnel;
