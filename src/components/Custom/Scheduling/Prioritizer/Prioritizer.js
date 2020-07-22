@@ -1,9 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader, Typography} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import SchedulingStore from '../../../../stores/SchedulingStore';
 import { observer } from "mobx-react"
+import LBNLScheduler from '../LBNLScheduler';
 
   const useStyles = theme => ({
     root: {
@@ -28,6 +28,7 @@ class Prioritizer extends React.Component {
           priority: [],
           general: [],
           checked: [],
+          hours: this.props.hours,
           startDateTime: this.props.start,
           endDateTime: this.props.end,
       }
@@ -159,10 +160,13 @@ getList(listArray, title) {
     SchedulingStore.setEndDateTime(this.state.endDateTime);
     console.log(SchedulingStore);
     SchedulingStore.toggleCalendar();
+
+    let testSchedule = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.hours);
+    console.log(testSchedule);
   }
 
   getSuggested() {
-    
+
   }
 
   getHeader() {

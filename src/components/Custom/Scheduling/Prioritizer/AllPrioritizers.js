@@ -21,8 +21,6 @@ class AllPrioritizers extends React.Component {
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
-      console.log("response");
-      console.log(response);
       SchedulingStore.setRequests(response.data.requests);
     }).catch(error => {
       alert(error);
@@ -46,17 +44,18 @@ class AllPrioritizers extends React.Component {
     return this.state.ranges.map(function(range) {
         return(
             <div>
-                {self.createPrioritizer(range.startDate, range.endDate, range.facility)}
+                {self.createPrioritizer(range.startDate, range.endDate, range.facility, range.hours)}
             </div>
         );
     });
   }
 
-  createPrioritizer(start, end, facility) {
+  createPrioritizer(start, end, facility, hours) {
     return <Prioritizer
       start={start} 
-      end={end} 
-      facility={facility}
+      end= {end} 
+      facility= {facility}
+      hours = {hours}
       />
   }
 
