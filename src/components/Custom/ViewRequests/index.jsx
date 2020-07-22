@@ -187,7 +187,9 @@ class ViewRequests extends React.Component {
     const url = "https://mda-phoenix.herokuapp.com/getforms";
     let self = this;
     let result;
-    await axios.post(url, {"name": "Rob"}).then(response => {
+    await axios.get(url, 
+      {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      ).then(response => {
       result = response.data.requests;
       //console.log(response.data);
     })
