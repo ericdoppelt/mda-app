@@ -162,7 +162,6 @@ getList(listArray, title) {
     SchedulingStore.toggleCalendar();
 
     let testSchedule = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.hours);
-    console.log(testSchedule);
   }
 
   getSuggested() {

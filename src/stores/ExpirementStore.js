@@ -93,10 +93,12 @@ class ExpirementStore {
         return "";
     }
 
+    numberBeams = 1;
     addBeam() {
         this.ions.push("");
         this.energies.push("");
         this.hours.push("");
+        this.numberBeams++;
     }
     clearBeams() {
         this.ions = observable.array([""]);;
@@ -120,8 +122,14 @@ class ExpirementStore {
     }
 
     get validForm() {
-        return !this.titleError && !this.hoursError && !this.personnelError && !this.startDateError
-        && !this.ionsError && !this.energiesError && !this.continuousError && this.submitted;
+        let ionError, energyError, hoursError = false;
+        for (let i = 0; i < this.numberBeams; i++) {
+            if (this.ionsError(i)) ionError = true;
+            if (this.energiesError(i)) energyError = true;
+            if (this.hoursError(i)) hoursError = true;
+        }
+        return !this.titleError && !this.personnelError && !this.startDateError
+        && !this.continuousError && !ionError && !energyError && !hoursError && this.submitted;
     }
 }
 
