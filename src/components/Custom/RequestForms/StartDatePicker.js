@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
+import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar} from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
@@ -26,6 +27,23 @@ class StartDatePicker extends React.Component {
       }
     }
 
+    checkForError() {
+      if (ExperimentStore.startDateError) {
+        return(
+          <Snackbar 
+            open={ExperimentStore.startDateError}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            >
+            <Alert severity="error">
+              Enter a start date.
+            </Alert>
+          </Snackbar>
+        );
+      }
+    }
     render() {
       const { classes } = this.props;
       return(
@@ -49,6 +67,8 @@ class StartDatePicker extends React.Component {
               </Button>
             </DialogActions>
           </Dialog>
+
+          {this.checkForError()}
         </div>
       );
     }
