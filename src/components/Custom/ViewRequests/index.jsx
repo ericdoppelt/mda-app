@@ -184,7 +184,7 @@ class ViewRequests extends React.Component {
   
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
-    const url = "https://mda-phoenix.herokuapp.com/getforms";
+    const url = "https://mda-phoenix.herokuapp.com/getforms/integrator";
     let self = this;
     let result;
     await axios.get(url, 
