@@ -84,7 +84,7 @@ class RegistrationForm extends React.Component {
     let url = 'https://mda-phoenix.herokuapp.com/integrator';
     await axios.get(url, {
       }).then(response => {
-        this.state.integrators = response.data.integrators;
+        this.setState({integrators: response.data.integrators});
         })
         .catch(error => {
         alert(error);
@@ -148,6 +148,9 @@ class RegistrationForm extends React.Component {
 
   render() {
     const { classes } = this.props;
+    console.log("here");
+    console.log(this.state);
+
     return (
       <div>
         <Typography className={classes.header} variant='h4'>Register an Account</Typography>
@@ -219,6 +222,8 @@ class RegistrationForm extends React.Component {
             onChange={event => {this.setState({affiliation: event.target.value})}}
             >
             {this.state.integrators.map(function(integrator) {
+              console.log("INTEGRATORS");
+              console.log(integrator);
               return <MenuItem value={integrator}>{integrator}</MenuItem>
             })}
           </Select>
