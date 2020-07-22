@@ -5,6 +5,7 @@ import ExperimentStore from '../../../../stores/ExpirementStore';
 import TesterStore from '../../../../stores/TesterStore';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = theme => ({
     submitButton: {
@@ -30,9 +31,11 @@ class TAMUSubmit extends React.Component {
   async submitForm() {
     TesterStore.setSubmitted();
     ExperimentStore.setSubmitted();
+
     if (TesterStore.validForm && ExperimentStore.validForm) {
         let self = this;
         let url = 'https://mda-phoenix.herokuapp.com/requestform';
+        console.log(self.props);
         await axios.post(url, {
           name: TesterStore.senderName,
           email: TesterStore.email,
@@ -97,4 +100,4 @@ class TAMUSubmit extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(TAMUSubmit);
+export default withRouter(withStyles(useStyles)(TAMUSubmit));
