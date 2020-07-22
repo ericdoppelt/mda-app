@@ -122,8 +122,9 @@ def requestform():
             with app.open_resource("TAMU_request.pdf") as fp:
                 msg.attach("TAMU_request.pdf", "TAMU_request/pdf", fp.read())
         if facility == 'LBNL':
+            pass
             # msg.recipients = ['88beamrequest@lbl.gov']
-            msg.body = pdf.mail()
+            # msg.body = pdf.mail()
         if facility == 'MSU':
             # msg.recipients = ['88beamrequest@lbl.gov']
             if form['date'] != "":
