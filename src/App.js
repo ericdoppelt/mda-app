@@ -27,6 +27,7 @@ import ForgotPassword from  './containers/User/ForgotPassword';
 import ForgotUsername from './containers/User/ForgotUsername';
 import ResetPassword from './containers/User/ResetPassword';
 import history from './history';
+import RequestCommon from './containers/RequestForm/Common'
 
 
 const App = () => (
