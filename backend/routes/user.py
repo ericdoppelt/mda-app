@@ -250,7 +250,7 @@ def authenticate_user():
             user.isAuthenticated = True
             db.session.commit()
 
-        elif request.method == 'GET' || request.method == 'POST':
+        elif request.method == 'GET' or request.method == 'POST':
             users = Users.query.filter_by(isAuthenticated=False).all()
             myList = []
             for user in users:

@@ -3,6 +3,7 @@ from flask import request, json, jsonify
 from flask_mail import Message
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from datetime import timedelta, datetime
+from sqlalchemy import and_, or_, between, func, inspect
 
 from main import app, jwt, mail
 from setup.extensions import db
@@ -17,10 +18,11 @@ def add_request(form, username):
     if form['billingPO'] == "":
         form['billingPO'] = None
     ion_ids = []
-    for i, ion in enumerate(form['ions']):
-        print(ion, form['energies'][i])
-        beam = Beams.query.filter_by(ion=ion, amev=form['energies'][i]).one()
-        ion_ids.append(beam.id)
+    for i, energy in enumerate(form['energies']):
+        for ion in form['ions'][i]:
+            print(ion, energy)
+            beam = Beams.query.filter_by(ion=ion, amev=energy).one()
+            ion_ids.append(beam.id)
 
     ionHours = []
     totalHours = 0
@@ -93,6 +95,7 @@ def add_request(form, username):
 def requestform():
     try:
         form = request.get_json()
+        print(form)
         facility = form['facility']
         form['signDate'] = datetime.today().strftime("%m/%d/%Y")
         template = ""
