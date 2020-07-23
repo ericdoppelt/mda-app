@@ -65,25 +65,7 @@ function createData(name, status, facility, integrator, company,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode };
 }
 
-const oldrows = [/*
-  createData('James James', 'MSU', 'MDA', 'Boeing',
-    'NA','NA','NA','NA','NA','NA','NA','NA','NA','NA','NA','NA','NA'),
-  createData('Jim Jim', 'TAMU', 'MDA', 'Boeing',
-    ),
-  createData('Kim Kim', 'TAMU', 'MDA', 'Aerospace Corp.'),
-  createData('Michael McKenna', 'NSRL', 'MDA', 'MDA'),
-  createData('Jodi Jansen', 'LBNL', 'MDA', 'MDA'),
-  createData('Sam Sam', 'LBNL', 'MDA', 'UTC'),
-  createData('Sam Sam', 'MSU', 'MDA', 'UTC'),
-  createData('Ken Ken', 'MSU', 'MDA', 'Aerospace Corp.'),
-  createData('Bridget Bridget', 'TAMU', 'MDA', 'Boeing'),
-  createData('Joan Joan', 'TAMU', 'MDA', 'Aerospace Corp.'),
-  createData('Tim Tim', 'NSRL', 'MDA', 'UTC'),
-  createData('Jamie Jamie', 'NSRL', 'MDA', 'MDA'),
-  createData('Anna Anna', 'NSRL', 'MDA', 'UTC'),
-  createData('Jane Jane', 'NSRL', 'MDA', 'Aerospace Corp.'),
-  createData('Jan Jan', 'NSRL', 'MDA', 'Aerospace Corp.'),*/
-];
+const oldrows = [];
 
 const rows = [];
 
@@ -173,9 +155,10 @@ class ViewRequests extends React.Component {
       message: "",
       data: [],
       oldrows: oldrows,
+      entryCount: 0,
       page: 0,
       rowsPerPage: 10,
-      component: "table",
+      component: "",
     }
   }
 
@@ -196,17 +179,19 @@ class ViewRequests extends React.Component {
     .catch(error => {
       console.log(error);
     });
-    console.log(result);
+    //console.log(result);
+    let tempRows = [];
     result.forEach(function(entry) {
       //console.log(entry);
-      self.setState(state=>({oldrows: [ 
-        createData(entry.name, entry.status, entry.facility, entry.integrator, entry.company,
-          entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
-          entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode),
-        ...state.oldrows]}))
-      //self.state.oldrows.push(createData(entry.name, entry.facility, entry.integrator, entry.company))
+      tempRows.push(createData(entry.name, entry.status, entry.facility, entry.integrator, entry.company,
+        entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
+        entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode))
     });
+    self.setState(state=>({oldrows: tempRows, entryCount: tempRows.length}))
+    console.log("Checking rows")
+    console.log(tempRows)
     console.log(self.state.oldrows);
+    self.setState({component: "table"})
   }
 
   viewMore(row) {
@@ -295,12 +280,12 @@ class ViewRequests extends React.Component {
       this.setState({page: newPage});
     };
     const handleChangeRowsPerPage = (event) => {
-      this.setState({rowsPerPage: this.state.rowsPerPage + event.target.value})
+      this.setState({rowsPerPage: event.target.value})
       this.setState({page: 0});
     };
 
-    const page = this.state.page;
-    const rowsPerPage = this.state.rowsPerPage;
+    let page = this.state.page;
+    let rowsPerPage = this.state.rowsPerPage;
     
     if (this.state.component === 'view') {
       return(
@@ -517,7 +502,7 @@ class ViewRequests extends React.Component {
             <br/><br/><br/><br/>
         </div>
       );
-    } else {
+    } else if (this.state.component === 'table') {
       return (
         <div className='view-requests'>
           <div className='view-requests-inner'>
@@ -567,7 +552,7 @@ class ViewRequests extends React.Component {
               <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={rows.length}
+                count={this.state.entryCount}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
@@ -579,7 +564,7 @@ class ViewRequests extends React.Component {
           </div>
         </div>
       )
-    }
+    } else {return null}
     
   }
 
