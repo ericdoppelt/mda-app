@@ -44,8 +44,8 @@ class ExpirementStore {
         else return "";
     }
 
-    ions = observable.array([""]);
-    setIons(newIons, index) {
+     ions = observable.array([]);
+     setIons(newIons, index) {
         this.ions[index] = newIons;
     }
     ionsError(index) {
@@ -61,7 +61,6 @@ class ExpirementStore {
         this.energies[index] = newEnergies;
     }
     energiesError(index) {
-        console.log(index);
         return (this.energies[index] === ""  || this.energies[index] === undefined) && this.submitted;
     }
     energiesHelperText(index) {

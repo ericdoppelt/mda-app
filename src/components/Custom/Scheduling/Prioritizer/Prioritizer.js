@@ -107,12 +107,14 @@ getList(listArray, title) {
 
     for (var i = 0; i < this.state.general.length; i++) {
       let tempIndex = this.state.general[i].checkedIndex;
-      console.log(tempIndex);
       if (this.state.checked[tempIndex]) {
+        console.log(tempIndex);
         let tempRequest = this.state.general[i];
         newPriority.push(tempRequest);
         let removedIndex = newGeneral.indexOf(this.state.general[i]);
+        console.log(newGeneral);
         newGeneral.splice(removedIndex, 1);
+        console.log(newGeneral);
       }
     }
     this.setState({

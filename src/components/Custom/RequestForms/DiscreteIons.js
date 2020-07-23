@@ -9,17 +9,17 @@ import axios from 'axios';
 const useStyles = theme => ({
   ions: {
     marginTop: '4px',
-    marginLeft: '5%',
+    marginLeft: '3%',
     marginRight: '3%',
     width: '26%',
   },
   energies: {
     marginTop: '4px',
-    marginLeft: '3%',
+    marginLeft: '5%',
     marginRight: '3%',
     width: '26%',
   },
-  energyHours: {
+  experimentHours: {
     marginTop: '4px',
     marginLeft: '3%',
     marginRight: '5%',
@@ -41,14 +41,17 @@ class DiscreteIons extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            particles: [],
-            energies: {},
+            energies: [],
+            beams: {},
             ionIterator: 0,
         }
 
         this.selectIon = this.selectIon.bind(this);
-        this.getEnergies = this.getEnergies.bind(this);
+        this.getEnergies = this.getIons.bind(this);
         ExperimentStore.clearBeams();
+
+        console.log("type");
+        console.log(typeof ExperimentStore.ions[0]);
     }
 
     async componentDidMount() {
@@ -56,8 +59,9 @@ class DiscreteIons extends React.Component {
           await axios.post(url, {
             facility: this.props.facility,
             }).then(response => {
-              this.setState({particles: Object.keys(response.data)});
-              this.setState({energies: response.data});
+              console.log(response);
+              this.setState({energies: Object.keys(response.data)});
+              this.setState({beams: response.data});
               })
               .catch(error => {
               alert(error);
@@ -70,18 +74,26 @@ class DiscreteIons extends React.Component {
         ExperimentStore.addBeam();
     }
     
-    getEnergies(index) {
-        let ion = ExperimentStore.ions[index];
-        if (ion === "" || ion === undefined || this.state.energies[ion] == undefined) {
-          return <MenuItem value={""}>{"Please enter an ion"}</MenuItem>
-          } else if (this.state.energies[ExperimentStore.ions[index]] != undefined) {
-          let energies = this.state.energies[ExperimentStore.ions[index]].map(function(energy) {
-            return <MenuItem value={energy}>{energy} MeV</MenuItem>
+    getIons(index) {
+        let energy = ExperimentStore.energies[index];
+        if (energy === "" || energy === undefined || this.state.beams[energy] == undefined) {
+          return <MenuItem value={""}>{"Please enter a valid energy"}</MenuItem>
+          } else if (this.state.beams[ExperimentStore.energies[index]] != undefined) {
+          let ions = this.state.beams[ExperimentStore.energies[index]].map(function(ions) {
+            return <MenuItem value={ions}>{ions} </MenuItem>
           });
-          return energies;
+          return ions;
         }
     }
 
+    ionArray(index) {
+      let returned = [];
+      let allIons = ExperimentStore.ions[index];
+      for (let i = 0; i < allIons.length; i++) {
+        returned.push(allIons[i]);
+      }
+      return returned;
+    }
     selectIon(ion, index) {
         this.setState({selectedIon: true});
         ExperimentStore.setIons(ion, index);
@@ -94,41 +106,42 @@ class DiscreteIons extends React.Component {
           const key = i;
           returnedSelectors.push(
             <div>
-            <FormControl 
-                className={classes.ions}
-                error = {ExperimentStore.ionsError(key)}
-                > 
-                <InputLabel>Ion</InputLabel>
-                <Select
-                  value={ExperimentStore.ions[i]}
-                  onChange={event => this.selectIon(event.target.value, key)}
-                  >
-                  {this.state.particles.map(function(ion) {
-                    return <MenuItem value={ion}>{ion}</MenuItem>
-                  })}
-                </Select>
-                <FormHelperText>{ExperimentStore.ionsHelperText(key)}</FormHelperText>
-              </FormControl>
-  
+
               <FormControl 
                 className={classes.energies}
                 error = {ExperimentStore.energiesError(key)}
-                disabled = {ExperimentStore.ions[key] === ""}
                 > 
                 <InputLabel>Energy</InputLabel>
                 <Select
                   value={ExperimentStore.energies[key]}
                   onChange={event => {ExperimentStore.setEnergies(event.target.value, key)}}
                   >
-                  {this.getEnergies(key)}
+                  {this.state.energies.map(function(energy) {
+                    return <MenuItem value={energy}>{energy} MeV</MenuItem>
+                  })}
                 </Select>
                 
+                <FormHelperText>{ExperimentStore.energiesHelperText(key)}</FormHelperText>
+              </FormControl>
+            <FormControl 
+                className={classes.ions}
+                error = {ExperimentStore.ionsError(key)}
+                disabled = {ExperimentStore.energies[key] === ""}
+                > 
+                <InputLabel>Ions</InputLabel>
+                <Select
+                  value={this.ionArray(key)}
+                  onChange={event => this.selectIon(event.target.value, key)}
+                  multiple
+                  >
+                  {this.getIons(key)}
+                </Select>
                 <FormHelperText>{ExperimentStore.ionsHelperText(key)}</FormHelperText>
               </FormControl>
 
               <TextField 
-                className={classes.energyHours}
-                label = "Hours Testing"
+                className={classes.experimentHours}
+                label = "Hours"
                 type = "number"
                 value = {ExperimentStore.hours[key]}
                 disabled = {ExperimentStore.ions[key] === ""}

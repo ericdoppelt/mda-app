@@ -2,6 +2,10 @@
 // RETURNS A STRING IF THERE IS AN ERROR, OTHERWISE AN ARRAY SUGGESTION.
 function scheduleLBNL(priorities, generals, startDate, totalHours) {
     
+    console.log("SCHEDULE");
+    console.log(priorities);
+    console.log(generals);
+
     // FIND PRIORITY HOURS
     let priorityLength = 0;
     priorities.forEach(request => priorityLength += request.totalHours);
@@ -37,8 +41,12 @@ function scheduleLBNL(priorities, generals, startDate, totalHours) {
 // RETURNS IF ENERGY CHANGE
 function hasEnergyChange(requests) {
     let energySet = new Set();
-    requests.forEach(request => 
-        request.beams.values.forEach(energy => energySet.add(energy)));
+    console.log("REQUESTS CHANGE");
+    console.log(requests);
+    console.log("AFTER REQUESTS");
+    requests.forEach(request => {
+        console.log(request.beams)}); //.forEach(energy => energySet.add(energy)));
+    
     return (energySet.length <= 1);
 }
 
