@@ -28,6 +28,7 @@ class Users(UserMixin, db.Model):
     phone = db.Column(db.String())
     email = db.Column(db.String())
     org_id = db.Column(db.Integer)
+    isAuthenticated = db.Column(db.Boolean())
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')

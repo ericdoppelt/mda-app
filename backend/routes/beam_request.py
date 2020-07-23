@@ -18,6 +18,7 @@ def add_request(form, username):
         form['billingPO'] = None
     ion_ids = []
     for i, ion in enumerate(form['ions']):
+        print(ion, form['energies'][i])
         beam = Beams.query.filter_by(ion=ion, amev=form['energies'][i]).one()
         ion_ids.append(beam.id)
 

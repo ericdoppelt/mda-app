@@ -37,7 +37,8 @@ def register():
             affiliation = req['affiliation'],
             user_type = req['type'],
             phone = req['phone'],
-            email = req['email']
+            email = req['email'],
+            isAuthenticated = False
         )
         user.set_password(password)
         result = user.register_user()
@@ -60,13 +61,16 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
-
-        expires = timedelta(hours=12)
-        access_token = create_access_token(identity = username, expires_delta=expires)
-        add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
-        result = {'success' : True,
-        'error' : "",
-        'access_token': access_token}
+        if user.isAutheticated:
+            expires = timedelta(hours=12)
+            access_token = create_access_token(identity = username, expires_delta=expires)
+            add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
+            result = {'success' : True,
+            'error' : "",
+            'access_token': access_token}
+        else:
+            result = {'success' : False,
+            'error' : "User not authenticated"}
     else:
         result = {'success' : False,
         'error' : "Incorrect password"}
@@ -229,6 +233,45 @@ def logout():
         return jsonify({'success': True, 'msg': 'Tokens revoked'}), 200
     except TokenNotFound:
         return jsonify({'success': False, 'msg': 'The specified token was not found'}), 404
+
+@app.route('/user/authenticate-user', methods=['GET', 'POST'])
+@jwt_required
+def authenticate_user():
+    result = ""
+    username = get_jwt_identity()
+    print(request.method)
+
+    try:
+        if request.method == 'GET':
+            users = Users.query.filter_by(isAuthenticated=False).all()
+            myList = []
+            for user in users:
+                myList.append({'id': user.id, 'user': user.username,
+                'first_name': user.first_name, 'last_name': user.last_name,
+                'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
+                'email': user.email})
+
+            result = {'results' : myList}
+        
+        elif request.method == 'POST':
+            req = request.get_json()
+
+            username = req['username']
+            user = Users.query.filter_by(username=username).first()
+            user.isAuthenticated = True
+            db.session.commit()
+            
+            result = {'success' : True}
+
+        else:
+            result = {'success' : False, 'error' : 'Invalid method!'}
+
+    except Exception as e:
+        print(e)
+        result = {'error' : str(e),
+        'success' : False}
+
+    return jsonify(result)
 
 # TODO delete or change for production, development purposes only
 @app.route('/deleteuser/<username>', methods=['DELETE'])
