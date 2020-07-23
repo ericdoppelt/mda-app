@@ -22,6 +22,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 const columns = [
   { id: 'name', label: 'Name', width: 200 },
   {
@@ -69,6 +72,10 @@ function createData(id, name, status, facility, integrator, company,
   return { id, name, status, facility, integrator, company, status, viewMore, 
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode, rejectNote };
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const oldrows = [];
@@ -138,6 +145,9 @@ class ViewRequests extends React.Component {
   constructor(props) {
     super(props);
     this.handleDialog= this.handleDialog.bind(this);
+    this.handleApproveSnackClose = this.handleApproveSnackClose.bind(this);
+    this.handleModifySnackClose = this.handleModifySnackClose.bind(this);
+    this.handleRejectSnackClose = this.handleRejectSnackClose.bind(this);
     /*** LIST OF DATES ***/
     this.state = {
       id: "",
@@ -189,6 +199,9 @@ class ViewRequests extends React.Component {
       /*** ETC ***/
       rejectNote: "",
       dialogOpen: false,
+      approveSnackOpen: false,
+      modifySnackOpen: false,
+      rejectSnackOpen: false,
       message: "",
       data: [],
       modifyBool: false,
@@ -332,6 +345,7 @@ class ViewRequests extends React.Component {
         console.log(response.data);
         this.setState(state=>({
           //component: "table",
+          approveSnackOpen: true,
           message: "The form has been approved and added to the calendar.",
         }))
         self.componentDidMount();
@@ -339,12 +353,12 @@ class ViewRequests extends React.Component {
     .catch(error => {
       console.log(error);
     });
-
-    
   }
 
   handleModify () {
-    this.setState({modifyBool: !this.state.modifyBool});
+    this.setState({
+      modifyBool: !this.state.modifyBool
+    });
     console.log("Modify true")
   }
 
@@ -379,6 +393,10 @@ class ViewRequests extends React.Component {
       ).then(response => {
       console.log(response);
       self.componentDidMount();
+      self.setState({
+        modifyBool: !this.state.modifyBool,
+        modifySnackOpen: true,
+      });
       //self.setState({modifyBool: false, component: "table"});
     })
     .catch(error => {
@@ -390,6 +408,18 @@ class ViewRequests extends React.Component {
     this.setState( {dialogOpen: !this.state.dialogOpen} );
   }
 
+  handleApproveSnackClose () {
+    this.setState({approveSnackOpen: false})
+  }
+
+  handleModifySnackClose () {
+    this.setState({modifySnackOpen: false})
+  }
+
+  handleRejectSnackClose () {
+    this.setState({rejectSnackOpen: false})
+  }
+
   async handleReject () {
     const url = "https://mda-phoenix.herokuapp.com/request/reject";
     let self = this;
@@ -399,6 +429,7 @@ class ViewRequests extends React.Component {
       console.log(response);
       self.handleDialog();
       self.componentDidMount();
+      self.setState({rejectSnackOpen: true});
       //self.setState({modifyBool: false, component: "table"});
     })
     .catch(error => {
@@ -470,6 +501,7 @@ class ViewRequests extends React.Component {
     
   }
 
+
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
 
@@ -484,376 +516,407 @@ class ViewRequests extends React.Component {
 
     let page = this.state.page;
     let rowsPerPage = this.state.rowsPerPage;
-    
-    if (this.state.component === 'view') {
-      return(
-        <div>
-          <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent:'flex-end'}}>
-            {this.state.rejectNote}
-          </Row>
-          <br/>
-            <Row>
-              <TextField
-                label="Status"
-                className={classes.leftTextField}
-                id="standard-read-only-input"
-                defaultValue={this.state.status}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
-              <Button 
-                className={classes.rightTextField}
-                id="button" 
-                variant="contained"
-                style={{width: '100px', height: '30px', fontSize: '12px'}}
-                onClick={(event) => this.handleBack()}
-              >
-                Return
-              </Button>
-            </Row>
-            <br/>
-            {this.state.status === 'Rejected'
-              ? <div>
-                  <Row style={{justifyContent: 'flex-start'}}>
-                    <TextField
-                      label="Rejection Reason"
-                      className={classes.leftTextField}
-                      id="standard-read-only-input"
-                      defaultValue={this.state.rejectNote}
-                      InputProps={{
-                        readOnly: true
-                      }}
-                    />
-                  </Row>
-                  <br/>
-                </div>
-            : null}
-            
-            <Row >
-              <TextField
-                label="Facility"
-                className={classes.leftTextField}
-                id="standard-read-only-input"
-                defaultValue={this.state.facility}
-                InputProps={{
-                  readOnly: !this.state.modifyBool,
-                }}
-                onChange={event => {this.setState({facilityNew: event.target.value})}}
-                variant={this.state.modifyBool ? "outlined" : "standard"}
-              />
-              
-            </Row>
-            <br/>
-            <Typography variant="h6">Contact and Funding Information</Typography>
-            <br/>
-            <TextField
-              label="Name"
-              className={classes.leftTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.name}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({nameNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Company"
-              className={classes.rightTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.company}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({companyNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Email"
-              className={classes.leftTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.email}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({emailNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Phone"
-              className={classes.rightTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.phone}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({phoneNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <br/>
-            <br/>
-            <TextField 
-              label = "Integrator"
-              className={classes.leftTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.integrator}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({integratorNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Funding Contact"
-              className={classes.rightTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.funding_contact}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({funding_contactNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Funding Contact Phone"
-              className={classes.leftTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.funding_cell}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({funding_cellNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Funding Contact Email"
-              className={classes.rightTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.funding_email}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({funding_emailNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <br/>
-            <br/>
-            <TextField 
-              label = "Billing Address"
-              className={classes.billingAddress}
-              id="standard-read-only-input"
-              defaultValue={this.state.address}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({billingAddressNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "P.O. No."
-              className={classes.poNumber}
-              id="standard-read-only-input"
-              defaultValue={this.state.poNum}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({poNumNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "City"
-              className={classes.billingCity}
-              id="standard-read-only-input"
-              defaultValue={this.state.city}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({cityNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "State"
-              className={classes.billingState}
-              id="standard-read-only-input"
-              defaultValue={this.state.state}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({stateNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Zip"
-              className={classes.billingZip}
-              id="standard-read-only-input"
-              defaultValue={this.state.zipCode}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({zipCodeNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <br/><br/>
-            <Typography variant="h6">Experiment Information</Typography>
-            <TextField 
-              label = "Energies"
-              className={classes.leftTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.energies}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({energiesNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Ions"
-              className={classes.rightTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.ions}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({ionsNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
-            <TextField 
-              label = "Start Date"
-              className={classes.leftTextField}
-              id="standard-read-only-input"
-              defaultValue={this.state.startDate}
-              InputProps={{
-                readOnly: !this.state.modifyBool,
-              }}
-              onChange={event => {this.setState({startDateNew: event.target.value})}}
-              variant={this.state.modifyBool ? "outlined" : "standard"}
-              margin={this.state.modifyBool ? "normal" : "none"}
-            />
 
-            <br/><br/><br/>
-
-            {this.showButtons()}
-            <br/><br/><br/><br/>
-
-            {/* Rejection Dialog */}
-            <Dialog
-              open={this.state.dialogOpen}
-              onClose={this.handleDialog}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+    const tableAndViewMaster = () => {
+      if (this.state.component === 'view') {
+        return(
+            <div>
+              <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent:'flex-end'}}>
+                {this.state.rejectNote}
+              </Row>
+              <br/>
+                <Row>
                   <TextField
-                    label="Enter the reason for rejection."
-                    fullWidth
+                    label="Status"
+                    className={classes.leftTextField}
                     id="standard-read-only-input"
-                    onChange={event => {this.setState({rejectNote: event.target.value})}}
+                    defaultValue={this.state.status}
+                    InputProps={{
+                      readOnly: true
+                    }}
                   />
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button 
-                  id="button" 
-                  variant="contained"
-                  style={{width: '160px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-                  onClick={(event) => this.handleReject()}
-                  color="secondary"
+                  <Button 
+                    className={classes.rightTextField}
+                    id="button" 
+                    variant="contained"
+                    style={{width: '100px', height: '30px', fontSize: '12px'}}
+                    onClick={(event) => this.handleBack()}
+                  >
+                    Return
+                  </Button>
+                </Row>
+                <br/>
+                {this.state.status === 'Rejected'
+                  ? <div>
+                      <Row style={{justifyContent: 'flex-start'}}>
+                        <TextField
+                          label="Rejection Reason"
+                          className={classes.leftTextField}
+                          id="standard-read-only-input"
+                          defaultValue={this.state.rejectNote}
+                          InputProps={{
+                            readOnly: true
+                          }}
+                        />
+                      </Row>
+                      <br/>
+                    </div>
+                : null}
+                
+                <Row >
+                  <TextField
+                    label="Facility"
+                    className={classes.leftTextField}
+                    id="standard-read-only-input"
+                    defaultValue={this.state.facility}
+                    InputProps={{
+                      readOnly: !this.state.modifyBool,
+                    }}
+                    onChange={event => {this.setState({facilityNew: event.target.value})}}
+                    variant={this.state.modifyBool ? "outlined" : "standard"}
+                  />
+                  
+                </Row>
+                <br/>
+                <Typography variant="h6">Contact and Funding Information</Typography>
+                <br/>
+                <TextField
+                  label="Name"
+                  className={classes.leftTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.name}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({nameNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Company"
+                  className={classes.rightTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.company}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({companyNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Email"
+                  className={classes.leftTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.email}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({emailNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Phone"
+                  className={classes.rightTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.phone}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({phoneNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <br/>
+                <br/>
+                <TextField 
+                  label = "Integrator"
+                  className={classes.leftTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.integrator}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({integratorNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Funding Contact"
+                  className={classes.rightTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.funding_contact}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({funding_contactNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Funding Contact Phone"
+                  className={classes.leftTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.funding_cell}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({funding_cellNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Funding Contact Email"
+                  className={classes.rightTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.funding_email}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({funding_emailNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <br/>
+                <br/>
+                <TextField 
+                  label = "Billing Address"
+                  className={classes.billingAddress}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.address}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({billingAddressNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "P.O. No."
+                  className={classes.poNumber}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.poNum}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({poNumNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "City"
+                  className={classes.billingCity}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.city}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({cityNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "State"
+                  className={classes.billingState}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.state}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({stateNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Zip"
+                  className={classes.billingZip}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.zipCode}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({zipCodeNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <br/><br/>
+                <Typography variant="h6">Experiment Information</Typography>
+                <TextField 
+                  label = "Energies"
+                  className={classes.leftTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.energies}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({energiesNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Ions"
+                  className={classes.rightTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.ions}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({ionsNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+                <TextField 
+                  label = "Start Date"
+                  className={classes.leftTextField}
+                  id="standard-read-only-input"
+                  defaultValue={this.state.startDate}
+                  InputProps={{
+                    readOnly: !this.state.modifyBool,
+                  }}
+                  onChange={event => {this.setState({startDateNew: event.target.value})}}
+                  variant={this.state.modifyBool ? "outlined" : "standard"}
+                  margin={this.state.modifyBool ? "normal" : "none"}
+                />
+    
+                <br/><br/><br/>
+    
+                {this.showButtons()}
+                <br/><br/><br/><br/>
+    
+                {/* Rejection Dialog */}
+                <Dialog
+                  open={this.state.dialogOpen}
+                  onClose={this.handleDialog}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
                 >
-                  Confirm Rejection
-                </Button>
-                <Button 
-                  id="button" 
-                  variant="contained"
-                  style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-                  onClick={this.handleDialog}
-                >
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
-        </div>
-      );
-    } else if (this.state.component === 'table') {
-      return (
-        <div className='view-requests'>
-          <div className='view-requests-inner'>
-            <Paper className={classes.root}>
-              <TableContainer className={classes.container} >
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    <TableRow>
-                      {columns.map((column) => (
-                        <TableCell
-                          key={column.id}
-                          align={column.align}
-                          style={{ minWidth: column.minWidth }}
-                        >
-                          {column.label}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                      return (
-                        
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            if(column.id === 'viewMore') {
-                              return (
-                                <TableCell key={column.id} align={column.align}>
-                                  {this.viewMore(row)}
-                                </TableCell>
-                              )
-                            } else {
-                              return (
-                                <TableCell key={column.id} align={column.align}>
-                                  {column.format && typeof value === 'number' ? column.format(value) : value}
-                                </TableCell>
-                              );
-                            }
-                          })}
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <TextField
+                        label="Enter the reason for rejection."
+                        fullWidth
+                        id="standard-read-only-input"
+                        onChange={event => {this.setState({rejectNote: event.target.value})}}
+                      />
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button 
+                      id="button" 
+                      variant="contained"
+                      style={{width: '160px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+                      onClick={(event) => this.handleReject()}
+                      color="secondary"
+                    >
+                      Confirm Rejection
+                    </Button>
+                    <Button 
+                      id="button" 
+                      variant="contained"
+                      style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+                      onClick={this.handleDialog}
+                    >
+                      Cancel
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+            </div>
+          );
+        } else if (this.state.component === 'table') {
+          return (
+            <div className='view-requests'>
+              <div className='view-requests-inner'>
+                <Paper className={classes.root}>
+                  <TableContainer className={classes.container} >
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              style={{ minWidth: column.minWidth }}
+                            >
+                              {column.label}
+                            </TableCell>
+                          ))}
                         </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={this.state.entryCount}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-                style={{ backgroundColor: 'white' }}
-              />
-            </Paper>
-            <br/><br/>
-          </div>
+                      </TableHead>
+                      <TableBody>
+                        {this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                          return (
+                            
+                            <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
+                              {columns.map((column) => {
+                                const value = row[column.id];
+                                if(column.id === 'viewMore') {
+                                  return (
+                                    <TableCell key={column.id} align={column.align}>
+                                      {this.viewMore(row)}
+                                    </TableCell>
+                                  )
+                                } else {
+                                  return (
+                                    <TableCell key={column.id} align={column.align}>
+                                      {column.format && typeof value === 'number' ? column.format(value) : value}
+                                    </TableCell>
+                                  );
+                                }
+                              })}
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={this.state.entryCount}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    style={{ backgroundColor: 'white' }}
+                  />
+                </Paper>
+                <br/><br/>
+              </div>
+            </div>
+          )
+        } else {return null}
+    }
+
+    const snackbarsComponent = () => {
+      return (
+        <div>
+          {/* Snackbars */}
+          <Snackbar open={this.state.approveSnackOpen} autoHideDuration={6000} onClose={this.handleApproveSnackClose}>
+            <Alert onClose={this.handleApproveSnackClose} severity="success">
+              The form has been approved.
+            </Alert>
+          </Snackbar>
+          <Snackbar open={this.state.modifySnackOpen} autoHideDuration={6000} onClose={this.handleModifySnackClose}>
+            <Alert onClose={this.handleModifySnackClose} severity="success">
+              The form has been approved with modifications.
+            </Alert>
+          </Snackbar>
+          <Snackbar open={this.state.rejectSnackOpen} autoHideDuration={6000} onClose={this.handleRejectSnackClose}>
+            <Alert onClose={this.handleRejectSnackClose} severity="error">
+              The form has been rejected.
+            </Alert>
+          </Snackbar>
         </div>
       )
-    } else {return null}
+    }
     
+    return (
+      <div>
+        {tableAndViewMaster()}
+        {snackbarsComponent()}
+      </div>
+    );
   }
 
 }
