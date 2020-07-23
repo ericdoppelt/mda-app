@@ -114,7 +114,7 @@ export default function TabsLBNL() {
           </ul>
           <li><strong>3 weeks ahead</strong></li>
           <ul>
-            <li>Register with the Admine office</li>
+            <li>Register with the Admin office</li>
             <li>Complete the Affiliate Registration Form (ARF)</li>
             <li>Forms found <a href="https://drive.google.com/file/d/0B-7RPAKnuE05XzRSYlJ3RU1Dc2xEaFJOaUdBVkJ2OFdJeEFz/view" target="_blank" rel="noopener noreferrer">here</a></li>
           </ul>
