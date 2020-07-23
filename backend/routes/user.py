@@ -139,7 +139,7 @@ def change_password():
             user.set_password(newPassword)
             result = user.register_user()
         else:
-            result = {'success' : False,
+            result = { 'success': False,
             'error' : "Incorrect password"}
 
     except Exception as e:

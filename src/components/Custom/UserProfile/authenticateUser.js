@@ -2,6 +2,8 @@ import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemSecondaryAction, ListItemText} from '@material-ui/core/';
 import axios from 'axios';
+import {Table, TableBody, TableCell, TableContainer, TableRow, TableHead, Typography, Paper} from '@material-ui/core';
+import Row from '../../UIzard/Row';
 
 const useStyles = theme => ({
   root: {
@@ -9,7 +11,39 @@ const useStyles = theme => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
+  table: {
+    width: '75%',
+    align: 'center',
+    marginTop: '5%',
+  },
+  header: {
+    marginTop: '5%',
+    marginBottom: '1%',
+  },
+
 });
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: '#424242',
+    color: theme.palette.common.white,
+    marginBottom: '5%',
+  },
+  body: {
+    fontSize: 14,
+    marginBottom: '5%',
+  },
+
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
 
 class AuthenticateUser extends React.Component {
 
@@ -21,23 +55,23 @@ class AuthenticateUser extends React.Component {
       selected: {},
 
       loadError: false,
+      submitError: false,
+      deleteError: false,
     }
   }
 
   async componentDidMount() {
     var self = this;
-    let url = 'https://mda-phoenix.herokuapp.com/authenticate-user';
+    let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
       console.log(response.data);
-      if (response.data.success === true) {
-        self.setState({
+      self.setState({
           accounts: response.data.results,
           loadError: false,
         });
-      }
-      else{
+      if(response.data.success===false){
         self.setState({
           loadError: true,
         });
@@ -60,18 +94,38 @@ class AuthenticateUser extends React.Component {
             console.log(response.data);
             this.setState({
               dialog: '',
-              accounts: response.data.results,
-              loadError: false,
+              accounts: response.data['results'],
+              submitError: false,
             });
           }
           else{
             this.setState({
-              loadError: true,
+              submitError: true,
             });
           }
         }).catch(error => {
           alert(error);
       });
+    }
+
+    async deleteAccount() {
+      let self = this;
+      let url = `https://mda-phoenix.herokuapp.com/user/deleteuser/${self.state.selected['username']}`;
+      await axios.delete(url).then(response => {
+        if (response.data.success === true) {
+          console.log(response.data);
+          this.setState({
+            deleteError: false
+          });
+        }
+        else{
+          this.setState({
+            deleteError: true,
+          });
+        }
+      }).catch(error => {
+        alert(error);
+    });
     }
 
 
@@ -113,20 +167,26 @@ class AuthenticateUser extends React.Component {
     let {classes} = this.props;
     return(
         <Dialog open={this.state.dialog === 'view'} onClose={() => this.setState({dialog: ''})}>
-          <DialogTitle>Are you sure you want to delete this account?</DialogTitle>
+          <DialogTitle>Pending Account Information</DialogTitle>
           <DialogContent>
             <List>
               <ListItem>
-                <ListItemText primary={`First Name: ${this.selected.first_name}`}/>
+                <ListItemText primary={`First Name: ${this.state.selected.first_name}`}/>
               </ListItem>
               <ListItem>
-                <ListItemText primary={`Last Name: ${this.selected.last_name}`}/>
+                <ListItemText primary={`Last Name: ${this.state.selected.last_name}`}/>
               </ListItem>
               <ListItem>
-                <ListItemText primary={`Phone Number: ${this.selected.phone}`}/>
+                <ListItemText primary={`Affiliation: ${this.state.selected.affiliation}`}/>
               </ListItem>
               <ListItem>
-                <ListItemText primary={`Email: ${this.selected.email}`}/>
+                <ListItemText primary={`User Type: ${this.state.selected.user_type}`}/>
+              </ListItem>
+              <ListItem>
+                <ListItemText primary={`Phone Number: ${this.state.selected.phone}`}/>
+              </ListItem>
+              <ListItem>
+                <ListItemText primary={`Email: ${this.state.selected.email}`}/>
               </ListItem>
             </List>
           </DialogContent>
@@ -160,29 +220,47 @@ class AuthenticateUser extends React.Component {
 
   render() {
     const {classes} = this.props;
+    console.log(this.state.accounts);
   return (
     <div>
-    <List dense className={classes.root}>
-      {this.state.accounts.map((account) => {
-        return (
-          <ListItem key={account.first_name} button>
-            <ListItemText primary={`${account.first_name} ${account.last_name}`} />
-            <ListItemSecondaryAction>
-              <Button onClick={() => {this.setState({dialog: 'view', selected: {account}})}}>
-                View
-              </Button>
-              <Button onClick={() => {this.setState({dialog:'autheticate', selected:{account}})}}>
-              Authenticate
-              </Button>
-              <Button onClick={() => {this.setState({dialog:'delete', selected:{account}})}}>
-              Delete
-              </Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
-    </List>
-    {this.getDialogue()};
+    <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+      <TableContainer className={classes.table} component={Paper}>
+        <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align='center' colSpan={4}>
+              <Typography variant='h5'>Pending Accounts</Typography>
+            </StyledTableCell>
+          </TableRow>
+        </TableHead>
+          <TableBody>
+          {this.state.accounts.map((account) => (
+            <StyledTableRow key={account.first_name}>
+              <StyledTableCell width="100%" align='center' component="th" scope="row">
+                {`${account.first_name} ${account.last_name}`}
+              </StyledTableCell>
+              <StyledTableCell size='small' align="right">
+                <Button onClick={() => {this.setState({dialog: 'view', selected: account})}}>
+                  View
+                </Button>
+              </StyledTableCell>
+              <StyledTableCell size='small' align="right">
+                <Button onClick={() => {this.setState({dialog:'authenticate', selected:account})}}>
+                Authenticate
+                </Button>
+              </StyledTableCell>
+              <StyledTableCell size='small' align="right">
+                <Button onClick={() => {this.setState({dialog:'delete', selected:account})}}>
+                Delete
+                </Button>
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Row>
+    {this.getDialogue()}
     </div>
     );
   }
