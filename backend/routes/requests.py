@@ -154,9 +154,9 @@ def getRequests():
         myForms = []
         for form in request_forms:
             ions = {}
-            for ion in form.ions:
+            for i, ion in enumerate(form.ions):
                 beam = Beams.query.filter_by(id=ion).one()
-                ions[beam.ion] = beam.amev
+                ions[beam.ion] = [beam.amev, form.ion_hours[i]]
             if form.request_range is not None:
                 request_range = Ranges.query.filter_by(id=form.request_range).first()
                 timeDelta = timedelta(hours = request_range.hours)
@@ -204,9 +204,9 @@ def getRequests_integrators():
         myForms = []
         for form in request_forms:
             ions = {}
-            for ion in form.ions:
+            for i, ion in enumerate(form.ions):
                 beam = Beams.query.filter_by(id=ion).one()
-                ions[beam.ion] = beam.amev
+                ions[beam.ion] = [beam.amev, form.ion_hours[i]]
             if form.request_range is not None:
                 request_range = Ranges.query.filter_by(id=form.request_range).first()
                 timeDelta = timedelta(hours = request_range.hours)

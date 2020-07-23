@@ -61,7 +61,7 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
-        if user.isAutheticated:
+        if user.isAuthenticated:
             expires = timedelta(hours=12)
             access_token = create_access_token(identity = username, expires_delta=expires)
             add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
