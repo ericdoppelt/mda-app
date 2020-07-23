@@ -4,6 +4,8 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListIte
 import axios from 'axios';
 import {Table, TableBody, TableCell, TableContainer, TableRow, TableHead, Typography, Paper} from '@material-ui/core';
 import Row from '../../UIzard/Row';
+import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
+import CancelPresentationTwoToneIcon from '@material-ui/icons/CancelPresentationTwoTone';
 
 const useStyles = theme => ({
   root: {
@@ -192,7 +194,7 @@ class AuthenticateUser extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
-              Cancel
+              Close
             </Button>
           </DialogActions>
         </Dialog>
@@ -239,20 +241,16 @@ class AuthenticateUser extends React.Component {
               <StyledTableCell width="100%" align='center' component="th" scope="row">
                 {`${account.first_name} ${account.last_name}`}
               </StyledTableCell>
-              <StyledTableCell size='small' align="right">
-                <Button onClick={() => {this.setState({dialog: 'view', selected: account})}}>
+              <StyledTableCell size="small" align="right">
+                <Button variant="contained" onClick={() => {this.setState({dialog: 'view', selected: account})}}>
                   View
                 </Button>
               </StyledTableCell>
-              <StyledTableCell size='small' align="right">
-                <Button onClick={() => {this.setState({dialog:'authenticate', selected:account})}}>
-                Authenticate
-                </Button>
+              <StyledTableCell size="small" align="right">
+                <CheckCircleTwoToneIcon color="primary" onClick={() => {this.setState({dialog:'authenticate', selected:account})}}/>
               </StyledTableCell>
-              <StyledTableCell size='small' align="right">
-                <Button onClick={() => {this.setState({dialog:'delete', selected:account})}}>
-                Delete
-                </Button>
+              <StyledTableCell size="small" align="right">
+                <CancelPresentationTwoToneIcon color="secondary" onClick={() => {this.setState({dialog:'delete', selected:account})}}/>
               </StyledTableCell>
             </StyledTableRow>
           ))}
