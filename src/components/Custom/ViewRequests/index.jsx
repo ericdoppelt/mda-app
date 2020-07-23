@@ -5,6 +5,7 @@ import './ViewRequests.scss'
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
+import Typography from '@material-ui/core/Typography';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -15,6 +16,11 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Row from '../../UIzard/Row'
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 const columns = [
   { id: 'name', label: 'Name', width: 200 },
@@ -55,14 +61,14 @@ const columns = [
   },
 ];
 
-function createData(name, status, facility, integrator, company, 
+function createData(id, name, status, facility, integrator, company, 
     poNum, address, city, email, energies, funding_cell,
-    funding_contact, funding_email, ions, phone, startDate, state, zipCode) {
+    funding_contact, funding_email, ions, phone, startDate, state, zipCode, rejectNote) {
   var viewMore = 'View More'
   //var status = 'Pending'
-  return { name, status, facility, integrator, company, status, viewMore, 
+  return { id, name, status, facility, integrator, company, status, viewMore, 
     poNum, address, city, email, energies, funding_cell,
-    funding_contact, funding_email, ions, phone, startDate, state, zipCode };
+    funding_contact, funding_email, ions, phone, startDate, state, zipCode, rejectNote };
 }
 
 const oldrows = [];
@@ -128,10 +134,15 @@ class ViewRequests extends React.Component {
   /*** INITIALIZE STATE VARIABLES ***/
   calendarComponentRef = React.createRef();
   
+  
   constructor(props) {
     super(props);
+    this.handleDialog= this.handleDialog.bind(this);
     /*** LIST OF DATES ***/
     this.state = {
+      id: "",
+
+      /*** ORIGINAL DATA ***/
       name: "",
       facility: "",
       integrator: "",
@@ -152,8 +163,35 @@ class ViewRequests extends React.Component {
       state: "",
       zipCode: "",
       status: "",
+
+      /*** MODIFIED DATA ***/
+      nameNew: "",
+      facilityNew: "",
+      integratorNew: "",
+      companyNew: "",
+      totalTimeNew: "",
+      startDateNew: "",
+      cannotRunNew: "",
+      poNumNew: "",
+      addressNew: "",
+      cityNew: "",
+      emailNew: "",
+      energiesNew: "",
+      funding_cellNew: "",
+      funding_contactNew: "",
+      funding_emailNew: "",
+      ionsNew: "",
+      phoneNew: "",
+      stateNew: "",
+      zipCodeNew: "",
+      statusNew: "",
+
+      /*** ETC ***/
+      rejectNote: "",
+      dialogOpen: false,
       message: "",
       data: [],
+      modifyBool: false,
       oldrows: oldrows,
       entryCount: 0,
       page: 0,
@@ -165,8 +203,8 @@ class ViewRequests extends React.Component {
   newRows = [];
   tester;
   
-  /*** COLLECT CALENDAR DATA FROM HEROKU ***/
-  async componentDidMount(username) {
+  // Collects request form data.
+  async componentDidMount() {
     const url = "https://mda-phoenix.herokuapp.com/getforms/integrator";
     let self = this;
     let result;
@@ -174,26 +212,27 @@ class ViewRequests extends React.Component {
       {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
       ).then(response => {
       result = response.data.requests;
-      //console.log(response.data);
+      console.log(response.data);
+      let tempRows = [];
+      result.forEach(function(entry) {
+        //console.log(entry);
+        tempRows.push(createData(entry.id, entry.name, entry.status, entry.facility, entry.integrator, entry.company,
+          entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
+          entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode, entry.rejectNote))
+      });
+      self.setState(state=>({oldrows: tempRows, entryCount: tempRows.length}))
+      console.log("Checking rows")
+      console.log(tempRows)
+      console.log(self.state.oldrows);
+      self.setState({component: "table"})
     })
     .catch(error => {
       console.log(error);
     });
     //console.log(result);
-    let tempRows = [];
-    result.forEach(function(entry) {
-      //console.log(entry);
-      tempRows.push(createData(entry.name, entry.status, entry.facility, entry.integrator, entry.company,
-        entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
-        entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode))
-    });
-    self.setState(state=>({oldrows: tempRows, entryCount: tempRows.length}))
-    console.log("Checking rows")
-    console.log(tempRows)
-    console.log(self.state.oldrows);
-    self.setState({component: "table"})
   }
 
+  // Used to view form information.
   viewMore(row) {
     return(
       <Button 
@@ -209,6 +248,7 @@ class ViewRequests extends React.Component {
 
   handleViewMore(row) {
     this.setState(state=>({
+      id: row.id,
       name: row.name,
       facility: row.facility,
       company: row.company,
@@ -227,49 +267,207 @@ class ViewRequests extends React.Component {
       state: row.state,
       zipCode: row.zipCode,
       status: row.status,
+
+      nameNew: row.name,
+      facilityNew: row.facility,
+      companyNew: row.company,
+      integratorNew: row.integrator,
+      poNumNew: row.poNum,
+      addressNew: row.address,
+      cityNew: row.city,
+      emailNew: row.email,
+      energiesNew: row.energies,
+      funding_cellNew: row.funding_cell,
+      funding_contactNew: row.funding_contact,
+      funding_emailNew: row.funding_email,
+      ionsNew: row.ions,
+      phoneNew: row.phone,
+      startDateNew: row.startDate,
+      stateNew: row.state,
+      zipCodeNew: row.zipCode,
+      statusNew: row.status,
+
+      rejectNote: row.rejectNote,
       component: "view",
     }))
-    console.log(row)
-    console.log(row.name)
-    console.log(this.state.integrator)
   }
 
   handleBack() {
     this.setState(state=>({
       component: "table",
+      modifyBool: false,
     }))
   }
 
   async handleApprove() {
-    const url = "https://mda-phoenix.herokuapp.com/calendar-entry";
+    let url = "https://mda-phoenix.herokuapp.com/request/modify";
     let self = this;
+    let vars = {
+      id: self.state.id, 
+    }
+    await axios.post(url, vars,
+      {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      ).then(response => {
+      console.log(response);
+      //self.setState({modifyBool: false, component: "table"});
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+    url = "https://mda-phoenix.herokuapp.com/calendar-entry";
     let result;
 
-    console.log('checking state')
-    console.log(self.state.facility)
-    console.log(self.state.integrator)
-    console.log(self.state.startDate)
-
     await axios.post(url, {
-      "username" : "test123",
+      "username" : self.state.name,
       "facility" : self.state.facility,
       "integrator" : self.state.integrator,
       "totalTime" : 8,
       "startDate" : self.state.startDate,
-      "title" : "",
+      "title" : "approval test",
       "private" : false,
       headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
       }).then(response => {
         result = response.data.requests;
         console.log(response.data);
+        this.setState(state=>({
+          //component: "table",
+          message: "The form has been approved and added to the calendar.",
+        }))
+        self.componentDidMount();
     })
     .catch(error => {
       console.log(error);
     });
-    this.setState(state=>({
-      //component: "table",
-      message: "The form has been approved and added to the calendar.",
-    }))
+
+    
+  }
+
+  handleModify () {
+    this.setState({modifyBool: !this.state.modifyBool});
+    console.log("Modify true")
+  }
+
+  async handleApproveChanges () {
+
+    const url = "https://mda-phoenix.herokuapp.com/request/modify";
+    let self = this;
+    let vars = {
+      id: self.state.id, 
+      name: self.state.nameNew,
+      facility: self.state.facilityNew,
+      company: self.state.companyNew,
+      integrator: self.state.integratorNew,
+      PO_number: self.state.poNumNew,
+      address: self.state.addressNew,
+      city: self.state.cityNew,
+      email: self.state.emailNew,
+      //energies: self.state.energiesNew,
+      funding_cell: self.state.funding_cellNew,
+      funding_contact: self.state.funding_contactNew,
+      funding_email: self.state.funding_emailNew,
+      //ions: self.state.ionsNew,
+      phone: self.state.phoneNew,
+      start: self.state.startDateNew,
+      state: self.state.stateNew,
+      zipCode: self.state.zipCodeNew,
+      //status: self.state.statusNew,
+    }
+    console.log(vars);
+    await axios.post(url, vars,
+      {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      ).then(response => {
+      console.log(response);
+      self.componentDidMount();
+      //self.setState({modifyBool: false, component: "table"});
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  handleDialog () {
+    this.setState( {dialogOpen: !this.state.dialogOpen} );
+  }
+
+  async handleReject () {
+    const url = "https://mda-phoenix.herokuapp.com/request/reject";
+    let self = this;
+    await axios.post(url, {id: self.state.id, rejectNote: self.state.rejectNote},
+      {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      ).then(response => {
+      console.log(response);
+      self.handleDialog();
+      self.componentDidMount();
+      //self.setState({modifyBool: false, component: "table"});
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  showButtons () {
+    if (this.state.modifyBool) {
+      return (
+        <div>
+          <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
+            <Button 
+              id="button" 
+              variant="contained"
+              style={{width: '160px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+              onClick={(event) => this.handleApproveChanges()}
+              color="primary"
+            >
+              Approve Changes
+            </Button>
+
+            <Button 
+              id="button" 
+              variant="contained"
+              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+              onClick={(event) => this.handleModify()}
+            >
+              Cancel
+            </Button>
+          </Row>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
+            <Button 
+              id="button" 
+              variant="contained"
+              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+              onClick={(event) => this.handleApprove()}
+              color="primary"
+            >
+              Approve
+            </Button>
+
+            <Button 
+              id="button" 
+              variant="contained"
+              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+              onClick={(event) => this.handleModify()}
+            >
+              Modify
+            </Button>
+            <Button 
+              id="button" 
+              variant="contained"
+              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+              onClick={(event) => this.handleDialog()}
+              color="secondary"
+            >
+              Reject
+            </Button>
+          </Row>
+        </div>
+      )
+    }
+    
   }
 
   /*** RENDER CALENDAR APPEARANCE ***/
@@ -291,17 +489,17 @@ class ViewRequests extends React.Component {
       return(
         <div>
           <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent:'flex-end'}}>
-            {this.state.message}
+            {this.state.rejectNote}
           </Row>
           <br/>
-            <Row >
+            <Row>
               <TextField
-                label="Facility"
+                label="Status"
                 className={classes.leftTextField}
                 id="standard-read-only-input"
-                defaultValue={this.state.facility}
+                defaultValue={this.state.status}
                 InputProps={{
-                  readOnly: true,
+                  readOnly: true
                 }}
               />
               <Button 
@@ -315,7 +513,39 @@ class ViewRequests extends React.Component {
               </Button>
             </Row>
             <br/>
-            <Box>Contact and Funding Information</Box>
+            {this.state.status === 'Rejected'
+              ? <div>
+                  <Row style={{justifyContent: 'flex-start'}}>
+                    <TextField
+                      label="Rejection Reason"
+                      className={classes.leftTextField}
+                      id="standard-read-only-input"
+                      defaultValue={this.state.rejectNote}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                    />
+                  </Row>
+                  <br/>
+                </div>
+            : null}
+            
+            <Row >
+              <TextField
+                label="Facility"
+                className={classes.leftTextField}
+                id="standard-read-only-input"
+                defaultValue={this.state.facility}
+                InputProps={{
+                  readOnly: !this.state.modifyBool,
+                }}
+                onChange={event => {this.setState({facilityNew: event.target.value})}}
+                variant={this.state.modifyBool ? "outlined" : "standard"}
+              />
+              
+            </Row>
+            <br/>
+            <Typography variant="h6">Contact and Funding Information</Typography>
             <br/>
             <TextField
               label="Name"
@@ -323,8 +553,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.name}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({nameNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Company"
@@ -332,8 +565,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.company}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({companyNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Email"
@@ -341,8 +577,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.email}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({emailNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Phone"
@@ -350,8 +589,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.phone}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({phoneNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <br/>
             <br/>
@@ -361,8 +603,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.integrator}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({integratorNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Funding Contact"
@@ -370,8 +615,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.funding_contact}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({funding_contactNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Funding Contact Phone"
@@ -379,8 +627,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.funding_cell}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({funding_cellNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Funding Contact Email"
@@ -388,8 +639,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.funding_email}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({funding_emailNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <br/>
             <br/>
@@ -399,8 +653,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.address}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({billingAddressNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "P.O. No."
@@ -408,8 +665,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.poNum}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({poNumNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "City"
@@ -417,17 +677,23 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.city}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({cityNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "State"
               className={classes.billingState}
               id="standard-read-only-input"
-              defaultValue="New York"
+              defaultValue={this.state.state}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({stateNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Zip"
@@ -435,19 +701,25 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.zipCode}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({zipCodeNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <br/><br/>
-            <Box>Experiment Information</Box>
+            <Typography variant="h6">Experiment Information</Typography>
             <TextField 
               label = "Energies"
               className={classes.leftTextField}
               id="standard-read-only-input"
               defaultValue={this.state.energies}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({energiesNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Ions"
@@ -455,8 +727,11 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.ions}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({ionsNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
             <TextField 
               label = "Start Date"
@@ -464,42 +739,55 @@ class ViewRequests extends React.Component {
               id="standard-read-only-input"
               defaultValue={this.state.startDate}
               InputProps={{
-                readOnly: true,
+                readOnly: !this.state.modifyBool,
               }}
+              onChange={event => {this.setState({startDateNew: event.target.value})}}
+              variant={this.state.modifyBool ? "outlined" : "standard"}
+              margin={this.state.modifyBool ? "normal" : "none"}
             />
 
             <br/><br/><br/>
 
-            <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
-              <Button 
-                id="button" 
-                variant="contained"
-                style={{width: '100px', height: '30px', fontSize: '12px', margin:'0 30px'}}
-                onClick={(event) => this.handleApprove()}
-                color="primary"
-              >
-                Approve
-              </Button>
-
-              <Button 
-                id="button" 
-                variant="contained"
-                style={{width: '100px', height: '30px', fontSize: '12px', margin:'0 30px'}}
-                onClick={(event) => this.handleBack()}
-              >
-                Modify
-              </Button>
-              <Button 
-                id="button" 
-                variant="contained"
-                style={{width: '100px', height: '30px', fontSize: '12px', margin:'0 30px'}}
-                onClick={(event) => this.handleBack()}
-                color="secondary"
-              >
-                Reject
-              </Button>
-            </Row>
+            {this.showButtons()}
             <br/><br/><br/><br/>
+
+            {/* Rejection Dialog */}
+            <Dialog
+              open={this.state.dialogOpen}
+              onClose={this.handleDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <TextField
+                    label="Enter the reason for rejection."
+                    fullWidth
+                    id="standard-read-only-input"
+                    onChange={event => {this.setState({rejectNote: event.target.value})}}
+                  />
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button 
+                  id="button" 
+                  variant="contained"
+                  style={{width: '160px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+                  onClick={(event) => this.handleReject()}
+                  color="secondary"
+                >
+                  Confirm Rejection
+                </Button>
+                <Button 
+                  id="button" 
+                  variant="contained"
+                  style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+                  onClick={this.handleDialog}
+                >
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
         </div>
       );
     } else if (this.state.component === 'table') {
