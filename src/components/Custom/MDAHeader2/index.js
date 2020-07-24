@@ -221,14 +221,21 @@ class MDAHeader2 extends React.Component {
                 </ListItem>
               </Link>
               {/*----SITES----*/}
-              <ListItem button onClick={() => this.handleFacilitiesClick()} style={{ color: '#FFF' }}>
+              <Link to={links[2]} style={{color: '#FFF'}}>
+                <ListItem button key='Facilities'>
+                  <ListItemIcon>{icons[2]}</ListItemIcon>
+                  <ListItemText primary='Facilities'/>
+                </ListItem>
+              </Link>
+
+              {/*-----OLD SITES----*/}
+            {/*  <ListItem button onClick={() => this.handleFacilitiesClick()} style={{ color: '#FFF' }}>
                 <ListItemIcon>{icons[2]}</ListItemIcon>
                 <ListItemText primary="Facilities"/>
                 {this.state.facilitiesOpen ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={this.state.facilitiesOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  {/*----FORM ITEMS----*/}
                   {['TAMU','MSU','LBNL','NSRL'].map((text, index) => (
                     <Link to={facilityLinks[index]} style={{ color: '#FFF' }}>
                       <ListItem button key={text}>
@@ -238,7 +245,7 @@ class MDAHeader2 extends React.Component {
                     </Link>
                   ))}
                 </List>
-              </Collapse>
+              </Collapse>*/}
 
             </List>
             <Divider />
