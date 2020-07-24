@@ -52,8 +52,9 @@ class NSRLSubmit extends React.Component {
           date: ExperimentStore.startDate,
           ions: ExperimentStore.ions,
           energies: ExperimentStore.energies,
-          hours: ExperimentStore.hours,
-          continuous: ExperimentStore.continuous,
+          shifts: ExperimentStore.shifts,
+          hoursOn: ExperimentStore.hoursOn,
+          hoursOff: ExperimentStore.hoursOff,
           comments: ExperimentStore.comments,
 
           endDate: NSRLStore.endDate,

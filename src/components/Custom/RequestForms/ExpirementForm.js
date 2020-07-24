@@ -8,30 +8,6 @@ import InfiniteCalendar from 'react-infinite-calendar';
 import ExperimentStore from '../../../stores/ExpirementStore';
 
 const useStyles = theme => ({
-    leftTextField: {
-      marginTop: '2px',
-      marginLeft: '5%',
-      marginRight: '3%',
-      width: '64%',
-    },
-    rightTextField: {
-      marginTop: '2px',
-      marginLeft: '3%',
-      marginRight: '5%',
-      width: '20%',
-    },
-    ions: {
-      marginTop: '2px',
-      marginLeft: '5%',
-      marginRight: '3%',
-      width: '42%',
-    },
-    energies: {
-      marginTop: '2px',
-      marginLeft: '3%',
-      marginRight: '5%',
-      width: '42%',
-    },
     fullText: {
       marginTop: '2px',
       marginLeft:'5%',
@@ -61,28 +37,13 @@ const useStyles = theme => ({
               helperText = {ExperimentStore.titleHelperText}
             />
             <TextField 
-              className={classes.leftTextField}
+              className={classes.fullText}
               label = "Personnel"
               value = {ExperimentStore.personnel}
               onChange={event => {ExperimentStore.setPersonnel(event.target.value)}}
               error = {ExperimentStore.personnelError}
               helperText = {ExperimentStore.personnelHelperText}
             />
-
-            <FormControl 
-              className={classes.rightTextField}
-              error = {ExperimentStore.continuousError}
-              > 
-              <InputLabel>Continuous?</InputLabel>
-              <Select
-                value={ExperimentStore.continuous}
-                onChange={event => {ExperimentStore.setContinuous(event.target.value)}}
-                >
-                <MenuItem value={"Continuous"}>Continuous</MenuItem>
-                <MenuItem value={"Interleaved"}>Interleaved</MenuItem>
-              </Select>
-              <FormHelperText>{ExperimentStore.continuousHelperText}</FormHelperText>
-            </FormControl>
 
             <TextField 
               className={classes.fullText}

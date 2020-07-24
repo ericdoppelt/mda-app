@@ -68,15 +68,39 @@ class ExpirementStore {
         return "";
     }
 
-    hours = observable.array([""]);
-    setHours(newHour, index) {
-        this.hours[index] = newHour;
+    shifts = observable.array([""]);
+    setShifts(newHour, index) {
+        this.shifts[index] = newHour;
     }
-    hoursError(index) {
-        return this.hours[index] === "" && this.submitted;
+    shiftsError(index) {
+        return this.shifts[index] === "" && this.submitted;
     }
-    hoursHelperText(index) {
-        if (this.hoursError(index)) return "Please enter the hours.";
+    shiftsHelperText(index) {
+        if (this.shiftsError(index)) return "Enter the number of shifts.";
+        return "";
+    }
+
+    hoursOn = observable.array([""]);
+    setHoursOn(newHour, index) {
+        this.hoursOn[index] = newHour;
+    }
+    hoursOnError(index) {
+        return this.hoursOn[index] === "" && this.submitted;
+    }
+    hoursOnHelperText(index) {
+        if (this.hoursOnError(index)) return "Enter the hours per shift.";
+        return "";
+    }
+
+    hoursOff = observable.array([""]);
+    setHoursOff(newHour, index) {
+        this.hoursOff[index] = newHour;
+    }
+    hoursOffError(index) {
+        return this.hoursOff[index] === "" && this.hoursOn[index] > 1 && this.submitted;
+    }
+    hoursOffHelperText(index) {
+        if (this.hoursOffError(index)) return "Enter the hours between shifts.";
         return "";
     }
 
@@ -84,12 +108,17 @@ class ExpirementStore {
     addBeam() {
         this.ions.push("");
         this.energies.push("");
-        this.hours.push("");
+        this.shifts.push("");
+        this.hoursOn.push("");
+        this.hoursOff.push("");
         this.numberBeams++;
     }
     clearBeams() {
         this.ions = observable.array([""]);;
         this.energies = observable.array([""]);;
+        this.shifts = observable.array([""]);
+        this.hoursOn = observable.array([""]);
+        this.hoursOff = observable.array([""]);
     }
 
     continuous = "";
@@ -109,14 +138,22 @@ class ExpirementStore {
     }
 
     get validForm() {
-        let ionError, energyError, hoursError = false;
+        let ionError = false;
+        let energyError = false;
+        let shiftsError = false;
+        let hoursOnError = false;
+        let hoursOffError = false;
         for (let i = 0; i < this.numberBeams; i++) {
             if (this.ionsError(i)) ionError = true;
             if (this.energiesError(i)) energyError = true;
-            if (this.hoursError(i)) hoursError = true;
+            if (this.shiftsError(i)) shiftsError = true;
+            if (this.hoursOnError(i)) hoursOnError = true;
+            if (this.hoursOffError(i)) hoursOffError = true;
         }
+
         return !this.titleError && !this.personnelError && !this.startDateError
-        && !this.continuousError && !ionError && !energyError && !hoursError && this.submitted;
+        && !ionError && !energyError && !shiftsError && !hoursOnError && !hoursOffError 
+        && this.submitted;
     }
 }
 
@@ -145,8 +182,14 @@ decorate(ExpirementStore, {
     energies: observable,
     setEnergies: action,
 
-    hours: observable,
-    setHours: action,
+    shifts: observable,
+    setShifts: action,
+
+    hoursOn: observable,
+    setHoursOn: action,
+
+    hoursOff: observable,
+    setHoursOff: action,
 
     addBeam: action,
     clearBeams: action,

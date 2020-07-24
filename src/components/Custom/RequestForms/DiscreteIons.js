@@ -4,27 +4,24 @@ import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import ExperimentStore from '../../../stores/ExpirementStore';
 import axios from 'axios';
-
+import ExperimentHours from './ExperimentHours';
 
 const useStyles = theme => ({
-  ions: {
-    marginTop: '4px',
-    marginLeft: '3%',
-    marginRight: '3%',
-    width: '26%',
-  },
+  
   energies: {
     marginTop: '4px',
     marginLeft: '5%',
     marginRight: '3%',
-    width: '26%',
+    width: '42%',
   },
-  experimentHours: {
+  
+  ions: {
     marginTop: '4px',
     marginLeft: '3%',
     marginRight: '5%',
-    width: '26%'
+    width: '42%',
   },
+  
   ionButton: {
     backgroundColor: "#f5f5b8",
     marginTop: '30px',
@@ -138,19 +135,9 @@ class DiscreteIons extends React.Component {
                 </Select>
                 <FormHelperText>{ExperimentStore.ionsHelperText(key)}</FormHelperText>
               </FormControl>
-
-              <TextField 
-                className={classes.experimentHours}
-                label = "Hours"
-                type = "number"
-                value = {ExperimentStore.hours[key]}
-                disabled = {ExperimentStore.ions[key] === ""}
-                error = {ExperimentStore.hoursError(key)}
-                helperText = {ExperimentStore.hoursHelperText(key)}
-                onChange={event => {ExperimentStore.setHours(event.target.value, key)}}
-              />
               
-              </div>
+              <ExperimentHours index={key}/>
+            </div>
           );
           }
           return returnedSelectors;

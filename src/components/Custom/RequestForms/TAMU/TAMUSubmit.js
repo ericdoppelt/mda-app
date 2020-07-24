@@ -56,8 +56,9 @@ class TAMUSubmit extends React.Component {
           date: ExperimentStore.startDate,
           ions: ExperimentStore.ions,
           energies: ExperimentStore.energies,
-          hours: ExperimentStore.hours,
-          continuous: ExperimentStore.continuous,
+          shifts: ExperimentStore.shifts,
+          hoursOn: ExperimentStore.hoursOn,
+          hoursOff: ExperimentStore.hoursOff,
           comments: ExperimentStore.comments,
 
           badDates: TAMUStore.badDates,
@@ -65,6 +66,7 @@ class TAMUSubmit extends React.Component {
           facility: "TAMU"},
           {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
           }).then(response => {
+            console.log(response);
             if (response.data.success === true) {
             alert("Form was sent to TAMU successfully. Please check your email!");
               self.props.history.push({
