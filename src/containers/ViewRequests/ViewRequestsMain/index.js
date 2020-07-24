@@ -2,7 +2,6 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 import Image from '../../../components/UIzard/Image';
 import Stack from '../../../components/UIzard/Stack';
-import Title from '../../../components/UIzard/Title';
 import {Typography} from '@material-ui/core';
 import ViewRequests from '../../../components/Custom/ViewRequests';
 import Card from '../../../components/UIzard/Card';
@@ -25,9 +24,9 @@ export default function Home() {
             <Card style={{ justifyContent: 'center', alignItems: 'auto', minWidth: '50px', minHeight: '600px', flexGrow: '0' }}>
               <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
                 <Image style={{ width: '200px', height: '200px', backgroundImage: 'url(/images/MDALogo.png)' }} />
-                <Title>
+                <Typography variant="h6">
                   Beam Request Forms
-                </Title>
+                </Typography>
                 <ViewRequests/>
               </Stack>
             </Card>

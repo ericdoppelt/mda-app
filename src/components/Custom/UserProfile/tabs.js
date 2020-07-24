@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {AppBar, Box,Tab, Tabs, Typography} from '@material-ui/core';
 import ProfileInfo from '../UserProfile/profileInfo';
+import AuthenticateUser from '../UserProfile/authenticateUser';
 import PasswordChanger from '../UserProfile/password';
 import Calendar from '../../../components/Custom/Calendar/Calendar';
 import Card from '../../../components/UIzard/Card';
@@ -79,6 +80,8 @@ export default function TabsProfile() {
           <Tab label="Update Profile Info" {...a11yProps(0)} />
           <Tab label="Change Password" {...a11yProps(1)} />
           <Tab label="Personal Calendar" {...a11yProps(2)} />
+          <Tab label="Authenticate Users" {...a11yProps(3)} />
+
         </Tabs>
       </AppBar>
 
@@ -86,10 +89,13 @@ export default function TabsProfile() {
           <ProfileInfo/>
         </TabPanel>
         <TabPanel value={value} index={1}>
-            <PasswordChanger/>
+          <PasswordChanger/>
         </TabPanel>
         <TabPanel value={value} index={2}>
-           <Calendar personal={true}/> 
+           <Calendar personal={true}/>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <AuthenticateUser/>
         </TabPanel>
     </div>
   );

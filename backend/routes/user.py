@@ -139,7 +139,7 @@ def change_password():
             user.set_password(newPassword)
             result = user.register_user()
         else:
-            result = {'success' : False,
+            result = { 'success': False,
             'error' : "Incorrect password"}
 
     except Exception as e:
@@ -242,7 +242,15 @@ def authenticate_user():
     print(request.method)
 
     try:
-        if request.method == 'GET':
+        if request.method == 'POST':
+            req = request.get_json()
+
+            username = req['username']
+            user = Users.query.filter_by(username=username).first()
+            user.isAuthenticated = True
+            db.session.commit()
+
+        elif request.method == 'GET' or request.method == 'POST':
             users = Users.query.filter_by(isAuthenticated=False).all()
             myList = []
             for user in users:
@@ -252,16 +260,6 @@ def authenticate_user():
                 'email': user.email})
 
             result = {'results' : myList}
-        
-        elif request.method == 'POST':
-            req = request.get_json()
-
-            username = req['username']
-            user = Users.query.filter_by(username=username).first()
-            user.isAuthenticated = True
-            db.session.commit()
-            
-            result = {'success' : True}
 
         else:
             result = {'success' : False, 'error' : 'Invalid method!'}
