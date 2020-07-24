@@ -92,7 +92,7 @@ class ExpirementStore {
         return "";
     }
 
-    hoursOff = observable.array([""]);
+    hoursOff = observable.array([0]);
     setHoursOff(newHour, index) {
         this.hoursOff[index] = newHour;
     }
@@ -110,7 +110,7 @@ class ExpirementStore {
         this.energies.push("");
         this.shifts.push("");
         this.hoursOn.push("");
-        this.hoursOff.push("");
+        this.hoursOff.push(0);
         this.numberBeams++;
     }
     clearBeams() {
