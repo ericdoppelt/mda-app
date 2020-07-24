@@ -26,11 +26,6 @@ export default function Home() {
               </Row>
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
               </Row>
-              <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-              <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-                <IonSearch/>
-              </Row>
-              </Stack>
         </main>
       </div>
     </ThemeProvider>

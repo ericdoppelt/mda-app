@@ -15,6 +15,9 @@ const useStyles = theme => ({
   header: {
     marginTop: '5%',
   },
+  table: {
+    width: '100%',
+  },
 });
 
 const StyledTableCell = withStyles((theme) => ({
@@ -125,7 +128,7 @@ class IonSearch extends React.Component {
           </Row>
 
           <TableContainer component={Paper}>
-            <Table aria-label="Matching Facilities List">
+            <Table className={classes.table} aria-label="Matching Facilities List">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Facility</StyledTableCell>
