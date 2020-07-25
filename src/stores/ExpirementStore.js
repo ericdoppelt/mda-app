@@ -94,6 +94,8 @@ class ExpirementStore {
 
     hoursOff = observable.array([0]);
     setHoursOff(newHour, index) {
+        console.log(newHour);
+        console.log(index);
         this.hoursOff[index] = newHour;
     }
     hoursOffError(index) {
