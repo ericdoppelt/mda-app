@@ -149,7 +149,7 @@ class DiscreteIons extends React.Component {
                 <div className={classes.fullDiv}>
                     {this.getIonSelectors()}
                     <Button className={classes.ionButton} onClick={() => this.incrementIonCounter()}>
-                    Add Another Ion
+                    Add Another Experiment
                     </Button>
                 </div>
             );
