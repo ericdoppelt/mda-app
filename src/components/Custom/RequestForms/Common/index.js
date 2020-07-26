@@ -158,77 +158,77 @@ class RequestFormCommon extends React.Component {
   validateAgreementForm() {
     let sectionIsValid = true;
     if (this.state.senderName === "") {
-      this.state.senderNameErrorText = "Please enter your name.";
+      this.setState({
+        senderNameErrorText: "Please enter your name."
+      });
       sectionIsValid = false;
     }
-    else this.state.senderNameErrorText = "";
+    else this.setState({senderNameErrorText: ""});
 
     if (this.state.companyName === "") {
-      this.state.companyNameErrorText = "Please enter your phone number.";
+      this.setState({companyNameErrorText: "Please enter your phone number."});;
       sectionIsValid = false;
     }
-    else this.state.companyNameErrorText = "";
+    else this.setState({companyNameErrorText: ""});
 
     if (this.state.companyName === "") {
-      this.state.companyNameErrorText = "Please enter the name of your funding source.";
+      this.setState({companyNameErrorText: "Please enter the name of your funding source."});
       sectionIsValid = false;
     }
-    else this.state.companyNameErrorText = "";
+    else this.setState({companyNameErrorText: ""});
 
     if (this.state.companyName === "") {
-      this.state.companyNameErrorText = "Please enter an email for your funding source.";
+      this.setState({companyNameErrorText: "Please enter an email for your funding source."});
       sectionIsValid = false;
     }
-    else this.state.companyNameErrorText = "";
+    else this.setState({companyNameErrorText: ""});
 
     if (this.state.companyName === "") {
-      this.state.companyNameErrorText = "Please enter a phone number for your funding source.";
+      this.setState({companyNameErrorText: "Please enter a phone number for your funding source."});
       sectionIsValid = false;
     }
-    else this.state.companyNameErrorText = "";
+    else this.setState({companyNameErrorText: ""});
 
     if (this.state.poNumber === "") {
-      this.state.poNumberErrorText = "Please enter a P.O. #.";
+      this.setState({poNumberErrorText: "Please enter a P.O. #."});
       sectionIsValid = false;
     }
-    else this.state.poNumberErrorText = "";
+    else this.setState({poNumberErrorText: ""});
 
     if (this.state.billingAddress === "") {
-      this.state.billingAddressErrorText = "Please enter a billing address.";
+      this.setState({billingAddressErrorText: "Please enter a billing address."});
       sectionIsValid = false;
     }
-    else this.state.billingAddressErrorText = "";
+    else this.setState({billingAddressErrorText: ""});
 
     if (this.state.billingCity === "") {
-      this.state.billingCityErrorText = "Please enter the city for the billing address.";
+      this.setStage({billingCityErrorText: "Please enter the city for the billing address."});
       sectionIsValid = false;
     }
-    else this.state.billingCityErrorText = "";
+    else this.setState({billingCityErrorText: ""});
 
     if (this.state.billingState === "") {
-      this.state.billingStateErrorText = "Please enter the state for the billing address.";
+      this.setState({billingStateErrorText: "Please enter the state for the billing address."});
       sectionIsValid = false;
     }
-    else this.state.billingStateErrorText = "";
+    else this.setState({billingStateErrorText: ""});
 
     if (this.state.billingZip === "") {
-      this.state.billingZipErrorText = "Please enter the city for the billing address.";
+      this.setStage({billingZipErrorText: "Please enter the city for the billing address."});
       sectionIsValid = false;
     }
-    else this.state.billingZipErrorText = "";
+    else this.setState({billingZipErrorText: ""});
 
     if (this.state.senderEmail === "") {
-      this.state.senderEmailErrorText = "Please enter an email to send this form to."
+      this.setState({senderEmailErrorText: "Please enter an email to send this form to."});
       sectionIsValid = false;
     }
-    else this.state.senderEmailErrorText = "";
+    else this.setState({senderEmailErrorText: ""});
 
     if (sectionIsValid) {
       this.setState({validForm: true});
-      this.state.validForm = true;
     } else {
       this.setState({validForm: false});
-      this.state.validForm = false;
     }
   }
 
@@ -236,35 +236,33 @@ class RequestFormCommon extends React.Component {
     let sectionIsValid = true;
 
     if (this.state["time" + formNumber] === "") {
-      this.state["timeErrorText" + formNumber] = "Please enter the time for your test.";
+      this.setState({["timeErrorText" + formNumber]: "Please enter the time for your test."});
       sectionIsValid = false;
     }
-    else this.state["timeErrorText" + formNumber] = "";
+    else this.setState({["timeErrorText" + formNumber]: ""});
 
     if (this.state["continuous" + formNumber] === "") {
-      this.state["continuousErrorText" + formNumber] = "Please enter either continuous or interleaved.";
+      this.setState({["continuousErrorText" + formNumber]: "Please enter either continuous or interleaved."});
       sectionIsValid = false;
     }
-    else this.state["continuousErrorText" + formNumber] = "";
+    else this.setState({["continuousErrorText" + formNumber]: ""});
 
     if (this.state["startDate" + formNumber] === "") {
-      this.state["startDateErrorText" + formNumber] = "Please enter a start date.";
+      this.setState({["startDateErrorText" + formNumber]: "Please enter a start date."});
       sectionIsValid = false;
     }
-    else this.state["startDateErrorText" + formNumber] = "";
+    else this.setState({["startDateErrorText" + formNumber]: ""});
 
     if (this.state["particles" + formNumber] === "") {
-      this.state["particlesErrorText" + formNumber] = "Please enter your particle and energy information.";
+      this.setState({["particlesErrorText" + formNumber]: "Please enter your particle and energy information."});
       sectionIsValid = false;
     }
-    else this.state["particlesErrorText" + formNumber] = "";
+    else this.setState({["particlesErrorText" + formNumber]: ""});
 
     if (sectionIsValid) {
       this.setState({validForm: true});
-      this.state.validForm = true;
   } else {
       this.setState({validForm: false});
-      this.state.validForm = false;
   }
 }
 

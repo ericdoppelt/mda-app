@@ -232,9 +232,9 @@ class Calendar extends React.Component {
     
     
     this.state.calendarEvents.forEach(function(event) {
-      var facility = event.extendedProps.facility; 
+      /* var facility = event.extendedProps.facility; 
       var integrator = event.extendedProps.integrator; 
-      var beamType = event.extendedProps.beamType; 
+      var beamType = event.extendedProps.beamType;  */
       /* var titleString = facility + " - " + integrator + ": " + beamType; */
       //console.log(event);
       //event.setProp('title', titleString);

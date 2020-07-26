@@ -48,8 +48,6 @@ class ContinuousIons extends React.Component {
         this.getEnergies = this.getIons.bind(this);
         ExperimentStore.clearBeams();
 
-        console.log("type");
-        console.log(typeof ExperimentStore.ions[0]);
     }
 
     async componentDidMount() {
@@ -57,8 +55,7 @@ class ContinuousIons extends React.Component {
           await axios.post(url, {
             facility: this.props.facility,
             }).then(response => {
-              console.log("RESPONSE");
-              console.log(response);
+
               let energyArray = Object.keys(response.data);
               let max = -1;
               energyArray.forEach(energy => {
@@ -84,26 +81,20 @@ class ContinuousIons extends React.Component {
     
     getIons(index) {
         let selectedEnergy = ExperimentStore.energies[index];
-        console.log("d");
-        console.log(selectedEnergy);
+        
         if (selectedEnergy === "" || selectedEnergy === undefined) {
           return <MenuItem value={""}>{"Please enter a valid energy"}</MenuItem>
           } else {
           let ions = [];
           
-          console.log(this.state.beams);
           this.state.energies.forEach(energy => {
             if (selectedEnergy <= parseInt(energy, 10)) {
-              console.log(energy);
-              console.log(this.state.beams[energy]);
               for (var ion of this.state.beams[energy]) {
                 ions.push(ion);
               }
             }
           });
 
-          console.log("IONS");
-          console.log(ions);
           let returned = [];
           ions.forEach(ion => returned.push(<MenuItem value={ion}>{ion} </MenuItem>)); 
           return returned;

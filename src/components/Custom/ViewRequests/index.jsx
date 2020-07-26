@@ -13,7 +13,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Row from '../../UIzard/Row'
 
@@ -79,8 +78,6 @@ function Alert(props) {
 }
 
 const oldrows = [];
-
-const rows = [];
 
 const MAXTABLEWIDTH = 650;
 const useStyles = theme => ({
