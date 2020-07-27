@@ -28,7 +28,9 @@ class Users(UserMixin, db.Model):
     phone = db.Column(db.String())
     email = db.Column(db.String())
     org_id = db.Column(db.Integer)
-    isAuthenticated = db.Column(db.Boolean())
+    isAuthenticatedAdmin = db.Column(db.Boolean())
+    isAdmin = db.Column(db.Boolean())
+    isAuthenticatedIntegrator = db.Column(db.Boolean())
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
@@ -178,7 +180,7 @@ class TAMU(db.Model):
     __tablename__ = 'TAMU'
 
     id = db.Column(db.Integer(), primary_key = True)
-    bad_date = db.Column(db.ARRAY(db.Date()))
+    bad_dates = db.Column(db.ARRAY(db.Date()))
     request_id = db.Column(db.Integer())
 
     def create_request(self):
@@ -221,6 +223,7 @@ class NSRL(db.Model):
     let = db.Column(db.String(100))
     beamSize = db.Column(db.String(100))
     maxDose = db.Column(db.String(100))
+    energies = db.Column(db.ARRAY(db.Integer()))
 
     def create_request(self):
         db.session.add(self)
@@ -264,6 +267,9 @@ class requests(db.Model):
     request_range = db.Column(db.Integer())
     priority = db.Column(db.Boolean())
     ion_hours = db.Column(db.ARRAY(db.Integer()))
+    shifts = db.Column(db.ARRAY(db.Integer()))
+    hoursOn = db.Column(db.ARRAY(db.Integer()))
+    hoursOff = db.Column(db.ARRAY(db.Integer()))
 
 
     def create_request(self):
