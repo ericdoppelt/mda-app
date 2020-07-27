@@ -6,6 +6,7 @@ from flask_jwt_extended import (create_access_token,
 create_refresh_token, jwt_required,
 get_jwt_identity, get_jti)
 from datetime import timedelta, datetime
+from sqlalchemy import and_, or_
 
 from main import app, jwt, mail
 from setup.extensions import db
@@ -38,7 +39,8 @@ def register():
             user_type = req['type'],
             phone = req['phone'],
             email = req['email'],
-            isAuthenticated = False
+            isAuthenticated = False,
+            isAdmin = False
         )
         user.set_password(password)
         result = user.register_user()
@@ -61,7 +63,7 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
-        if user.isAuthenticated:
+        if user.isAuthenticatedAdmin and user.isAuthenticatedIntegrator:
             expires = timedelta(hours=12)
             access_token = create_access_token(identity = username, expires_delta=expires)
             add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
@@ -239,20 +241,41 @@ def logout():
 def authenticate_user():
     result = ""
     username = get_jwt_identity()
-    print(request.method)
 
     try:
+        user = Users.query.filter_by(username=username).first()
+        if not user.isAdmin or user.user_type == 'integrator':
+            return {'success' : False, 'error' : 'You must be an admin or integrator to access this method!'}
+
         if request.method == 'POST':
             req = request.get_json()
 
             username = req['username']
             user = Users.query.filter_by(username=username).first()
-            user.isAuthenticated = True
+
+            if user.isAdmin is True:
+                if user.user_type == 'integrator':
+                    user.isAuthenticatedIntegrator = True
+                    user.isAuthenticatedAdmin = True
+                else:
+                    user.isAuthenticatedIntegrator = True
+            else:
+                user.isAuthenticatedIntegrator = True
+
             db.session.commit()
 
         elif request.method == 'GET' or request.method == 'POST':
-            users = Users.query.filter_by(isAuthenticated=False).all()
             myList = []
+            if user.isAdmin is True:
+                if user.user_type == 'integrator':
+                    users = Users.query.filter(or_(Users.isAuthenticatedAdmin==False, 
+                    and_(Users.isAuthenticatedIntegrator==False, Users.affiliation==user.affiliation))).all()
+                else:
+                    users = Users.query.filter_by(isAuthenticatedAdmin=False).all()
+
+            else:
+                users = Users.query.filter_by(isAuthenticatedIntegrator=False).all()
+
             for user in users:
                 myList.append({'id': user.id, 'user': user.username,
                 'first_name': user.first_name, 'last_name': user.last_name,
@@ -271,12 +294,21 @@ def authenticate_user():
 
     return jsonify(result)
 
-# TODO delete or change for production, development purposes only
-@app.route('/deleteuser/<username>', methods=['DELETE'])
-def delete(username):
+@app.route('/user/deleteuser', methods=['DELETE'])
+@jwt_required
+def delete_user():
     try:
-        Users.query.filter_by(username=username).delete()
-        db.session.commit()
-        return jsonify({'success': True, 'msg': 'User deleted'}), 200
+        username = get_jwt_identity()
+
+        user = Users.query.filter_by(username=username).first()
+        if user.isAdmin:
+            username = request.get_json()['username']
+            Users.query.filter_by(username=username).delete()
+            db.session.commit()
+            return jsonify({'success': True}), 200
+
+        else:
+            return {'success' : False, 'error' : 'You must be an admin to access this method!'}
+        
     except:
-        return jsonify({'success': False, 'msg': 'The specified user was not found'}), 404
+        return jsonify({'success': False, 'error': 'The specified user was not found'}), 404
