@@ -10,7 +10,7 @@ from datetime import timedelta, datetime
 from main import app, bcrypt, jwt, mail
 from setup.extensions import db
 from models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
-                    Integrator, Ranges)
+                    Integrator, Ranges, LBNL, TAMU, NSRL)
 from blacklist_helpers import (
     is_token_revoked, add_token_to_database, get_user_tokens,
     revoke_token, unrevoke_token, revoke_user_tokens,
@@ -99,9 +99,14 @@ def request_modify():
             if attr in req and req[attr] != "" and attr != 'id':
                 modified = True
                 setattr(beam_request, attr, req[attr])
+        if req['facility'] != 'MSU':
+            for attr, value in req['facility'].__dict__.items():
+                if attr in req and req[attr] != "" and attr != 'id' and attr != 'request_id':
+                    modified = True
+                    setattr(req['facility'], attr, req[attr])
 
         beam_request.approved_integrator = True
-        beam_request.status = "Approved"
+        beam_request.status = "Approved with changes"
 
         if modified:
             beam_request.modified = True
@@ -153,10 +158,26 @@ def getRequests():
         request_forms = requests.query.all()
         myForms = []
         for form in request_forms:
+            print(form.name)
             ions = {}
-            for i, ion in enumerate(form.ions):
-                beam = Beams.query.filter_by(id=ion).one()
-                ions[beam.ion] = [beam.amev, form.ion_hours[i]]
+            if form.facility == 'NSRL':
+                print(form.id)
+                extraInfo = NSRL.query.filter_by(request_id=form.id).one()
+                print('h1')
+                print(form.ions)
+                if form.ions != None or form.ions != []:
+                    beams = []
+                    for i, ion in enumerate(form.ions):
+                        beam = Beams.query.filter_by(id=ion).one()
+                        beams.append(beam.ion)
+                    ions[extraInfo.energies[i]] = [beams, form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
+                print('he2')
+            else:
+                beams = []
+                for i, ion in enumerate(form.ions):
+                    beam = Beams.query.filter_by(id=ion).one()
+                    beams.append(beam.ion)
+                ions[beam.amev] = [beams, form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
             if form.request_range is not None:
                 request_range = Ranges.query.filter_by(id=form.request_range).first()
                 timeDelta = timedelta(hours = request_range.hours)
@@ -168,10 +189,11 @@ def getRequests():
                 range_start = None
                 range_end = None
                 totalHours = None
+            
             start_date = form.start.strftime('%Y-%m-%d')
             if form.scheduled_start is not None:
                 form.scheduled_start = form.scheduled_start.strftime("%Y-%m-%dT%H:%M:%S")
-            myForms.append({'name' : form.name, 'integrator' : form.integrator,
+            myDict = {'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
@@ -180,7 +202,35 @@ def getRequests():
             'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
             "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
             'rangeId' : form.request_range, 'totalHours' : totalHours, 
-            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment})
+            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment}
+
+            attrBlacklist = ['id', 'request_id', 'energies']
+
+            if form.facility == 'TAMU':
+                print("tamu")
+                extraInfo = TAMU.query.filter_by(request_id=form.id).first()
+                if extraInfo != None:
+                    dates = []
+                    for date in extraInfo.bad_dates:
+                        dates.append(date.strftime("%Y-%m-%dT%H:%M:%S"))
+                    myDict['badDates'] = dates
+
+            if form.facility == 'LBNL':
+                print("lbnl")
+                extraInfo = LBNL.query.filter_by(request_id=form.id).first()
+                if extraInfo != None:
+                    for key in LBNL.__table__.columns.keys():
+                        if key not in attrBlacklist:
+                            myDict[key] = getattr(extraInfo, key)
+
+            if form.facility == 'NSRL':
+                extraInfo = NSRL.query.filter_by(request_id=form.id).first()
+                if extraInfo != None:
+                    for key in NSRL.__table__.columns.keys():
+                        if key not in attrBlacklist:
+                            myDict[key] = getattr(extraInfo, key)
+
+            myForms.append(myDict)
         result = {'requests' : myForms}
 
     except Exception as e:
@@ -203,10 +253,26 @@ def getRequests_integrators():
         request_forms = requests.query.filter_by(integrator=user.affiliation).all()
         myForms = []
         for form in request_forms:
+            print(form.name)
             ions = {}
-            for i, ion in enumerate(form.ions):
-                beam = Beams.query.filter_by(id=ion).one()
-                ions[beam.ion] = [beam.amev, form.ion_hours[i]]
+            if form.facility == 'NSRL':
+                print(form.id)
+                extraInfo = NSRL.query.filter_by(request_id=form.id).one()
+                print('h1')
+                print(form.ions)
+                if form.ions != None or form.ions != []:
+                    beams = []
+                    for i, ion in enumerate(form.ions):
+                        beam = Beams.query.filter_by(id=ion).one()
+                        beams.append(beam.ion)
+                    ions[extraInfo.energies[i]] = [beams, form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
+                print('he2')
+            else:
+                beams = []
+                for i, ion in enumerate(form.ions):
+                    beam = Beams.query.filter_by(id=ion).one()
+                    beams.append(beam.ion)
+                ions[beam.amev] = [beams, form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
             if form.request_range is not None:
                 request_range = Ranges.query.filter_by(id=form.request_range).first()
                 timeDelta = timedelta(hours = request_range.hours)
@@ -218,10 +284,11 @@ def getRequests_integrators():
                 range_start = None
                 range_end = None
                 totalHours = None
+            
             start_date = form.start.strftime('%Y-%m-%d')
             if form.scheduled_start is not None:
                 form.scheduled_start = form.scheduled_start.strftime("%Y-%m-%dT%H:%M:%S")
-            myForms.append({'name' : form.name, 'integrator' : form.integrator,
+            myDict = {'name' : form.name, 'integrator' : form.integrator,
             'facility' : form.facility, 'company' : form.company, 'email' : form.email,
             'phone' : form.cell, 'funding_contact' : form.funding_contact,
             'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
@@ -230,7 +297,36 @@ def getRequests_integrators():
             'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
             "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
             'rangeId' : form.request_range, 'totalHours' : totalHours, 
-            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment})
+            'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment}
+
+            attrBlacklist = ['id', 'request_id', 'energies']
+
+            if form.facility == 'TAMU':
+                print("tamu")
+                extraInfo = TAMU.query.filter_by(request_id=form.id).first()
+                if extraInfo != None:
+                    dates = []
+                    for date in extraInfo.bad_dates:
+                        dates.append(date.strftime("%Y-%m-%dT%H:%M:%S"))
+                    myDict['badDates'] = dates
+
+            if form.facility == 'LBNL':
+                print("lbnl")
+                extraInfo = LBNL.query.filter_by(request_id=form.id).first()
+                if extraInfo != None:
+                    for key in LBNL.__table__.columns.keys():
+                        if key not in attrBlacklist:
+                            myDict[key] = getattr(extraInfo, key)
+
+            if form.facility == 'NSRL':
+                extraInfo = NSRL.query.filter_by(request_id=form.id).first()
+                if extraInfo != None:
+                    for key in NSRL.__table__.columns.keys():
+                        if key not in attrBlacklist:
+                            myDict[key] = getattr(extraInfo, key)
+
+            myForms.append(myDict)
+
         result = {'requests' : myForms}
 
     except Exception as e:

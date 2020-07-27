@@ -14,21 +14,53 @@ from .request_helper import FormBuilder
 
 
 def add_request(form, username):
+    IDs = {}
+    IDs['TAMU'] = 3
+    IDs['LBNL'] = 4
+    IDs['NSRL'] = 5
+    IDs['MSU'] = 6
+    facId = IDs[form['facility']]
 
     if form['billingPO'] == "":
         form['billingPO'] = None
     ion_ids = []
-    for i, energy in enumerate(form['energies']):
-        for ion in form['ions'][i]:
-            print(ion, energy)
-            beam = Beams.query.filter_by(ion=ion, amev=energy).one()
-            ion_ids.append(beam.id)
+    shifts = []
+    hoursOn = []
+    hoursOff = []
+    energyHours = []
+    nsrlEnergy = []
+    beamTime = 0
+    if form['facility'] == 'NSRL':
+        for i, energy in enumerate(form['energies']):
+            hours = int(form['shifts'][i]) * int(form['hoursOn'][i])
+            beamTime += hours
+            for ion in form['ions'][i]:
+                beams = Beams.query.filter(and_(Beams.ion==ion, Beams.amev>=energy)).all()
+                beam = beams[0]
+                minAmev = beams[0].amev
+                for b in beams:
+                    if minAmev > b.amev:
+                        beam = b
+                        minAmev = b.amev
+                ion_ids.append(beam.id)
+                shifts.append(int(form['shifts'][i]))
+                hoursOn.append(int(form['hoursOn'][i]))
+                hoursOff.append(int(form['hoursOff'][i]))
+                nsrlEnergy.append(int(energy))
+                energyHours.append(hours)
+    else:
+        for i, energy in enumerate(form['energies']):
+            hours = int(form['shifts'][i]) * int(form['hoursOn'][i])
+            beamTime += hours
+            for ion in form['ions'][i]:
+                beam = Beams.query.filter_by(ion=ion, amev=energy, org_id=facId).one()
+                ion_ids.append(beam.id)
+                shifts.append(int(form['shifts'][i]))
+                hoursOn.append(int(form['hoursOn'][i]))
+                hoursOff.append(int(form['hoursOff'][i]))
+                energyHours.append(hours)
 
-    ionHours = []
-    totalHours = 0
-    for i in form['hours']:
-        ionHours.append(int(i))
-        totalHours += int(i)
+        
     entry = requests(name = form['name'],
                     email = form['email'],
                     cell = form['cell'],
@@ -49,50 +81,61 @@ def add_request(form, username):
                     ions = ion_ids,
                     comments = form['comments'],
                     po_number = form['billingPO'],
-                    beam_time = totalHours,
+                    beam_time = beamTime,
                     username = username,
                     date_of_request = datetime.now(),
                     modified = False,
                     status = "Pending",
                     rejected = False,
-                    ion_hours = ionHours)
+                    shifts = shifts,
+                    hoursOn = hoursOn,
+                    hoursOff = hoursOff,
+                    totalHours = energyHours)
     entry.create_request()
-    # request_id = entry.id
-    # if form['facility'] == 'TAMU':
-    #     facility_form = TAMU(request_id = request_id,
-    #                         bad_dates = form['badDates'])
-    #     facility_form.create_request()
+    request_id = entry.id
+    if form['facility'] == 'TAMU':
+        facility_form = TAMU(request_id = request_id,
+                            bad_dates = form['badDates'])
+        facility_form.create_request()
 
-    # if form['facility'] == 'LBNL':
-    #     facility_form = LBNL(request_id = request_id,
-    #                         address = form['address'],
-    #                         officePhone = form['officePhone'],
-    #                         abstract = form['abstract'],
-    #                         alternateDate = form['alternateDate'],
-    #                         targetMaterials = form['targetMaterials'],
-    #                         safetyConcerns = form['safetyConcerns'],
-    #                         beamType = form['beamType'],
-    #                         specialIons = form['specialIons'],
-    #                         specialEnergies = form['specialEnergies'],
-    #                         desiredIntensity = form['desiredIntensity'],
-    #                         airOrVacuum = form['airOrVacuum'],
-    #                         controlRestrictions = form['controlRestrictions'],
-    #                         electricallySafe = form['electricallySafe'])
-    #     facility_form.create_request()
+    if form['facility'] == 'LBNL':
+        if form['alternateDate'] == "":
+            form['alternateDate'] = None
+        facility_form = LBNL(request_id = request_id,
+                            address = form['address'],
+                            officePhone = form['officePhone'],
+                            abstract = form['abstract'],
+                            alternateDate = form['alternateDate'],
+                            targetMaterials = form['targetMaterials'],
+                            safetyConcerns = form['safetyConcerns'],
+                            beamType = form['beamType'],
+                            specialIons = form['specialIons'],
+                            specialEnergies = form['specialEnergies'],
+                            desiredIntensity = form['desiredIntensity'],
+                            airOrVacuum = form['airOrVacuum'],
+                            controlRestrictions = form['controlRestrictions'],
+                            electricallySafe = form['electricallySafe'])
+        facility_form.create_request()
 
-    # if form['facility'] == 'NSRL':
-    #     facility_form = NSRL(request_id = request_id,
-    #                         endDate = form['endDate'],
-    #                         experimentType = form['experimentType'],
-    #                         isNasa = form['isNasa'],
-    #                         let = form['let'],
-    #                         beamSize = form['beamSize'],
-    #                         maxDose = form['maxDose'])
-    #     facility_form.create_request()
+    if form['facility'] == 'NSRL':
+        if form['isNasa'] == "":
+            form['isNasa'] = None
+        if form['endDate'] == "":
+            form['endDate'] = None
+        facility_form = NSRL(request_id = request_id,
+                            endDate = form['endDate'],
+                            experimentType = form['experimentType'],
+                            isNasa = form['isNasa'],
+                            let = form['let'],
+                            beamSize = form['beamSize'],
+                            maxDose = form['maxDose'],
+                            energies = nsrlEnergy)
+        facility_form.create_request()
 
 @app.route('/requestform', methods=['POST'])
 @jwt_required
 def requestform():
+    
     try:
         form = request.get_json()
         print(form)

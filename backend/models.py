@@ -176,7 +176,7 @@ class Beams(db.Model):
         return "<Beam(org_id=%s, ion=%s)>" % (self.org_id, self.ion)
 
 class TAMU(db.Model):
-    """Model for the Requests table"""
+    """Model for the TAMU table"""
     __tablename__ = 'TAMU'
 
     id = db.Column(db.Integer(), primary_key = True)
@@ -188,7 +188,7 @@ class TAMU(db.Model):
         db.session.commit()
 
 class LBNL(db.Model):
-    """Model for the Requests table"""
+    """Model for the LBNL table"""
     __tablename__ = 'LBNL'
 
     id = db.Column(db.Integer(), primary_key = True)
@@ -212,7 +212,7 @@ class LBNL(db.Model):
         db.session.commit()
 
 class NSRL(db.Model):
-    """Model for the Requests table"""
+    """Model for the NSRL table"""
     __tablename__ = 'NSRL'
 
     id = db.Column(db.Integer(), primary_key = True)
@@ -270,7 +270,7 @@ class requests(db.Model):
     shifts = db.Column(db.ARRAY(db.Integer()))
     hoursOn = db.Column(db.ARRAY(db.Integer()))
     hoursOff = db.Column(db.ARRAY(db.Integer()))
-
+    totalHours = db.Column(db.ARRAY(db.Integer()))
 
     def create_request(self):
         db.session.add(self)
