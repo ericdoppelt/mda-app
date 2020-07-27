@@ -256,23 +256,22 @@ def getRequests_integrators():
             print(form.name)
             ions = {}
             if form.facility == 'NSRL':
-                print(form.id)
                 extraInfo = NSRL.query.filter_by(request_id=form.id).one()
-                print('h1')
-                print(form.ions)
                 if form.ions != None or form.ions != []:
-                    beams = []
                     for i, ion in enumerate(form.ions):
                         beam = Beams.query.filter_by(id=ion).one()
-                        beams.append(beam.ion)
-                    ions[extraInfo.energies[i]] = [beams, form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
-                print('he2')
+                        if extraInfo.energies[i] in ions:
+                            ions[extraInfo.energies[i]][0].append(beam.ion)
+                        else:
+                            ions[extraInfo.energies[i]] = [[beam.ion], form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
             else:
                 beams = []
                 for i, ion in enumerate(form.ions):
                     beam = Beams.query.filter_by(id=ion).one()
-                    beams.append(beam.ion)
-                ions[beam.amev] = [beams, form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
+                    if beam.amev in ions:
+                        ions[beam.amev][0].append(beam.ion)
+                    else:
+                        ions[beam.amev] = [[beam.ion], form.shifts[i], form.hoursOn[i], form.hoursOff[i]]
             if form.request_range is not None:
                 request_range = Ranges.query.filter_by(id=form.request_range).first()
                 timeDelta = timedelta(hours = request_range.hours)
