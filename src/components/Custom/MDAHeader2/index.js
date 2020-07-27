@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import {AppBar, Tabs, Tab, Menu, MenuItem} from '@material-ui/core';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import CalendarTodayRoundedIcon from '@material-ui/icons/CalendarTodayRounded';
@@ -19,6 +20,11 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -45,11 +51,33 @@ const useStyles = theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: "#424242"
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    backgroundColor: "#424242",
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    zIndex: theme.zIndex.drawer + 1,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    backgroundColor: "#424242",
+  },
+  menuButton: {
+    marginRight: 36,
+  },
+  hide: {
+    display: 'none',
   },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    whiteSpace: 'nowrap',
+    backgroundColor: "#424242",
   },
   drawerPaper: {
     width: drawerWidth,
@@ -57,6 +85,34 @@ const useStyles = theme => ({
   },
   drawerContainer: {
     overflow: 'auto',
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    backgroundColor: "#424242",
+  },
+  drawerClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9) + 1,
+    },
+    backgroundColor: "#424242",
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
   },
   content: {
     flexGrow: 1,
@@ -81,11 +137,13 @@ class MDAHeader2 extends React.Component {
     this.openFacilitiesMenu = this.openFacilitiesMenu.bind(this);
     this.openFormsMenu = this.openFormsMenu.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
+    this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     this.state = {
       menuAnchor: null,
       facilitiesOpen: false,
       formsOpen: false,
       loggedIn: false,
+      drawerOpen: false,
     }
   }
 
@@ -100,6 +158,11 @@ class MDAHeader2 extends React.Component {
       formsOpen: !this.state.formsOpen
       }))
   };
+
+  handleDrawerOpen () {
+    console.log('hey')
+    this.setState({drawerOpen: !this.state.drawerOpen})
+  }
 
   openFacilitiesMenu(event) {
     this.setState({
@@ -184,8 +247,25 @@ class MDAHeader2 extends React.Component {
     return (
       <div className='column'>
         <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar} color="paper">
+        <AppBar 
+          position="fixed" 
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: this.state.drawerOpen,
+          })}
+          color="paper"
+        >
           <Toolbar>
+            <IconButton
+              color="white"
+              aria-label="open drawer"
+              onClick={this.handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, {
+                [classes.hide]: this.state.drawerOpen,
+              })}
+            >
+              <MenuIcon />
+            </IconButton>
             <Link to={links[0]} style={{ color: '#FFF' }}>
               <img src="images/ISEEULogoWhite.png" alt="logo" className={classes.logo} />
             </Link>
@@ -196,14 +276,29 @@ class MDAHeader2 extends React.Component {
             </section>
           </Toolbar>
         </AppBar>
+
+
         <Drawer
-          className={classes.drawer}
           variant="permanent"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: this.state.drawerOpen,
+            [classes.drawerClose]: !this.state.drawerOpen,
+          })}
           classes={{
-            paper: classes.drawerPaper,
+            paper: clsx({
+              [classes.drawerOpen]: this.state.drawerOpen,
+              [classes.drawerClose]: !this.state.drawerOpen,
+            }),
           }}
         >
-          <Toolbar />
+          {/*(<Toolbar />*/}
+          <div className={classes.toolbar}>
+            <IconButton onClick={this.handleDrawerOpen}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+
           <div className={classes.drawerContainer}>
             <List>
               {/*----HOME----*/}
@@ -227,27 +322,8 @@ class MDAHeader2 extends React.Component {
                   <ListItemText primary='Facilities'/>
                 </ListItem>
               </Link>
-
-              {/*-----OLD SITES----*/}
-            {/*  <ListItem button onClick={() => this.handleFacilitiesClick()} style={{ color: '#FFF' }}>
-                <ListItemIcon>{icons[2]}</ListItemIcon>
-                <ListItemText primary="Facilities"/>
-                {this.state.facilitiesOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={this.state.facilitiesOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {['TAMU','MSU','LBNL','NSRL'].map((text, index) => (
-                    <Link to={facilityLinks[index]} style={{ color: '#FFF' }}>
-                      <ListItem button key={text}>
-                        <ListItemIcon></ListItemIcon>
-                        <ListItemText primary={text} />
-                      </ListItem>
-                    </Link>
-                  ))}
-                </List>
-              </Collapse>*/}
-
             </List>
+
             <Divider />
             {/*----USER AND VIEW REQUESTS----*/}
             <List>
