@@ -156,8 +156,7 @@ getList(listArray, title) {
     SchedulingStore.setFacility(this.props.facility);
     SchedulingStore.setPriorities(this.state.priority);
     SchedulingStore.setGenerals(this.state.general);
-    // ADD SUGGEGSTION HERE
-    SchedulingStore.setSuggestion(null);
+    SchedulingStore.setSuggestion(LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.endDateTime));
     SchedulingStore.setStartDateTime(this.state.startDateTime)
     SchedulingStore.setEndDateTime(this.state.endDateTime);
     console.log(SchedulingStore);
