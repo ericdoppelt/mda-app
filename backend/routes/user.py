@@ -39,8 +39,9 @@ def register():
             user_type = req['type'],
             phone = req['phone'],
             email = req['email'],
-            isAuthenticated = False,
-            isAdmin = False
+            isAuthenticatedAdmin = False,
+            isAdmin = False,
+            isAuthenticatedIntegrator = False
         )
         user.set_password(password)
         result = user.register_user()
@@ -166,8 +167,7 @@ def forgot_username():
         msg.recipients = [user.email]
         msg.body = "Your ISEEU username is: \n\n"
         msg.body += user.username
-        # mail.send(msg)
-        print(msg)
+        mail.send(msg)
         result = {'success' : True,
         'error' : ""}
 
@@ -193,7 +193,6 @@ def forgot_password():
         msg.body = "Click the link below to reset your password. This link will expire in 1 hour.\n\n"
         msg.body += link + access_token
         # mail.send(msg)
-        print(msg)
         result = {'success' : True,
         'error' : ""}
 
@@ -264,28 +263,24 @@ def authenticate_user():
 
             db.session.commit()
 
-        elif request.method == 'GET' or request.method == 'POST':
-            myList = []
-            if user.isAdmin is True:
-                if user.user_type == 'integrator':
-                    users = Users.query.filter(or_(Users.isAuthenticatedAdmin==False, 
-                    and_(Users.isAuthenticatedIntegrator==False, Users.affiliation==user.affiliation))).all()
-                else:
-                    users = Users.query.filter_by(isAuthenticatedAdmin=False).all()
-
+        myList = []
+        if user.isAdmin is True:
+            if user.user_type == 'integrator':
+                users = Users.query.filter(or_(Users.isAuthenticatedAdmin==False, 
+                and_(Users.isAuthenticatedIntegrator==False, Users.affiliation==user.affiliation))).all()
             else:
-                users = Users.query.filter_by(isAuthenticatedIntegrator=False).all()
-
-            for user in users:
-                myList.append({'id': user.id, 'user': user.username,
-                'first_name': user.first_name, 'last_name': user.last_name,
-                'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
-                'email': user.email})
-
-            result = {'results' : myList}
+                users = Users.query.filter_by(isAuthenticatedAdmin=False).all()
 
         else:
-            result = {'success' : False, 'error' : 'Invalid method!'}
+            users = Users.query.filter_by(isAuthenticatedIntegrator=False, affiliation=user.affiliation).all()
+
+        for user in users:
+            myList.append({'id': user.id, 'user': user.username,
+            'first_name': user.first_name, 'last_name': user.last_name,
+            'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
+            'email': user.email})
+
+        result = {'results' : myList}
 
     except Exception as e:
         print(e)
