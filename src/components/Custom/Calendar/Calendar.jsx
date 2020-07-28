@@ -22,11 +22,9 @@ const facilities = [
   'MSU'
 ]; 
 
-const integrators = [
-  'MDA',
-  'NASA',
-  'Independent',
-]; 
+let integrators = new Set();
+
+
 
 const beamTypes = [
   'Heavy Ion',
@@ -112,10 +110,10 @@ class Calendar extends React.Component {
       checkedFacilities: this.props.personal
         ? facilities
         : ['TAMU'],
-      checkedIntegrators: integrators,
+      checkedIntegrators: [],
       checkedBeamTypes: beamTypes,
       checkedPersonal: this.props.personal,
-      checkedValues: ['TAMU'].concat(integrators).concat(beamTypes),
+      checkedValues: [],
       calendarWeekends: true,
       calendarEvents: [ // initial event data
       ],
@@ -142,9 +140,14 @@ class Calendar extends React.Component {
         var data = [];
         response.data.entries.forEach(function(event) {
           data.push(self.makeEvent(event.facility,event.integrator,event.startDate));
+          integrators.add(event.integrator);
         })
-        self.setState({calendarEvents : data});
-        //self.setState(state => ({checkedValues: self.state.checkedFacilities.concat(integrators.concat(beamTypes)),}));
+        self.setState({
+          calendarEvents : data, 
+          integrators: Array.from(integrators),
+          checkedValues: ['TAMU'].concat(Array.from(integrators)).concat(beamTypes),
+          checkedIntegrators: Array.from(integrators),
+        });
       })
       .catch(error => {
       });
@@ -167,6 +170,7 @@ class Calendar extends React.Component {
           })
           self.setState({personalEvents : data});
           //self.setState(state => ({checkedValues: self.state.checkedFacilities.concat(integrators.concat(beamTypes)),}));
+          
         })
         .catch(error => {
         });
@@ -260,7 +264,7 @@ class Calendar extends React.Component {
                     onChange={ this.handleChangeFacilities }
                     input={<Input />}
                     MenuProps={MenuProps}
-                    style={{width:'150px',}}
+                    style={{width:'250px',}}
                   >
                     {facilities.map((name) => (
                       <MenuItem key={name} value={name} style={getStyles(name, facilities, theme)}>
@@ -281,19 +285,24 @@ class Calendar extends React.Component {
                     onChange={ this.handleChangeIntegrators }
                     input={<Input />}
                     MenuProps={MenuProps}
-                    style={{width:'150px',}}
+                    style={{width:'250px',}}
                   >
-                    {integrators.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, integrators, theme)}>
+                    
+                    {this.state.integrators.length > 1
+                    ? this.state.integrators.map((name) => (
+                      <MenuItem key={name} value={name} style={getStyles(name, this.state.integrators, theme)}>
                         {name}
                       </MenuItem>
-                    ))}
+                    ))
+                    : null
+                    }
                   </Select>
                 </FormControl>
 
-                {/*** BEAM TYPE FILTER ***/}
+                {/*** BEAM TYPE FILTER DSIABLED ***/}
+                {/*
                 <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-mutiple-name-label">Integrator</InputLabel>
+                  <InputLabel id="demo-mutiple-name-label">Beam Type</InputLabel>
                   <Select
                     labelId="demo-mutiple-name-label"
                     id="demo-mutiple-name"
@@ -311,6 +320,7 @@ class Calendar extends React.Component {
                     ))}
                   </Select>
                 </FormControl>
+                */}
 
                 <FormControlLabel
                   control={
