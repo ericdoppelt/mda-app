@@ -356,7 +356,7 @@ class Calendar extends React.Component {
                   }
                 }}
                 allDaySlot={false}
-                expandRows={false} // not working??
+                expandRows={true} // not working??
                 //height='500'
                 plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
                 ref={ this.calendarComponentRef }
