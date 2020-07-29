@@ -889,17 +889,32 @@ class ViewRequests extends React.Component {
       return (
         <div>
           {/* Snackbars */}
-          <Snackbar open={this.state.approveSnackOpen} autoHideDuration={6000} onClose={this.handleApproveSnackClose}>
+          <Snackbar 
+            anchorOrigin={{vertical: 'top',horizontal: 'center'}}
+            open={this.state.approveSnackOpen} 
+            autoHideDuration={6000} 
+            onClose={this.handleApproveSnackClose}
+          >
             <Alert onClose={this.handleApproveSnackClose} severity="success">
               The form has been approved.
             </Alert>
           </Snackbar>
-          <Snackbar open={this.state.modifySnackOpen} autoHideDuration={6000} onClose={this.handleModifySnackClose}>
+          <Snackbar 
+            anchorOrigin={{vertical: 'top',horizontal: 'center'}}
+            open={this.state.modifySnackOpen} 
+            autoHideDuration={6000} 
+            onClose={this.handleModifySnackClose}
+          >
             <Alert onClose={this.handleModifySnackClose} severity="success">
               The form has been approved with modifications.
             </Alert>
           </Snackbar>
-          <Snackbar open={this.state.rejectSnackOpen} autoHideDuration={6000} onClose={this.handleRejectSnackClose}>
+          <Snackbar 
+            anchorOrigin={{vertical: 'top',horizontal: 'center'}}
+            open={this.state.rejectSnackOpen} 
+            autoHideDuration={6000} 
+            onClose={this.handleRejectSnackClose}
+          >
             <Alert onClose={this.handleRejectSnackClose} severity="error">
               The form has been rejected.
             </Alert>

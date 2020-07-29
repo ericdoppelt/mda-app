@@ -22,3 +22,8 @@
 .moreBorder{
   border: 3px solid green !important;
 }
+
+.fc-time-grid .fc-slats td {
+  height: 6em; // Change This to your required height
+  border-bottom: 0;
+}
