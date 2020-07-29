@@ -14,6 +14,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Skeleton from '@material-ui/lab/Skeleton';
 import Row from '../../UIzard/Row'
 
 import Dialog from '@material-ui/core/Dialog';
@@ -145,6 +146,7 @@ class ViewRequests extends React.Component {
     this.handleApproveSnackClose = this.handleApproveSnackClose.bind(this);
     this.handleModifySnackClose = this.handleModifySnackClose.bind(this);
     this.handleRejectSnackClose = this.handleRejectSnackClose.bind(this);
+    this.tableView = this.tableView.bind(this);
     /*** LIST OF DATES ***/
     this.state = {
       id: "",
@@ -231,14 +233,11 @@ class ViewRequests extends React.Component {
           entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode, entry.rejectNote))
       });
       self.setState(state=>({oldrows: tempRows, entryCount: tempRows.length}))
-      console.log("Checking rows")
-      console.log(tempRows)
-      console.log(self.state.oldrows);
-      self.setState({component: "table"})
     })
     .catch(error => {
       console.log(error);
     });
+    self.setState({component: "table"})
     //console.log(result);
   }
 
@@ -496,6 +495,39 @@ class ViewRequests extends React.Component {
       )
     }
     
+  }
+
+  tableView () {
+    let page = this.state.page;
+    let rowsPerPage = this.state.rowsPerPage;
+
+    if (this.state.oldrows.length > 0) {
+      this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+        return (
+          
+          <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
+            {columns.map((column) => {
+              const value = row[column.id];
+              if(column.id === 'viewMore') {
+                return (
+                  <TableCell key={column.id} align={column.align}>
+                    {this.viewMore(row)}
+                  </TableCell>
+                )
+              } else {
+                return (
+                  <TableCell key={column.id} align={column.align}>
+                    {column.format && typeof value === 'number' ? column.format(value) : value}
+                  </TableCell>
+                );
+              }
+            })}
+          </TableRow>
+        );
+      })
+    } else {
+      return 'hello'
+    }
   }
 
 
@@ -841,29 +873,32 @@ class ViewRequests extends React.Component {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                          return (
-                            
-                            <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
-                              {columns.map((column) => {
-                                const value = row[column.id];
-                                if(column.id === 'viewMore') {
-                                  return (
-                                    <TableCell key={column.id} align={column.align}>
-                                      {this.viewMore(row)}
-                                    </TableCell>
-                                  )
-                                } else {
-                                  return (
-                                    <TableCell key={column.id} align={column.align}>
-                                      {column.format && typeof value === 'number' ? column.format(value) : value}
-                                    </TableCell>
-                                  );
-                                }
-                              })}
-                            </TableRow>
-                          );
-                        })}
+                        {this.state.oldrows.length > 0 
+                          ? this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                            return (
+                              
+                              <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
+                                {columns.map((column) => {
+                                  const value = row[column.id];
+                                  if(column.id === 'viewMore') {
+                                    return (
+                                      <TableCell key={column.id} align={column.align}>
+                                        {this.viewMore(row)}
+                                      </TableCell>
+                                    )
+                                  } else {
+                                    return (
+                                      <TableCell key={column.id} align={column.align}>
+                                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                                      </TableCell>
+                                    );
+                                  }
+                                })}
+                              </TableRow>
+                            );
+                          })
+                          : <div style={{textAlign: 'center', display: 'inline-block'}}><br/>  No requests found for this account.<br/></div>
+                        }
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -882,7 +917,25 @@ class ViewRequests extends React.Component {
               </div>
             </div>
           )
-        } else {return null}
+        } else {
+          return ( //loading screen
+            <div>
+              <Skeleton variant="rect" width={MAXTABLEWIDTH-100} height={50} />
+              <br/><br/>
+              <Skeleton variant="text"/>
+              <br/><br/>
+              <Skeleton variant="text" />
+              <br/><br/>
+              <Skeleton variant="text" />
+              <br/><br/>
+              <Skeleton variant="text" />
+              <br/><br/>
+              <Skeleton variant="text" />
+              <br/><br/>
+              <Skeleton variant="text" />
+            </div>
+          )
+        }
     }
 
     const snackbarsComponent = () => {

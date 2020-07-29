@@ -203,6 +203,26 @@ class MDAHeader2 extends React.Component {
     }
   }
 
+  schedulerMenu () {
+    console.log(window.sessionStorage.getItem('access_token'))
+    if (window.sessionStorage.getItem('integrator_token') === 'true') {
+      console.log('found integrator token')
+      console.log(window.sessionStorage.getItem('integrator_token'))
+      return (
+        <Link to={links[6]} style={{ color: '#FFF' }}>
+          <ListItem button key='Scheduler'>
+            <ListItemIcon>{icons[6]}</ListItemIcon>
+            <ListItemText primary='Scheduler' />
+          </ListItem>
+        </Link>
+      )
+    } else {
+      console.log('no integrator token')
+      console.log(window.sessionStorage.getItem('integrator_token'))
+      return null;
+    }
+  }
+
   LoginButtons = () => {
     //console.log("Logged in state:");
     //console.log(this.state.loggedIn);
@@ -285,12 +305,7 @@ class MDAHeader2 extends React.Component {
               <ListItemText primary='View Requests' />
             </ListItem>
           </Link>
-          <Link to={links[6]} style={{ color: '#FFF' }}>
-            <ListItem button key='Scheduler'>
-              <ListItemIcon>{icons[6]}</ListItemIcon>
-              <ListItemText primary='Scheduler' />
-            </ListItem>
-          </Link>
+          {this.schedulerMenu()}
           {/*----REQUEST FORMS----*/}
           <ListItem button onClick={this.handleFormsClick} style={{ color: '#FFF' }}>
             <ListItemIcon>{icons[3]}</ListItemIcon>
@@ -316,6 +331,7 @@ class MDAHeader2 extends React.Component {
   }
 
   async componentDidMount() {
+    /*
     const url = "https://mda-phoenix.herokuapp.com/user";
 
     var self = this;
@@ -338,6 +354,7 @@ class MDAHeader2 extends React.Component {
         console.log("error");
         console.log(error);
     });
+    */
   }
 
   render() {
