@@ -16,6 +16,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Row from '../../UIzard/Row'
+import Image from '../../../components/UIzard/Image';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -147,6 +148,7 @@ class ViewRequests extends React.Component {
     this.handleModifySnackClose = this.handleModifySnackClose.bind(this);
     this.handleRejectSnackClose = this.handleRejectSnackClose.bind(this);
     this.tableView = this.tableView.bind(this);
+    this.viewRequestsHeader = this.viewRequestsHeader.bind(this);
     /*** LIST OF DATES ***/
     this.state = {
       id: "",
@@ -196,6 +198,8 @@ class ViewRequests extends React.Component {
       statusNew: "",
 
       /*** ETC ***/
+      loggedAffiliation: "",
+      isAuthenticatedIntegrator: false,
       rejectNote: "",
       dialogOpen: false,
       approveSnackOpen: false,
@@ -217,7 +221,7 @@ class ViewRequests extends React.Component {
   
   // Collects request form data.
   async componentDidMount() {
-    const url = "https://mda-phoenix.herokuapp.com/getforms/integrator";
+    let url = "https://mda-phoenix.herokuapp.com/getforms/integrator";
     let self = this;
     let result;
     await axios.get(url, 
@@ -237,8 +241,26 @@ class ViewRequests extends React.Component {
     .catch(error => {
       console.log(error);
     });
+
+    url = 'https://mda-phoenix.herokuapp.com/user';
+    await axios.get(url, {
+      headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+      }).then(response => {
+      console.log(response.data);
+      self.setState({
+        loggedAffiliation: response.data.affiliation,
+        isAuthenticatedIntegrator: response.data.isAuthenticatedIntegrator,
+      });
+      }).catch(error => {
+        console.log("error");
+        console.log(error);
+    });
+
+
     self.setState({component: "table"})
     //console.log(result);
+
+
   }
 
   // Used to view form information.
@@ -497,6 +519,30 @@ class ViewRequests extends React.Component {
     
   }
 
+  viewRequestsHeader () {
+
+    // set logo image
+    let logo = <Image style={{ width: '200px', height: '200px', backgroundImage: 'url(/images/ISEEULogo.png)', justifyContent:'center' }} />;
+    if (this.state.loggedAffiliation === 'MDA') {
+      logo = <Image style={{ width: '200px', height: '200px', backgroundImage: 'url(/images/MDALogo.png)', justifyContent:'center' }} />
+    } else if (this.state.loggedAffiliation === 'NASA') {
+      logo = <Image style={{ width: '200px', height: '200px', backgroundImage: 'url(/images/NASALogo.png)', justifyContent:'center' }} />
+    }
+
+    return (
+      <div>
+        <Row style={{justifyContent: 'center'}}>
+          {logo}
+        </Row>
+        <br/>
+        <Typography variant="h6">
+          Beam Request Forms for {this.state.loggedAffiliation}
+        </Typography>
+        <br/><br/>
+      </div>
+    );
+  }
+
   tableView () {
     let page = this.state.page;
     let rowsPerPage = this.state.rowsPerPage;
@@ -550,9 +596,8 @@ class ViewRequests extends React.Component {
       if (this.state.component === 'view') {
         return(
             <div>
-              <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent:'flex-end'}}>
-                {this.state.rejectNote}
-              </Row>
+              {this.viewRequestsHeader()}
+            
               <br/>
                 <Row>
                   <TextField
@@ -854,7 +899,9 @@ class ViewRequests extends React.Component {
           );
         } else if (this.state.component === 'table') {
           return (
+            
             <div className='view-requests'>
+              {this.viewRequestsHeader()}
               <div className='view-requests-inner'>
                 <Paper className={classes.root}>
                   <TableContainer className={classes.container} >
@@ -920,6 +967,14 @@ class ViewRequests extends React.Component {
         } else {
           return ( //loading screen
             <div>
+              <Row style={{justifyContent: 'center'}}>
+                <Skeleton variant="circle" width={200} height={200} />
+              </Row>
+              <br/><br/>
+              <Row style={{justifyContent: 'center'}}>
+                <Skeleton variant="text" width={250} />
+              </Row>
+              <br/><br/>
               <Skeleton variant="rect" width={MAXTABLEWIDTH-100} height={50} />
               <br/><br/>
               <Skeleton variant="text"/>

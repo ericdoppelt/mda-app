@@ -23,10 +23,6 @@ export default function Home() {
           <Row style={{ justifyContent: 'center', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
             {/*<CardNoShadow style={{ justifyContent: 'center', alignItems: 'auto', minWidth: '50px', minHeight: '600px', flexGrow: '0' }}>*/}
               <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
-                <Image style={{ width: '200px', height: '200px', backgroundImage: 'url(/images/MDALogo.png)' }} />
-                <Typography variant="h6">
-                  Beam Request Forms
-                </Typography>
                 <ViewRequests/>
               </Stack>
             {/*</CardNoShadow>*/}
