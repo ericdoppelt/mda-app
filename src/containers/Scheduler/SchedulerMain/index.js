@@ -23,11 +23,9 @@ export default function Home() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Row style={{ justifyContent: 'center', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
-            <Card style={{ justifyContent: 'center', alignItems: 'auto', minWidth: '50px', minHeight: '600px', flexGrow: '0' }}>
-              <Stack style={{ justifyContent: 'flex-start', minWidth: '50px', minHeight: '50px' }}>
+              <Stack style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
                 <ScheduleContainer/>
               </Stack>
-            </Card>
           </Row>
         </main>
       </div>
