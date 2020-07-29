@@ -341,43 +341,45 @@ class Calendar extends React.Component {
             {/*** CALENDAR PLUGIN ***/}
             <Row style={{ minWidth: '50px', minHeight: '50px' }}>
               <FullCalendar
-              defaultView="dayGridMonth"
-              header={{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridTwoWeeks,timeGridWeek,timeGridDay,listWeek'
-              }}
-              views= {{
-                timeGridTwoWeeks: {
-                  type: 'timeGrid',
-                  duration: { weeks: 2 },
-                  rows: 2,
-                  buttonText: '2 weeks'
-                }
-              }}
-              height='500'
-              plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-              ref={ this.calendarComponentRef }
-              weekends={ this.state.calendarWeekends }
-              events={ this.state.checkedPersonal
-                        ? this.state.personalEvents
-                        : this.state.calendarEvents
-                      }
-              slotDuration='04:00:00'
-              dateClick={ this.handleDateClick }
-              eventOrder="facility,start"
+                defaultView="dayGridMonth"
+                header={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridTwoWeeks,timeGridWeek,timeGridDay,listWeek'
+                }}
+                views= {{
+                  timeGridTwoWeeks: {
+                    type: 'timeGrid',
+                    duration: { weeks: 2 },
+                    rows: 3,
+                    buttonText: '2 weeks',
+                  }
+                }}
+                allDaySlot={false}
+                expandRows={false} // not working??
+                //height='500'
+                plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+                ref={ this.calendarComponentRef }
+                weekends={ this.state.calendarWeekends }
+                events={ this.state.checkedPersonal
+                          ? this.state.personalEvents
+                          : this.state.calendarEvents
+                        }
+                slotDuration='04:00:00'
+                dateClick={ this.handleDateClick }
+                eventOrder="facility,start"
 
-              /* Render Event Options */
-              eventRender={ function(info) {
-                var arr1 = self.state.checkedFacilities;
-                var arr2 = self.state.checkedIntegrators;
-                var arr3 = self.state.checkedBeamTypes;
-                //console.log(arr)
-                return (arr1.indexOf(info.event.extendedProps.facility) >=0
-                  && arr2.indexOf(info.event.extendedProps.integrator) >=0
-                  && arr3.indexOf(info.event.extendedProps.beamType) >=0
-                )  
-              } }
+                /* Render Event Options */
+                eventRender={ function(info) {
+                  var arr1 = self.state.checkedFacilities;
+                  var arr2 = self.state.checkedIntegrators;
+                  var arr3 = self.state.checkedBeamTypes;
+                  //console.log(arr)
+                  return (arr1.indexOf(info.event.extendedProps.facility) >=0
+                    && arr2.indexOf(info.event.extendedProps.integrator) >=0
+                    && arr3.indexOf(info.event.extendedProps.beamType) >=0
+                  )  
+                }}
               />
             </Row>
 
