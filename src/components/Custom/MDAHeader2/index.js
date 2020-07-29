@@ -13,6 +13,7 @@ import Row from '../../UIzard/Row';
 
 import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -29,6 +30,8 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import axios from 'axios';
+
+import * as Constants from '../../../constants'
 
 const icons = [<HomeRoundedIcon />,
                <CalendarTodayRoundedIcon />,
@@ -60,7 +63,7 @@ const useStyles = theme => ({
   appBarShift: {
     marginLeft: drawerWidth,
     zIndex: theme.zIndex.drawer + 1,
-    width: `calc(100% - ${drawerWidth}px)`,
+    width: '100%',
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -81,10 +84,12 @@ const useStyles = theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: "#424242"
+    backgroundColor: "#424242",
+    overflowX: 'hidden',
   },
   drawerContainer: {
     overflow: 'auto',
+    overflowX: 'hidden',
   },
   drawerOpen: {
     width: drawerWidth,
@@ -99,17 +104,18 @@ const useStyles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    overflow: 'hidden',
     overflowX: 'hidden',
     width: theme.spacing(7) + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
+      width: theme.spacing(7) + 1,
     },
     backgroundColor: "#424242",
   },
   toolbar: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -128,6 +134,12 @@ const useStyles = theme => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: 'auto',
+  },
 });
 
 class MDAHeader2 extends React.Component {
@@ -138,6 +150,8 @@ class MDAHeader2 extends React.Component {
     this.openFormsMenu = this.openFormsMenu.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
     this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+    this.handleFormsClick = this.handleFormsClick.bind(this);
+    this.drawerMenu = this.drawerMenu.bind(this);
     this.state = {
       menuAnchor: null,
       facilitiesOpen: false,
@@ -157,10 +171,12 @@ class MDAHeader2 extends React.Component {
     this.setState(state => ({
       formsOpen: !this.state.formsOpen
       }))
+    if (!this.state.drawerOpen) {
+      this.handleDrawerOpen();
+    }
   };
 
   handleDrawerOpen () {
-    console.log('hey')
     this.setState({drawerOpen: !this.state.drawerOpen})
   }
 
@@ -217,6 +233,87 @@ class MDAHeader2 extends React.Component {
     }
   }
 
+  drawerMenu () {
+    const { classes } = this.props;
+    return (
+      <div
+        className={classes.drawerPaper}
+        role="presentation"
+      >
+        <Divider />
+        <List>
+          {/*----HOME----*/}
+          <Link to={links[0]} style={{ color: '#FFF' }}>
+            <ListItem button key='Home'>
+              <ListItemIcon>{icons[0]}</ListItemIcon>
+              <ListItemText primary='Home' />
+            </ListItem>
+          </Link>
+          {/*----CALENDAR----*/}
+          <Link to={links[1]} style={{ color: '#FFF' }}>
+            <ListItem button key='Calendar'>
+              <ListItemIcon>{icons[1]}</ListItemIcon>
+              <ListItemText primary='Calendar' />
+            </ListItem>
+          </Link>
+          {/*----SITES----*/}
+          <Link to={links[2]} style={{color: '#FFF'}}>
+            <ListItem button key='Facilities'>
+              <ListItemIcon>{icons[2]}</ListItemIcon>
+              <ListItemText primary='Facilities'/>
+            </ListItem>
+          </Link>
+        </List>
+
+        <Divider />
+        {/*----USER AND VIEW REQUESTS----*/}
+        <List>
+          <Link to={
+            window.sessionStorage.getItem('access_token')
+            ? 'user-profile'
+            : 'user-login'}
+            style={{ color: '#FFF' }}>
+            <ListItem button key='User'>
+              <ListItemIcon>{icons[4]}</ListItemIcon>
+              <ListItemText primary='User' />
+            </ListItem>
+          </Link>
+          <Link to={links[5]} style={{ color: '#FFF' }}>
+            <ListItem button key='View Requests'>
+              <ListItemIcon>{icons[5]}</ListItemIcon>
+              <ListItemText primary='View Requests' />
+            </ListItem>
+          </Link>
+          <Link to={links[6]} style={{ color: '#FFF' }}>
+            <ListItem button key='Scheduler'>
+              <ListItemIcon>{icons[6]}</ListItemIcon>
+              <ListItemText primary='Scheduler' />
+            </ListItem>
+          </Link>
+          {/*----REQUEST FORMS----*/}
+          <ListItem button onClick={this.handleFormsClick} style={{ color: '#FFF' }}>
+            <ListItemIcon>{icons[3]}</ListItemIcon>
+            <ListItemText primary='Request Forms' />
+            {this.state.drawerOpen ? (this.state.formsOpen ? <ExpandLess /> : <ExpandMore />) : null}
+          </ListItem>
+          <Collapse in={this.state.formsOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {/*----FORM ITEMS----*/}
+              {['TAMU','MSU','LBNL','NSRL'].map((text, index) => (
+                <Link to={formLinks[index]} style={{ color: '#FFF' }}>
+                  <ListItem button key={text}>
+                    <ListItemIcon></ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                </Link>
+              ))}
+            </List>
+          </Collapse>
+        </List>
+      </div>
+    );
+  }
+
   async componentDidMount() {
     const url = "https://mda-phoenix.herokuapp.com/user";
 
@@ -246,6 +343,7 @@ class MDAHeader2 extends React.Component {
     const { classes } = this.props;
     return (
       <div className='column'>
+        <ThemeProvider theme={Constants.darkTheme}>
         <CssBaseline />
         <AppBar 
           position="fixed" 
@@ -254,15 +352,13 @@ class MDAHeader2 extends React.Component {
           })}
           color="paper"
         >
-          <Toolbar>
+          <Toolbar style={{}}>
             <IconButton
               color="white"
               aria-label="open drawer"
               onClick={this.handleDrawerOpen}
               edge="start"
-              className={clsx(classes.menuButton, {
-                [classes.hide]: this.state.drawerOpen,
-              })}
+              className={clsx(classes.menuButton)}
             >
               <MenuIcon />
             </IconButton>
@@ -277,100 +373,49 @@ class MDAHeader2 extends React.Component {
           </Toolbar>
         </AppBar>
 
+        
+        {/* Drawer */}
 
         <Drawer
           variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: this.state.drawerOpen,
-            [classes.drawerClose]: !this.state.drawerOpen,
-          })}
+          className={clsx(classes.drawer, 
+            classes.drawerClose
+          )}
           classes={{
-            paper: clsx({
-              [classes.drawerOpen]: this.state.drawerOpen,
-              [classes.drawerClose]: !this.state.drawerOpen,
-            }),
+            paper: clsx(classes.drawerClose
+            ),
           }}
         >
-          {/*(<Toolbar />*/}
           <div className={classes.toolbar}>
-            <IconButton onClick={this.handleDrawerOpen}>
+            <IconButton>
               <ChevronLeftIcon />
             </IconButton>
           </div>
-          <Divider />
-
-          <div className={classes.drawerContainer}>
-            <List>
-              {/*----HOME----*/}
-              <Link to={links[0]} style={{ color: '#FFF' }}>
-                <ListItem button key='Home'>
-                  <ListItemIcon>{icons[0]}</ListItemIcon>
-                  <ListItemText primary='Home' />
-                </ListItem>
-              </Link>
-              {/*----CALENDAR----*/}
-              <Link to={links[1]} style={{ color: '#FFF' }}>
-                <ListItem button key='Calendar'>
-                  <ListItemIcon>{icons[1]}</ListItemIcon>
-                  <ListItemText primary='Calendar' />
-                </ListItem>
-              </Link>
-              {/*----SITES----*/}
-              <Link to={links[2]} style={{color: '#FFF'}}>
-                <ListItem button key='Facilities'>
-                  <ListItemIcon>{icons[2]}</ListItemIcon>
-                  <ListItemText primary='Facilities'/>
-                </ListItem>
-              </Link>
-            </List>
-
-            <Divider />
-            {/*----USER AND VIEW REQUESTS----*/}
-            <List>
-              <Link to={
-                window.sessionStorage.getItem('access_token')
-                ? 'user-profile'
-                : 'user-login'}
-                style={{ color: '#FFF' }}>
-                <ListItem button key='User'>
-                  <ListItemIcon>{icons[4]}</ListItemIcon>
-                  <ListItemText primary='User' />
-                </ListItem>
-              </Link>
-              <Link to={links[5]} style={{ color: '#FFF' }}>
-                <ListItem button key='View Requests'>
-                  <ListItemIcon>{icons[5]}</ListItemIcon>
-                  <ListItemText primary='View Requests' />
-                </ListItem>
-              </Link>
-              <Link to={links[6]} style={{ color: '#FFF' }}>
-                <ListItem button key='Scheduler'>
-                  <ListItemIcon>{icons[6]}</ListItemIcon>
-                  <ListItemText primary='Scheduler' />
-                </ListItem>
-              </Link>
-              {/*----REQUEST FORMS----*/}
-              <ListItem button onClick={() => this.handleFormsClick()} style={{ color: '#FFF' }}>
-                <ListItemIcon>{icons[3]}</ListItemIcon>
-                <ListItemText primary='Request Forms' />
-                {this.state.formsOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={this.state.formsOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {/*----FORM ITEMS----*/}
-                  {['TAMU','MSU','LBNL','NSRL'].map((text, index) => (
-                    <Link to={formLinks[index]} style={{ color: '#FFF' }}>
-                      <ListItem button key={text}>
-                        <ListItemIcon></ListItemIcon>
-                        <ListItemText primary={text} />
-                      </ListItem>
-                    </Link>
-                  ))}
-                </List>
-              </Collapse>
-            </List>
-          </div>
+          {this.drawerMenu()}
         </Drawer>
+
+        <div
+          className={classes.drawerPaper}
+        >
+          <SwipeableDrawer
+              anchor='left'
+              open={this.state.drawerOpen}
+              onClose={this.handleDrawerOpen}
+              onOpen={this.handleDrawerOpen}
+              PaperProps={{ className: classes.drawerPaper }}
+          >
+            <div className={classes.toolbar}>
+              <IconButton style={{justifyContent: 'left'}}>
+                <Link to={links[0]} style={{ color: '#FFF' }}>
+                  <img src="images/ISEEULogoWhite.png" alt="logo" className={classes.logo} />
+                </Link>
+              </IconButton>
+              
+            </div>
+            {this.drawerMenu()}
+          </SwipeableDrawer>
+        </div>
+        </ThemeProvider>
       </div>
     );
   }
