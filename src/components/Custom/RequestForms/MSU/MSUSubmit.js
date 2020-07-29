@@ -29,6 +29,7 @@ class MSUSubmit extends React.Component {
     TesterStore.setSubmitted();
     ExperimentStore.setSubmitted();
     if (TesterStore.validForm && ExperimentStore.validForm) {
+        let self = this;
         let url = 'https://mda-phoenix.herokuapp.com/requestform';
         await axios.post(url, {
           name: TesterStore.senderName,
@@ -60,7 +61,7 @@ class MSUSubmit extends React.Component {
           }).then(response => {
             if (response.data.success === true) {
             alert("Form was sent to MSU successfully. Please check your email!")
-              this.props.history.push({
+              self.props.history.push({
                 pathname: "/"
               });
             } else {
