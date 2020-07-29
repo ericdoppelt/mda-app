@@ -93,7 +93,8 @@ def user():
         account_info = {'success' : True, 'id': user.id, 'user': user.username,
         'first_name': user.first_name, 'last_name': user.last_name,
         'affiliation': user.affiliation, 'user_type': user.user_type, 'phone': user.phone,
-        'email': user.email}
+        'email': user.email, 'isAdmin' : user.isAdmin, 'isAuthenticatedAdmin' : user.isAuthenticatedAdmin,
+        'isAuthenticatedIntegrator' : user.isAuthenticatedIntegrator}
     except:
         account_info = {'success' : False, 'error' : 'unable to get user info'}
     return account_info
@@ -246,23 +247,24 @@ def authenticate_user():
 
     try:
         user = Users.query.filter_by(username=username).first()
-        if not user.isAdmin or user.user_type != 'integrator':
+        print(user.isAdmin, user.user_type)
+        if not user.isAdmin or user.user_type == 'integrator':
             return {'success' : False, 'error' : 'You must be an admin or integrator to access this method!'}
 
         if request.method == 'POST':
             req = request.get_json()
 
             username = req['username']
-            user = Users.query.filter_by(username=username).first()
+            userAuthenticate = Users.query.filter_by(username=username).first()
 
             if user.isAdmin is True:
                 if user.user_type == 'integrator':
-                    user.isAuthenticatedIntegrator = True
-                    user.isAuthenticatedAdmin = True
+                    userAuthenticate.isAuthenticatedIntegrator = True
+                    userAuthenticate.isAuthenticatedAdmin = True
                 else:
-                    user.isAuthenticatedIntegrator = True
+                    userAuthenticate.isAuthenticatedAdmin = True
             else:
-                user.isAuthenticatedIntegrator = True
+                userAuthenticate.isAuthenticatedIntegrator = True
 
             db.session.commit()
 
