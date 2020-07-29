@@ -65,12 +65,15 @@ def login():
         'error' : "Incorrect username"}
     elif user.check_password(password):
         if user.isAuthenticatedAdmin and user.isAuthenticatedIntegrator:
+            integrator_token = False
+            if user.user_type == 'integrator':
+                integrator_token = True
             expires = timedelta(hours=12)
             access_token = create_access_token(identity = username, expires_delta=expires)
             add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
             result = {'success' : True,
             'error' : "",
-            'access_token': access_token}
+            'access_token': access_token, 'integrator_token' : integrator_token}
         else:
             result = {'success' : False,
             'error' : "User not authenticated"}
@@ -243,7 +246,7 @@ def authenticate_user():
 
     try:
         user = Users.query.filter_by(username=username).first()
-        if not user.isAdmin or user.user_type == 'integrator':
+        if not user.isAdmin or user.user_type != 'integrator':
             return {'success' : False, 'error' : 'You must be an admin or integrator to access this method!'}
 
         if request.method == 'POST':
