@@ -47,6 +47,7 @@ const formLinks = ['request-tamu', 'request-MSU', 'request-LBNL', 'request-NSRL'
 
 const drawerWidth = 240;
 
+
 const useStyles = theme => ({
   root: {
     display: 'flex',
@@ -341,8 +342,9 @@ class MDAHeader2 extends React.Component {
 
   render() {
     const { classes } = this.props;
+
     return (
-      <div className='column'>
+      <div className={classes.drawerClose}>
         <ThemeProvider theme={Constants.darkTheme}>
         <CssBaseline />
         <AppBar 
@@ -378,7 +380,7 @@ class MDAHeader2 extends React.Component {
 
         <Drawer
           variant="permanent"
-          className={clsx(classes.drawer, 
+          className={clsx( 
             classes.drawerClose
           )}
           classes={{
