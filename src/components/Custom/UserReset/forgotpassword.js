@@ -77,8 +77,8 @@ class ForgotPassword extends React.Component {
               open={this.state.submitSuccess}
               autoHideDuration={6000}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: 'top',
+                horizontal: 'center',
               }}
               onClose={() => {this.setState({submitSuccess: false})}}
               >
@@ -94,8 +94,8 @@ class ForgotPassword extends React.Component {
               open={this.state.submitError}
               autoHideDuration={6000}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: 'top',
+                horizontal: 'center',
               }}
               onClose={() => {this.setState({submitSuccess: false})}}
               >
