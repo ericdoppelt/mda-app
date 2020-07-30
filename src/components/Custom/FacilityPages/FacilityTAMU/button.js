@@ -1,14 +1,9 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import React from 'react';
 import TabsTAMU from '../FacilityTAMU/tabs';
-import TabsTAMU_MDA from '../FacilityTAMU/tabs_MDA';
+import TabsTAMUMDA from '../FacilityTAMU/tabs_MDA';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +28,7 @@ function getStepContent(step) {
     case 1:
       return <TabsTAMU/>;
     case 2:
-      return <TabsTAMU_MDA/>;
+      return <TabsTAMUMDA/>;
     default:
       return 'Unknown step';
   }
@@ -51,9 +46,11 @@ export default function ButtonTAMU() {
     setActiveStep(2);
   };
 
+  /*
   const handleReset = () => {
     setActiveStep(0);
   };
+  */
 
   return (
     <div className={classes.root}>

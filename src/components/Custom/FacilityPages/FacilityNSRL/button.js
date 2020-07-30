@@ -1,14 +1,9 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import React from 'react';
 import TabsNSRL from '../FacilityNSRL/tabs';
-import TabsNSRL_MDA from '../FacilityNSRL/tabs_MDA';
+import TabsNSRLMDA from '../FacilityNSRL/tabs_MDA';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +28,7 @@ function getStepContent(step) {
     case 1:
       return <TabsNSRL/>;
     case 2:
-      return <TabsNSRL_MDA/>;
+      return <TabsNSRLMDA/>;
     default:
       return 'Unknown step';
   }
@@ -51,9 +46,11 @@ export default function ButtonNSRL() {
     setActiveStep(2);
   };
 
+  /*
   const handleReset = () => {
     setActiveStep(0);
   };
+  */
 
   return (
     <div className={classes.root}>

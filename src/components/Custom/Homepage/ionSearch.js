@@ -1,15 +1,10 @@
-import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {Button,List, ListItem, ListItemText, Snackbar, TextField, Typography, Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper} from '@material-ui/core';
-import axios from 'axios';
-import { withRouter } from 'react-router-dom';
-import Row from '../../UIzard/Row';
-import Paragraph from '../../../components/UIzard/Paragraph';
-import Title from '../../../components/UIzard/Title';
-import Card from '../../../components/UIzard/Card';
+import { Button, List, ListItem, ListItemText, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
 import ListAltIcon from '@material-ui/icons/ListAlt';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
+import axios from 'axios';
+import React from 'react';
 
 
 
@@ -108,7 +103,7 @@ class IonSearch extends React.Component {
       console.log(response);
       self.setState({facilities:response.data.result});
       console.log(response.data.result);
-      if(response.data.result.length==0){
+      if(response.data.result.length===0){
         this.setState({noMatch: true});
         console.log(this.state.noMatch);
       }
@@ -146,11 +141,11 @@ class IonSearch extends React.Component {
       <div style={{width:'75%',}}>
           <Typography className={classes.header} variant='h4'>Search Facilities by Energy and Ion</Typography>
           <br/>
-          <Typography variant='body'>Enter ion atomic symbol and energy in MeV/amu to find matching facilities</Typography>
+          <Typography variant='body1'>Enter ion atomic symbol and energy in MeV/amu to find matching facilities</Typography>
           <br/>
           <br/>
           <TextField
-            id="outlined-basic"
+            id="outlined-basic1"
             label="Ion"
             variant="outlined"
             onChange={event => {this.setState({ion: event.target.value, ionErrorHelper: '', ionError: false})}}
@@ -159,7 +154,7 @@ class IonSearch extends React.Component {
             />
 
           <TextField
-            id="outlined-basic"
+            id="outlined-basic2"
             label="Min Energy"
             variant="outlined"
             onChange={event => {this.setState({minEnergy: event.target.value, minEnergyError: false, minEnergyErrorHelper: '',})}}
@@ -168,7 +163,7 @@ class IonSearch extends React.Component {
             />
 
           <TextField
-            id="outlined-basic"
+            id="outlined-basic3"
             label="Max Energy"
             variant="outlined"
             onChange={event => {this.setState({maxEnergy: event.target.value, maxEnergyError: false, maxEnergyErrorHelper: '',})}}
@@ -179,7 +174,7 @@ class IonSearch extends React.Component {
           <Button variant="contained" style={{height: '50px', width: '150px', marginTop:'1%',}} onClick={(event) => this.handleSearch(event)}>
             Search
           </Button>
-          <Typography><h3>Matching Facilities</h3></Typography>
+          <Typography variant="h3">Matching Facilities</Typography>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="Matching Facilities List">
               <TableHead>

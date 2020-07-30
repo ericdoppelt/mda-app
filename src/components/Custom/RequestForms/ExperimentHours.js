@@ -93,7 +93,7 @@ class ExperimentHours extends React.Component {
               <FormControl 
                   className={classes.hoursOff}
                   error = {ExperimentStore.hoursOffError(this.state.index)}
-                  disabled = {ExperimentStore.shifts[this.state.index] === '' || ExperimentStore.shifts[this.state.index] == 1 || ExperimentStore.hoursOn[this.state.index] === ''}
+                  disabled = {ExperimentStore.shifts[this.state.index] === '' || ExperimentStore.shifts[this.state.index] === 1 || ExperimentStore.hoursOn[this.state.index] === ''}
                   type= 'number'
                 > 
                 <InputLabel>Hours Off</InputLabel>

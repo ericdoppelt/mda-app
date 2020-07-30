@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 
-import Image from '../../../components/UIzard/Image';
-import Paragraph from '../../../components/UIzard/Paragraph';
+//import Image from '../../../components/UIzard/Image';
+//import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';

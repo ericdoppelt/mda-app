@@ -1,9 +1,8 @@
+import axios from 'axios';
+import { observer } from "mobx-react";
 import React from 'react';
 import Stack from '../../UIzard/Stack';
-import { observer } from "mobx-react"
-import { observable } from "mobx"
 import TabsProfile from '../UserProfile/tabs';
-import axios from 'axios';
 
 class UserProfile extends React.Component {
 

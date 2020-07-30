@@ -20,12 +20,6 @@ const useStyles = theme => ({
       marginRight: '3%',
       width: '25%',
     },
-    let: {
-      marginTop: '2px',
-      marginLeft: '5%',
-      marginRight: '3%',
-      width: '25%',
-    },
     beamSize: {
       marginTop: '2px',
       marginLeft: '3%',

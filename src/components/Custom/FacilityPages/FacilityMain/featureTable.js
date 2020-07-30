@@ -1,6 +1,6 @@
 import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import {Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import {Button, Table, TableBody, TableCell, TableHead, TableRow, Typography} from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 
 const StyledTableCell = withStyles((theme) => ({

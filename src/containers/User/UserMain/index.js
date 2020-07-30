@@ -1,13 +1,12 @@
+import { ThemeProvider } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import Row from '../../../components/UIzard/Row';
-import Card from '../../../components/UIzard/Card';
 import LoginForm from '../../../components/Custom/LoginForm';
 import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import * as Constants from '../../../constants'
-import { ThemeProvider } from '@material-ui/core/styles';
+import Card from '../../../components/UIzard/Card';
 import Image from '../../../components/UIzard/Image';
-import Title from '../../../components/UIzard/Title';
-import Typography from '@material-ui/core/Typography';
+import Row from '../../../components/UIzard/Row';
+import * as Constants from '../../../constants';
 
 
 
@@ -26,9 +25,9 @@ export default function Home() {
                 <Image style={{ width: '120px', height: '120px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
 
               </Row>
-              <Title>
-                <br/><Typography style={{marginTop: '10px', marginBottom: '10px',}} variant='subheader2'>Sign in to continue</Typography> <br/><br/>
-              </Title>
+              
+                <Typography style={{marginTop: '20px', marginBottom: '20px',}} variant='subtitle2'>Sign in to continue</Typography>
+              
               <LoginForm/>
             </Card>
           </Row>

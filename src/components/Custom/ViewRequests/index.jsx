@@ -70,7 +70,7 @@ function createData(id, name, status, facility, integrator, company,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode, rejectNote) {
   var viewMore = 'View More'
   //var status = 'Pending'
-  return { id, name, status, facility, integrator, company, status, viewMore, 
+  return { id, name, status, facility, integrator, company, viewMore, 
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode, rejectNote };
 }
@@ -347,7 +347,6 @@ class ViewRequests extends React.Component {
     });
 
     url = "https://mda-phoenix.herokuapp.com/calendar-entry";
-    let result;
 
     await axios.post(url, {
       "username" : self.state.name,
@@ -359,8 +358,6 @@ class ViewRequests extends React.Component {
       "private" : false,
       headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
       }).then(response => {
-        result = response.data.requests;
-        console.log(response.data);
         this.setState(state=>({
           //component: "table",
           approveSnackOpen: true,

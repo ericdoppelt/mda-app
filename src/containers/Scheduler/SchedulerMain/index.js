@@ -1,12 +1,11 @@
-import React from 'react';
-import {Redirect} from 'react-router-dom';
-import Card from '../../../components/UIzard/Card';
-import Row from '../../../components/UIzard/Row';
-import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import Stack from '../../../components/UIzard/Stack';
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import ScheduleContainer from '../../../components/Custom/Scheduling/ScheduleContainer';
+import Row from '../../../components/UIzard/Row';
+import Stack from '../../../components/UIzard/Stack';
+import * as Constants from '../../../constants';
 
 
 export default function Home() {

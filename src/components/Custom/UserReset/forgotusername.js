@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import {Snackbar, Table, TableBody, TableCell, TableRow, TextField, Typography} from '@material-ui/core';
-import {Button, IconButton, InputAdornment, InputLabel} from '@material-ui/core';
-import {Visibility, VisibilityOff} from '@material-ui/icons';
+import {Snackbar,TextField, Typography} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import {Alert} from '@material-ui/lab';
 
   /*Define class themes */
   const useStyles = theme => ({

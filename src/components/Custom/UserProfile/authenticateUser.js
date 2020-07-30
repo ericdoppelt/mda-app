@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemSecondaryAction, ListItemText} from '@material-ui/core/';
+import { withStyles } from '@material-ui/core/styles';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemText} from '@material-ui/core/';
 import axios from 'axios';
 import {Snackbar, Table, TableBody, TableCell, TableContainer, TableRow, TableHead, Typography, Paper} from '@material-ui/core';
 import Row from '../../UIzard/Row';
 import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
 import CancelPresentationTwoToneIcon from '@material-ui/icons/CancelPresentationTwoTone';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import {Alert} from '@material-ui/lab';
 
 
 const useStyles = theme => ({
@@ -156,7 +156,7 @@ class AuthenticateUser extends React.Component {
 
 
   getAuthenticatePicker() {
-    let {classes} = this.props;
+    //let {classes} = this.props;
     return(
         <Dialog open={this.state.dialog === 'authenticate'} onClose={() => this.setState({dialog: ''})}>
           <DialogTitle>Are you sure you want to authenticate {this.state.selected.first_name}'s account?</DialogTitle>
@@ -173,7 +173,7 @@ class AuthenticateUser extends React.Component {
   }
 
   getDeletePicker() {
-    let {classes} = this.props;
+    //let {classes} = this.props;
     return(
         <Dialog open={this.state.dialog === 'delete'} onClose={() => this.setState({dialog: ''})}>
           <DialogTitle>Are you sure you want to delete {this.state.selected.first_name}'s account?</DialogTitle>
@@ -190,7 +190,7 @@ class AuthenticateUser extends React.Component {
   }
 
   getViewPicker() {
-    let {classes} = this.props;
+    //let {classes} = this.props;
     return(
         <Dialog open={this.state.dialog === 'view'} onClose={() => this.setState({dialog: ''})}>
           <DialogTitle>Pending Account Information</DialogTitle>
