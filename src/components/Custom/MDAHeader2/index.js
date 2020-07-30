@@ -107,9 +107,10 @@ const useStyles = theme => ({
     }),
     overflow: 'hidden',
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
+    //width: theme.spacing(7) + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(7) + 1,
+      //width: theme.spacing(7) + 1,
+      width: 0,
     },
     backgroundColor: "#424242",
   },
@@ -362,7 +363,7 @@ class MDAHeader2 extends React.Component {
         <AppBar 
           position="fixed" 
           className={clsx(classes.appBar, {
-            [classes.appBarShift]: this.state.drawerOpen,
+            //[classes.appBarShift]: this.state.drawerOpen,
           })}
           color="paper"
         >
@@ -388,7 +389,7 @@ class MDAHeader2 extends React.Component {
         </AppBar>
 
         
-        {/* Drawer */}
+        {/* Drawer 
 
         <Drawer
           variant="permanent"
@@ -407,6 +408,8 @@ class MDAHeader2 extends React.Component {
           </div>
           {this.drawerMenu()}
         </Drawer>
+
+        */}
 
         <div
           className={classes.drawerPaper}
