@@ -27,9 +27,11 @@ const StyledTableRow = withStyles((theme) => ({
 
 const useStyles = theme => ({
   table: {
-    width: '100%',
+    width: '50%',
     marginBottom: '5%',
-
+    align: 'center',
+    marginLeft: '0%',
+    marginRight: '25%',
 
   },
  subheader: {
@@ -53,44 +55,41 @@ class FeatureTable extends React.Component {
   render() {
     const { classes } = this.props;
   return (
-    <div>
+    <div style={{width:'75%'}}>
     <Typography className={classes.subheader} variant='h4'>Compare Facility Capabilities</Typography>
-    <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Facility</StyledTableCell>
-            <StyledTableCell align="right">Piece-Parts</StyledTableCell>
-            <StyledTableCell align="right">Circuit Card Assemblies</StyledTableCell>
-            <StyledTableCell align="right">System Assebmly Level</StyledTableCell>
-            <StyledTableCell align="right">De-lidding Required</StyledTableCell>
-            <StyledTableCell align="right">Test in Vacuum?</StyledTableCell>
-            <StyledTableCell align="right">Test in air?</StyledTableCell>
+            <StyledTableCell align="center">Piece-Parts</StyledTableCell>
+            <StyledTableCell align="center">Circuit Card Assemblies</StyledTableCell>
+            <StyledTableCell align="center">System Assembly Level</StyledTableCell>
+            <StyledTableCell align="center">De-lidding Required</StyledTableCell>
+            <StyledTableCell align="center">Test in Vacuum?</StyledTableCell>
+            <StyledTableCell align="center">Test in air?</StyledTableCell>
             <StyledTableCell align="center">Point of Contact</StyledTableCell>
-            <StyledTableCell align="right">Website</StyledTableCell>
+            <StyledTableCell align="center">Website</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <StyledTableRow key={row.facility}>
-              <StyledTableCell component="th" scope="row">
+              <StyledTableCell component="th" scope="row" align="center">
                 {row.facility}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.pieceparts}</StyledTableCell>
-              <StyledTableCell align="right">{row.circuit_card_assemby}</StyledTableCell>
-              <StyledTableCell align="right">{row.system_assembly}</StyledTableCell>
-              <StyledTableCell align="right">{row.delidding}</StyledTableCell>
-              <StyledTableCell align="right">{row.vacuum}</StyledTableCell>
-              <StyledTableCell align="right">{row.air}</StyledTableCell>
+              <StyledTableCell align="center">{row.pieceparts}</StyledTableCell>
+              <StyledTableCell align="center">{row.circuit_card_assemby}</StyledTableCell>
+              <StyledTableCell align="center">{row.system_assembly}</StyledTableCell>
+              <StyledTableCell align="center">{row.delidding}</StyledTableCell>
+              <StyledTableCell align="center">{row.vacuum}</StyledTableCell>
+              <StyledTableCell align="center">{row.air}</StyledTableCell>
               <StyledTableCell align="center">{row.contact}</StyledTableCell>
-              <StyledTableCell align="right">{row.website}</StyledTableCell>
-
+              <StyledTableCell align="center">{row.website}</StyledTableCell>
 
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
     </div>
   );}
 }
