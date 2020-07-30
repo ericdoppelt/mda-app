@@ -41,14 +41,17 @@ class SchedulingStore {
         // let end = new Date(endDate);
         let returnedRequests = [];
 
-        for (let i = 0; i < this.requests.length; i++) {
-            let tempRequest = this.requests[i];
-            let tempStart = new Date(tempRequest.start);
-            let tempFacility = tempRequest.facility;
-            if (tempFacility === facility && tempStart < start) {
-                returnedRequests.unshift(tempRequest);
+        if (this.requests !== undefined) {
+            for (let i = 0; i < this.requests.length; i++) {
+                let tempRequest = this.requests[i];
+                let tempStart = new Date(tempRequest.start);
+                let tempFacility = tempRequest.facility;
+                if (tempFacility === facility && tempStart < start) {
+                    returnedRequests.unshift(tempRequest);
+                }
             }
         }
+
         return returnedRequests;
     }
 

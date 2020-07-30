@@ -52,10 +52,10 @@ class LoginForm extends React.Component {
         this.props.history.push('user-profile');
       } else {
           if (response.data.error === "Incorrect username") {
-            self.setState({ usernameError: response.data.error });
+            self.setState({ usernameError: response.data.error, submitted: false });
           }
           if (response.data.error === "Incorrect password") {
-            self.setState({ passwordError: response.data.error });
+            self.setState({ passwordError: response.data.error, submitted: false });
           }
         }
       })
@@ -70,22 +70,22 @@ class LoginForm extends React.Component {
     return (
       <div className="loginform">
         <form onSubmit={this.handleSubmit}>
-          <TextField
-            id="outlined-error-helper-text"
-            label = "Username"
-            variant="outlined"
-            error = {this.state.usernameError.length !== 0 && this.state.submitted}
-            helperText = {this.state.usernameError}
-            onChange={event => {this.setState({username: event.target.value})}}
+            <TextField
+              id="outlined-error-helper-text"
+              label = "Username"
+              variant="outlined"
+              error = {this.state.usernameError.length !== 0}
+              helperText = {this.state.usernameError}
+              onChange={event => {this.setState({username: event.target.value})}}
             />
           <br/><br/>
-          <TextField
-            type="password"
-            label = "Password"
-            variant="outlined"
-            error = {this.state.passwordError.length !== 0 && this.state.submitted}
-            helperText = {this.state.passwordError}
-            onChange={event => {this.setState({password: event.target.value})}}
+            <TextField
+              type="password"
+              label = "Password"
+              variant="outlined"
+              error = {this.state.passwordError.length !== 0}
+              helperText = {this.state.passwordError}
+              onChange={event => {this.setState({password: event.target.value})}}
             />
           <br/><br/>
           <Row>
@@ -96,6 +96,7 @@ class LoginForm extends React.Component {
                 color="primary"
                 variant="contained"
                 style={{width: '100px'}}
+                disabled={this.state.submitted}
               >
                 Login
               </Button>

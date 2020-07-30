@@ -204,10 +204,7 @@ class MDAHeader2 extends React.Component {
   }
 
   schedulerMenu () {
-    console.log(window.sessionStorage.getItem('access_token'))
     if (window.sessionStorage.getItem('integrator_token') === 'true') {
-      console.log('found integrator token')
-      console.log(window.sessionStorage.getItem('integrator_token'))
       return (
         <Link to={links[6]} style={{ color: '#FFF' }}>
           <ListItem button key='Scheduler'>
@@ -217,8 +214,6 @@ class MDAHeader2 extends React.Component {
         </Link>
       )
     } else {
-      console.log('no integrator token')
-      console.log(window.sessionStorage.getItem('integrator_token'))
       return null;
     }
   }
