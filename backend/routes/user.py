@@ -247,8 +247,10 @@ def authenticate_user():
 
     try:
         user = Users.query.filter_by(username=username).first()
-        print(user.isAdmin, user.user_type)
-        if not user.isAdmin or user.user_type == 'integrator':
+            
+        if user.isAdmin or user.user_type == 'integrator':
+            pass
+        else:
             return {'success' : False, 'error' : 'You must be an admin or integrator to access this method!'}
 
         if request.method == 'POST':
