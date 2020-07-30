@@ -110,15 +110,16 @@ class LoginForm extends React.Component {
             </Button>
           </Row>
         </form>
-        <Row>
-        <Button className={classes.subheader} color='primary' onClick={() => {this.props.history.push('/forgot-password')}}>
-          <br/><br/><small>Forgot Password?</small>
-        </Button>
+        <br/>
+        <Row style={{justifyContent: 'center'}}>
+          <Button color='primary' onClick={() => {this.props.history.push('/forgot-password')}}>
+            <small>Forgot Password?</small>
+          </Button>
         </Row>
-        <Row>
-        <Button className={classes.subheader} color='primary' onClick={() => {this.props.history.push('/forgot-username')}}>
-        <small>Forgot Username?</small>
-        </Button>
+        <Row style={{justifyContent: 'center'}}>
+          <Button color='primary' onClick={() => {this.props.history.push('/forgot-username')}}>
+            <small>Forgot Username?</small>
+          </Button>
         </Row>
          {this.state.displayedText}
       </div>
