@@ -186,6 +186,7 @@ class CalendarSched extends React.Component {
     this.handleDateSubmit = this.handleDateSubmit.bind(this);
     this.handleModal = this.handleModal.bind(this);
     this.handleEventClick = this.handleEventClick.bind(this);
+    this.loadPrioritizerData = this.loadPrioritizerData.bind(this);
     
     let sampleProp = "null";
     if (this.props.samp !== null) {
@@ -205,17 +206,16 @@ class CalendarSched extends React.Component {
       facilities: facilities,
       integrators: integrators,
       beamTypes: beamTypes,
-      checkedFacilities: this.props.personal
-        ? facilities
-        : ['TAMU'],
+      checkedFacilities: facilities,
       checkedIntegrators: integrators,
       checkedBeamTypes: beamTypes,
       checkedPersonal: this.props.personal,
-      checkedValues: ['TAMU'].concat(integrators).concat(beamTypes),
+      checkedValues: facilities.concat(integrators).concat(beamTypes),
       calendarWeekends: true,
       colorsReady: false,
       calendarEvents: [ // initial event data
       ],
+      calendarStartDate: new Date(),
       personalEvents: ["hello"],
       modalOpen: false,
     }
@@ -294,6 +294,12 @@ class CalendarSched extends React.Component {
     title: titleString, start: new Date(startDate), end: endDate, backgroundColor: color}
   };
 
+  makeEvent2 = (startDate, endDate, color) => {
+    var titleString = "Test";
+    return { id: "1", extendedProps: {facility: "TAMU", integrator: "MDA", beamType: "Heavy Ion"}, 
+    title: titleString, start: startDate, end: endDate, backgroundColor: color}
+  };
+
   makeEventColor = (facility) => {
     return facility==='TAMU' ? '#c0392b'
       : facility==='LBNL' ? '#2980b9'
@@ -340,30 +346,36 @@ class CalendarSched extends React.Component {
   }
 
   loadPrioritizerData() {
-    console.log("Retrieving list of events")
-    console.log(SchedulingStore.generals)
-    SchedulingStore.generals.forEach(function(event) {
-      console.log(event.start)
-    })
-
+    
     console.log('Generating Events')
-    SchedulingStore.generals.forEach(function(event) {
+    SchedulingStore.suggestion.forEach(function(event) {
       //Add beam energies to uniques
-      for (let key in event.beams) {
-        uniqueEnergies.push(event.beams[key]);
-      }
+      uniqueEnergies.push(event.energy);
     })
     uniqueEnergies = uniqueEnergies.filter((v, i, a) => a.indexOf(v) === i).sort(); //make energies unique
 
     var data = [];
     var self = this;
-    SchedulingStore.generals.forEach(function(event) {
+    
+    self.setState({calendarStartDate: SchedulingStore.suggestion[0].start});
+    console.log(SchedulingStore.suggestion[0].start);
+    console.log(self.state.calendarStartDate)
+    console.log(self.dateStringConverter(self.state.calendarStartDate))
+
+    SchedulingStore.suggestion.forEach(function(event) {
+      console.log('checking suggestion')
+      console.log(event)
+
       let theColor = "";
       for (let key in event.beams) {
         theColor = colors[uniqueEnergies.indexOf(event.beams[key])]
       }
       //
-      data.push(self.makeEvent(event.facility,event.integrator,event.start,theColor));
+      data.push(self.makeEvent2(event.start,event.end,event.start,theColor));
+      if (event.start < self.state.calendarStartDate) {
+        console.log('changing calendar start')
+        self.setState({calendarStartDate: event.start});
+      }
     })
 
     this.state.colorsReady = true;
@@ -376,6 +388,17 @@ class CalendarSched extends React.Component {
       modalOpen: !this.state.modalOpen
     })
   }
+
+  dateStringConverter (date) {
+    var mm = date.getMonth() + 1; // getMonth() is zero-based
+    var dd = date.getDate();
+  
+    return [date.getFullYear(),
+            (mm>9 ? '' : '0') + mm,
+            (dd>9 ? '' : '0') + dd
+           ].join('-');
+  };
+  
 
   handleEventClick(event) {
     console.log("Event clicked");
@@ -407,10 +430,11 @@ class CalendarSched extends React.Component {
           <Stack style={{ justifyContent: 'flex-end', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
 
             {/*** FILTER CARD ***/}
+            {/*
             <CardNoShadow style={{ justifyContent: 'left', minWidth: '300px', minHeight: '50px', width: '100%', flexGrow: '0' }}>
               
               <Row>
-                {/*** FACILITY FILTER ***/}
+                {/*** FACILITY FILTER ***
                 <FormControl className={classes.formControl}>
                   <InputLabel id="demo-mutiple-name-label">Facility</InputLabel>
                   <Select
@@ -431,7 +455,7 @@ class CalendarSched extends React.Component {
                   </Select>
                 </FormControl>
 
-                {/*** INTEGRATOR FILTER ***/}
+                {/*** INTEGRATOR FILTER ***
                 <FormControl className={classes.formControl}>
                   <InputLabel id="demo-mutiple-name-label">Integrator</InputLabel>
                   <Select
@@ -452,7 +476,7 @@ class CalendarSched extends React.Component {
                   </Select>
                 </FormControl>
 
-                {/*** BEAM TYPE FILTER ***/}
+                {/*** BEAM TYPE FILTER ***
                 <FormControl className={classes.formControl}>
                   <InputLabel id="demo-mutiple-name-label">Integrator</InputLabel>
                   <Select
@@ -486,7 +510,7 @@ class CalendarSched extends React.Component {
                 />
               </Row>
             </CardNoShadow>
-            
+            */}
 
 
             {/*** CALENDAR PLUGIN ***/}
@@ -514,7 +538,10 @@ class CalendarSched extends React.Component {
                         ? this.state.personalEvents
                         : this.state.calendarEvents
                       }
+              allDaySlot={false}
+              expandRows={true} // not working??
               slotDuration='04:00:00'
+              defaultDate={this.state.calendarStartDate}
               dateClick={(info) => {this.handleDateClick(info.event)} }
               eventClick={ this.handleEventClick }
               eventOrder="facility,start"
@@ -534,10 +561,12 @@ class CalendarSched extends React.Component {
               />
             </Row>
             <Row>
-              <Row>
+              <Row style={{justifyContent: 'flex-start'}}>
                 {uniqueEnergies.map( (energy, index) =>
                   <div>
-                    <Avatar size={10} style={{backgroundColor: colors[index]}}> </Avatar> {energy + " MeV"}
+                    <Box mx='10px'>
+                      <Avatar size={10} style={{backgroundColor: colors[index]}}> </Avatar> {energy + " MeV"}
+                    </Box>
                   </div>
                 )}
               </Row>
