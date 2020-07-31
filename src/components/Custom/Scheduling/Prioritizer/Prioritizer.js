@@ -11,8 +11,9 @@ import LBNLScheduler from '../LBNLScheduler';
         width: '100%',
       },
       card: {
-        width: 280,
-        height: 300,
+        marginTop: '20px',
+        width: 350,
+        height: 475,
         overflow: 'auto',
       },
       button: {
@@ -165,10 +166,6 @@ getList(listArray, title) {
     //let testSchedule = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.hours);
   }
 
-  getSuggested() {
-
-  }
-
   getHeader() {
     let start = new Date(this.props.start);
     let startDisplay = start.toDateString();
@@ -184,7 +181,7 @@ getList(listArray, title) {
     return(
       <div>
         <Typography
-        variant="h6">
+        variant="h5">
           {this.getHeader()}
         </Typography>
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>
