@@ -68,6 +68,7 @@ class IonSearch extends React.Component {
       maxEnergyErrorHelper: '',
       energyReverseError: [],
       noMatch: false,
+      validEnergyError: false,
 
     }
   }
@@ -77,13 +78,19 @@ class IonSearch extends React.Component {
       ionError: (this.state.ion === ''),
       maxEnergyError: (this.state.minEnergy === '' || this.state.maxEnergy === ''),
       minEnergyError: (this.state.minEnergy <= 0),
+      validEnergyError: !(this.isNaturalNumber(this.state.minEnergy)&&this.isNaturalNumber(this.state.maxEnergy)),
       energyReverseError: (this.state.minEnergy > this.state.maxEnergy),
     }, () => {
+      console.log('validEnergyError = '+ this.state.validEnergyError);
+      console.log('Min energy valid: '+this.isNaturalNumber(this.state.minEnergy));
+      console.log('Max eenegy valid: t'+this.state.maxEnergy + ' ' + this.isNaturalNumber(this.state.maxEnergy));
+
       if (this.state.ionError) this.setState({ionErrorHelper: "Please enter an ion"});
       if (this.state.maxEnergyError) this.setState({minEnergyError: true, minEnergyErrorHelper: "Please enter a minimum energy", maxEnergyErrorHelper: "Please enter a maximum energy"});
       if (this.state.minEnergyError) this.setState({minEnergyErrorHelper: "Minimum energy value must be positive"})
-      if (this.state.energyReverseError) this.setState({minEnergyErrorHelper: "Min energy cannot be greater than max energy", maxEnergyErrorHelper: "Max energy cannot be less than min energy"});
-      if(!(this.state.energyReverseError||this.state.ionError||this.state.minEnergyError||this.state.maxEnergyError)) this.submit(event);
+      if (this.state.energyReverseError) this.setState({minEnergyError: true, maxEnergyError: true, minEnergyErrorHelper: "Min energy cannot be greater than max energy", maxEnergyErrorHelper: "Max energy cannot be less than min energy"});
+      if (this.state.validEnergyError) this.setState({minEnergyError: true, maxEnergyError: true,  minEnergyErrorHelper: "Energy must be a positive integer", maxEnergyErrorHelper: "Energy must be a positive integer"});
+      if(!(this.state.validEnergyError|| this.state.energyReverseError||this.state.ionError||this.state.minEnergyError||this.state.maxEnergyError)) this.submit(event);
     });
   }
 
@@ -135,6 +142,11 @@ class IonSearch extends React.Component {
     }
   }
 
+    isNaturalNumber(energy) {
+      let energyRegex = new RegExp('^[1-9]+[0-9]*$');
+      return energyRegex.test(energy);
+    }
+
     render() {
       const { classes } = this.props;
       return (
@@ -157,7 +169,7 @@ class IonSearch extends React.Component {
             id="outlined-basic2"
             label="Min Energy"
             variant="outlined"
-            onChange={event => {this.setState({minEnergy: event.target.value, minEnergyError: false, minEnergyErrorHelper: '',})}}
+            onChange={event => {this.setState({minEnergy: event.target.value, minEnergyError: false, validEnergyError: false, minEnergyErrorHelper: '',})}}
             error={this.state.minEnergyError}
             helperText={this.state.minEnergyErrorHelper}
             />
@@ -166,7 +178,7 @@ class IonSearch extends React.Component {
             id="outlined-basic3"
             label="Max Energy"
             variant="outlined"
-            onChange={event => {this.setState({maxEnergy: event.target.value, maxEnergyError: false, maxEnergyErrorHelper: '',})}}
+            onChange={event => {this.setState({maxEnergy: event.target.value, maxEnergyError: false, validEnergyError: false, maxEnergyErrorHelper: '',})}}
             error={this.state.maxEnergyError}
             helperText={this.state.maxEnergyErrorHelper}
             />
