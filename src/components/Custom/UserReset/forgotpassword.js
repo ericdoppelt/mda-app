@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import {Snackbar, Table, TableBody, TableCell, TableRow, TextField, Typography} from '@material-ui/core';
-import {Button, IconButton, InputAdornment, InputLabel, Select} from '@material-ui/core';
-import {Visibility, VisibilityOff} from '@material-ui/icons';
+import {Snackbar, TextField, Typography} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import {Alert} from '@material-ui/lab';
 
   /*Define class themes */
   const useStyles = theme => ({
@@ -77,8 +76,8 @@ class ForgotPassword extends React.Component {
               open={this.state.submitSuccess}
               autoHideDuration={6000}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: 'top',
+                horizontal: 'center',
               }}
               onClose={() => {this.setState({submitSuccess: false})}}
               >
@@ -94,8 +93,8 @@ class ForgotPassword extends React.Component {
               open={this.state.submitError}
               autoHideDuration={6000}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: 'top',
+                horizontal: 'center',
               }}
               onClose={() => {this.setState({submitSuccess: false})}}
               >

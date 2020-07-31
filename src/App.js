@@ -29,7 +29,6 @@ import ForgotPassword from  './containers/User/ForgotPassword';
 import ForgotUsername from './containers/User/ForgotUsername';
 import ResetPassword from './containers/User/ResetPassword';
 import history from './history';
-import RequestCommon from './containers/RequestForm/Common'
 
 
 const App = () => (
@@ -41,7 +40,7 @@ const App = () => (
       <Route path="/facilities-lbnl" component={FacilityLBNL}/>
       <Route path="/facilities-nsrl" component={FacilityBNL}/>
       <Route path="/facilities-msu" component={FacilityMSU}/>
-      <Route path="/calendar" component={CalendarMain} />
+      <Route exact path="/calendar" component={CalendarMain} />
       <Route path="/request-tamu" component={RequestTAMU}/>
       <Route path="/request-lbnl" component={RequestLBNL}/>
       <Route path="/request-msu" component={RequestMSU}/>

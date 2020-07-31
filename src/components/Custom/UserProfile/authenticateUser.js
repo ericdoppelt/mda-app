@@ -1,11 +1,13 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemSecondaryAction, ListItemText} from '@material-ui/core/';
+import { withStyles } from '@material-ui/core/styles';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemText} from '@material-ui/core/';
 import axios from 'axios';
-import {Table, TableBody, TableCell, TableContainer, TableRow, TableHead, Typography, Paper} from '@material-ui/core';
+import {Snackbar, Table, TableBody, TableCell, TableContainer, TableRow, TableHead, Typography, Paper} from '@material-ui/core';
 import Row from '../../UIzard/Row';
 import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
 import CancelPresentationTwoToneIcon from '@material-ui/icons/CancelPresentationTwoTone';
+import {Alert} from '@material-ui/lab';
+
 
 const useStyles = theme => ({
   root: {
@@ -57,15 +59,83 @@ class AuthenticateUser extends React.Component {
       selected: {},
 
       loadError: false,
-      submitError: false,
       deleteError: false,
+      deleteSuccess: false,
+      deleteHelper: '',
     }
   }
 
   async componentDidMount() {
-    var self = this;
-    let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
-    await axios.get(url, {
+      var self = this;
+      let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
+      await axios.get(url, {
+        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+        }).then(response => {
+        console.log(response.data);
+        self.setState({
+            accounts: response.data.results,
+            loadError: false,
+          });
+        if(response.data.success===false){
+          self.setState({
+            loadError: true,
+          });
+        }
+        }).catch(error => {
+          console.log("error");
+          console.log(error);
+      });
+    }
+
+      async submit() {
+          let self = this;
+          let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
+          console.log(self.state.selected['user']);
+          await axios.post(url, {
+              username: self.state.selected['user'],
+          }, {
+            headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+          }).then(response => {
+            console.log('Response');
+            console.log(response.data);
+            console.log(response.data['results']);
+            this.setState({
+                dialog: '',
+                accounts: response.data['results'],
+              });
+            }
+          ).catch(error => {
+            alert(error);
+        });
+      }
+
+    async deleteAccount() {
+      let self = this;
+      let url = 'https://mda-phoenix.herokuapp.com/user/deleteuser';
+      console.log(this.state.selected['user']);
+      await axios.delete(url,{
+        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` },
+        data: {username: self.state.selected['user'],},
+      }).then(response => {
+        if(response.data.success===false){
+          this.setState({
+            deleteError: true,
+            deleteHelper: response.data.error,
+          })
+        }
+        else{
+          this.setState({
+            deleteSuccess: true,
+            deleteHelper: `Deleted ${this.state.selected['first_name']}'s account`,
+          })
+        }
+        this.setState({dialog:'',});
+      }).catch(error => {
+        alert(error);
+    });
+
+    let urlGet = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
+    await axios.get(urlGet, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
       console.log(response.data);
@@ -82,60 +152,14 @@ class AuthenticateUser extends React.Component {
         console.log("error");
         console.log(error);
     });
-  }
-
-    async submit() {
-        let self = this;
-        let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
-        await axios.post(url, {
-            username: self.state.selected['username'],
-        }, {
-          headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
-        }).then(response => {
-          if (response.data.success === true) {
-            console.log(response.data);
-            this.setState({
-              dialog: '',
-              accounts: response.data['results'],
-              submitError: false,
-            });
-          }
-          else{
-            this.setState({
-              submitError: true,
-            });
-          }
-        }).catch(error => {
-          alert(error);
-      });
-    }
-
-    async deleteAccount() {
-      let self = this;
-      let url = `https://mda-phoenix.herokuapp.com/user/deleteuser/${self.state.selected['username']}`;
-      await axios.delete(url).then(response => {
-        if (response.data.success === true) {
-          console.log(response.data);
-          this.setState({
-            deleteError: false
-          });
-        }
-        else{
-          this.setState({
-            deleteError: true,
-          });
-        }
-      }).catch(error => {
-        alert(error);
-    });
     }
 
 
   getAuthenticatePicker() {
-    let {classes} = this.props;
+    //let {classes} = this.props;
     return(
         <Dialog open={this.state.dialog === 'authenticate'} onClose={() => this.setState({dialog: ''})}>
-          <DialogTitle>Are you sure you want to authenticate this account?</DialogTitle>
+          <DialogTitle>Are you sure you want to authenticate {this.state.selected.first_name}'s account?</DialogTitle>
           <DialogActions>
             <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
               No
@@ -149,10 +173,10 @@ class AuthenticateUser extends React.Component {
   }
 
   getDeletePicker() {
-    let {classes} = this.props;
+    //let {classes} = this.props;
     return(
         <Dialog open={this.state.dialog === 'delete'} onClose={() => this.setState({dialog: ''})}>
-          <DialogTitle>Are you sure you want to delete this account?</DialogTitle>
+          <DialogTitle>Are you sure you want to delete {this.state.selected.first_name}'s account?</DialogTitle>
           <DialogActions>
             <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
               No
@@ -166,7 +190,7 @@ class AuthenticateUser extends React.Component {
   }
 
   getViewPicker() {
-    let {classes} = this.props;
+    //let {classes} = this.props;
     return(
         <Dialog open={this.state.dialog === 'view'} onClose={() => this.setState({dialog: ''})}>
           <DialogTitle>Pending Account Information</DialogTitle>
@@ -189,6 +213,9 @@ class AuthenticateUser extends React.Component {
               </ListItem>
               <ListItem>
                 <ListItemText primary={`Email: ${this.state.selected.email}`}/>
+              </ListItem>
+              <ListItem>
+                <ListItemText primary={`Username: ${this.state.selected.user}`}/>
               </ListItem>
             </List>
           </DialogContent>
@@ -220,9 +247,73 @@ class AuthenticateUser extends React.Component {
     return returnedDialogue;
   }
 
+  getAlert(){
+    if (this.state.deleteError) {
+      return(
+        <Snackbar
+          open={this.state.deleteError}
+          autoHideDuration={6000}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          onClose={() => {this.setState({deleteError: false})}}
+          >
+          <Alert severity="warning">
+            {this.state.deleteHelper}
+          </Alert>
+        </Snackbar>
+    );
+    }
+    if(this.state.deleteSuccess){
+      return(
+        <Snackbar
+          open={this.state.deleteSuccess}
+          autoHideDuration={6000}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          onClose={() => {this.setState({deleteSuccess: false})}}
+          >
+          <Alert severity="success">
+            {this.state.deleteHelper}
+          </Alert>
+        </Snackbar>
+    );
+    }
+  }
+
   render() {
     const {classes} = this.props;
-    console.log(this.state.accounts);
+  if(this.state.accounts[0]== null){
+    return(
+      <div>
+      <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+        <TableContainer className={classes.table} component={Paper}>
+          <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align='center' colSpan={4}>
+                <Typography variant='h5'>Pending Accounts</Typography>
+              </StyledTableCell>
+            </TableRow>
+          </TableHead>
+            <TableBody>
+              <StyledTableRow>
+                <StyledTableCell width="100%" align='center' component="th" scope="row">
+                  <Typography variant='subtitle1'>No accounts to authenticate</Typography>
+                </StyledTableCell>
+              </StyledTableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Row>
+      {this.getDialogue()}
+      </div>
+    );
+  }
+  else{
   return (
     <div>
     <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
@@ -237,9 +328,9 @@ class AuthenticateUser extends React.Component {
         </TableHead>
           <TableBody>
           {this.state.accounts.map((account) => (
-            <StyledTableRow key={account.first_name}>
+            <StyledTableRow key={account.username}>
               <StyledTableCell width="100%" align='center' component="th" scope="row">
-                {`${account.first_name} ${account.last_name}`}
+                {`${account.first_name} ${account.last_name} - ${account.user_type}`}
               </StyledTableCell>
               <StyledTableCell size="small" align="right">
                 <Button variant="contained" onClick={() => {this.setState({dialog: 'view', selected: account})}}>
@@ -259,8 +350,9 @@ class AuthenticateUser extends React.Component {
       </TableContainer>
     </Row>
     {this.getDialogue()}
+    {this.getAlert()}
     </div>
-    );
+  );}
   }
 }
 export default withStyles(useStyles)(AuthenticateUser);

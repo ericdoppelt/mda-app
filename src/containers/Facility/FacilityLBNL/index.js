@@ -1,14 +1,12 @@
+import { ThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
-
-import Card from '../../../components/UIzard/Card';
+import ButtonLBNL from '../../../components/Custom/FacilityPages/FacilityLBNL/button';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import Image from '../../../components/UIzard/Image';
-import Paragraph from '../../../components/UIzard/Paragraph';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
-import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import ButtonLBNL from '../../../components/Custom/FacilityPages/FacilityLBNL/button';
-import * as Constants from '../../../constants'
-import { ThemeProvider } from '@material-ui/core/styles';
+import * as Constants from '../../../constants';
+
 
 
 export default function Home() {

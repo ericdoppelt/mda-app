@@ -5,11 +5,12 @@ import ExperimentStore from '../../../../stores/ExpirementStore';
 import TesterStore from '../../../../stores/TesterStore';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = theme => ({
     submitButton: {
       backgroundColor: "#bfddff",
-      marginTop: '15px',
+      marginBottom: '20px',
       marginLeft:'5%',
       marginRight: '5%',
       width: '90%',
@@ -77,7 +78,7 @@ class LBNLSubmit extends React.Component {
             if (response.data.success === true) {
             alert("Form was sent to LBNL successfully. Please check your email!")
               self.props.history.push({
-                pathname: "/"
+                pathname: "/view-requests"
               });
             } else {
               alert(response.data.msg);
@@ -109,4 +110,4 @@ class LBNLSubmit extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(LBNLSubmit);
+export default withRouter(withStyles(useStyles)(LBNLSubmit));

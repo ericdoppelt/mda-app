@@ -1,13 +1,9 @@
-import React from 'react';
-import Image from '../../components/UIzard/Image';
-import Card from '../../components/UIzard/Card';
-import Row from '../../components/UIzard/Row';
-import Stack from '../../components/UIzard/Stack';
-import Title from '../../components/UIzard/Title';
-import MDAHeader2 from '../../components/Custom/MDAHeader2';
-import IonSearch from '../../components/Custom/Homepage/ionSearch';
-import * as Constants from '../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
+import React from 'react';
+import MDAHeader2 from '../../components/Custom/MDAHeader2';
+import Image from '../../components/UIzard/Image';
+import Row from '../../components/UIzard/Row';
+import * as Constants from '../../constants';
 
 
 export default function Home() {

@@ -54,7 +54,6 @@ class ExperimentHours extends React.Component {
         else if (ExperimentStore.hoursOn[this.state.index] === 16) {
             let returned = [];
             returned.push(<MenuItem value={8}>{8}</MenuItem>);
-            returned.push(<MenuItem value={32}>{32}</MenuItem>);
             return returned;
         }
     }
@@ -93,7 +92,7 @@ class ExperimentHours extends React.Component {
               <FormControl 
                   className={classes.hoursOff}
                   error = {ExperimentStore.hoursOffError(this.state.index)}
-                  disabled = {ExperimentStore.shifts[this.state.index] === '' || ExperimentStore.shifts[this.state.index] == 1 || ExperimentStore.hoursOn[this.state.index] === ''}
+                  disabled = {ExperimentStore.shifts[this.state.index] === '' || ExperimentStore.shifts[this.state.index] === 1 || ExperimentStore.hoursOn[this.state.index] === ''}
                   type= 'number'
                 > 
                 <InputLabel>Hours Off</InputLabel>

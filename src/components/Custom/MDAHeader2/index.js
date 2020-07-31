@@ -1,37 +1,33 @@
-import React from 'react';
-import clsx from 'clsx';
-import {AppBar, Tabs, Tab, Menu, MenuItem} from '@material-ui/core';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
-import CalendarTodayRoundedIcon from '@material-ui/icons/CalendarTodayRounded';
-import FaceRoundedIcon from '@material-ui/icons/FaceRounded';
-import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded';
-import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
-import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
-import { Link, Redirect } from 'react-router-dom';
-import Row from '../../UIzard/Row';
-
-import { withStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import { AppBar } from '@material-ui/core';
+import Collapse from '@material-ui/core/Collapse';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Collapse from '@material-ui/core/Collapse';
+import { ThemeProvider, withStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Toolbar from '@material-ui/core/Toolbar';
+import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded';
+import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
+import CalendarTodayRoundedIcon from '@material-ui/icons/CalendarTodayRounded';
+import DvrRoundedIcon from '@material-ui/icons/DvrRounded';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import axios from 'axios';
+import FaceRoundedIcon from '@material-ui/icons/FaceRounded';
+import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import MenuIcon from '@material-ui/icons/Menu';
+import clsx from 'clsx';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import * as Constants from '../../../constants';
+import Row from '../../UIzard/Row';
 
-import * as Constants from '../../../constants'
+
+
 
 const icons = [<HomeRoundedIcon />,
                <CalendarTodayRoundedIcon />,
@@ -42,7 +38,7 @@ const icons = [<HomeRoundedIcon />,
                <ImportContactsIcon />,]
 
 const links = ['/', '/calendar', '/facilities','/request-form','/user-login','/view-requests','/scheduler']
-const facilityLinks = ['facilities-tamu', 'facilities-MSU', 'facilities-LBNL', 'facilities-NSRL']
+//const facilityLinks = ['facilities-tamu', 'facilities-MSU', 'facilities-LBNL', 'facilities-NSRL']
 const formLinks = ['request-tamu', 'request-MSU', 'request-LBNL', 'request-NSRL']
 
 const drawerWidth = 240;
@@ -107,9 +103,10 @@ const useStyles = theme => ({
     }),
     overflow: 'hidden',
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
+    //width: theme.spacing(7) + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(7) + 1,
+      //width: theme.spacing(7) + 1,
+      width: 0,
     },
     backgroundColor: "#424242",
   },
@@ -196,7 +193,7 @@ class MDAHeader2 extends React.Component {
   }
 
   handleLogOut() {
-    var self = this;
+    //var self = this;
     if (window.sessionStorage !== null) {
       window.sessionStorage.clear();
       this.setState({loggedIn: false})
@@ -311,7 +308,7 @@ class MDAHeader2 extends React.Component {
             <List component="div" disablePadding>
               {/*----FORM ITEMS----*/}
               {['TAMU','MSU','LBNL','NSRL'].map((text, index) => (
-                <Link to={formLinks[index]} style={{ color: '#FFF' }}>
+                <Link to={formLinks[index]} style={{ color: '#FFF' }} key={text}>
                   <ListItem button key={text}>
                     <ListItemIcon></ListItemIcon>
                     <ListItemText primary={text} />
@@ -362,13 +359,13 @@ class MDAHeader2 extends React.Component {
         <AppBar 
           position="fixed" 
           className={clsx(classes.appBar, {
-            [classes.appBarShift]: this.state.drawerOpen,
+            //[classes.appBarShift]: this.state.drawerOpen,
           })}
-          color="paper"
+          //color="paper"
         >
           <Toolbar style={{}}>
             <IconButton
-              color="white"
+              //color="#fff"
               aria-label="open drawer"
               onClick={this.handleDrawerOpen}
               edge="start"
@@ -388,7 +385,7 @@ class MDAHeader2 extends React.Component {
         </AppBar>
 
         
-        {/* Drawer */}
+        {/* Drawer 
 
         <Drawer
           variant="permanent"
@@ -407,6 +404,8 @@ class MDAHeader2 extends React.Component {
           </div>
           {this.drawerMenu()}
         </Drawer>
+
+        */}
 
         <div
           className={classes.drawerPaper}

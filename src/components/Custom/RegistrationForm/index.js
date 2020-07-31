@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {TextField, Button, FormHelperText, FormControl, InputLabel, Select, MenuItem, Typography} from '@material-ui/core';
+import {TextField, Button, FormHelperText, FormControl, InputLabel, Select, MenuItem, Typography, Snackbar} from '@material-ui/core';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,16 +8,18 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import {Alert} from '@material-ui/lab';
+
 
 const useStyles = theme => ({
   left: {
-    marginTop: '2px',
+    marginTop: '3px',
     marginLeft: '5%',
     marginRight: '3%',
     width: '42%',
   },
   right: {
-    marginTop: '2px',
+    marginTop: '3px',
     marginLeft: '3%',
     marginRight: '5%',
     width: '42%',
@@ -37,9 +39,6 @@ const useStyles = theme => ({
     marginTop: '10px',
     marginBottom: '10px',
   },
-  fullDiv: {
-    width: '100%',
-  }
 });
 
 class RegistrationForm extends React.Component {
@@ -76,6 +75,7 @@ class RegistrationForm extends React.Component {
       email: "",
       emailError: false,
 
+      backendError: false,
       integrators: [],
     }
   }
@@ -94,7 +94,6 @@ class RegistrationForm extends React.Component {
 
   validatePassword(password) {
     let passwordRegex = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$');
-    console.log(passwordRegex.test(password));
     return passwordRegex.test(password);
   }
 
@@ -105,7 +104,7 @@ class RegistrationForm extends React.Component {
       usernameError: (this.state.username === ""),
       passwordEmptyError: (this.state.password === ""),
       passwordInvalidError: (!this.validatePassword(this.state.password)),
-      affiliationError: (this.state.password === ""),
+      affiliationError: (this.state.affiliation === ""),
       typeError: (this.state.type === ""),
       phoneError: (this.state.phone === ""),
       emailError: (this.state.email === ""),
@@ -119,6 +118,7 @@ class RegistrationForm extends React.Component {
   }
 
   async postToAxios() {
+    console.log("CALLED");
     let formIsValid = !this.state.firstNameError && !this.state.lastNameError && !this.state.usernameError && !this.state.passwordError
     && !this.affiliationError && !this.typeError && !this.phoneError && !this.emailError;
     console.log(this.state);
@@ -134,11 +134,18 @@ class RegistrationForm extends React.Component {
         phone: self.state.phone,
         email: self.state.email,
       }).then(response => {
+        console.log(response);
         if (response.data.success === true) {
-          self.props.history.push('/user-login');
+        
+          self.props.history.push({
+            pathname: '/user-login',
+            state: {accountCreated: true}
+          });
         } else {
-          self.setState({userNameError: true});
-          self.setState({userNameHelper: response.data.error});
+          self.setState({
+            backendError: true,
+            backendErrorMessage: response.data.error,
+          });
         }
       }).catch(error => {
         alert(error);
@@ -146,6 +153,26 @@ class RegistrationForm extends React.Component {
     }
   }
 
+  getSnackBars() {
+    if (this.state.backendError) {
+      return(
+        <Snackbar
+          open={this.state.backendError}
+          autoHideDuration={6000}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          onClose={() => {this.setState({noMatch: false})}}
+          >
+          <Alert severity="warning">
+            {this.state.backendErrorMessage}
+          </Alert>
+        </Snackbar>
+      );
+    }
+
+  }
   render() {
     const { classes } = this.props;
     console.log("here");
@@ -182,7 +209,7 @@ class RegistrationForm extends React.Component {
           label = "Password"
           onChange={event => {this.setState({password: event.target.value})}}
           type = {this.state.showPassword ? 'text' : 'password'}
-          error = {(this.state.passwordEmptyError | this.passwordInvalidError)}
+          error = {(this.state.passwordEmptyError | this.state.passwordInvalidError)}
           helperText = {this.state.passwordHelper}
           InputProps={{
             endAdornment: (
@@ -245,6 +272,9 @@ class RegistrationForm extends React.Component {
           helperText = {this.state.emailError ? "Please enter your primary email." : ""}
         />
         <Button className = {classes.submitButton} onClick={() => this.submitForm()}>Create Account</Button>
+
+        {this.getSnackBars()}
+
       </div>
   );
   }

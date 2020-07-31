@@ -95,6 +95,7 @@ function scheduleLBNL(priorities, generals, start, end) {
     return dummyData;
 }
 
+/*
 function development(priorities, generals, start, end) {
     console.log("SCHEDULE");
     console.log(priorities);
@@ -144,6 +145,7 @@ function development(priorities, generals, start, end) {
     return returned;
 }
 
+
 // WORKS ON SPLIT REQUESTS
 function optimize(requestsSplit, startDate, endDate) {
     let returnedSchedule = [];
@@ -167,6 +169,7 @@ function optimize(requestsSplit, startDate, endDate) {
 
     return returnedSchedule;
 }
+
 
 function addTunes(returnedSchedule, splitRequests, pointer) {
     
@@ -218,6 +221,7 @@ function findPerfectEights(returnedSchedule, allRequests, pointer) {
         }
     });
 }
+
 
 // THIS IS ALL THAT IS LEFT
 // ASSUMES THIS IS AN 8/16 or 16/8 PERFECT MATCH
@@ -338,8 +342,8 @@ function getMatch(mainRequest, allRequests, hours) {
     }
 
     // IF HERE, NO NEGATIVE OFFSETS WERE FOUND
-    if (neutralOffsets != []) return [neutralOffsets, 0];
-    if (positiveOffsets != []) return [positiveOffsets, 1];
+    if (neutralOffsets !== []) return [neutralOffsets, 0];
+    if (positiveOffsets !== []) return [positiveOffsets, 1];
 
 
     // IF HERE, THEN THERE ARE NO GOOD OPTIONS AND ALL ARRAYS ARE EMPTY.
@@ -362,14 +366,14 @@ function getMatch(mainRequest, allRequests, hours) {
         }
         // IF THEY SUM TO CLOSE TO +/-1 SHIFTS, CONSIDER THEM
         // OTHERWISE IGNORE
-        if (totalShifts == shifts + 1) positiveOffsets.push(subset);
-        if (totalShifts == shifts) neutralOffsets.push(subset);
-        if (totalShifts == shifts - 1) negativeOffsets.push(subset);
+        if (totalShifts === shifts + 1) positiveOffsets.push(subset);
+        if (totalShifts === shifts) neutralOffsets.push(subset);
+        if (totalShifts === shifts - 1) negativeOffsets.push(subset);
     }
 
-    if (negativeOffsets != []) return [getSmallestSubset(negativeOffsets), -1];
-    if (neutralOffsets != []) return [getSmallestSubset(neutralOffsets), 0];
-    if (positiveOffsets != []) return [getSmallestSubset(positiveOffsets), 1];
+    if (negativeOffsets !== []) return [getSmallestSubset(negativeOffsets), -1];
+    if (neutralOffsets !== []) return [getSmallestSubset(neutralOffsets), 0];
+    if (positiveOffsets !== []) return [getSmallestSubset(positiveOffsets), 1];
 
     // AT THIS POINT, NO PERFECT MATCHES EXIST.
     return false;
@@ -402,6 +406,7 @@ function getSmallestSubset(subsets) {
     return set;
 }
 
+
 function splitUpRequests(requests) {
     let returnedRequests = [];
 
@@ -424,6 +429,7 @@ function splitUpRequests(requests) {
     });
     return returnedRequests;
 }
+
 
 
 
@@ -469,6 +475,7 @@ function addEndTune(returnedSchedule, pointer) {
     pointer.downTime += 4;
     pointer.endTune = true;
 }
+*/
 
 
 export default scheduleLBNL;

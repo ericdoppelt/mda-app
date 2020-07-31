@@ -1,8 +1,8 @@
-import React from 'react';
-import {Card, Button, Grid, List, ListItem, ListItemIcon, Checkbox, ListItemText, CardHeader, Typography} from '@material-ui/core';
+import { Button, Card, CardHeader, Checkbox, Grid, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { observer } from "mobx-react";
+import React from 'react';
 import SchedulingStore from '../../../../stores/SchedulingStore';
-import { observer } from "mobx-react"
 import LBNLScheduler from '../LBNLScheduler';
 
   const useStyles = theme => ({
@@ -11,8 +11,9 @@ import LBNLScheduler from '../LBNLScheduler';
         width: '100%',
       },
       card: {
-        width: 280,
-        height: 300,
+        marginTop: '20px',
+        width: 350,
+        height: 475,
         overflow: 'auto',
       },
       button: {
@@ -42,11 +43,11 @@ class Prioritizer extends React.Component {
     let possibleRequests = SchedulingStore.rangeRequests(this.props.start, this.props.end, this.props.facility); 
     let self = this;
     var requestsChecked = possibleRequests.map(function(request) {
-      var request = Object.assign({}, request);
-      request.checkedIndex = i;
+      var requestOut = Object.assign({}, request);
+      requestOut.checkedIndex = i;
       self.state.checked[i] = false;
       i++;
-      return request;
+      return requestOut;
     });
     this.setState({ general : requestsChecked});
   }
@@ -73,7 +74,7 @@ getList(listArray, title) {
       </CardHeader>
       <List dense component="div" role="list">
         {listArray.map((value, index) => {
-          const i = index;
+          //const i = index;
           return (
             <ListItem key={value.name} role="listitem" button onClick={() => this.toggleChecked(value)}>
               <ListItemIcon>
@@ -162,11 +163,7 @@ getList(listArray, title) {
     console.log(SchedulingStore);
     SchedulingStore.toggleCalendar();
 
-    let testSchedule = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.hours);
-  }
-
-  getSuggested() {
-
+    //let testSchedule = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.hours);
   }
 
   getHeader() {
@@ -184,7 +181,7 @@ getList(listArray, title) {
     return(
       <div>
         <Typography
-        variant="h6">
+        variant="h5">
           {this.getHeader()}
         </Typography>
         <Grid container direction="row" spacing={2} justify="center" alignItems="center" className={classes.root}>

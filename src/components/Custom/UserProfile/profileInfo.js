@@ -1,13 +1,7 @@
-import React from 'react';
-import axios from 'axios';
-import {Box, Button, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
-import {FormControl, InputLabel, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, FormHelperText, TextField, Typography, Snackbar} from '@material-ui/core';
-import { MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
-import DateFnsUtils from "@date-io/date-fns";
-import Alert from '@material-ui/lab/Alert';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableRow, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import Row from '../../../components/UIzard/Row';
-import Stack from '../../../components/UIzard/Stack';
+import axios from 'axios';
+import React from 'react';
 
 const useStyles = theme => ({
    table: {

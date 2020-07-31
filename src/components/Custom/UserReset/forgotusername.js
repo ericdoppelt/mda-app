@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import {Snackbar, Table, TableBody, TableCell, TableRow, TextField, Typography} from '@material-ui/core';
-import {Button, IconButton, InputAdornment, InputLabel} from '@material-ui/core';
-import {Visibility, VisibilityOff} from '@material-ui/icons';
+import {Snackbar,TextField, Typography} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import {Alert} from '@material-ui/lab';
 
   /*Define class themes */
   const useStyles = theme => ({
@@ -78,8 +77,8 @@ class ForgotUsername extends React.Component {
               open={this.state.submitSuccess}
               autoHideDuration={6000}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: 'top',
+                horizontal: 'center',
               }}
               onClose={() => {this.setState({submitSuccess: false})}}
               >
@@ -95,10 +94,10 @@ class ForgotUsername extends React.Component {
               open={this.state.submitError}
               autoHideDuration={6000}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: 'top',
+                horizontal: 'center',
               }}
-              onClose={() => {this.setState({submitSuccess: false})}}
+              onClose={() => {this.setState({submitError: false})}}
               >
               <Alert severity="warning">
                 Invalid Email
@@ -113,7 +112,7 @@ class ForgotUsername extends React.Component {
       const {classes} = this.props; //Allows access to class styles defined above
       return (
         <div>
-          <Typography className={classes.subheader} variant='subtitle2'>Please enter the email associated with your account<br/> We will email you the matching usename </Typography>
+          <Typography className={classes.subheader} variant='subtitle2'>Please enter the email associated with your account<br/> We will email you the matching username </Typography>
           <TextField
           className={classes.textfield}
           label="Email"

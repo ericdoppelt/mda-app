@@ -1,17 +1,8 @@
 import React from 'react';
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {Button, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubheader} from '@material-ui/core';
-import Image from '../../../UIzard/Image';
-import Stack from '../../../UIzard/Stack';
-import Subheader from '../../../UIzard/Subheader';
-import UserInfo from '../../UserInfo';
 import axios from 'axios';
-import { observer } from "mobx-react"
-import { observable } from "mobx"
-import UserProfileStore from '../../../../stores/UserProfileStore';
-import UserProfile from '../../UserProfile';
-import TodoList from '../TodoList/todoList';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
@@ -58,7 +49,7 @@ class UsertodoList extends React.Component {
       filterArrays = (array1,array2) => {
         var ret = [];
         for(var i=0;i<array1.length;i++){
-          if(array2[i]==1){
+          if(array2[i]===1){
             ret.push({message:array1[i],idx:i});
           }
         }

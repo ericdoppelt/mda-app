@@ -1,14 +1,11 @@
-import React from 'react';
-import {Redirect} from 'react-router-dom';
-import Image from '../../../components/UIzard/Image';
-import Stack from '../../../components/UIzard/Stack';
-import {Typography} from '@material-ui/core';
-import ViewRequests from '../../../components/Custom/ViewRequests';
-import CardNoShadow from '../../../components/UIzard/CardNoShadow';
-import Row from '../../../components/UIzard/Row';
-import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import ViewRequests from '../../../components/Custom/ViewRequests';
+import Row from '../../../components/UIzard/Row';
+import Stack from '../../../components/UIzard/Stack';
+import * as Constants from '../../../constants';
 
 export default function Home() {
   if (window.sessionStorage.getItem("access_token") === null) return <Redirect to='user-login'/>;

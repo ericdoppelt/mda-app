@@ -1,10 +1,9 @@
 import React from 'react';
-import {TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, FormHelperText, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
+import {TextField, Typography} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
-import InfiniteCalendar from 'react-infinite-calendar';
 import ExperimentStore from '../../../stores/ExpirementStore';
 
 const useStyles = theme => ({
@@ -22,12 +21,17 @@ const useStyles = theme => ({
   
   class ExperimentForm extends React.Component {
       
+    constructor(props) {
+      super(props);
+      ExperimentStore.clear();
+    }
+
     render() {
       const { classes } = this.props;
       return(
           <div className={classes.fullDiv}>
             <br/>
-            <Box>Please enter the following information about your experiment.</Box>
+            <Typography variant='subtitle1'>Please enter the following information about your experiment.</Typography>
             <TextField
               className={classes.fullText}
               label = "Experiment Title"
@@ -50,6 +54,7 @@ const useStyles = theme => ({
               label = "Comments"
               value = {ExperimentStore.comments}
               onChange={event => {ExperimentStore.setComments(event.target.value)}}
+              multiline
             />
           </div>
       );

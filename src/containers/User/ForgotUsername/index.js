@@ -1,14 +1,12 @@
+import { ThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
+import ForgotUsername from '../../../components/Custom/UserReset/forgotusername';
 import Card from '../../../components/UIzard/Card';
+import Image from '../../../components/UIzard/Image';
 import Row from '../../../components/UIzard/Row';
 import Stack from '../../../components/UIzard/Stack';
-import RegistrationForm from '../../../components/Custom/RegistrationForm';
-import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import * as Constants from '../../../constants'
-import { ThemeProvider } from '@material-ui/core/styles';
-import Image from '../../../components/UIzard/Image';
-import Title from '../../../components/UIzard/Title';
-import ForgotUsername from '../../../components/Custom/UserReset/forgotusername';
+import * as Constants from '../../../constants';
 
 
 export default function Home() {

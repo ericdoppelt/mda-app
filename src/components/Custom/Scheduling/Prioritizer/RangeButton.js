@@ -283,8 +283,8 @@ class RangeButton extends React.Component {
             onClose={() => this.setState({startDateError: false})}
             autoHideDuration={6000}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
+              vertical: 'top',
+              horizontal: 'center',
             }}
             >
             <Alert severity="error">
@@ -300,8 +300,8 @@ class RangeButton extends React.Component {
             onClose={() => this.setState({startTimeError: false})}
             autoHideDuration={6000}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
+              vertical: 'top',
+              horizontal: 'center',
             }}
             >
             <Alert severity="error">
@@ -316,8 +316,8 @@ class RangeButton extends React.Component {
           open={this.state.submitSuccess}
           autoHideDuration={6000}
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
+            vertical: 'top',
+            horizontal: 'center',
           }}
           onClose={() => {this.setState({submitSuccess: false})}}
           >
@@ -333,8 +333,8 @@ class RangeButton extends React.Component {
           open={this.state.submitError}
           autoHideDuration={6000}
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
+            vertical: 'top',
+            horizontal: 'center',
           }}
           onClose={() => {this.setState({submitError: false})}}
           >

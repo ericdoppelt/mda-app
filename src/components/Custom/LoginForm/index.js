@@ -2,12 +2,14 @@
 
 import React from 'react';
 import './LoginForm.css'
-import {TextField, Button, Typography} from '@material-ui/core';
+import {TextField, Button, Snackbar} from '@material-ui/core';
+import {Alert} from '@material-ui/lab';
+import Box from '@material-ui/core/Box';
+import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
-import Row from '../../UIzard/Row'
-import Box from '@material-ui/core/Box'
+import Row from '../../UIzard/Row';
+import './LoginForm.css';
 
 const useStyles = theme => ({
 
@@ -24,13 +26,20 @@ class LoginForm extends React.Component {
 
     this.handleSubmit= this.handleSubmit.bind(this);
 
+    let accountWasCreated;
+    if (this.props.location.state !== undefined) {
+      accountWasCreated = this.props.location.state.accountCreated;
+    } else {
+      accountWasCreated = false;
+    }
+    
     this.state = {
       username: "",
       password: "",
-      displayedText: "",
       usernameError: "",
       passwordError: "",
       submitted: false,
+      accountCreated: accountWasCreated,
     }
   }
 
@@ -65,8 +74,29 @@ class LoginForm extends React.Component {
     });
   }
 
+  getSnackBars() {
+    console.log("PROPS");
+    console.log(this.props);
+    
+      return(
+        <Snackbar
+          open = {this.state.accountCreated}
+          autoHideDuration={6000}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          onClose={() => {this.setState({accountCreated: false})}}
+          >
+          <Alert severity="success">
+            Account Created
+          </Alert>
+        </Snackbar>
+      );
+  }
+
   render() {
-    var { classes} = this.props;
+    //var { classes} = this.props;
     return (
       <div className="loginform">
         <form onSubmit={this.handleSubmit}>
@@ -122,7 +152,8 @@ class LoginForm extends React.Component {
             <small>Forgot Username?</small>
           </Button>
         </Row>
-         {this.state.displayedText}
+
+         {this.getSnackBars()}
       </div>
   );
   }

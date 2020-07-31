@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import {Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, TextField, Typography} from '@material-ui/core';
-import {Button, FormHelperText, FormControl, InputLabel, Select} from '@material-ui/core';
+import {Snackbar, Table, TableBody, TableCell, TableRow, TextField, Typography} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import {Alert} from '@material-ui/lab';
 
 
   const useStyles = theme => ({
@@ -25,9 +25,9 @@ import {Alert, AlertTitle} from '@material-ui/lab';
    },
   });
 
-  const rows = [{key: 'oldPassword', value: 'Old Password', helper: 'oldPasswordHelper'},
-                {key: 'newPassword', value: 'New Password', helper: 'passwordHelper'},
-                {key: 'confirmPassword', value: 'Confirm New Password', helper: 'passwordHelper'}]
+  const rows = [{key: 'oldPassword', value: 'Old Password', error: 'oldPasswordError', helper: 'oldPasswordHelper'},
+                {key: 'newPassword', value: 'New Password', error: 'passwordError', helper: 'passwordHelper'},
+                {key: 'confirmPassword', value: 'Confirm New Password', error: 'passwordError', helper: 'passwordHelper'}]
 
   class PasswordChanger extends React.Component {
 
@@ -63,8 +63,9 @@ import {Alert, AlertTitle} from '@material-ui/lab';
     this.setState({
       passwordEmptyError: ((this.state.newPassword && this.state.confirmPassword) === ""),
       passwordInvalidError: (!this.validatePassword(this.state.newPassword)),
-      passwordMatchError: (!(this.state.newPassword === this.state.confirmPassword))
+      passwordMatchError: (!(this.state.newPassword === this.state.confirmPassword)),
     }, () => {
+      if(this.state.passwordEmptyError||this.state.passwordInvalidError||this.state.passwordMatchError) this.setState({passwordError: true});
       if (this.state.passwordEmptyError) this.setState({passwordHelper: "Please enter a new password."});
       else if (this.state.passwordInvalidError) this.setState({passwordHelper: "Please enter a password matching the criteria."});
       else if (this.state.passwordMatchError) this.setState({passwordHelper: "Passwords do not match"})
@@ -98,7 +99,7 @@ import {Alert, AlertTitle} from '@material-ui/lab';
       }
       else{
         self.setState({ responseError: response.data.error,
-                        oldPasswordEror: true,
+                        oldPasswordError: true,
                         oldPasswordHelper: 'Old password is incorrect',});
       }
     }).catch(error => {
@@ -115,8 +116,8 @@ import {Alert, AlertTitle} from '@material-ui/lab';
             open={this.state.submitSuccess}
             autoHideDuration={6000}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
+              vertical: 'top',
+              horizontal: 'center',
             }}
             onClose={() => {this.setState({submitSuccess: false})}}
             >
@@ -141,9 +142,9 @@ import {Alert, AlertTitle} from '@material-ui/lab';
               <TableCell>
                 <TextField
                 value = {this.state[row.key]}
-                onChange={event => {this.setState({[row.key]: event.target.value})}}
+                onChange={event => {this.setState({[row.key]: event.target.value, [row.helper]: '', [row.error]: false,})}}
                 type = {this.state.showPassword ? 'text' : 'password'}
-                error = {this.state.passwordError}
+                error = {this.state[row.error]}
                 helperText = {this.state[row.helper]}
                 InputProps={{
                   endAdornment: (
@@ -162,7 +163,7 @@ import {Alert, AlertTitle} from '@material-ui/lab';
           ))}
           </TableBody>
         </Table>
-        <Button color="primary" variant={(this.state.newPassword=='' || this.state.confirmPassword=='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
+        <Button color="primary" variant={(this.state.newPassword==='' || this.state.confirmPassword==='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
           Change Password
         </Button>
         <br/>
