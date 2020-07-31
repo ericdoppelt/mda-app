@@ -29,16 +29,24 @@ def approve():
     result = ""
     try:
         req = request.get_json()
+
         beam_request = requests.query.filter_by(id=req['id']).first()
-        if req['approval'] == 'Integrator':
+        if req['approval'] == 'integrator':
             beam_request.approved_integrator = True
         if req['approval'] == 'facility':
             beam_request.approved_facility = True
         else:
             raise Exception("No approval key found")
-        db.session.commit()
         if beam_request.approved_facility and beam_request.approved_integrator:
             beam_request.status = 'Approved'
+        db.session.commit()
+
+        msg = Message("Beam Time Request Approved")
+        msg.recipients = [beam_request.email]
+        msg.body = "Your beam time request has been approved.\n\n"
+
+        # msg.send
+
         result = {'success' : True}
     except Exception as e:
         print(e)
@@ -216,7 +224,7 @@ def getForms(request_forms):
         'facility' : form.facility, 'company' : form.company, 'email' : form.email,
         'phone' : form.cell, 'funding_contact' : form.funding_contact,
         'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
-        'PO_number' : form.po_number, 'address' : form.address,
+        'PO_number' : form.po_number, 'address' : form.address, 'submitDate' : form.date_of_request,
         'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,
         'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
         "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
