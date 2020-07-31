@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextField, Button, Box, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
+import {TextField, Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
@@ -78,6 +78,7 @@ const useStyles = theme => ({
         this.state = {
             open: false
         }
+        LBNLStore.clear();
     }
     render() {
       const { classes } = this.props;
@@ -85,7 +86,7 @@ const useStyles = theme => ({
         <div>
           <br/>
           <br/>
-          <Box>Please enter the following supplemental and optional information for LBNL.</Box>
+          <Typography variant='subtitle1'>Please enter the following supplemental information for LBNL.</Typography>
             <TextField 
               className={classes.officePhone}
               label = "Office Phone"

@@ -30,6 +30,15 @@ class NSRLStore {
     setMaxDose(newDose) {
         this.maxDose = newDose;
     }
+
+    clear() {
+        this.endDate = "";
+        this.experimentType = "";
+        this.isNasa = "";
+        this.let = "";
+        this.beamSize = "";
+        this.maxDose = "";
+    }
 }
 
 decorate(NSRLStore, {

@@ -14,6 +14,10 @@ class TAMUStore {
         else this.badDates.splice(index, 1);
         console.log(this.badDates);
     }
+
+    clear() {
+        this.badDates = [];
+    }
 }
 
 decorate(TAMUStore, {

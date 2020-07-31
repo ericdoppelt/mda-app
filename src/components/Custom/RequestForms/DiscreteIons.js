@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
+import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, Chip} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import ExperimentStore from '../../../stores/ExpirementStore';
@@ -45,10 +45,6 @@ class DiscreteIons extends React.Component {
 
         this.selectIon = this.selectIon.bind(this);
         this.getEnergies = this.getIons.bind(this);
-        ExperimentStore.clearBeams();
-
-        console.log("type");
-        console.log(typeof ExperimentStore.ions[0]);
     }
 
     async componentDidMount() {
@@ -130,6 +126,14 @@ class DiscreteIons extends React.Component {
                   value={this.ionArray(key)}
                   onChange={event => this.selectIon(event.target.value, key)}
                   multiple
+                  renderValue={(selected) => (
+                    <div>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} className={classes.chip} />
+                    ))}
+                    </div>
+                    )
+                  }
                   >
                   {this.getIons(key)}
                 </Select>

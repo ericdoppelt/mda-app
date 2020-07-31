@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextField, Box} from '@material-ui/core';
+import {TextField, Typography} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
@@ -52,12 +52,18 @@ const useStyles = theme => ({
   });
 
   class TesterForm extends React.Component {
+
+    constructor(props){
+      super(props);
+      TesterStore.clear();
+    }
+
     render() {
       const { classes } = this.props;
       return(
         <div>
           <br/>
-          <Box>Please enter the following information about yourself.</Box>
+          <Typography variant='subtitle1'>Please enter the following information about yourself.</Typography>
             <TextField
               className={classes.leftTextField}
               label = "Name"

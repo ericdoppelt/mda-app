@@ -90,8 +90,28 @@ class LBNLStore {
     setElectricallySafe(newChoice) {
         this.electricallySafe = newChoice;
     }
-}
 
+
+clear() {
+    this.submitted = "";
+    this.senderAddress = "";
+    this.senderCity = "";
+    this.senderState = "";
+    this.senderZip = "";
+    this.senderOfficePhone = "";
+    this.experimentAbstract = "";
+    this.alternateDate = "";
+    this.targetMaterials = "";
+    this.safetyConcerns = "";
+    this.beamType = "";
+    this.specialIons = "";
+    this.specialEnergies = "";
+    this.flux = "";
+    this.airOrVacuum = "";
+    this.controlRestrictions = "";
+    this.electricallySafe = "";
+    }
+}
 decorate(LBNLStore, {
     submitted: observable,
     setSubmitted: action,

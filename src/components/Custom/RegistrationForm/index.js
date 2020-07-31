@@ -94,7 +94,6 @@ class RegistrationForm extends React.Component {
 
   validatePassword(password) {
     let passwordRegex = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$');
-    console.log(passwordRegex.test(password));
     return passwordRegex.test(password);
   }
 

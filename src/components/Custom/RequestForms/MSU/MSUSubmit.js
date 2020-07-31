@@ -9,7 +9,8 @@ import { withRouter } from 'react-router-dom';
 const useStyles = theme => ({
     submitButton: {
       backgroundColor: "#bfddff",
-      marginTop: '15px',
+      marginTop: '2px',
+      marginBottom: '20px',
       marginLeft:'5%',
       marginRight: '5%',
       width: '90%',
@@ -85,11 +86,6 @@ class MSUSubmit extends React.Component {
       <Button className={classes.submitButton} onClick={this.submitForm}>
         Submit to Integrator
       </Button>
-
-      {/*
-      <Button className={classes.submitButton} onClick={this.submitForm}>
-        Email Form to Facility
-      </Button>*/}
       </div>
     );
   }

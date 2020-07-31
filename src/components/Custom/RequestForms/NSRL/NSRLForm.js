@@ -1,6 +1,6 @@
 import React from 'react';
 import InfiniteCalendar from 'react-infinite-calendar';
-import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, TextField, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
+import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
@@ -52,6 +52,7 @@ class NSRLForm extends React.Component {
       this.state = {
           open: false
       }
+      NSRLStore.clear();
   }
 
   render() {
@@ -59,7 +60,7 @@ class NSRLForm extends React.Component {
     return(
     <div>
       <br/>
-      <Box>Please enter the following supplemental information for NSRL.</Box>
+      <Typography variant='subtitle1'>Please enter the following supplemental information for NSRL.</Typography>
         <TextField
           className={classes.let}
           label = "Linear Energy Transfer"

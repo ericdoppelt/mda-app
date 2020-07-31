@@ -161,6 +161,23 @@ class TesterStore {
         && !this.financierError && !this.financierPhoneError && !this.financierEmailError && !this.billingAddressError && !this.billingCityError
         && !this.billingStateError && !this.billingZipError && this.submitted;
     }
+
+    clear() {
+        this.submitted = false;
+        this.senderName = "";
+        this.email = "";
+        this.phone = "";
+        this.company = "";
+        this.integrator = "";
+        this.financier = "";
+        this.financierPhone = "";
+        this.financierEmail = "";
+        this.billingAddress = "";
+        this.billingPO = "";
+        this.billingCity = "";
+        this.billingState = "";
+        this.billingZip = "";
+    }
 }
 
 decorate(TesterStore, {

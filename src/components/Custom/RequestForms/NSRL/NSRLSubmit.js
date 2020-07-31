@@ -10,9 +10,10 @@ import { withRouter } from 'react-router-dom';
 const useStyles = theme => ({
   submitButton: {
     backgroundColor: "#bfddff",
-    marginTop: '15px',
+    marginTop: '2px',
     marginLeft: '5%',
     marginRight: '5%',
+    marginBottom: '20px',
     width: '90%',
     },    
   fullDiv: {

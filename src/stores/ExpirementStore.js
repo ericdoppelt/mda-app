@@ -115,25 +115,21 @@ class ExpirementStore {
         this.hoursOff.push(0);
         this.numberBeams++;
     }
-    clearBeams() {
+
+    clear() {
+        this.submitted = false;
+        this.title = "";
+        this.personnel = "";
+        this.startDate = "";
         this.ions = observable.array([""]);;
         this.energies = observable.array([""]);;
         this.shifts = observable.array([""]);
         this.hoursOn = observable.array([""]);
         this.hoursOff = observable.array([""]);
+        this.numberBeams = 1;
+        this.comments = "";
     }
 
-    continuous = "";
-    setContinuous(newCont) {
-        this.continuous = newCont;
-    }
-    get continuousError() {
-        return this.continuous === "" && this.submitted;
-    }
-    get continuousHelperText() {
-        if (this.continuousError) return "Please enter whether the experiment is continuous or interleaved.";
-        else return "";
-    }
     comments = "";
     setComments(newComment) {
         this.comments = newComment;
@@ -195,11 +191,6 @@ decorate(ExpirementStore, {
 
     addBeam: action,
     clearBeams: action,
-    
-    continuous: observable,
-    setContinuous: action,
-    continuousError: computed,
-    continuousHelperText: computed,
 
     comments: observable,
     setComments: action,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextField, Box} from '@material-ui/core';
+import {TextField, Typography} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
@@ -21,12 +21,17 @@ const useStyles = theme => ({
   
   class ExperimentForm extends React.Component {
       
+    constructor(props) {
+      super(props);
+      ExperimentStore.clear();
+    }
+
     render() {
       const { classes } = this.props;
       return(
           <div className={classes.fullDiv}>
             <br/>
-            <Box>Please enter the following information about your experiment.</Box>
+            <Typography variant='subtitle1'>Please enter the following information about your experiment.</Typography>
             <TextField
               className={classes.fullText}
               label = "Experiment Title"

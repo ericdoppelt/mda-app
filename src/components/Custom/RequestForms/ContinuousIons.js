@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField} from '@material-ui/core';
+import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField, InputAdornment, Chip} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import ExperimentStore from '../../../stores/ExpirementStore';
@@ -12,14 +12,14 @@ const useStyles = theme => ({
     marginTop: '4px',
     marginLeft: '5%',
     marginRight: '3%',
-    width: '42%',
+    width: '32%',
   },
   
   ions: {
     marginTop: '4px',
     marginLeft: '3%',
     marginRight: '5%',
-    width: '42%',
+    width: '52%',
   },
   
   ionButton: {
@@ -46,8 +46,6 @@ class ContinuousIons extends React.Component {
 
         this.selectIon = this.selectIon.bind(this);
         this.getEnergies = this.getIons.bind(this);
-        ExperimentStore.clearBeams();
-
     }
 
     async componentDidMount() {
@@ -116,10 +114,12 @@ class ContinuousIons extends React.Component {
         ExperimentStore.setIons(ion, index);
     }
 
-    updateEnergy(energy, key) {
-    
-      if ((energy > 0 && energy < this.state.maxBeam) || (energy === '')) {
-        ExperimentStore.setEnergies(energy, key);
+
+    updateEnergies(newEnergy, index) {
+      let energyRegex = new RegExp('[1-9][0-9]*');
+      console.log(this.state.maxBeam);
+      if ((energyRegex.test(newEnergy) && parseInt(newEnergy) < this.state.maxBeam) || newEnergy === '') {
+        ExperimentStore.setEnergies(newEnergy, index);
       }
     }
 
@@ -135,12 +135,13 @@ class ContinuousIons extends React.Component {
                 className={classes.energies}
                 label = "Energy"
                 value={ExperimentStore.energies[key]}
-                type = 'number'
-                onChange={event => {ExperimentStore.setEnergies(event.target.value, key)}}
+                onChange={event => {this.updateEnergies(event.target.value, key)}}
                 error = {ExperimentStore.energiesError(key)}
                 helperText = {ExperimentStore.energiesHelperText(key)}
+                InputProps={{
+                  endAdornment: <InputAdornment>MeV</InputAdornment>,
+                }}
               />
-
               
             <FormControl 
                 className={classes.ions}
@@ -152,6 +153,14 @@ class ContinuousIons extends React.Component {
                   value={this.ionArray(key)}
                   onChange={event => this.selectIon(event.target.value, key)}
                   multiple
+                  renderValue={(selected) => (
+                    <div>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} className={classes.chip} />
+                    ))}
+                    </div>
+                    )
+                  }
                   >
                   {this.getIons(key)}
                 </Select>
