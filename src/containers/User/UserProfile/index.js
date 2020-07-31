@@ -1,20 +1,13 @@
-import React from 'react';
-import { createContext } from "react";
-import Row from '../../../components/UIzard/Row';
-import Card from '../../../components/UIzard/Card';
-import MDAHeader2 from '../../../components/Custom/MDAHeader2';
-import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
-import {Typography} from '@material-ui/core';
+import { observable } from "mobx";
+import React from 'react';
+import MDAHeader2 from '../../../components/Custom/MDAHeader2';
 import UserProfile from '../../../components/Custom/UserProfile';
-import UsertodoList from '../../../components/Custom/UserProfile/TodoList/generateList';
-import Calendar from '../../../components/Custom/Calendar/Calendar';
-import { observer } from "mobx-react"
-import { observable } from "mobx"
-import UserProfileStorage from '../../../stores/UserProfileStore';
+import Row from '../../../components/UIzard/Row';
+import * as Constants from '../../../constants';
 
 const samp = observable({ text: "John" })
-const UserProfileStore = createContext(UserProfileStorage);
+//const UserProfileStore = createContext(UserProfileStorage);
 
 export default function Home() {
 

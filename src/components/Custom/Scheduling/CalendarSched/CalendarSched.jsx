@@ -12,7 +12,7 @@ import Row from '../../../UIzard/Row';
 import Stack from '../../../UIzard/Stack';
 
 import {withStyles} from '@material-ui/core/styles';
-import { Box, TextField, Checkbox, Select, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Button, Avatar} from '@material-ui/core';  
+import { Box, TextField, Button, Avatar} from '@material-ui/core';  
 import SchedulingStore from '../../../../stores/SchedulingStore';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -145,6 +145,7 @@ const useStyles = (theme) => ({
   },
 });
 
+/*
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -164,6 +165,7 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightMedium,
   };
 }
+*/
 
 
 class CalendarSched extends React.Component {
@@ -378,9 +380,10 @@ class CalendarSched extends React.Component {
       }
     })
 
-    this.state.colorsReady = true;
-    console.log(data)
-    this.setState({calendarEvents : data});
+    this.setState({
+      calendarEvents: data, 
+      colorsReady: true,
+    });
   }
 
   handleModal() {
@@ -410,17 +413,17 @@ class CalendarSched extends React.Component {
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
     var self = this;
-    const { classes, theme } = this.props;
+    const { classes } = this.props;
 
     
     
     
     
     this.state.calendarEvents.forEach(function(event) {
-      var facility = event.extendedProps.facility; 
-      var integrator = event.extendedProps.integrator; 
-      var beamType = event.extendedProps.beamType; 
-      var titleString = facility + " - " + integrator + ": " + beamType;
+      //var facility = event.extendedProps.facility; 
+      //var integrator = event.extendedProps.integrator; 
+      //var beamType = event.extendedProps.beamType; 
+      //var titleString = facility + " - " + integrator + ": " + beamType;
       //console.log(event);
       //event.setProp('title', titleString);
     })

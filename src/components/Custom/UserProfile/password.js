@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import {Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, TextField, Typography} from '@material-ui/core';
-import {Button, FormHelperText, FormControl, InputLabel, Select} from '@material-ui/core';
+import {Snackbar, Table, TableBody, TableCell, TableRow, TextField, Typography} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import {Alert} from '@material-ui/lab';
 
 
   const useStyles = theme => ({
@@ -163,7 +163,7 @@ import {Alert, AlertTitle} from '@material-ui/lab';
           ))}
           </TableBody>
         </Table>
-        <Button color="primary" variant={(this.state.newPassword=='' || this.state.confirmPassword=='' || this.state.oldPassword=='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
+        <Button color="primary" variant={(this.state.newPassword==='' || this.state.confirmPassword==='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
           Change Password
         </Button>
         <br/>

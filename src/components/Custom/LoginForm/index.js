@@ -4,11 +4,14 @@ import React from 'react';
 import './LoginForm.css'
 import {TextField, Button, Snackbar} from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
-import axios from 'axios';
-import { withRouter } from 'react-router-dom';
+import { Button, TextField } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
-import Row from '../../UIzard/Row'
-import Box from '@material-ui/core/Box'
+import axios from 'axios';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import Row from '../../UIzard/Row';
+import './LoginForm.css';
 
 const useStyles = theme => ({
 
@@ -95,7 +98,7 @@ class LoginForm extends React.Component {
   }
 
   render() {
-    var { classes} = this.props;
+    //var { classes} = this.props;
     return (
       <div className="loginform">
         <form onSubmit={this.handleSubmit}>

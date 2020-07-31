@@ -1,14 +1,9 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import React from 'react';
 import TabsLBNL from '../FacilityLBNL/tabs';
-import TabsLBNL_MDA from '../FacilityLBNL/tabs_MDA';
+import TabsLBNLMDA from '../FacilityLBNL/tabs_MDA';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +28,7 @@ function getStepContent(step) {
     case 1:
       return <TabsLBNL/>;
     case 2:
-      return <TabsLBNL_MDA/>;
+      return <TabsLBNLMDA/>;
     default:
       return 'Unknown step';
   }
@@ -51,9 +46,11 @@ export default function ButtonLBNL() {
     setActiveStep(2);
   };
 
+  /*
   const handleReset = () => {
     setActiveStep(0);
   };
+  */
 
   return (
     <div className={classes.root}>

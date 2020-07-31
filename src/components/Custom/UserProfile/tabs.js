@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {AppBar, Box,Tab, Tabs, Typography} from '@material-ui/core';
 import ProfileInfo from '../UserProfile/profileInfo';
 import AuthenticateUser from '../UserProfile/authenticateUser';
 import PasswordChanger from '../UserProfile/password';
 import Calendar from '../../../components/Custom/Calendar/Calendar';
-import Card from '../../../components/UIzard/Card';
 import axios from 'axios';
 
 /* Define style and function of TabPanel to be used in the exported function*/
@@ -86,7 +85,7 @@ class TabsProfile extends React.Component {
 
   render () {
     const {classes} = this.props;
-    if(this.state.isAdmin || (this.state.user_type=='integrator')){
+    if(this.state.isAdmin || (this.state.user_type==='integrator')){
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -96,7 +95,7 @@ class TabsProfile extends React.Component {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            /*Tab header labels*/
+            {/*Tab header labels*/}
             <Tab onClick={() => this.setState({value: 0})} label="Update Profile Info" {...this.a11yProps(0)} />
             <Tab onClick={() => this.setState({value: 1})} label="Change Password" {...this.a11yProps(1)} />
             <Tab onClick={() => this.setState({value: 2})} label="Personal Calendar" {...this.a11yProps(2)} />
@@ -128,7 +127,7 @@ class TabsProfile extends React.Component {
                 variant="fullWidth"
                 aria-label="full width tabs example"
               >
-                /*Tab header labels*/
+                {/*Tab header labels*/}
                 <Tab onClick={() => this.setState({value: 0})} label="Update Profile Info" {...this.a11yProps(0)} />
                 <Tab onClick={() => this.setState({value: 1})} label="Change Password" {...this.a11yProps(1)} />
                 <Tab onClick={() => this.setState({value: 2})} label="Personal Calendar" {...this.a11yProps(2)} />

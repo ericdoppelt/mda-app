@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField} from '@material-ui/core';
+import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import ExperimentStore from '../../../stores/ExpirementStore';
@@ -73,9 +73,9 @@ class DiscreteIons extends React.Component {
     
     getIons(index) {
         let energy = ExperimentStore.energies[index];
-        if (energy === "" || energy === undefined || this.state.beams[energy] == undefined) {
+        if (energy === "" || energy === undefined || this.state.beams[energy] === undefined) {
           return <MenuItem value={""}>{"Please enter a valid energy"}</MenuItem>
-          } else if (this.state.beams[ExperimentStore.energies[index]] != undefined) {
+          } else if (this.state.beams[ExperimentStore.energies[index]] !== undefined) {
           let ions = this.state.beams[ExperimentStore.energies[index]].map(function(ions) {
             return <MenuItem value={ions}>{ions} </MenuItem>
           });
