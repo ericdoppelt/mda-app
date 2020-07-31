@@ -4,11 +4,9 @@ import React from 'react';
 import './LoginForm.css'
 import {TextField, Button, Snackbar} from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
-import { Button, TextField } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Row from '../../UIzard/Row';
 import './LoginForm.css';
@@ -29,7 +27,7 @@ class LoginForm extends React.Component {
     this.handleSubmit= this.handleSubmit.bind(this);
 
     let accountWasCreated;
-    if (this.props.location.state != undefined) {
+    if (this.props.location.state !== undefined) {
       accountWasCreated = this.props.location.state.accountCreated;
     } else {
       accountWasCreated = false;

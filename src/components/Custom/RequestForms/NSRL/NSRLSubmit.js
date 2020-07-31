@@ -5,6 +5,7 @@ import React from 'react';
 import ExperimentStore from '../../../../stores/ExpirementStore';
 import NSRLStore from '../../../../stores/NSRLStore';
 import TesterStore from '../../../../stores/TesterStore';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = theme => ({
   submitButton: {
@@ -70,7 +71,7 @@ class NSRLSubmit extends React.Component {
             if (response.data.success === true) {
             alert("Form was sent to NSRL successfully. Please check your email!")
               self.props.history.push({
-                pathname: "/"
+                pathname: "/view-requests"
               });
             } else {
               alert(response.data.msg);
@@ -102,4 +103,4 @@ class NSRLSubmit extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(NSRLSubmit);
+export default withRouter(withStyles(useStyles)(NSRLSubmit));

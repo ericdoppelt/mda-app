@@ -70,7 +70,7 @@ class TAMUSubmit extends React.Component {
             if (response.data.success === true) {
             alert("Form was sent to TAMU successfully. Please check your email!");
               self.props.history.push({
-                pathname: "/"
+                pathname: "/view-requests"
               });
             } else {
               alert(response.data.msg);
@@ -89,14 +89,9 @@ class TAMUSubmit extends React.Component {
     return(
       <div className={classes.fullDiv}>
       <br/>
-      <Button className={classes.submitButton} onClick={this.submitForm}>
-        Submit to Integrator
-      </Button>
-
-      {/*
-      <Button className={classes.submitButton} onClick={this.submitForm}>
-        Email Form to Facility
-      </Button> */}
+        <Button className={classes.submitButton} onClick={this.submitForm}>
+          Submit to Integrator
+        </Button>      
       </div>
     );
   }

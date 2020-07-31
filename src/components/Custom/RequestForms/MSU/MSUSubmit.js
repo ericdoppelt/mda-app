@@ -4,6 +4,7 @@ import ExperimentStore from '../../../../stores/ExpirementStore';
 import TesterStore from '../../../../stores/TesterStore';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = theme => ({
     submitButton: {
@@ -62,7 +63,7 @@ class MSUSubmit extends React.Component {
             if (response.data.success === true) {
             alert("Form was sent to MSU successfully. Please check your email!")
               self.props.history.push({
-                pathname: "/"
+                pathname: "/view-requests"
               });
             } else {
               alert(response.data.msg);
@@ -94,4 +95,4 @@ class MSUSubmit extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(MSUSubmit);
+export default withRouter(withStyles(useStyles)(MSUSubmit));

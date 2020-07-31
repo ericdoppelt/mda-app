@@ -54,7 +54,6 @@ class ExperimentHours extends React.Component {
         else if (ExperimentStore.hoursOn[this.state.index] === 16) {
             let returned = [];
             returned.push(<MenuItem value={8}>{8}</MenuItem>);
-            returned.push(<MenuItem value={32}>{32}</MenuItem>);
             return returned;
         }
     }

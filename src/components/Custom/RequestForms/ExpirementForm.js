@@ -49,6 +49,7 @@ const useStyles = theme => ({
               label = "Comments"
               value = {ExperimentStore.comments}
               onChange={event => {ExperimentStore.setComments(event.target.value)}}
+              multiline
             />
           </div>
       );
