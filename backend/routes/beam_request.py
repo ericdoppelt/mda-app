@@ -34,6 +34,7 @@ def add_request(form, username):
         for i, energy in enumerate(form['energies']):
             hours = int(form['shifts'][i]) * int(form['hoursOn'][i])
             beamTime += hours
+
             for ion in form['ions'][i]:
                 beams = Beams.query.filter(and_(Beams.ion==ion, Beams.amev>=energy)).all()
                 beam = beams[0]
@@ -53,6 +54,7 @@ def add_request(form, username):
             hours = int(form['shifts'][i]) * int(form['hoursOn'][i])
             beamTime += hours
             for ion in form['ions'][i]:
+                print(ion, energy, facId)
                 beam = Beams.query.filter_by(ion=ion, amev=energy, org_id=facId).one()
                 ion_ids.append(beam.id)
                 shifts.append(int(form['shifts'][i]))
@@ -90,7 +92,8 @@ def add_request(form, username):
                     shifts = shifts,
                     hoursOn = hoursOn,
                     hoursOff = hoursOff,
-                    totalHours = energyHours)
+                    totalHours = energyHours,
+                    personnel = form['personnel'])
     entry.create_request()
     request_id = entry.id
     if form['facility'] == 'TAMU':
@@ -99,8 +102,6 @@ def add_request(form, username):
         facility_form.create_request()
 
     if form['facility'] == 'LBNL':
-        if form['alternateDate'] == "":
-            form['alternateDate'] = None
         facility_form = LBNL(request_id = request_id,
                             address = form['address'],
                             officePhone = form['officePhone'],
@@ -140,18 +141,8 @@ def requestform():
         form = request.get_json()
         print(form)
         facility = form['facility']
-        form['signDate'] = datetime.today().strftime("%m/%d/%Y")
-        template = ""
-        output = ""
-        pdf = FormBuilder(form)
-        msg = Message("Send Request Form Demo", cc=[form['email']])
-        # msg.recipients = ['edopp4182@gmail.com']
         if facility == 'TAMU':
-            # msg.recipients = ['clark@comp.tamu.edu']
             form['signature'] = form['name']
-            if form['date'] != "":
-                date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
-                form['date'] = date.strftime('%m/%d/%Y')
             badDates = copy.deepcopy(form['badDates'])
             if badDates is not []:
                 for i, date in enumerate(badDates):
@@ -162,43 +153,84 @@ def requestform():
                         form['badDates'] = date.strftime('%m/%d/%Y')
                     else:
                         form['badDates'] += date.strftime('%m/%d/%Y')
-            template = "TAMU_request_template.pdf"
-            output = "TAMU_request.pdf"
-            pdf.fill(template, output)
-            msg.body = "Here is the request form for beam time"
-            with app.open_resource("TAMU_request.pdf") as fp:
-                msg.attach("TAMU_request.pdf", "TAMU_request/pdf", fp.read())
         if facility == 'LBNL':
-            pass
-            # msg.recipients = ['88beamrequest@lbl.gov']
-            # msg.body = pdf.mail()
-        if facility == 'MSU':
-            # msg.recipients = ['88beamrequest@lbl.gov']
-            if form['date'] != "":
-                date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
-                form['date'] = date.strftime('%m/%d/%Y')
-            template = "Universal_request_template.pdf"
-            output = "Universal_request.pdf"
-            pdf.fill(template, output)
-            msg.body = "Here is the request form for beam time"
-            with app.open_resource("Universal_request.pdf") as fp:
-                msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
-        if facility == 'NSRL':
-            # msg.recipients = ['88beamrequest@lbl.gov']
-            if form['date'] != "":
-                date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
-                form['date'] = date.strftime('%m/%d/%Y')
-            template = "Universal_request_template.pdf"
-            output = "Universal_request.pdf"
-            pdf.fill(template, output)
-            msg.body = "Here is the request form for beam time"
-            with app.open_resource("Universal_request.pdf") as fp:
-                msg.attach("Universal_request.pdf", "Universal_request/pdf", fp.read())
-        # mail.send(msg)
+            if form['alternateDate'] == "":
+                form['alternateDate'] = None
         username = get_jwt_identity()
         add_request(form, username)
 
         return jsonify({'success': True, 'msg': 'Mail sent!'}), 200
     except Exception as e:
         print(e)
-        return jsonify({'success': False, 'msg': str(e)}), 404
+        return jsonify({'success': False, 'msg': str(e)}), 500
+
+
+@app.route('/request/send-forms', methods=['POST'])
+@jwt_required
+def send_forms():
+    
+    try:
+        req = request.get_json()
+        ids = req['ids']
+        requests = requests.Beams.query.filter(requests.id.in_(ids)).all()
+
+        msg = Message("Send Request Form Demo", cc=[req['email']])
+
+        msg.body = "Here are the dates, times, and ions requested:\n\n"
+
+        msg.body += "Attached are the details of each request\n\n"
+
+        msg.body += ("Please do not reply to this email. Please email "
+                    + req['email'] + " for questions.\n\n\n")
+
+        msg.body += "Thanks and have a wonderful day!\n\n"
+        msg.body += "ISEEU"
+        if req['facility'] == 'TAMU':
+            # msg.recipients = ['clark@comp.tamu.edu']
+
+            baseName = 'request_forms/TAMU/'
+            for i, form in enumerate(requests):
+                extraInfo = TAMU.query.filter_by(request_id=form.id).first()
+                form['badDates'] = extraInfo.badDates
+                pdf = FormBuilder(form)
+                template = "TAMU_request_template.pdf"
+                output = baseName + form.company + '_' + i
+                pdf.fill(template, output)
+
+                with app.open_resource(output + '.pdf') as fp:
+                    msg.attach(output + '.pdf', output + '/pdf', fp.read())
+        if req['facility'] == 'LBNL':
+            # msg.recipients = ['88beamrequest@lbl.gov']
+
+            baseName = 'request_forms/LBNL/'
+            for i, form in enumerate(requests):
+                extraInfo = LBNL.query.filter_by(request_id=form.id).first()
+                textBuilder = FormBuilder(form)
+                text = textBuilder.lbnl(extraInfo)
+                filename = baseName + form.company + '_' + i
+                text_file = open(filename + '.txt', "w+")
+                n = text_file.write()
+                text_file.close()
+
+                with app.open_resource(filename + '.txt') as fp:
+                    msg.attach(filename + '.txt', filename + '/txt', fp.read())
+        if req['facility'] == 'NSRL':
+            # msg.recipients = ['88beamrequest@lbl.gov']
+            
+            baseName = 'request_forms/NSRL/'
+            for i, form in enumerate(requests):
+                extraInfo = NSRL.query.filter_by(request_id=form.id).first()
+                textBuilder = FormBuilder(form)
+                text = textBuilder.lbnl(extraInfo)
+                filename = baseName + form.company + '_' + i
+                text_file = open(filename + '.txt', "w+")
+                n = text_file.write()
+                text_file.close()
+
+                with app.open_resource(filename + '.txt') as fp:
+                    msg.attach(filename + '.txt', filename + '/txt', fp.read())
+        print(msg)
+
+    except Exception as e:
+        print(e)
+        return jsonify({'success': False, 'msg': str(e)}), 500

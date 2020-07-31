@@ -47,7 +47,7 @@ def register():
         result = user.register_user()
 
     else:
-        result = {'error' : "User already registered, please login",
+        result = {'error' : "User exists, please login!",
         'success' : False}
 
     return jsonify(result)
@@ -64,19 +64,23 @@ def login():
         result = {'success' : False,
         'error' : "Incorrect username"}
     elif user.check_password(password):
-        if user.isAuthenticatedAdmin and user.isAuthenticatedIntegrator:
-            integrator_token = False
-            if user.user_type == 'integrator':
-                integrator_token = True
-            expires = timedelta(hours=12)
-            access_token = create_access_token(identity = username, expires_delta=expires)
-            add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
-            result = {'success' : True,
-            'error' : "",
-            'access_token': access_token, 'integrator_token' : integrator_token}
+        if user.isAuthenticatedIntegrator:
+            if user.isAuthenticatedAdmin:
+                integrator_token = False
+                if user.user_type == 'Integrator':
+                    integrator_token = True
+                expires = timedelta(hours=12)
+                access_token = create_access_token(identity = username, expires_delta=expires)
+                add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
+                result = {'success' : True,
+                'error' : "",
+                'access_token': access_token, 'integrator_token' : integrator_token}
+            else:
+                result = {'success' : False,
+                'error' : "User not authenticated by admin"}
         else:
             result = {'success' : False,
-            'error' : "User not authenticated"}
+            'error' : "User not authenticated by integrator"}
     else:
         result = {'success' : False,
         'error' : "Incorrect password"}
@@ -248,7 +252,7 @@ def authenticate_user():
     try:
         user = Users.query.filter_by(username=username).first()
             
-        if user.isAdmin or user.user_type == 'integrator':
+        if user.isAdmin or user.user_type == 'Integrator':
             pass
         else:
             return {'success' : False, 'error' : 'You must be an admin or integrator to access this method!'}
@@ -260,7 +264,7 @@ def authenticate_user():
             userAuthenticate = Users.query.filter_by(username=username).first()
 
             if user.isAdmin is True:
-                if user.user_type == 'integrator':
+                if user.user_type == 'Integrator':
                     userAuthenticate.isAuthenticatedIntegrator = True
                     userAuthenticate.isAuthenticatedAdmin = True
                 else:
@@ -272,11 +276,11 @@ def authenticate_user():
 
         myList = []
         if user.isAdmin is True:
-            if user.user_type == 'integrator':
-                users = Users.query.filter(or_(Users.isAuthenticatedAdmin==False, 
+            if user.user_type == 'Integrator':
+                users = Users.query.filter(or_(and_(Users.isAuthenticatedAdmin==False, Users.isAuthenticatedIntegrator==True), 
                 and_(Users.isAuthenticatedIntegrator==False, Users.affiliation==user.affiliation))).all()
             else:
-                users = Users.query.filter_by(isAuthenticatedAdmin=False).all()
+                users = Users.query.filter_by(isAuthenticatedAdmin=False, isAuthenticatedIntegrator=True).all()
 
         else:
             users = Users.query.filter_by(isAuthenticatedIntegrator=False, affiliation=user.affiliation).all()
@@ -303,9 +307,12 @@ def delete_user():
         username = get_jwt_identity()
 
         user = Users.query.filter_by(username=username).first()
-        if user.isAdmin:
-            username = request.get_json()['username']
-            Users.query.filter_by(username=username).delete()
+        username = request.get_json()['username']
+        if user.isAdmin or user.user_type == 'Integrator':
+            if user.isAdmin:
+                Users.query.filter_by(username=username).delete()
+            else:
+                Users.query.filter_by(username=username, affiliation=user.affilitation).delete()
             db.session.commit()
             return jsonify({'success': True}), 200
 
@@ -313,4 +320,4 @@ def delete_user():
             return {'success' : False, 'error' : 'You must be an admin to access this method!'}
         
     except:
-        return jsonify({'success': False, 'error': 'The specified user was not found'}), 404
+        return jsonify({'success': False, 'error': 'The specified user was not found'}), 500

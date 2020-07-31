@@ -24,7 +24,7 @@ def set_range():
 
     try:
         user = Users.query.filter_by(username=username).first()
-        if user.user_type != 'integrator':
+        if user.user_type != 'Integrator':
             raise Exception("You must be an integrator to view this page!")
         myOrg = Organization.query.filter_by(abbrv=user.affiliation).first()
         startDate = req['startDate']
@@ -56,7 +56,7 @@ def get_range():
 
     try:
         user = Users.query.filter_by(username=username).first()
-        if user.user_type != 'integrator':
+        if user.user_type != 'Integrator':
             raise Exception("You must be an integrator to view this page!")
         myOrg = Organization.query.filter_by(abbrv=user.affiliation).first()
         myList = []

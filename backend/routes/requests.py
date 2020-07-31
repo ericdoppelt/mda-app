@@ -23,14 +23,14 @@ from pdf_builder import FormBuilder
 
 
 
-@app.route('/approve', methods=['POST'])
+@app.route('/request/approve', methods=['POST'])
 #@jwt_required
 def approve():
     result = ""
     try:
         req = request.get_json()
         beam_request = requests.query.filter_by(id=req['id']).first()
-        if req['approval'] == 'integrator':
+        if req['approval'] == 'Integrator':
             beam_request.approved_integrator = True
         if req['approval'] == 'facility':
             beam_request.approved_facility = True
@@ -38,8 +38,7 @@ def approve():
             raise Exception("No approval key found")
         db.session.commit()
         if beam_request.approved_facility and beam_request.approved_integrator:
-            # add_calendar()
-            pass
+            beam_request.status = 'Approved'
         result = {'success' : True}
     except Exception as e:
         print(e)
@@ -122,6 +121,34 @@ def request_modify():
         'success' : False}
     return jsonify(result)
 
+# @app.route('/request/undo', methods=['POST'])
+# @jwt_required
+# def reject_form():
+#     result = ""
+#     try:
+#         req = request.get_json()
+#         beam_request = requests.query.filter_by(id=req['id']).first()
+#         pdf = FormBuilder(req)
+#         msg = Message("Beam Time Request Rejected") #, cc=[req['email']])
+#         msg.recipients = [beam_request.email]
+        
+#         msg.body = "Your beam time request was rejected for the following reason: \n\n"
+#         msg.body += req['rejectNote'] + "\n\n"
+
+#         beam_request.integrator_comment =req['rejectNote']
+#         beam_request.status = "Rejected"
+#         beam_request.approved_facility = False
+#         beam_request.approved_integrator = False
+#         beam_request.rejected = True
+#         db.session.commit()
+#         # mail.send(msg)
+#         result = {'success' : True}
+#     except Exception as e:
+#         print(e)
+#         result = {'error' : str(e),
+#         'success' : False}
+#     return result
+
 @app.route('/request/reject', methods=['POST'])
 # @jwt_required
 def reject_form():
@@ -194,7 +221,8 @@ def getForms(request_forms):
         'beams' : ions, 'start' : start_date, 'id' : form.id, "rangeStart" : range_start,
         "rangeEnd" : range_end, 'order' : form.order, 'scheduledStart' : form.scheduled_start,
         'rangeId' : form.request_range, 'totalHours' : totalHours, 
-        'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment}
+        'ionHours' : form.ion_hours, 'status' : form.status, 'rejectNote' : form.integrator_comment,
+        'personnel' : form.personnel}
 
         attrBlacklist = ['id', 'request_id', 'energies']
 
@@ -231,9 +259,17 @@ def getRequests(route):
     result = ""
 
     try:
+        if route == 'view':
+            user = Users.query.filter_by(username=username).first()
+            if user.user_type == 'Integrator':
+                request_forms = requests.query.filter(and_(requests.integrator==user.affiliation,
+                or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start))).all()
+            else:
+                request_forms = requests.query.filter(and_(requests.username==username,
+                or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start))).all()
         if route == 'integrator':
             user = Users.query.filter_by(username=username).first()
-            if user.user_type != 'integrator':
+            if user.user_type != 'Integrator':
                 raise Exception("You must be an integrator to view this page!")
             request_forms = requests.query.filter_by(integrator=user.affiliation).all()
         if route == 'tester':
