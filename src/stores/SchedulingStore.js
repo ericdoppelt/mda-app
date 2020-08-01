@@ -51,6 +51,9 @@ class SchedulingStore {
                 }
             }
         }
+        
+        console.log("returned");
+        console.log(returnedRequests);
 
         return returnedRequests;
     }

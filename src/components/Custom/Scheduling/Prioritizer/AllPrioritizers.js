@@ -38,10 +38,11 @@ class AllPrioritizers extends React.Component {
       let validRequests = [];
       for (let i = 0; i < response.data.requests.length; i++) {
         let request = response.data.requests[i];
-        if (request.status === "Approved" && request.rangeId === null) {
+        if (request.status === "Approved" && request.scheduledStart === null) {
           validRequests.push(request);
         }
       }
+      console.log(validRequests);
       SchedulingStore.setRequests(validRequests);
     }).catch(error => {
       alert(error);

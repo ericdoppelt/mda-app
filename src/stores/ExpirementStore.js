@@ -31,7 +31,7 @@ class ExpirementStore {
         else return "";
     }
 
-    startDate = "";
+    startDate = new Date('');
     setStartDate(newDate) {
         this.startDate = newDate;
         console.log(newDate);

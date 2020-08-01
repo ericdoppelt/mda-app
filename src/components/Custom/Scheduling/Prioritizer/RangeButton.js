@@ -181,6 +181,7 @@ class RangeButton extends React.Component {
               openTo="hours"
               value={this.state.startTime}
               onChange={(event) => this.setState({startTime: event})}
+              views = {["hours"]}
             />
           </MuiPickersUtilsProvider>
 

@@ -40,7 +40,10 @@ class Prioritizer extends React.Component {
     if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
     else {
     let i = 0;
+    console.log(SchedulingStore.requests);
     let possibleRequests = SchedulingStore.rangeRequests(this.props.start, this.props.end, this.props.facility); 
+    console.log("break");
+    console.log(possibleRequests);
     let self = this;
     var requestsChecked = possibleRequests.map(function(request) {
       var requestOut = Object.assign({}, request);
