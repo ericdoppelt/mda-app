@@ -94,7 +94,7 @@ def get_integrators():
     myList = []
 
     try:
-        integrators = Organization.query.filter_by(org_type='integrator').all()
+        integrators = Organization.query.filter_by(org_type='Integrator').all()
         for org in integrators:
             myList.append(org.abbrv)
     except Exception as e:
@@ -225,7 +225,7 @@ def approve():
     try:
         req = request.get_json()
         beam_request = requests.query.filter_by(id=req['id']).first()
-        if req['approval'] == 'integrator':
+        if req['approval'] == 'Integrator':
             beam_request.approved_integrator = True
         if req['approval'] == 'facility':
             beam_request.approved_facility = True
@@ -392,7 +392,7 @@ def getRequests_integrators():
 
     try:
         user = Users.query.filter_by(username=username).first()
-        if user.user_type != 'integrator':
+        if user.user_type != 'Integrator':
             raise Exception("You must be an integrator to view this page!")
         request_forms = requests.query.filter_by(integrator=user.affiliation).all()
         myForms = []
