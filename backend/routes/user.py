@@ -87,12 +87,18 @@ def login():
 
     return jsonify(result)
 
-@app.route('/user', methods=['GET'])
+@app.route('/user', methods=['GET', 'POST'])
 @jwt_required
 def user():
     account_info = ""
-    username = get_jwt_identity()
+
     try:
+        if request.method == 'POST':
+            req = request.get_json()
+            username = req['username']
+        else:
+            username = get_jwt_identity()
+
         user = Users.query.filter_by(username=username).first()
         account_info = {'success' : True, 'id': user.id, 'user': user.username,
         'first_name': user.first_name, 'last_name': user.last_name,
