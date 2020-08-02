@@ -10,7 +10,7 @@ const useStyles = theme => ({
     marginTop: '4px',
     marginLeft: '5%',
     marginRight: '3%',
-    width: '19%',
+    width: '20%',
   },
   hoursOn: {
     marginTop: '4px',
@@ -28,7 +28,7 @@ const useStyles = theme => ({
     marginTop: '4px',
     marginLeft: '3%',
     marginRight: '5%',
-    width: '15%'
+    width: '13%'
   },
   fullDiv: {
     width: '100%',

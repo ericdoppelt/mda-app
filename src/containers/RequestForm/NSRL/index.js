@@ -44,7 +44,6 @@ export default function Home() {
                         <TesterForm/>
                         <ExperimentForm/>
                         <ContinuousIons facility="NSRL"/>
-                        <StartDatePicker/>
                         <NSRLForm/>
                         <NSRLSubmit/>
                       </NSRLStore.Provider>

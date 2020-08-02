@@ -26,6 +26,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
+import { withRouter } from 'react-router-dom';
+
 const columns = [
   { id: 'name', label: 'Name', width: 200 },
   {
@@ -1024,6 +1026,16 @@ class ViewRequests extends React.Component {
               The form has been rejected.
             </Alert>
           </Snackbar>
+          <Snackbar 
+            anchorOrigin={{vertical: 'top',horizontal: 'center'}}
+            open={this.props.location.state !== undefined && this.props.location.state.formSubmitted} 
+            autoHideDuration={6000} 
+            onClose={this.props.location.state.formSubmitted = false}
+          >
+            <Alert severity="success">
+              The form has been submitted.
+            </Alert>
+          </Snackbar>
         </div>
       )
     }
@@ -1038,4 +1050,4 @@ class ViewRequests extends React.Component {
 
 }
 
-export default withStyles(useStyles)(ViewRequests)
+export default withRouter(withStyles(useStyles)(ViewRequests));

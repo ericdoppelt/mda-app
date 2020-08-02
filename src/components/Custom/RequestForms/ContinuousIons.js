@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField, InputAdornment, Chip} from '@material-ui/core';
+import {Button, Divider, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField, InputAdornment, Chip} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import ExperimentStore from '../../../stores/ExpirementStore';
@@ -23,11 +23,11 @@ const useStyles = theme => ({
   },
   
   ionButton: {
-    backgroundColor: "#f5f5b8",
     marginTop: '30px',
     marginLeft:'5%',
     marginRight: '5%',
     width: '90%',
+    height: '50px',
   },
   fullDiv: {
     width: '100%',
@@ -179,7 +179,10 @@ class ContinuousIons extends React.Component {
             return(
                 <div className={classes.fullDiv}>
                     {this.getIonSelectors()}
-                    <Button className={classes.ionButton} onClick={() => this.incrementIonCounter()}>
+                    <Button 
+                    variant='contained' 
+                    className={classes.ionButton} 
+                    onClick={() => this.incrementIonCounter()}>
                     Add Another Experiment
                     </Button>
                 </div>

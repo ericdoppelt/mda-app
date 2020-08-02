@@ -27,11 +27,11 @@ class ExpirementStore {
         return this.personnel === "" && this.submitted;
     }
     get personnelHelperText() {
-        if (this.personnelError) return "Please enter the personnel for the experiment.";
+        if (this.personnelError) return "Please enter all personnel.";
         else return "";
     }
 
-    startDate = new Date('');
+    startDate = null;
     setStartDate(newDate) {
         this.startDate = newDate;
         console.log(newDate);
@@ -40,7 +40,7 @@ class ExpirementStore {
         return this.startDate === "" && this.submitted;
     }
     get startDateHelperText() {
-        if (this.startDateError) return "Please enter the start date for the experiment.";
+        if (this.startDateError) return "Please enter the experiment's start date.";
         else return "";
     }
 
@@ -52,7 +52,7 @@ class ExpirementStore {
         return this.ions[index] === "" && this.submitted;
     }
     ionsHelperText(index) {
-        if (this.ionsError(index)) return "Please enter the ion..";
+        if (this.ionsError(index)) return "Please enter the ions.";
         return "";
     }
 
@@ -120,7 +120,7 @@ class ExpirementStore {
         this.submitted = false;
         this.title = "";
         this.personnel = "";
-        this.startDate = "";
+        this.startDate = null;
         this.ions = observable.array([""]);;
         this.energies = observable.array([""]);;
         this.shifts = observable.array([""]);

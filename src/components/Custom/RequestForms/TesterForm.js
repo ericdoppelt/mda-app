@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextField, Typography} from '@material-ui/core';
+import {TextField, Typography, Divider} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
@@ -23,13 +23,13 @@ const useStyles = theme => ({
       marginLeft: '5%',
       marginRight: '3%',
       marginTop: '2px',
-      width: '64%',
+      width: '62%',
     },
     poNumber: {
       marginLeft: '3%',
       marginRight: '5%',
       marginTop: '2px',
-      width: '20%',
+      width: '22%',
     },
     billingCity: {
       marginLeft: '5%',
@@ -41,13 +41,13 @@ const useStyles = theme => ({
       marginLeft: '3%',
       marginRight: '3%',
       marginTop: '2px',
-      width: '29%',
+      width: '27%',
     },
     billingZip: {
       marginLeft: '3%',
       marginRight: '5%',
       marginTop: '2px',
-      width: '20%',
+      width: '22%',
     }
   });
 
@@ -62,6 +62,8 @@ const useStyles = theme => ({
       const { classes } = this.props;
       return(
         <div>
+          <br/>
+          <Divider/>
           <br/>
           <Typography variant='subtitle1'>Please enter the following information about yourself.</Typography>
             <TextField

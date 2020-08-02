@@ -1,20 +1,21 @@
 import React from 'react';
-import {TextField, Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
+import {TextField, Divider, Typography, Dialog} from '@material-ui/core';
 import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
-import InfiniteCalendar from 'react-infinite-calendar';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from "@date-io/date-fns";
 
 import LBNLStore from '../../../../stores/LBNLStore';
 
 const useStyles = theme => ({
     alternateButton: {
-      backgroundColor: "#f5f5b8",
       marginTop: '25px',
       marginLeft: '5%',
       marginRight: '5%',
       width: '90%',
+      height: '50px',
     },
     leftTextField: {
       marginTop: '2px',
@@ -84,7 +85,8 @@ const useStyles = theme => ({
       const { classes } = this.props;
       return(
         <div>
-          <br/>
+         <br/>
+          <Divider/>
           <br/>
           <Typography variant='subtitle1'>Please enter the following supplemental information for LBNL.</Typography>
             <TextField 
@@ -122,6 +124,7 @@ const useStyles = theme => ({
               className={classes.fullWidth}
               label = "Abstract of Experiment"
               value = {LBNLStore.experimentAbstract}
+              multiline
               onChange={event => {LBNLStore.setExperimentAbstract(event.target.value)}}
             />
             <TextField 
@@ -183,31 +186,29 @@ const useStyles = theme => ({
               fullWidth
             />
             <TextField
-              className={classes.fullWidth}
-              label = "Does the test have export control restrictions?"
+              className={classes.left}
+              label = "Are there export control restrictions?"
               value = {LBNLStore.controlRestrictions}
               onChange={event => {LBNLStore.setControlRestrictions(event.target.value)}}
               fullWidth
             />
-            <Button className={classes.alternateButton} onClick={() => this.setState({open: true})}>
-            Select Alternate Date
-            </Button>
-            <Dialog open={this.state.open} onClose={() => this.setState({open: false})}>
-              <DialogTitle>Please enter an alternate start date.</DialogTitle>
-              <DialogContent>
-              <InfiniteCalendar
-                selected={LBNLStore.alternateDate}
-                onSelect={(event) => {LBNLStore.setAlternateDate(event)}}
-                minDate={new Date()}
-                min={new Date()}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => this.setState({open: false})}>
-                  Select Alternate Date
-                </Button>
-              </DialogActions>
-            </Dialog>
+
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                className={classes.right}
+                label="Alternate Date"
+                format="MM/dd/yyyy"
+                value={LBNLStore.alternateDate}
+                onChange={(event) => {LBNLStore.setAlternateDate(event)}}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+               }}
+              />
+            </MuiPickersUtilsProvider>
+            
+           
+
+
         </div>
       );
     }
