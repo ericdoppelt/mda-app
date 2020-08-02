@@ -11,7 +11,7 @@ def get_integrators():
     myList = []
 
     try:
-        integrators = Organization.query.filter_by(org_type='Integrator').all()
+        integrators = Organization.query.filter_by(org_type='integrator').all()
         for org in integrators:
             myList.append(org.abbrv)
         print(myList)
