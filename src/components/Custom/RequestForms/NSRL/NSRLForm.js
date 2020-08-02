@@ -1,6 +1,6 @@
 import React from 'react';
 import InfiniteCalendar from 'react-infinite-calendar';
-import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
+import {Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
@@ -8,11 +8,11 @@ import NSRLStore from '../../../../stores/NSRLStore';
 
 const useStyles = theme => ({
     endButton: {
-      backgroundColor: "#f5c1b8",
       marginTop: '30px',
       marginLeft: '5%',
       marginRight: '5%',
       width: '90%',
+      height: '50px',
     },
     let: {
       marginTop: '2px',
@@ -59,6 +59,8 @@ class NSRLForm extends React.Component {
     const { classes } = this.props;
     return(
     <div>
+      <br/>
+      <Divider/>
       <br/>
       <Typography variant='subtitle1'>Please enter the following supplemental information for NSRL.</Typography>
         <TextField
@@ -108,7 +110,9 @@ class NSRLForm extends React.Component {
           <MenuItem value={"Biology Study"}>Biology Study</MenuItem>
         </Select>
       </FormControl>
-      <Button className={classes.endButton} onClick={() => this.setState({open: true})}>
+
+      
+      <Button color = 'secondary' variant = 'contained' className={classes.endButton} onClick={() => this.setState({open: true})}>
         Select Preferred End Date
       </Button>
       <Dialog open={this.state.open} onClose={() => this.setState({open: false})}>
@@ -122,7 +126,8 @@ class NSRLForm extends React.Component {
         />
         </DialogContent>
         <DialogActions>
-        <Button onClick={() => this.setState({open: false})}>
+      
+        <Button cclassName={classes.endButton} color='primary' variant = 'contained'  onClick={() => this.setState({open: false})}>
           Select End Date
         </Button>
         </DialogActions>

@@ -45,7 +45,6 @@ export default function TAMU() {
                         <TesterForm/>
                         <ExperimentForm/>
                         <DiscreteIons facility="TAMU"/>
-                        <StartDatePicker/>
                         <TAMUForm/>
                         <TAMUSubmit/>
                       </TAMUStore.Provider>

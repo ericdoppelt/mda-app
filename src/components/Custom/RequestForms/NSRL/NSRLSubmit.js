@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button, Snackbar, Divider} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import React from 'react';
@@ -6,15 +6,16 @@ import ExperimentStore from '../../../../stores/ExpirementStore';
 import NSRLStore from '../../../../stores/NSRLStore';
 import TesterStore from '../../../../stores/TesterStore';
 import { withRouter } from 'react-router-dom';
+import {Alert} from '@material-ui/lab';
 
 const useStyles = theme => ({
   submitButton: {
-    backgroundColor: "#bfddff",
-    marginTop: '2px',
+    marginTop: '20px',
     marginLeft: '5%',
     marginRight: '5%',
     marginBottom: '20px',
     width: '90%',
+    height: '50px',
     },    
   fullDiv: {
     width: '100%',
@@ -26,6 +27,9 @@ class NSRLSubmit extends React.Component {
   constructor(props) {
       super(props);
       this.submitForm = this.submitForm.bind(this);
+      this.state = {
+        submitFailed: false,
+      }
     }
 
   async submitForm() {
@@ -72,7 +76,8 @@ class NSRLSubmit extends React.Component {
             if (response.data.success === true) {
             alert("Form was sent to NSRL successfully. Please check your email!")
               self.props.history.push({
-                pathname: "/view-requests"
+                pathname: "/view-requests",
+                state: {formSubmitted: true}
               });
             } else {
               alert(response.data.msg);
@@ -82,8 +87,27 @@ class NSRLSubmit extends React.Component {
               alert(error);
           });
         } else {
-          alert("The form was not sent. Please fill out all required fields.");
+          this.setState({submitFailed: true});
         }
+  }
+
+  getSnackBar() {
+    console.log("called");
+    console.log(this.state.submitFailed);
+    if (this.state.submitFailed) {
+      return(
+        <Snackbar 
+            anchorOrigin={{vertical: 'top',horizontal: 'center'}}
+            open={this.state.submitFailed} 
+            autoHideDuration={6000} 
+            onClose={() => this.setState({submitFailed: false})}
+          >
+            <Alert severity="error">
+              The form was not submitted. Please fill in the required fields.
+            </Alert>
+        </Snackbar>
+      );
+    }
   }
   
   render() {
@@ -91,14 +115,13 @@ class NSRLSubmit extends React.Component {
     return(
       <div className={classes.fullDiv}>
       <br/>
-      <Button className={classes.submitButton} onClick={this.submitForm}>
+      <Divider />
+      <Button color='primary' variant = 'contained' className={classes.submitButton} onClick={this.submitForm}>
         Submit to Integrator
       </Button>
 
-      {/*
-      <Button className={classes.submitButton} onClick={this.submitForm}>
-        Email Form to Facility
-      </Button>*/}
+      {this.getSnackBar()}
+
       </div>
     );
   }

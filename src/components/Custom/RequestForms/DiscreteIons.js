@@ -23,11 +23,11 @@ const useStyles = theme => ({
   },
   
   ionButton: {
-    backgroundColor: "#f5f5b8",
     marginTop: '30px',
     marginLeft:'5%',
     marginRight: '5%',
     width: '90%',
+    height: '50px',
   },
   fullDiv: {
     width: '100%',
@@ -152,7 +152,10 @@ class DiscreteIons extends React.Component {
             return(
                 <div className={classes.fullDiv}>
                     {this.getIonSelectors()}
-                    <Button className={classes.ionButton} onClick={() => this.incrementIonCounter()}>
+                    <Button 
+                      variant='contained' 
+                      className={classes.ionButton} 
+                      onClick={() => this.incrementIonCounter()}>
                     Add Another Experiment
                     </Button>
                 </div>

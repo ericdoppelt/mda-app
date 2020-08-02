@@ -1,6 +1,6 @@
 import React from 'react';
 import InfiniteCalendar, {Calendar, withMultipleDates, defaultMultipleDateInterpolation} from 'react-infinite-calendar';
-import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography} from '@material-ui/core';
+import {Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Typography} from '@material-ui/core';
 import TAMUStore from '../../../../stores/TAMUStore';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
@@ -11,11 +11,11 @@ const useStyles = theme => ({
       width: '100%',
     },
     unavailableButton: {
-      backgroundColor: "#f5c1b8",
       marginTop: '13px',
       marginLeft: '5%',
       marginRight: '5%',
       width: '90%',
+      height: '50px',
     },
   });
 
@@ -39,9 +39,10 @@ class TAMUForm extends React.Component {
     return(
     <div className={classes.fullDiv}>
       <br/>
+      <Divider/>
       <br/>
       <Typography variant="subtitle1">Please enter the following supplemental information for TAMU.</Typography>
-      <Button className={classes.unavailableButton} onClick={() => this.setState({open: true})}>Select Unavailable Dates</Button>
+      <Button color='secondary' variant='contained' className={classes.unavailableButton} onClick={() => this.setState({open: true})}>Select Unavailable Dates</Button>
       <Dialog open={this.state.open} onClose={() => this.setState({open: false})}>
         <DialogTitle>Please enter dates you cannot run.</DialogTitle>
         <DialogContent>
@@ -55,7 +56,7 @@ class TAMUForm extends React.Component {
           />
         </DialogContent>
           <DialogActions>
-            <Button onClick={() => {this.setState({open: false})}}>
+            <Button variant='contained' color='secondary' onClick={() => {this.setState({open: false})}}>
               Select Dates
             </Button>
           </DialogActions>

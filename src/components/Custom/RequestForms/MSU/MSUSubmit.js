@@ -1,19 +1,20 @@
 import React from 'react';
-import {Button} from '@material-ui/core';
+import {Button, Snackbar, Divider} from '@material-ui/core';
 import ExperimentStore from '../../../../stores/ExpirementStore';
 import TesterStore from '../../../../stores/TesterStore';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
+import {Alert} from '@material-ui/lab';
 
 const useStyles = theme => ({
     submitButton: {
-      backgroundColor: "#bfddff",
-      marginTop: '2px',
+      marginTop: '20px',
       marginBottom: '20px',
       marginLeft:'5%',
       marginRight: '5%',
       width: '90%',
+      height: '50px',
       },
       fullDiv: {
         width: '100%',
@@ -25,6 +26,9 @@ class MSUSubmit extends React.Component {
   constructor(props) {
       super(props);
       this.submitForm = this.submitForm.bind(this);
+      this.state = {
+        submitFailed: false,
+      }
     }
 
   async submitForm() {
@@ -64,7 +68,8 @@ class MSUSubmit extends React.Component {
             if (response.data.success === true) {
             alert("Form was sent to MSU successfully. Please check your email!")
               self.props.history.push({
-                pathname: "/view-requests"
+                pathname: "/view-requests",
+                state: {formSubmiited: true}
               });
             } else {
               alert(response.data.msg);
@@ -74,18 +79,40 @@ class MSUSubmit extends React.Component {
               alert(error);
           });
         } else {
-          alert("The form was not sent. Please fill out all required fields.");
+          this.setState({submitFailed: true});
         }
   }
   
+  getSnackBar() {
+    console.log("called");
+    console.log(this.state.submitFailed);
+    if (this.state.submitFailed) {
+      return(
+        <Snackbar 
+            anchorOrigin={{vertical: 'top',horizontal: 'center'}}
+            open={this.state.submitFailed} 
+            autoHideDuration={6000} 
+            onClose={() => this.setState({submitFailed: false})}
+          >
+            <Alert severity="error">
+              The form was not submitted. Please fill in the required fields.
+            </Alert>
+        </Snackbar>
+      );
+    }
+  }
+
   render() {
     const { classes } = this.props;
     return(
       <div className={classes.fullDiv}>
       <br/>
-      <Button className={classes.submitButton} onClick={this.submitForm}>
+      <Divider />
+      <Button color='primary' variant = 'contained' className={classes.submitButton} onClick={this.submitForm}>
         Submit to Integrator
       </Button>
+
+      {this.getSnackBar()}
       </div>
     );
   }

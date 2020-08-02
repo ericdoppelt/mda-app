@@ -75,7 +75,7 @@ class TesterStore {
         return this.financier === "" && this.submitted;
     }
     get financierHelperText() {
-        if (this.financierError) return "Please enter the name of the funding contact."
+        if (this.financierError) return "Please enter the funding contact's name."
         else return "";
     }
 
@@ -87,7 +87,7 @@ class TesterStore {
         return this.financierPhone === "" && this.submitted;
     }
     get financierPhoneHelperText() {
-        if (this.financierPhoneError) return "Please enter the phone number of the funding contact.";
+        if (this.financierPhoneError) return "Please enter the funding contact's phone number.";
         else return "";
     }
 
@@ -99,7 +99,7 @@ class TesterStore {
         return this.financierEmail === "" && this.submitted;
     }
     get financierEmailHelperText() {
-        if (this.financierEmailError) return "Please enter the email of the funding contact.";
+        if (this.financierEmailError) return "Please enter the funding contact's email.";
         else return "";
     }
 
@@ -128,7 +128,7 @@ class TesterStore {
         return this.billingCity === "" && this.submitted;
     }
     get billingCityHelperText() {
-        if (this.billingCityError) return "Please enter a city for the billing address.";
+        if (this.billingCityError) return "Please enter a billing city.";
         else return "";
     }
 
@@ -140,7 +140,7 @@ class TesterStore {
         return this.billingState === "" && this.submitted;
     }
     get billingStateHelperText() {
-        if (this.billingStateError) return "Please enter a state for the billing address.";
+        if (this.billingStateError) return "Please enter a billing state.";
         else return "";
     }
 
@@ -152,7 +152,7 @@ class TesterStore {
         return this.billingZip === "" && this.submitted;
     }
     get billingZipHelperText() {
-        if (this.billingZipError) return "Please enter a zip for the billing address.";
+        if (this.billingZipError) return "Please enter a billing zip.";
         else return "";
     }
 

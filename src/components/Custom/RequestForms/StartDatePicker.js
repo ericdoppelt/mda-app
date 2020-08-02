@@ -5,6 +5,7 @@ import 'react-nice-dates/build/style.css'
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react"
 import InfiniteCalendar from 'react-infinite-calendar';
+import 'react-infinite-calendar/styles.css';
 import ExperimentStore from '../../../stores/ExpirementStore';
 
 const useStyles = theme => ({
@@ -19,6 +20,7 @@ const useStyles = theme => ({
       width: '100%',
     }});
 
+    // DEPRECATED. USE MATERIAL UI INSTEAD.
 class StartDatePicker extends React.Component {
     constructor(props) {
       super(props);

@@ -45,7 +45,6 @@ export default function LBNL() {
                     <TesterForm/>
                     <ExperimentForm/>
                     <DiscreteIons facility="LBNL"/>
-                    <StartDatePicker/>
                     <LBNLForm/>
                     <LBNLSubmit/>
                   </LBNLStore.Provider>

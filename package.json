@@ -19,7 +19,7 @@
     "classnames": "^2.2.6",
     "clsx": "^1.1.1",
     "date-fns": "^2.14.0",
-    "devextreme": "20.1-stable",
+    "devextreme": "^20.1.6",
     "devextreme-react": "20.1-stable",
     "fontsource-roboto": "^2.1.4",
     "fullcalendar": "^3.10.2",

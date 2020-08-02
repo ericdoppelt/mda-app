@@ -41,7 +41,7 @@ class LBNLStore {
         this.experimentAbstract = newAbstract;
     }
 
-    alternateDate = "";
+    alternateDate = null;
     setAlternateDate(newDate) {
         this.alternateDate = newDate;
     }
@@ -100,7 +100,7 @@ clear() {
     this.senderZip = "";
     this.senderOfficePhone = "";
     this.experimentAbstract = "";
-    this.alternateDate = "";
+    this.alternateDate = null;
     this.targetMaterials = "";
     this.safetyConcerns = "";
     this.beamType = "";
