@@ -47,6 +47,8 @@ class RegistrationForm extends React.Component {
     super(props);
 
     this.state = {
+      submitted: false,
+
       firstName: "",
       firstNameError: false,
 
@@ -84,6 +86,8 @@ class RegistrationForm extends React.Component {
     let url = 'https://mda-phoenix.herokuapp.com/integrator';
     await axios.get(url, {
       }).then(response => {
+        console.log("RESPONSE");
+        console.log(response);
         this.setState({integrators: response.data.integrators});
         })
         .catch(error => {
@@ -98,31 +102,24 @@ class RegistrationForm extends React.Component {
   }
 
   submitForm() {
-    this.setState({
-      firstNameError: (this.state.firstName === ""),
-      lastNameError: (this.state.lastName === ""),
-      usernameError: (this.state.username === ""),
-      passwordEmptyError: (this.state.password === ""),
-      passwordInvalidError: (!this.validatePassword(this.state.password)),
-      affiliationError: (this.state.affiliation === ""),
-      typeError: (this.state.type === ""),
-      phoneError: (this.state.phone === ""),
-      emailError: (this.state.email === ""),
-    }, () => {
-      if (this.state.usernameError) this.setState({usernameHelper: "Please enter a username."});
-      if (this.state.passwordEmptyError) this.setState({passwordHelper: "Please enter a password."});
-      else if (this.state.passwordInvalidError) this.setState({passwordHelper: "Please enter a password matching the criteria."});
-      else this.setState({passwordHelper: ""});
-      this.postToAxios();
-    });
+    this.updatePassword(this.state.password);
+    this.setState({submitted: true});
+    let firstNameError = (this.state.firstName === "");
+    let lastNameError = (this.state.lastName === "");
+    let usernameError = (this.state.username === "");
+    let passwordEmptyError = (this.state.password === "");
+    let passwordInvalidError = (!this.validatePassword(this.state.password));
+    let affiliationError = (this.state.affiliation === "");
+    let typeError = (this.state.type === "");
+    let phoneError = (this.state.phone === "");
+    let emailError = (this.state.email === "");
+    let formIsValid = !firstNameError && !lastNameError && !usernameError && !passwordEmptyError
+    && !passwordInvalidError && !affiliationError && !typeError && !phoneError && !emailError;
+
+    if (formIsValid) this.postToAxios();
   }
 
   async postToAxios() {
-    console.log("CALLED");
-    let formIsValid = !this.state.firstNameError && !this.state.lastNameError && !this.state.usernameError && !this.state.passwordError
-    && !this.affiliationError && !this.typeError && !this.phoneError && !this.emailError;
-    console.log(this.state);
-    if (formIsValid) {
       var self = this;
       await axios.post('https://mda-phoenix.herokuapp.com/register', {
         first_name: self.state.firstName,
@@ -134,9 +131,7 @@ class RegistrationForm extends React.Component {
         phone: self.state.phone,
         email: self.state.email,
       }).then(response => {
-        console.log(response);
         if (response.data.success === true) {
-        
           self.props.history.push({
             pathname: '/user-login',
             state: {accountCreated: true}
@@ -151,7 +146,7 @@ class RegistrationForm extends React.Component {
         alert(error);
       });
     }
-  }
+  
 
   getSnackBars() {
     if (this.state.backendError) {
@@ -171,8 +166,16 @@ class RegistrationForm extends React.Component {
         </Snackbar>
       );
     }
-
   }
+
+  updatePassword(newPassword) {
+    this.setState({password: newPassword});
+    let helperText = '';
+    if (newPassword === '') helperText = 'Please enter a password.';
+    else if (!this.validatePassword(newPassword)) helperText = 'Please enter a password matching the criteria.';
+    this.setState({passwordHelper: helperText});
+  }
+
   render() {
     const { classes } = this.props;
     console.log("here");
@@ -186,30 +189,30 @@ class RegistrationForm extends React.Component {
           className = {classes.left}
           label = "First Name"
           onChange={event => {this.setState({firstName: event.target.value})}}
-          error = {this.state.firstNameError}
-          helperText = {this.state.firstNameError ? "Please enter a first name.": ""}
+          error = {this.state.firstName === '' && this.state.submitted}
+          helperText = {this.state.firstName === '' && this.state.submitted ? "Please enter a first name.": ""}
         />
         <TextField
           className = {classes.right}
           label = "Last Name"
           onChange={event => {this.setState({lastName: event.target.value})}}
-          error = {this.state.lastNameError}
-          helperText = {this.state.lastNameError ? "Please enter a last name." : ""}
+          error = {this.state.lastName === "" && this.state.submitted}
+          helperText = {this.state.lastName === '' && this.state.submitted ? "Please enter a last name." : ""}
         />
         <TextField
           className = {classes.left}
           label = "Username"
           onChange={event => {this.setState({username: event.target.value})}}
-          error = {this.state.usernameError}
-          helperText = {this.state.usernameHelper}
+          error = {this.state.username === "" && this.state.submitted}
+          helperText = {this.state.username === '' && this.state.submitted ? "Please enter a username." : ""}
         />
 
         <TextField
           className = {classes.right}
           label = "Password"
-          onChange={event => {this.setState({password: event.target.value})}}
+          onChange={event => {this.updatePassword(event.target.value)}}
           type = {this.state.showPassword ? 'text' : 'password'}
-          error = {(this.state.passwordEmptyError | this.state.passwordInvalidError)}
+          error = {((this.state.password === "" | !this.validatePassword(this.state.password)) && this.state.submitted)}
           helperText = {this.state.passwordHelper}
           InputProps={{
             endAdornment: (
@@ -226,7 +229,7 @@ class RegistrationForm extends React.Component {
 
         <FormControl
           className={classes.left}
-          error = {this.state.typeError}
+          error = {this.state.type === "" && this.state.submitted}
           >
           <InputLabel>User Type</InputLabel>
           <Select
@@ -236,12 +239,12 @@ class RegistrationForm extends React.Component {
             <MenuItem value={"Tester"}>Tester</MenuItem>
             <MenuItem value={"Integrator"}>Integrator</MenuItem>
           </Select>
-          <FormHelperText>{this.state.typeError ? "Please enter your user type." : ""}</FormHelperText>
+          <FormHelperText>{this.state.type === '' && this.state.submitted ? "Please enter your user type." : ""}</FormHelperText>
         </FormControl>
 
         <FormControl
           className={classes.right}
-          error = {this.state.affiliationError}
+          error = {this.state.affiliation === "" &&  this.state.submitted}
           >
           <InputLabel>Affiliation</InputLabel>
           <Select
@@ -254,22 +257,22 @@ class RegistrationForm extends React.Component {
               return <MenuItem value={integrator}>{integrator}</MenuItem>
             })}
           </Select>
-          <FormHelperText>{this.state.affiliationError ? "Please enter your affiliation." : ""}</FormHelperText>
+          <FormHelperText>{this.state.affiliation === "" && this.state.submitted ? "Please enter your affiliation." : ""}</FormHelperText>
         </FormControl>
 
         <TextField
           className = {classes.left}
           label = "Phone"
           onChange={event => {this.setState({phone: event.target.value})}}
-          error = {this.state.phoneError}
-          helperText = {this.state.phoneError ? "Please enter your primary phone number." : ""}
+          error = {this.state.phone === "" && this.state.submitted}
+          helperText = {this.state.phone  === "" && this.state.submitted ? "Please enter your primary phone number." : ""}
         />
         <TextField
           className = {classes.right}
           label = "Email"
           onChange={event => {this.setState({email: event.target.value})}}
-          error = {this.state.emailError}
-          helperText = {this.state.emailError ? "Please enter your primary email." : ""}
+          error = {this.state.email === "" && this.state.submitted}
+          helperText = {this.state.email === "" && this.state.submitted ? "Please enter your primary email." : ""}
         />
         <Button className = {classes.submitButton} onClick={() => this.submitForm()}>Create Account</Button>
 
