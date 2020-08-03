@@ -84,6 +84,7 @@ def get_range():
     return jsonify(result)
 
 @app.route('/request/priority', methods=['POST'])
+@jwt_required
 def set_priority():
     result = ""
     req = request.get_json()
