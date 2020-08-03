@@ -65,11 +65,15 @@ class HomePage extends React.Component {
                 <Button onClick={() => {this.props.history.push('/calendar')}}>
                   <CalendarTodayRoundedIcon/>
                 </Button>
+                <br/>
+                Calendar
               </TableCell>
               <TableCell align='center'>
                 <Button onClick={() => {this.props.history.push('/facilities')}}>
                   <AccountBalanceRoundedIcon/>
                 </Button>
+                <br/>
+                Facilities
               </TableCell>
             </TableRow>
             <TableRow className={classes.row}>
@@ -96,11 +100,15 @@ class HomePage extends React.Component {
                 <Button onClick={() => {this.props.history.push('/request-forms')}}>
                   <AssignmentRoundedIcon/>
                 </Button>
+                <br/>
+                Request Forms
               </TableCell>
               <TableCell align='center'>
                 <Button onClick={() => {this.props.history.push('/scheduler')}}>
                   <ImportContactsIcon/>
                 </Button>
+                <br/>
+                Scheduler
               </TableCell>
             </TableRow>
             <TableRow style={{backgroundColor: '#bdbdbd',}}>
@@ -116,11 +124,15 @@ class HomePage extends React.Component {
                 <Button onClick={() => {this.props.history.push('/view-requests')}}>
                   <DvrRoundedIcon/>
                 </Button>
+                <br/>
+                View Requests
               </TableCell>
               <TableCell align='center'>
                 <Button onClick={() => {this.props.history.push('/view-requests')}}>
                   <DvrRoundedIcon/>
                 </Button>
+                <br/>
+                View Requests
               </TableCell>
             </TableRow>
             <TableRow style={{backgroundColor: '#bdbdbd',}}>
