@@ -82,3 +82,28 @@ def get_range():
         'success' : False}
 
     return jsonify(result)
+
+@app.route('/request/priority', methods=['POST'])
+def set_priority():
+    result = ""
+    req = request.get_json()
+
+    try:
+        beam_requests = requests.query.filter(requests.id.in_(req['ids']))
+        if req['add']:
+            for form in beam_requests:
+                form.priority = True
+        else:
+            for form in beam_requests:
+                form.priority = False
+
+        db.session.commit()
+        
+        result = {'success' : True}
+
+    except Exception as e:
+        print(e)
+        result = {'error' : str(e),
+        'success' : False}
+
+    return result

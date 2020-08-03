@@ -1,4 +1,6 @@
 import copy
+import string
+import random
 from sqlalchemy import and_, or_, between, func, inspect
 from flask import jsonify, request, json
 from flask_mail import Message
@@ -169,63 +171,71 @@ def change_password():
 @app.route('/user/forgot-username', methods=['POST'])
 def forgot_username():
     result = ""
-    email = request.get_json()['email']
 
-    user = Users.query.filter_by(email=email).first()
+    try:
+        email = request.get_json()['email']
 
-    if not user:
-        result = {'success' : False,
-        'error' : "No user associated with that email"}
-    else:
-        msg = Message("ISEEU Username")
-        msg.recipients = [user.email]
-        msg.body = "Your ISEEU username is: \n\n"
-        msg.body += user.username
-        mail.send(msg)
-        result = {'success' : True,
-        'error' : ""}
+        user = Users.query.filter_by(email=email).first()
+
+        if not user:
+            result = {'success' : False,
+            'error' : "No user associated with that email"}
+        else:
+            msg = Message("ISEEU Username")
+            msg.recipients = [user.email]
+            msg.body = "Your ISEEU username is: \n\n"
+            msg.body += user.username
+            msg.body += "\n\n\nThanks,\nThe ISEEU Team"
+            mail.send(msg)
+            result = {'success' : True,
+            'error' : ""}
+
+    except Exception as e:
+        print(e)
+        result = {'error' : str(e),
+        'success' : False}
 
     return jsonify(result)
+
+def password_generator(length=8):
+    # create alphanumerical from string constants
+    LETTERS = string.ascii_letters
+    NUMBERS = string.digits  
+    PUNCTUATION = string.punctuation  
+    printable = f'{LETTERS}{NUMBERS}{PUNCTUATION}'
+
+    # convert printable from string to list and shuffle
+    printable = list(printable)
+    random.shuffle(printable)
+
+    # generate random password and convert to string
+    random_password = random.choices(printable, k=length)
+    random_password = ''.join(random_password)
+    return random_password
 
 @app.route('/user/forgot-password', methods=['POST'])
 def forgot_password():
-    link = "https://mda-phoenix.herokuapp.com/reset-password/"
     result = ""
-    username = request.get_json()['username']
-
-    user = Users.query.filter_by(username=username).first()
-
-    if not user:
-        result = {'success' : False,
-        'error' : "Incorrect username"}
-    else:
-        msg = Message("ISEEU Password Reset")
-        msg.recipients = [user.email]
-        expires = timedelta(hours=1)
-        access_token = create_access_token(identity = username, expires_delta=expires)
-        add_token_to_database(access_token, app.config['JWT_IDENTITY_CLAIM'])
-        msg.body = "Click the link below to reset your password. This link will expire in 1 hour.\n\n"
-        msg.body += link + access_token
-        # mail.send(msg)
-        result = {'success' : True,
-        'error' : ""}
-
-    return jsonify(result)
-
-@app.route('/user/reset-password', methods=['GET', 'POST'])
-@jwt_required
-def reset_password():
-    result = ""
-    username = get_jwt_identity()
 
     try:
-        req = request.get_json()
+        username = request.get_json()['username']
+
         user = Users.query.filter_by(username=username).first()
 
-        user.set_password(req['password'])
-        result = user.register_user()
+        if not user:
+            result = {'success' : False,
+            'error' : "Incorrect username"}
+        else:
+            password = password_generator(10)
+            msg = Message("ISEEU Forgot Password")
+            msg.recipients = [user.email]
+            msg.body = "This is your new password. Please login and change it immediately.\n\n\n"
+            msg.body += password
+            msg.body += "\n\n\nThanks,\nThe ISEEU Team"
+            mail.send(msg)
+            user.set_password(password)
+            result = user.register_user()
 
-        result = {'success' : True}
     except Exception as e:
         print(e)
         result = {'error' : str(e),
