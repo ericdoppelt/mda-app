@@ -82,7 +82,7 @@ def login():
                 'error' : "User not authenticated by admin"}
         else:
             result = {'success' : False,
-            'error' : "User not authenticated by integrator"}
+            'error' : "User not authenticated by integrator nor admin"}
     else:
         result = {'success' : False,
         'error' : "Incorrect password"}
@@ -267,7 +267,7 @@ def authenticate_user():
 
     try:
         user = Users.query.filter_by(username=username).first()
-            
+
         if user.isAdmin or user.user_type == 'Integrator':
             pass
         else:
@@ -293,7 +293,7 @@ def authenticate_user():
         myList = []
         if user.isAdmin is True:
             if user.user_type == 'Integrator':
-                users = Users.query.filter(or_(and_(Users.isAuthenticatedAdmin==False, Users.isAuthenticatedIntegrator==True), 
+                users = Users.query.filter(or_(and_(Users.isAuthenticatedAdmin==False, Users.isAuthenticatedIntegrator==True),
                 and_(Users.isAuthenticatedIntegrator==False, Users.affiliation==user.affiliation))).all()
             else:
                 users = Users.query.filter_by(isAuthenticatedAdmin=False, isAuthenticatedIntegrator=True).all()

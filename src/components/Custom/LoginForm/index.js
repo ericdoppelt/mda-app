@@ -32,10 +32,12 @@ class LoginForm extends React.Component {
     } else {
       accountWasCreated = false;
     }
-    
+
     this.state = {
       username: "",
       password: "",
+      loginError: false,
+      loginErrorHelper: "",
       usernameError: "",
       passwordError: "",
       submitted: false,
@@ -60,6 +62,7 @@ class LoginForm extends React.Component {
         window.sessionStorage.setItem("integrator_token", response.data.integrator_token);
         this.props.history.push('user-profile');
       } else {
+          self.setState({loginError:true, loginErrorHelper: response.data.error, submitted: false})
           if (response.data.error === "Incorrect username") {
             self.setState({ usernameError: response.data.error, submitted: false });
           }
@@ -77,7 +80,23 @@ class LoginForm extends React.Component {
   getSnackBars() {
     console.log("PROPS");
     console.log(this.props);
-    
+    if (this.state.loginError){
+      return(
+        <Snackbar
+          open = {this.state.loginError}
+          autoHideDuration={6000}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          onClose={() => {this.setState({loginError: false})}}
+          >
+          <Alert severity="warning">
+            {this.state.loginErrorHelper}
+          </Alert>
+        </Snackbar>);
+    }
+    else {
       return(
         <Snackbar
           open = {this.state.accountCreated}
@@ -93,6 +112,7 @@ class LoginForm extends React.Component {
           </Alert>
         </Snackbar>
       );
+    }
   }
 
   render() {

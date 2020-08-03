@@ -17,6 +17,7 @@ export default function Home() {
   const classes = Constants.useStyles();
   return (
     <ThemeProvider theme={Constants.darkTheme}>
+
       <div className={classes.root}>
         <MDAHeader2/>
         <main className={classes.content}>

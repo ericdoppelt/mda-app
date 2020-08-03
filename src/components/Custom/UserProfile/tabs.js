@@ -85,7 +85,7 @@ class TabsProfile extends React.Component {
 
   render () {
     const {classes} = this.props;
-    if(this.state.isAdmin || (this.state.user_type==='integrator')){
+    if(this.state.isAdmin || (this.state.user_type==='Integrator')){
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
