@@ -26,8 +26,8 @@ import {Alert} from '@material-ui/lab';
   });
 
   const rows = [{key: 'oldPassword', value: 'Old Password', error: 'oldPasswordError', helper: 'oldPasswordHelper'},
-                {key: 'newPassword', value: 'New Password', error: 'passwordError', helper: 'passwordHelper'},
-                {key: 'confirmPassword', value: 'Confirm New Password', error: 'passwordError', helper: 'passwordHelper'}]
+                {key: 'newPassword', value: 'New Password', error: 'newPasswordError', helper: 'newPasswordHelper'},
+                {key: 'confirmPassword', value: 'Confirm New Password', error: 'confirmPasswordError', helper: 'confirmPasswordHelper'}]
 
   class PasswordChanger extends React.Component {
 
@@ -38,12 +38,17 @@ import {Alert} from '@material-ui/lab';
         newPassword: '',
         confirmPassword: '',
 
-        passwordError: false,
-        passwordEmptyError: false,
-        passwordInvalidError: false,
-        passwordMatchError: false,
-        passwordHelper: '',
         oldPasswordError: false,
+        oldPasswordEmptyError: false,
+        newPasswordError: false,
+        newPasswordEmptyError: false,
+        newPasswordInvalidError: false,
+        confirmPasswordError: false,
+        confirmPasswordEmptyError: false,
+        confirmPasswordInvalidError: false,
+        passwordMatchError: false,
+        newPasswordHelper: '',
+        confirmPasswordHelper: '',
         oldPasswordHelper: '',
         responseError: '',
         showPassword: true,
@@ -61,15 +66,26 @@ import {Alert} from '@material-ui/lab';
 
   commitChange() {
     this.setState({
-      passwordEmptyError: ((this.state.newPassword && this.state.confirmPassword) === ""),
-      passwordInvalidError: (!this.validatePassword(this.state.newPassword)),
+      oldPasswordEmptyError: (this.state.oldPassword === ""),
+      newPasswordEmptyError: (this.state.newPassword === ""),
+      confirmPasswordEmptyError:  (this.state.confirmPassword === ""),
+      newPasswordInvalidError: (!this.validatePassword(this.state.newPassword)),
+      confirmPasswordInvalidError: (!this.validatePassword(this.state.confirmPassword)),
       passwordMatchError: (!(this.state.newPassword === this.state.confirmPassword)),
     }, () => {
-      if(this.state.passwordEmptyError||this.state.passwordInvalidError||this.state.passwordMatchError) this.setState({passwordError: true});
-      if (this.state.passwordEmptyError) this.setState({passwordHelper: "Please enter a new password."});
-      else if (this.state.passwordInvalidError) this.setState({passwordHelper: "Please enter a password matching the criteria."});
-      else if (this.state.passwordMatchError) this.setState({passwordHelper: "Passwords do not match"})
-      else this.submit();
+      if(this.state.oldPasswordEmptyError){
+        this.setState({oldPasswordError: true, oldPasswordHelper: "Please enter your old password"});
+      }
+      if(this.state.newPasswordEmptyError||this.state.confirmPasswordEmptyError){
+        if (this.state.newPasswordEmptyError) this.setState({newPasswordError: true, newPasswordHelper: "Please enter a new password"});
+        if(this.state.confirmPasswordEmptyError) this.setState({confirmPasswordError:true, confirmPasswordHelper: "Please confirm password"});
+      }
+      else if(this.state.newPasswordInvalidError||this.state.confirmPasswordInvalidError){
+       if (this.state.newPasswordInvalidError) this.setState({newPasswordError: true, newPasswordHelper: "Please enter a password matching the criteria"});
+       if(this.state.confirmPasswordInvalidError) this.setState({confirmPasswordError: true, confirmPasswordHelper: "Please enter a password matching the criteria"});
+     }
+     else if (this.state.passwordMatchError) {this.setState({newPasswordError: true, confirmPasswordError: true, newPasswordHelper: "Passwords do not match", confirmPasswordHelper: "Passwords do not match"})}
+     if (!(this.state.oldPasswordError||this.state.newPasswordError||this.state.confirmPasswordError)) {this.submit();}
     });
   }
 

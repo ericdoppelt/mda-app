@@ -4,6 +4,7 @@ import MDAHeader2 from '../../components/Custom/MDAHeader2';
 import Image from '../../components/UIzard/Image';
 import Row from '../../components/UIzard/Row';
 import * as Constants from '../../constants';
+import HomePage from '../../components/Custom/Homepage';
 
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
                 <Image style={{ width: '250px', height: '250px', backgroundImage: 'url(/images/phoenix.png)' }} />
               </Row>
               <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+                <HomePage/>
               </Row>
         </main>
       </div>
