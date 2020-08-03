@@ -3,6 +3,10 @@ import pdfrw
 import copy
 from datetime import datetime
 from fpdf import FPDF
+from flask_mail import Message
+
+from models import (requests, LBNL, TAMU, NSRL)
+from main import app
 
 ANNOT_KEY = '/Annots'
 ANNOT_FIELD_KEY = '/T'
@@ -16,15 +20,68 @@ class FormBuilder():
         self.form = form
         self.facility = form.facility
 
-    def send(self):
-        if self.facility == 'TAMU':
-            pass
-        if self.facility == 'LBNL':
-            pass
-        if self.facility == 'NSRL':
-            pass
-        if self.facility == 'MSU':
-            pass
+    def attach(self, beamRequests):
+        
+
+        # if self.facility == 'TAMU':
+        #     # msg.recipients = ['clark@comp.tamu.edu']
+
+        #     baseName = 'request_forms/TAMU/'
+        #     for i, form in enumerate(beamRequests):
+        #         extraInfo = TAMU.query.filter_by(request_id=form.id).first()
+        #         form['badDates'] = extraInfo.badDates
+        #         pdf = FormBuilder(form)
+        #         template = "TAMU_request_template.pdf"
+        #         output = baseName + form.company + '_' + i
+        #         pdf.fill(template, output)
+
+        #         with app.open_resource(output + '.pdf') as fp:
+        #             msg.attach(output + '.pdf', output + '/pdf', fp.read())
+        # if self.facility == 'LBNL':
+        #     # msg.recipients = ['88beamrequest@lbl.gov']
+
+        #     baseName = 'request_forms/LBNL/'
+        #     for i, form in enumerate(beamRequests):
+        #         extraInfo = LBNL.query.filter_by(request_id=form.id).first()
+        #         textBuilder = FormBuilder(form)
+        #         text = textBuilder.lbnl(extraInfo)
+        #         filename = baseName + form.company + '_' + i
+        #         text_file = open(filename + '.txt', "w+")
+        #         text_file.write(text)
+        #         text_file.close()
+
+        #         with app.open_resource(filename + '.txt') as fp:
+        #             msg.attach(filename + '.txt', filename + '/txt', fp.read())
+
+        # if self.facility == 'NSRL':
+        #     # msg.recipients = ['88beamrequest@lbl.gov']
+            
+        #     baseName = 'request_forms/NSRL/'
+        #     for i, form in enumerate(requests):
+        #         extraInfo = NSRL.query.filter_by(request_id=form.id).first()
+        #         textBuilder = FormBuilder(form)
+        #         text = textBuilder.lbnl(extraInfo)
+        #         filename = baseName + form.company + '_' + i
+        #         text_file = open(filename + '.txt', "w+")
+        #         n = text_file.write()
+        #         text_file.close()
+
+        #         with app.open_resource(filename + '.txt') as fp:
+        #             msg.attach(filename + '.txt', filename + '/txt', fp.read())
+        # if self.facility == 'MSU':
+        #     # msg.recipients = ['88beamrequest@lbl.gov']
+            
+        #     baseName = 'request_forms/MSU/'
+        #     for i, form in enumerate(requests):
+        #         textBuilder = FormBuilder(form)
+        #         text = textBuilder.lbnl(extraInfo)
+        #         filename = baseName + form.company + '_' + i
+        #         text_file = open(filename + '.txt', "w+")
+        #         n = text_file.write()
+        #         text_file.close()
+
+        #         with app.open_resource(filename + '.txt') as fp:
+        #             msg.attach(filename + '.txt', filename + '/txt', fp.read())
 
     def fill(self, template, output):
         template_pdf = pdfrw.PdfReader(template)

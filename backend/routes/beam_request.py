@@ -83,6 +83,7 @@ def add_request(form, username):
                     ions = ion_ids,
                     comments = form['comments'],
                     po_number = form['billingPO'],
+                    title = form['title'],
                     beam_time = beamTime,
                     username = username,
                     date_of_request = datetime.now(),
@@ -165,6 +166,23 @@ def requestform():
         return jsonify({'success': False, 'msg': str(e)}), 500
 
 
+def create_calendar_entry(req):
+    result = ""
+
+    entry = Calendar(
+        username = req.username,
+        facility = req.facility,
+        integrator = req.integrator,
+        totalTime = req.totalTime,
+        startDate = req.startDate,
+        private = False,
+        title = req.title,
+        requestId = req.id
+    )
+    result = entry.create_entry()
+
+    return result
+
 @app.route('/request/send-forms', methods=['POST'])
 @jwt_required
 def send_forms():
@@ -172,7 +190,7 @@ def send_forms():
     try:
         req = request.get_json()
         ids = req['ids']
-        requests = requests.Beams.query.filter(requests.id.in_(ids)).all()
+        beamReqs = requests.query.filter(requests.id.in_(ids)).all()
 
         msg = Message("Send Request Form Demo", cc=[req['email']])
 
@@ -185,50 +203,17 @@ def send_forms():
 
         msg.body += "Thanks and have a wonderful day!\n\n"
         msg.body += "ISEEU"
-        if req['facility'] == 'TAMU':
-            # msg.recipients = ['clark@comp.tamu.edu']
 
-            baseName = 'request_forms/TAMU/'
-            for i, form in enumerate(requests):
-                extraInfo = TAMU.query.filter_by(request_id=form.id).first()
-                form['badDates'] = extraInfo.badDates
-                pdf = FormBuilder(form)
-                template = "TAMU_request_template.pdf"
-                output = baseName + form.company + '_' + i
-                pdf.fill(template, output)
-
-                with app.open_resource(output + '.pdf') as fp:
-                    msg.attach(output + '.pdf', output + '/pdf', fp.read())
-        if req['facility'] == 'LBNL':
-            # msg.recipients = ['88beamrequest@lbl.gov']
-
-            baseName = 'request_forms/LBNL/'
-            for i, form in enumerate(requests):
-                extraInfo = LBNL.query.filter_by(request_id=form.id).first()
-                textBuilder = FormBuilder(form)
-                text = textBuilder.lbnl(extraInfo)
-                filename = baseName + form.company + '_' + i
-                text_file = open(filename + '.txt', "w+")
-                n = text_file.write()
-                text_file.close()
-
-                with app.open_resource(filename + '.txt') as fp:
-                    msg.attach(filename + '.txt', filename + '/txt', fp.read())
-        if req['facility'] == 'NSRL':
-            # msg.recipients = ['88beamrequest@lbl.gov']
-            
-            baseName = 'request_forms/NSRL/'
-            for i, form in enumerate(requests):
-                extraInfo = NSRL.query.filter_by(request_id=form.id).first()
-                textBuilder = FormBuilder(form)
-                text = textBuilder.lbnl(extraInfo)
-                filename = baseName + form.company + '_' + i
-                text_file = open(filename + '.txt', "w+")
-                n = text_file.write()
-                text_file.close()
-
-                with app.open_resource(filename + '.txt') as fp:
-                    msg.attach(filename + '.txt', filename + '/txt', fp.read())
+        for i, req in enumerate(beamReqs):
+            if req['scheduled']:
+                try:
+                    entry = Calendar.query.filter_by(id=req.requestId).first()
+                    entry.startDate = req['dates'][i]
+                    db.session.commit()
+                except:
+                    create_calendar_entry(req)
+            else:
+                create_calendar_entry(req)
         print(msg)
 
     except Exception as e:

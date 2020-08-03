@@ -198,7 +198,7 @@ def getForms(request_forms):
             form.scheduled_start = form.scheduled_start.strftime("%Y-%m-%dT%H:%M:%S")
         myDict = {'name' : form.name, 'integrator' : form.integrator,
         'facility' : form.facility, 'company' : form.company, 'email' : form.email,
-        'phone' : form.cell, 'funding_contact' : form.funding_contact,
+        'phone' : form.cell, 'funding_contact' : form.funding_contact, "title" : form.title,
         'funding_cell' : form.funding_cell, 'funding_email' : form.funding_email,
         'PO_number' : form.po_number, 'address' : form.address, 'submitDate' : form.date_of_request,
         'city' : form.city, 'state' : form.state, 'zipcode' : form.zipcode,

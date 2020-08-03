@@ -33,7 +33,7 @@ def entries():
             startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
             entry_info = {'username': entry.username,
             'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
-            'totalTime': entry.totalTime}
+            'totalTime': entry.totalTime, 'requestId' : entry.requestId}
             myList.append(entry_info)
     return jsonify({'entries' : myList})
 
@@ -48,40 +48,39 @@ def personal_entries():
         startDate = entry.startDate.strftime("%Y-%m-%dT%H:%M")
         entry_info = {'username': entry.username,
         'facility': entry.facility, 'integrator': entry.integrator, 'startDate': startDate,
-        'totalTime': entry.totalTime}
+        'totalTime': entry.totalTime, 'requestId' : entry.requestId}
         myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-@app.route('/calendar/tasks', methods=['GET', 'POST'])
-@jwt_required
-def tasks():
-    if request.method == 'POST':
-        req = request.get_json()
-        modifyEntry = Calendar.query.filter_by(id=req['id']).first()
-        modifyEntry.steps = req['steps']
-        db.session.commit()
+# @app.route('/calendar/tasks', methods=['GET', 'POST'])
+# @jwt_required
+# def tasks():
+#     if request.method == 'POST':
+#         req = request.get_json()
+#         modifyEntry = Calendar.query.filter_by(id=req['id']).first()
+#         modifyEntry.steps = req['steps']
+#         db.session.commit()
 
-    eventArray = []
-    username = get_jwt_identity()
-    # today = datetime.now().strftime('%Y-%m-%d')
-    entries = Calendar.query.filter(and_(Calendar.username==username, Calendar.startDate >= datetime.now())).all()
-    # entries = Calendar.query.filter(Calendar.username==username).all()
-    for entry in entries:
-        print(entry.startDate)
-        date = entry.startDate.strftime("%m/%d/%Y")
-        time = entry.startDate.strftime("%I %p")
-        adder = {"site" : entry.facility, "date" : date,
-                "time" : time, "integrator" : entry.integrator,
-                "steps" : entry.steps, "id" : entry.id, "startDate" : entry.startDate}
-        eventArray.append(adder)
-    return jsonify({'eventArray' : eventArray})
+#     eventArray = []
+#     username = get_jwt_identity()
+#     # today = datetime.now().strftime('%Y-%m-%d')
+#     entries = Calendar.query.filter(and_(Calendar.username==username, Calendar.startDate >= datetime.now())).all()
+#     # entries = Calendar.query.filter(Calendar.username==username).all()
+#     for entry in entries:
+#         print(entry.startDate)
+#         date = entry.startDate.strftime("%m/%d/%Y")
+#         time = entry.startDate.strftime("%I %p")
+#         adder = {"site" : entry.facility, "date" : date,
+#                 "time" : time, "integrator" : entry.integrator,
+#                 "steps" : entry.steps, "id" : entry.id, "startDate" : entry.startDate}
+#         eventArray.append(adder)
+#     return jsonify({'eventArray' : eventArray})
 
 
 @app.route('/calendar-entry', methods=['POST'])
 @jwt_required
 def create_entry():
 
-    username = get_jwt_identity()
     req = request.get_json()
     result = ""
 

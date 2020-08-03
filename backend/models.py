@@ -106,6 +106,7 @@ class Ranges(db.Model):
     start_date = db.Column(db.DateTime())
     facility = db.Column(db.String())
     hours = db.Column(db.Integer())
+    scheduled = db.Column(db.Boolean())
 
     def create_range(self):
         result = ""
@@ -137,7 +138,7 @@ class Calendar(db.Model):
     startDate = db.Column(db.DateTime(), nullable=False)
     private = db.Column(db.Boolean())
     title = db.Column(db.String(50))
-    steps = db.Column(db.ARRAY(db.Boolean()))
+    requestId = db.Column(db.Integer())
 
     def create_entry(self):
         result = ""

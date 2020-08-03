@@ -35,7 +35,7 @@ def set_range():
         date = date + timeDelta
         print(date)
         entry = Ranges(org_id=myOrg.id, start_date=date, hours=req['hours'],
-                        facility=req['facility'])
+                        facility=req['facility'], scheduled=False)
         result = entry.create_range()
 
         return jsonify({'success': True}), 200
@@ -51,7 +51,6 @@ def set_range():
 @jwt_required
 def get_range():
     username = get_jwt_identity()
-    req = request.get_json()
     result = ""
 
     try:
@@ -66,12 +65,8 @@ def get_range():
             end = rang.start_date + timeDelta
             start = rang.start_date.strftime("%Y-%m-%dT%H:%M:%S")
             end = end.strftime("%Y-%m-%dT%H:%M:%S")
-            # startDate = rang.start_date.strftime("%m/%d/%Y")
-            # startTime = rang.start_date.strftime("%I %p")
-            # endDate = end.strftime("%m/%d/%Y")
-            # endTime = end.strftime("%I %p")
             entry = {"facility" : rang.facility, "hours" : rang.hours,
-            "startDate" : start, "endDate" : end, "id" : rang.id}
+            "startDate" : start, "endDate" : end, "id" : rang.id, "scheduled" : rang.scheduled}
             myList.append(entry)
 
         return {"ranges" : myList}, 200
