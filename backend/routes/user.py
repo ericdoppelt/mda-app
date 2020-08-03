@@ -328,12 +328,13 @@ def delete_user():
             if user.isAdmin:
                 Users.query.filter_by(username=username).delete()
             else:
-                Users.query.filter_by(username=username, affiliation=user.affilitation).delete()
+                Users.query.filter_by(username=username, affiliation=user.affiliation).delete()
             db.session.commit()
             return jsonify({'success': True}), 200
 
         else:
-            return {'success' : False, 'error' : 'You must be an admin to access this method!'}
+            return {'success' : False, 'error' : 'You must be an admin or integrator to access this method!'}
         
-    except:
-        return jsonify({'success': False, 'error': 'The specified user was not found'}), 500
+    except Exception as e:
+        print(e)
+        return {'error' : str(e), 'success' : False}, 500
