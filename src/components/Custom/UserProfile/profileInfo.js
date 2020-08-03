@@ -29,16 +29,17 @@ const useStyles = theme => ({
     marginLeft: '3%',
     marginRight: '5%',
     marginBottom: '10px',
-    width: '75%',
+    width: '90%',
   }
 });
 
 const rows = [
   {key:'first_name', value:'First Name', class:'left'},
   {key:'last_name', value:'Last Name', class:'right'},
-  {key:'affiliation', value:'Affiliation',class:'left'},
   {key:'phone', value:'Phone Number',class:'right'},
-  {key:'email', value:'Email',class:'left'}
+  {key:'email', value:'Email',class:'left'},
+  {key:'userType', value: 'User Type', class: 'right'},
+  {key:'affiliation', value:'Affiliation',class:'left'},
 ];
 
 class ProfileInfo extends React.Component {
@@ -84,15 +85,6 @@ class ProfileInfo extends React.Component {
         console.log(error);
     });
 
-    let urlInt = 'https://mda-phoenix.herokuapp.com/integrator';
-    await axios.get(urlInt, {
-      }).then(response => {
-        this.state.integrators = response.data.integrators;
-        })
-        .catch(error => {
-        alert(error);
-      });
-
   }
 
     async submit() {
@@ -121,8 +113,8 @@ class ProfileInfo extends React.Component {
     getFirst_NamePicker() {
       let {classes} = this.props;
       return(
-          <Dialog open={this.state.dialog === 'first_name'} onClose={() => this.setState({dialog: ''})}>
-            <DialogTitle>Please update your first name</DialogTitle>
+          <Dialog fullWidth="true" maxWidth="xs" open={this.state.dialog === 'first_name'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle align="center">Please update your first name</DialogTitle>
             <DialogContent>
               <TextField
                 className={classes.dialog}
@@ -148,8 +140,8 @@ class ProfileInfo extends React.Component {
     getLast_NamePicker() {
       let {classes} = this.props;
       return(
-          <Dialog open={this.state.dialog === 'last_name'} onClose={() => this.setState({dialog: ''})}>
-            <DialogTitle>Please update your last name</DialogTitle>
+          <Dialog fullWidth="true" maxWidth="xs" open={this.state.dialog === 'last_name'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle align="center">Please update your last name</DialogTitle>
             <DialogContent>
               <TextField
                 className={classes.dialog}
@@ -175,8 +167,8 @@ class ProfileInfo extends React.Component {
     getEmailPicker() {
       let {classes} = this.props;
       return(
-          <Dialog open={this.state.dialog === 'email'} onClose={() => this.setState({dialog: ''})}>
-            <DialogTitle>Please update your email</DialogTitle>
+          <Dialog fullWidth="true" maxWidth="xs" open={this.state.dialog === 'email'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle align="center">Please update your email</DialogTitle>
             <DialogContent>
               <TextField
                 className={classes.dialog}
@@ -201,8 +193,8 @@ class ProfileInfo extends React.Component {
     getPhonePicker() {
       let {classes} = this.props;
       return(
-          <Dialog open={this.state.dialog === 'phone'} onClose={() => this.setState({dialog: ''})}>
-            <DialogTitle>Please update your phone number</DialogTitle>
+          <Dialog fullWidth="true" maxWidth="xs" open={this.state.dialog === 'phone'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle align="center">Please update your phone number</DialogTitle>
             <DialogContent>
               <TextField
                 className={classes.dialog}
@@ -225,33 +217,29 @@ class ProfileInfo extends React.Component {
       );
     }
 
+    getUserTypePicker() {
+      let {classes} = this.props;
+      return(
+          <Dialog fullWidth="true" maxWidth="sm" open={this.state.dialog === 'userType'} onClose={() => this.setState({dialog: ''})}>
+            <DialogTitle align="center">You must make a new account to change user type</DialogTitle>
+
+            <DialogActions>
+              <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+      );
+    }
+
     getAffiliationPicker() {
       let {classes} = this.props;
       return(
-        <Dialog open={this.state.dialog === 'affiliation'} onClose={() => this.setState({dialog: ''})}>
-        <DialogTitle>Please update your affiliation</DialogTitle>
-        <DialogContent>
-        <FormControl
-          className={classes.dialog}
-          >
-          <InputLabel>Affiliation</InputLabel>
-          <Select
-            value={this.state.affiliation}
-            onChange={event => {this.setState({affiliation: event.target.value})}}
-            >
-            {this.state.integrators.map(function(integrator) {
-              return <MenuItem value={integrator}>{integrator}</MenuItem>
-            })}
-          </Select>
-          <FormHelperText>{this.state.affiliationError ? "Please enter your affiliation." : ""}</FormHelperText>
-        </FormControl>
-        </DialogContent>
+        <Dialog fullWidth="true" maxWidth="sm" open={this.state.dialog === 'affiliation'} onClose={() => this.setState({dialog: ''})}>
+        <DialogTitle align="center">You must make a new account to change your affiliation</DialogTitle>
         <DialogActions>
             <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
               Cancel
-            </Button>
-            <Button color='primary' variant="outlined" onClick={() => this.submit()}>
-              Submit
             </Button>
           </DialogActions>
         </Dialog>
@@ -275,6 +263,9 @@ class ProfileInfo extends React.Component {
             case 'affiliation':
               returnedDialogue = this.getAffiliationPicker();
               break;
+            case 'userType':
+              returnedDialogue = this.getUserTypePicker();
+              break;
             default:
               returnedDialogue = null;
               break;
@@ -292,6 +283,8 @@ class ProfileInfo extends React.Component {
               <TableCell><strong>{row.value}</strong></TableCell>
               <TableCell>
                 <TextField
+                variant="outlined"
+                fullWidth='true'
                 value = {this.state[row.key]}
                 onClick={event => {this.setState({dialog: row.key})}}
                 type="text"

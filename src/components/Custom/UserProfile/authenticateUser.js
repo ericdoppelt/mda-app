@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemText} from '@material-ui/core/';
+import {Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemText} from '@material-ui/core/';
 import axios from 'axios';
 import {Snackbar, Table, TableBody, TableCell, TableContainer, TableRow, TableHead, Typography, Paper} from '@material-ui/core';
 import Row from '../../UIzard/Row';
@@ -58,10 +58,13 @@ class AuthenticateUser extends React.Component {
       dialog: '',
       selected: {},
 
+      componentLoaded: false,
       loadError: false,
       deleteError: false,
       deleteSuccess: false,
       deleteHelper: '',
+
+      authenticateSuccess: false,
     }
   }
 
@@ -75,6 +78,7 @@ class AuthenticateUser extends React.Component {
         self.setState({
             accounts: response.data.results,
             loadError: false,
+            componentLoaded: true,
           });
         if(response.data.success===false){
           self.setState({
@@ -90,18 +94,15 @@ class AuthenticateUser extends React.Component {
       async submit() {
           let self = this;
           let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
-          console.log(self.state.selected['user']);
           await axios.post(url, {
               username: self.state.selected['user'],
           }, {
             headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
           }).then(response => {
-            console.log('Response');
-            console.log(response.data);
-            console.log(response.data['results']);
             this.setState({
                 dialog: '',
                 accounts: response.data['results'],
+                authenticateSuccess: true,
               });
             }
           ).catch(error => {
@@ -112,7 +113,6 @@ class AuthenticateUser extends React.Component {
     async deleteAccount() {
       let self = this;
       let url = 'https://mda-phoenix.herokuapp.com/user/deleteuser';
-      console.log(this.state.selected['user']);
       await axios.delete(url,{
         headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` },
         data: {username: self.state.selected['user'],},
@@ -248,6 +248,23 @@ class AuthenticateUser extends React.Component {
   }
 
   getAlert(){
+    if(this.state.authenticateSuccess){
+      return(
+        <Snackbar
+          open={this.state.authenticateSuccess}
+          autoHideDuration={15000}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          onClose={() => {this.setState({authenticateSuccess: false})}}
+          >
+          <Alert severity="success">
+            Authenticated account
+          </Alert>
+        </Snackbar>
+      );
+    }
     if (this.state.deleteError) {
       return(
         <Snackbar
@@ -286,7 +303,33 @@ class AuthenticateUser extends React.Component {
 
   render() {
     const {classes} = this.props;
-  if(this.state.accounts[0]== null){
+  if(this.state.componentLoaded == false){
+    return (
+      <div>
+        <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
+          <TableContainer className={classes.table} component={Paper}>
+            <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align='center' colSpan={4}>
+                  <Typography variant='h5'>Pending Accounts</Typography>
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+              <TableBody>
+                <StyledTableRow>
+                  <StyledTableCell width="100%" align='center' component="th" scope="row">
+                    <CircularProgress/>
+                  </StyledTableCell>
+                </StyledTableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Row>
+      </div>
+    )
+  }
+  else if(this.state.accounts[0]== null){
     return(
       <div>
       <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>

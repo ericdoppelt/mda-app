@@ -163,7 +163,7 @@ import {Alert} from '@material-ui/lab';
           ))}
           </TableBody>
         </Table>
-        <Button color="primary" variant={(this.state.newPassword==='' || this.state.confirmPassword==='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
+        <Button color="primary" variant={(this.state.newPassword==='' || this.state.confirmPassword===''|| this.state.oldPassword==='') ? 'outlined' : 'contained'} onClick={() => this.commitChange()}>
           Change Password
         </Button>
         <br/>

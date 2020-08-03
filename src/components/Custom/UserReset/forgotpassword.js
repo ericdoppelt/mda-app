@@ -82,7 +82,7 @@ class ForgotPassword extends React.Component {
               onClose={() => {this.setState({submitSuccess: false})}}
               >
               <Alert severity="success">
-                Link Sent
+                Email Sent
               </Alert>
             </Snackbar>
         );
@@ -111,7 +111,7 @@ class ForgotPassword extends React.Component {
       const {classes} = this.props; //Allows access to class styles defined above
       return (
         <div>
-          <Typography className={classes.subheader} variant='subtitle2'>Please enter your username<br/> We will email a link to reset your password </Typography>
+          <Typography className={classes.subheader} variant='subtitle2'>Please enter your username<br/> We will email you a temporary password</Typography>
           <TextField
           className={classes.textfield}
           label="Username"

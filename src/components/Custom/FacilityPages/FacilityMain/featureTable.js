@@ -16,7 +16,10 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: '#e0e0e0',
+    },
+    '&:nth-of-type(even)': {
+      backgroundColor: '#bdbdbd',
     },
     // hide last border
     '&:last-child td, &:last-child th': {
@@ -36,7 +39,7 @@ const useStyles = theme => ({
   },
  subheader: {
    marginTop: '10%',
-   marginBottom: '5%',
+   marginBottom: '3%',
  },
 });
 

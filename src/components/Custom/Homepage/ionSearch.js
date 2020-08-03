@@ -5,12 +5,14 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import { Alert } from '@material-ui/lab';
 import axios from 'axios';
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 
 
 const useStyles = theme => ({
   header: {
     marginTop: '5%',
+    marginBottom: '2%',
   },
   table: {
     width: '100%',
@@ -35,7 +37,10 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: '#e0e0e0',
+    },
+    '&:nth-of-type(even)': {
+      backgroundColor: '#bdbdbd',
     },
   },
 }))(TableRow);
@@ -54,7 +59,7 @@ class IonSearch extends React.Component {
 
     this.state = {
       ion: "",
-      minEnergy: 1,
+      minEnergy: "",
       maxEnergy: "",
       facilities: [],
       errorMessage: "",
@@ -66,31 +71,32 @@ class IonSearch extends React.Component {
       minEnergyErrorHelper: '',
       maxEnergyError: false,
       maxEnergyErrorHelper: '',
-      energyReverseError: [],
+      energyReverseError: false,
       noMatch: false,
-      validEnergyError: false,
+      validMinEnergyError: false,
+      validMaxEnergyError: false,
 
     }
   }
 
   handleSearch(event) {
     this.setState({
+      minEnergyErrorHelper: '',
+      maxEnergyErrorHelper: '',
       ionError: (this.state.ion === ''),
-      maxEnergyError: (this.state.minEnergy === '' || this.state.maxEnergy === ''),
-      minEnergyError: (this.state.minEnergy <= 0),
-      validEnergyError: !(this.isNaturalNumber(this.state.minEnergy)&&this.isNaturalNumber(this.state.maxEnergy)),
-      energyReverseError: (this.state.minEnergy > this.state.maxEnergy),
+      maxEnergyError: ( this.state.maxEnergy === ''),
+      minEnergyError: (this.state.minEnergy === ''),
+      validMinEnergyError: !(this.isNaturalNumber(this.state.minEnergy)),
+      validMaxEnergyError: !(this.isNaturalNumber(this.state.maxEnergy)),
+      energyReverseError: (parseFloat(this.state.minEnergy) > parseFloat(this.state.maxEnergy)),
     }, () => {
-      console.log('validEnergyError = '+ this.state.validEnergyError);
-      console.log('Min energy valid: '+this.isNaturalNumber(this.state.minEnergy));
-      console.log('Max eenegy valid: t'+this.state.maxEnergy + ' ' + this.isNaturalNumber(this.state.maxEnergy));
-
       if (this.state.ionError) this.setState({ionErrorHelper: "Please enter an ion"});
-      if (this.state.maxEnergyError) this.setState({minEnergyError: true, minEnergyErrorHelper: "Please enter a minimum energy", maxEnergyErrorHelper: "Please enter a maximum energy"});
-      if (this.state.minEnergyError) this.setState({minEnergyErrorHelper: "Minimum energy value must be positive"})
-      if (this.state.energyReverseError) this.setState({minEnergyError: true, maxEnergyError: true, minEnergyErrorHelper: "Min energy cannot be greater than max energy", maxEnergyErrorHelper: "Max energy cannot be less than min energy"});
-      if (this.state.validEnergyError) this.setState({minEnergyError: true, maxEnergyError: true,  minEnergyErrorHelper: "Energy must be a positive integer", maxEnergyErrorHelper: "Energy must be a positive integer"});
-      if(!(this.state.validEnergyError|| this.state.energyReverseError||this.state.ionError||this.state.minEnergyError||this.state.maxEnergyError)) this.submit(event);
+      if (this.state.maxEnergyError) this.setState({ maxEnergyErrorHelper: "Please enter a maximum energy"});
+      else if (this.state.validMaxEnergyError) this.setState({maxEnergyError: true, maxEnergyErrorHelper: "Energy must  be a positive integer",});
+      if (this.state.minEnergyError) this.setState({minEnergyErrorHelper: "Please enter a minimum energy"})
+      else if (this.state.validMinEnergyError) this.setState({minEnergyError: true,  minEnergyErrorHelper: "Energy must be a positive integer",});
+      if (this.state.energyReverseError && (!this.state.validMinEnergyError &&  !this.state.validMaxEnergyError)) this.setState({minEnergyError: true, maxEnergyError: true, minEnergyErrorHelper: "Min energy cannot be greater than max energy", maxEnergyErrorHelper: "Max energy cannot be less than min energy"});
+      if(!(this.state.validMinEnergyError|| this.state.validMaxEnergyError || this.state.energyReverseError||this.state.ionError||this.state.minEnergyError||this.state.maxEnergyError)) this.submit(event);
     });
   }
 
@@ -149,13 +155,11 @@ class IonSearch extends React.Component {
 
     render() {
       const { classes } = this.props;
+      var self = this;
       return (
       <div style={{width:'75%',}}>
           <Typography className={classes.header} variant='h4'>Search Facilities by Energy and Ion</Typography>
-          <br/>
-          <Typography variant='body1'>Enter ion atomic symbol and energy in MeV/amu to find matching facilities</Typography>
-          <br/>
-          <br/>
+          <Typography variant='body1' className={classes.header}>Enter ion atomic symbol (case sensitive) and energy in MeV/amu to find matching facilities</Typography>
           <TextField
             id="outlined-basic1"
             label="Ion"
@@ -169,7 +173,7 @@ class IonSearch extends React.Component {
             id="outlined-basic2"
             label="Min Energy"
             variant="outlined"
-            onChange={event => {this.setState({minEnergy: event.target.value, minEnergyError: false, validEnergyError: false, minEnergyErrorHelper: '',})}}
+            onChange={event => {this.setState({minEnergy: event.target.value, energyReverseError:false, minEnergyError: false, validEnergyError: false, minEnergyErrorHelper: '',})}}
             error={this.state.minEnergyError}
             helperText={this.state.minEnergyErrorHelper}
             />
@@ -178,16 +182,15 @@ class IonSearch extends React.Component {
             id="outlined-basic3"
             label="Max Energy"
             variant="outlined"
-            onChange={event => {this.setState({maxEnergy: event.target.value, maxEnergyError: false, validEnergyError: false, maxEnergyErrorHelper: '',})}}
+            onChange={event => {this.setState({maxEnergy: event.target.value, energyReverseError: false, maxEnergyError: false, validEnergyError: false, maxEnergyErrorHelper: '',})}}
             error={this.state.maxEnergyError}
             helperText={this.state.maxEnergyErrorHelper}
             />
             <br/>
-          <Button variant="contained" style={{height: '50px', width: '150px', marginTop:'1%',}} onClick={(event) => this.handleSearch(event)}>
+          <Button variant="contained" style={{align: 'center', height: '50px', width: '150px', marginTop:'1%', marginBottom:'5%'}} onClick={(event) => this.handleSearch(event)}>
             Search
           </Button>
-          <Typography variant="h3">Matching Facilities</Typography>
-          <TableContainer component={Paper}>
+          <Typography variant="h4" style={{marginBottom:'3%'}} >Matching Facilities</Typography>
             <Table className={classes.table} aria-label="Matching Facilities List">
               <TableHead>
                 <TableRow>
@@ -198,22 +201,22 @@ class IonSearch extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {this.state.facilities.map((facDict, self) => (
+              {this.state.facilities.map((facDict) => (
                   <StyledTableRow key={facDict.facility}>
-                    <StyledTableCell component="th" scope="row">{facDict.facility}</StyledTableCell>
+                    <StyledTableCell align="center" component="th" scope="row">{facDict.facility}</StyledTableCell>
                     <StyledTableCell align="center">
                       {facDict.ions.map(function(ion){
                         return(
                           <List>
                             <ListItem>
-                              <ListItemText primary={ion}/>
+                              <ListItemText align="center" primary={ion}/>
                             </ListItem>
                           </List>
                         )
                       })}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      <Button href={facilityLinks[facDict.facility].info}>
+                      <Button onClick={() => {self.props.history.push(facilityLinks[facDict.facility].info)}}>
                       <HomeIcon/>
                       </Button>
                     </StyledTableCell>
@@ -226,7 +229,6 @@ class IonSearch extends React.Component {
                 ))}
               </TableBody>
             </Table>
-          </TableContainer>
           <br/><br/>
           {this.getAlert()}
         </div>
@@ -234,4 +236,4 @@ class IonSearch extends React.Component {
   }
 }
 
-export default withStyles(useStyles, { withTheme: true })(IonSearch);
+export default withRouter(withStyles(useStyles, { withTheme: true })(IonSearch));
