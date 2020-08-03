@@ -24,7 +24,7 @@ from pdf_builder import FormBuilder
 
 
 @app.route('/request/approve', methods=['POST'])
-#@jwt_required
+@jwt_required
 def approve():
     result = ""
     try:
@@ -55,13 +55,16 @@ def approve():
     return result
 
 @app.route('/request/modify', methods=['POST'])
-#@jwt_required
+@jwt_required
 def request_modify():
     result = ""
 
     try:
         req = request.get_json()
+        username = get_jwt_identity()
+        user = Users.query.filter_by(username=username).first()
         beam_request = requests.query.filter_by(id=req['id']).first()
+
 
         msg = Message("Beam Time Request Modified")
         msg.recipients = [beam_request.email]
@@ -99,27 +102,28 @@ def request_modify():
                 for i, ion in enumerate(req['ions']):
                     beam = Beams.query.filter_by(ion=ion, amev=req['energies'][i]).one()
                     ion_ids.append(beam.id)
+            else:
+                ion_ids = beam_request.ions
         else:
             ion_ids = beam_request.ions
 
-        modified = False
         for attr, value in beam_request.__dict__.items():
             if attr in req and req[attr] != "" and attr != 'id':
-                modified = True
                 setattr(beam_request, attr, req[attr])
         if req['facility'] != 'MSU':
             for attr, value in req['facility'].__dict__.items():
                 if attr in req and req[attr] != "" and attr != 'id' and attr != 'request_id':
-                    modified = True
                     setattr(req['facility'], attr, req[attr])
 
-        beam_request.approved_integrator = True
-        beam_request.status = "Approved with changes"
+        
 
-        if modified:
-            beam_request.modified = True
-            beam_request.ions = ion_ids
+        beam_request.ions = ion_ids
+        beam_request.modified = True
+        if user.user_type == 'Integrator':
+            beam_request.approved_integrator = True
+            beam_request.status = "Approved with changes"
             # mail.send(msg)
+
         db.session.commit()
 
         result = {'success' : True}
@@ -129,43 +133,14 @@ def request_modify():
         'success' : False}
     return jsonify(result)
 
-# @app.route('/request/undo', methods=['POST'])
-# @jwt_required
-# def reject_form():
-#     result = ""
-#     try:
-#         req = request.get_json()
-#         beam_request = requests.query.filter_by(id=req['id']).first()
-#         pdf = FormBuilder(req)
-#         msg = Message("Beam Time Request Rejected") #, cc=[req['email']])
-#         msg.recipients = [beam_request.email]
-        
-#         msg.body = "Your beam time request was rejected for the following reason: \n\n"
-#         msg.body += req['rejectNote'] + "\n\n"
-
-#         beam_request.integrator_comment =req['rejectNote']
-#         beam_request.status = "Rejected"
-#         beam_request.approved_facility = False
-#         beam_request.approved_integrator = False
-#         beam_request.rejected = True
-#         db.session.commit()
-#         # mail.send(msg)
-#         result = {'success' : True}
-#     except Exception as e:
-#         print(e)
-#         result = {'error' : str(e),
-#         'success' : False}
-#     return result
-
 @app.route('/request/reject', methods=['POST'])
-# @jwt_required
+@jwt_required
 def reject_form():
     result = ""
     try:
         req = request.get_json()
         beam_request = requests.query.filter_by(id=req['id']).first()
-        pdf = FormBuilder(req)
-        msg = Message("Beam Time Request Rejected") #, cc=[req['email']])
+        msg = Message("Beam Time Request Rejected", cc=[req['email']])
         msg.recipients = [beam_request.email]
         
         msg.body = "Your beam time request was rejected for the following reason: \n\n"
@@ -177,8 +152,9 @@ def reject_form():
         beam_request.approved_integrator = False
         beam_request.rejected = True
         db.session.commit()
-        # mail.send(msg)
+        mail.send(msg)
         result = {'success' : True}
+
     except Exception as e:
         print(e)
         result = {'error' : str(e),
@@ -271,15 +247,17 @@ def getRequests(route):
             user = Users.query.filter_by(username=username).first()
             if user.user_type == 'Integrator':
                 request_forms = requests.query.filter(and_(requests.integrator==user.affiliation,
-                or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start))).all()
+                or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start), 
+                requests.status != 'Rejected')).all()
             else:
                 request_forms = requests.query.filter(and_(requests.username==username,
-                or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start))).all()
+                or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start),
+                requests.status != 'Rejected')).all()
         if route == 'integrator':
             user = Users.query.filter_by(username=username).first()
             if user.user_type != 'Integrator':
                 raise Exception("You must be an integrator to view this page!")
-            request_forms = requests.query.filter_by(integrator=user.affiliation).all()
+            request_forms = requests.query.filter(and_(requests.integrator == user.affiliation, requests.status != 'Rejected')).all()
         if route == 'tester':
             request_forms = requests.query.filter_by(username=username).all()
         if route == 'id' and request.method == 'POST':
@@ -297,28 +275,8 @@ def getRequests(route):
 
     return result
 
-# @app.route('/getforms/integrator', methods=['GET'])
-# @jwt_required
-# def getRequests_integrators():
-#     username = get_jwt_identity()
-#     result = ""
-
-#     try:
-#         user = Users.query.filter_by(username=username).first()
-#         if user.user_type != 'integrator':
-#             raise Exception("You must be an integrator to view this page!")
-#         request_forms = requests.query.filter_by(integrator=user.affiliation).all()
-#         myForms = getForms(request_forms)
-#         result = {'requests' : myForms}
-
-#     except Exception as e:
-#         print(e)
-#         result = {'error' : str(e),
-#         'success' : False}
-
-#     return result
-
 @app.route('/request/add-range', methods=['POST'])
+@jwt_required
 def add_range():
     result = ""
     req = request.get_json()
@@ -355,7 +313,6 @@ def filterion():
         and_(Beams.ion.ilike(ion + '%'), Beams.amev.between(minEnergy, maxEnergy)))).all()
         myDict = {}
         filteredBeams = []
-        print(ionCharsReq)
         for beam in beams:
             ionCharsBeam = " ".join(re.findall("[a-zA-Z]+", beam.ion))
             print(ionCharsBeam)
@@ -388,3 +345,5 @@ def filterion():
         'success' : False}
 
     return result
+
+

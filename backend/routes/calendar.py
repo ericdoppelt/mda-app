@@ -78,7 +78,7 @@ def tasks():
 
 
 @app.route('/calendar-entry', methods=['POST'])
-# @jwt_required
+@jwt_required
 def create_entry():
 
     username = get_jwt_identity()
