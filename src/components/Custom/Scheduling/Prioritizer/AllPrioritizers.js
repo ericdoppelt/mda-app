@@ -86,12 +86,15 @@ class AllPrioritizers extends React.Component {
   }
 
   createPrioritizer(range) {
-    return <Prioritizer
+    console.log(range);
+    let prioritizer = (<Prioritizer
       start={range.startDate} 
       end= {range.endDate} 
       facility= {range.facility}
       hours = {range.hours}
-      />
+      />);
+    console.log(prioritizer);
+    return prioritizer;
   }
 
   getMessage() {
@@ -109,7 +112,7 @@ class AllPrioritizers extends React.Component {
         <InputLabel>Select a Range</InputLabel>
         <Select
           value={this.state.displayedRange}
-          onChange={event => {this.setState({displayedRange: event.target.value})}}
+          onChange={(event) => {this.setState({displayedRange: event.target.value})}}
           >
           {this.state.ranges.map(function(range) {
           let start = new Date(range.startDate);
@@ -123,13 +126,13 @@ class AllPrioritizers extends React.Component {
   }
   
   render() {
+    console.log("render");
     return(
         <div>
             {this.getMessage()}
             {this.getSelector()}
             {this.getPrioritizer()}
         </div>
-    
     );
   }
 }

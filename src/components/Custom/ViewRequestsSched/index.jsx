@@ -16,7 +16,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Row from '../../UIzard/Row'
-import Image from '../../../components/UIzard/Image';
+import Image from '../../UIzard/Image';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -137,7 +137,7 @@ const useStyles = theme => ({
 });
 
 
-class ViewRequests extends React.Component {
+class ViewRequestsSched extends React.Component {
 
   /*** INITIALIZE STATE VARIABLES ***/
   calendarComponentRef = React.createRef();
@@ -269,17 +269,18 @@ class ViewRequests extends React.Component {
   viewMore(row) {
     return(
       <Button 
-            id="button" 
-            variant="contained"
-            style={{width: '100px', height: '30px', fontSize: '12px'}}
-            onClick={(event) => this.handleViewMore(row)}
-          >
+        id="button" 
+        variant="contained"
+        style={{width: '100px', height: '30px', fontSize: '12px'}}
+        onClick={() => {this.handleViewMore(row)}}
+      >
             View More
       </Button>
     );
   }
 
   handleViewMore(row) {
+    console.log('viewmore???')
     this.setState(state=>({
       id: row.id,
       name: row.name,
@@ -323,6 +324,7 @@ class ViewRequests extends React.Component {
       rejectNote: row.rejectNote,
       component: "view",
     }))
+  
   }
 
   handleBack() {
@@ -488,28 +490,10 @@ class ViewRequests extends React.Component {
               id="button" 
               variant="contained"
               style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-              onClick={(event) => this.handleApprove()}
+              onClick={() => {this.props.addEvent(this.state.id)}}
               color="primary"
             >
-              Approve
-            </Button>
-
-            <Button 
-              id="button" 
-              variant="contained"
-              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-              onClick={(event) => this.handleModify()}
-            >
-              Modify
-            </Button>
-            <Button 
-              id="button" 
-              variant="contained"
-              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-              onClick={(event) => this.handleDialog()}
-              color="secondary"
-            >
-              Reject
+              Add
             </Button>
           </Row>
         </div>
@@ -534,10 +518,23 @@ class ViewRequests extends React.Component {
           {logo}
         </Row>
         <br/>
-        <Typography variant="h6">
-          Beam Request Forms for {this.state.loggedAffiliation}
-        </Typography>
-        <br/><br/>
+        <Row style={{justifyContent: 'center'}}>
+          <Typography variant="h6">
+            Beam Request Forms for {this.state.loggedAffiliation}
+          </Typography>
+        </Row>
+        <br/>
+        <Row style={{justifyContent: 'center'}}>
+          <Button 
+            color="secondary" 
+            variant='contained' 
+            onClick={this.props.addEvent}
+          >
+            Add Tune Time
+          </Button>
+        </Row>
+        <br/>
+        
       </div>
     );
   }
@@ -1055,4 +1052,4 @@ class ViewRequests extends React.Component {
   }
 }
 
-export default withRouter(withStyles(useStyles)(ViewRequests));
+export default withRouter(withStyles(useStyles)(ViewRequestsSched));
