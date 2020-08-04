@@ -15,115 +15,112 @@ ANNOT_RECT_KEY = '/Rect'
 SUBTYPE_KEY = '/Subtype'
 WIDGET_SUBTYPE_KEY = '/Widget'
 
-class FormBuilder():
-    def __init__(self, form):
-        self.form = form
-        self.facility = form.facility
+def attach(beamRequest, message, rangeId, date, idx):
+    idx = str(idx)
+    msg = copy.deepcopy(message)
 
-    def attach(self, beamRequests):
+    if beamRequest.facility == 'TAMU':
+        # msg.recipients = ['clark@comp.tamu.edu']
+
+        baseName = 'request_forms/TAMU/'
+        extraInfo = TAMU.query.filter_by(request_id=beamRequest.id).first()
+        dictReq = beamRequest.__dict__
+        dictReq['badDates'] = extraInfo.badDates
+        template = "TAMU_request_template.pdf"
+        output = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
+        fill(dictReq, template, output)
+
+        with app.open_resource(output + '.pdf') as fp:
+            msg.attach(output + '.pdf', output + '/pdf', fp.read())
+
+
+    if beamRequest.facility == 'LBNL':
+        # msg.recipients = ['88beamrequest@lbl.gov']
+
+        baseName = 'request_forms/LBNL/'
+        extraInfo = LBNL.query.filter_by(request_id=beamRequest.id).first()
+        text = lbnl(beamRequest, extraInfo)
+        filename = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
+        text_file = open(filename + '.txt', "w+")
+        text_file.write(text)
+        text_file.close()
+
+        with app.open_resource(filename + '.txt') as fp:
+            msg.attach(filename + '.txt', "text/plain", fp.read())
+
+    if beamRequest.facility == 'NSRL':
+        # msg.recipients = ['sivertz@lbl.gov']
         
+        baseName = 'routes/request_forms/NSRL/'
+        extraInfo = NSRL.query.filter_by(request_id=beamRequest.id).first()
+        baseDict = beamRequest.__dict__
+        extraDict = extraInfo.__dict__
+        dictReq = {**baseDict, **extraDict}
+        template = "TAMU_request_template.pdf"
+        output = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
+        fill(dictReq, template, output + ".pdf")
 
-        # if self.facility == 'TAMU':
-        #     # msg.recipients = ['clark@comp.tamu.edu']
+        with app.open_resource(output + '.pdf') as fp:
+            msg.attach(output + '.pdf', output + '/pdf', fp.read())
+        # print("2", msg)
 
-        #     baseName = 'request_forms/TAMU/'
-        #     for i, form in enumerate(beamRequests):
-        #         extraInfo = TAMU.query.filter_by(request_id=form.id).first()
-        #         form['badDates'] = extraInfo.badDates
-        #         pdf = FormBuilder(form)
-        #         template = "TAMU_request_template.pdf"
-        #         output = baseName + form.company + '_' + i
-        #         pdf.fill(template, output)
+    if beamRequest.facility == 'MSU':
+        # msg.recipients = ['88beamrequest@lbl.gov']
+        
+        baseName = 'request_forms/MSU/'
+        dictReq = beamRequest.__dict__
+        template = "Universal_request_template.pdf"
+        output = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
+        fill(dictReq, template, output)
 
-        #         with app.open_resource(output + '.pdf') as fp:
-        #             msg.attach(output + '.pdf', output + '/pdf', fp.read())
-        # if self.facility == 'LBNL':
-        #     # msg.recipients = ['88beamrequest@lbl.gov']
+        with app.open_resource(output + '.pdf') as fp:
+            msg.attach(output + '.pdf', output + '/pdf', fp.read())
 
-        #     baseName = 'request_forms/LBNL/'
-        #     for i, form in enumerate(beamRequests):
-        #         extraInfo = LBNL.query.filter_by(request_id=form.id).first()
-        #         textBuilder = FormBuilder(form)
-        #         text = textBuilder.lbnl(extraInfo)
-        #         filename = baseName + form.company + '_' + i
-        #         text_file = open(filename + '.txt', "w+")
-        #         text_file.write(text)
-        #         text_file.close()
+    
 
-        #         with app.open_resource(filename + '.txt') as fp:
-        #             msg.attach(filename + '.txt', filename + '/txt', fp.read())
+    return msg
 
-        # if self.facility == 'NSRL':
-        #     # msg.recipients = ['88beamrequest@lbl.gov']
-            
-        #     baseName = 'request_forms/NSRL/'
-        #     for i, form in enumerate(requests):
-        #         extraInfo = NSRL.query.filter_by(request_id=form.id).first()
-        #         textBuilder = FormBuilder(form)
-        #         text = textBuilder.lbnl(extraInfo)
-        #         filename = baseName + form.company + '_' + i
-        #         text_file = open(filename + '.txt', "w+")
-        #         n = text_file.write()
-        #         text_file.close()
+def fill(form, template, output):
+    template_pdf = pdfrw.PdfReader(template)
+    annotations = template_pdf.pages[0][ANNOT_KEY]
+    for annotation in annotations:
+        if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
+            if annotation[ANNOT_FIELD_KEY]:
+                key = annotation[ANNOT_FIELD_KEY][1:-1]
+                if key in form.keys():
+                    annotation.update(
+                        pdfrw.PdfDict(V='{}'.format(form[key]))
+                    )
+    template_pdf.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
+    pdfrw.PdfWriter().write(output, template_pdf)
 
-        #         with app.open_resource(filename + '.txt') as fp:
-        #             msg.attach(filename + '.txt', filename + '/txt', fp.read())
-        # if self.facility == 'MSU':
-        #     # msg.recipients = ['88beamrequest@lbl.gov']
-            
-        #     baseName = 'request_forms/MSU/'
-        #     for i, form in enumerate(requests):
-        #         textBuilder = FormBuilder(form)
-        #         text = textBuilder.lbnl(extraInfo)
-        #         filename = baseName + form.company + '_' + i
-        #         text_file = open(filename + '.txt', "w+")
-        #         n = text_file.write()
-        #         text_file.close()
+def lbnl(form, extraInfo):
 
-        #         with app.open_resource(filename + '.txt') as fp:
-        #             msg.attach(filename + '.txt', filename + '/txt', fp.read())
+    body = "Principal Investigator Name: " + form.name + "\n\n\n"
+    body += "Principal Investigator Organization: " + form.company + "\n\n\n"
+    body += "Principal Investigator E-mail: " + form.email + "\n\n\n"
+    body += "Principal Investigator Address:" + form.address + "\n\n\n"
+    body += "Principal Investigator Office Phone: " + extraInfo.officePhone + "\n\n\n"
+    body += "Principal Investigator Cell Phone During Experiment: " + form.cell + "\n\n\n"
+    body += "Contract/Financial Point of Contact Name: " + form.financierName + "\n\n\n"
+    body += "Contract/Financial Point of Contact E-mail: " + form.financierEmail + "\n\n\n"
+    body += "Contract/Financial Point of Contact Telephone: " + form.financierPhone + "\n\n\n"
+    body += "Title of Experiment/Proposal: " + form.title + "\n\n\n"
+    body += "Abstract of Experiment/Proposal: " + extraInfo.abstract + "\n\n\n"
+    body += "Desired Start Date of Run: " + form.scheduled_start + "\n\n\n"
+    body += "Alternate Start Date of Run: " + extraInfo.alternateDate + "\n\n\n"
+    body += "Total Tune & Run Hours Needed: " + form.hours + "\n\n\n"
+    body += "Target Material(s) and Thickness: " + extraInfo.targetMaterials + "\n\n\n"
+    # body += "Funding Source: " + form['fundingSource'] + "\n\n\n"
+    body += "Potential Safety Concerns: " + extraInfo.safetyConcerns + "\n\n\n"
+    body += "Type of Beam Desired: " + form.beamType + "\n\n\n"
+    body += "Special Request Ions: " + form.specialIons + "\n\n\n"
+    body += "Desired Energy: " + extraInfo.energies + "\n\n\n"
+    body += "Desired Intensity/Flux: " + extraInfo.desiredIntensity + "\n\n\n"
+    body += "Will the run be conducted in air or vacuum?: " + extraInfo.airOrVacuum + "\n\n\n"
+    body += "Does this work have export control restrictions?: " + extraInfo.controlRestrictions + "\n\n\n"
+    body += "Are all electrical/electronic equipment that will be used onsite electrically safe? " + extraInfo.electricallySafe + "\n\n\n"
+    body += "List the names of ALL personnel participating in the experiment: " + form.personnel + "\n\n\n"
+    body += "Comments: " + form.comments + "\n\n\n"
 
-    def fill(self, template, output):
-        template_pdf = pdfrw.PdfReader(template)
-        annotations = template_pdf.pages[0][ANNOT_KEY]
-        for annotation in annotations:
-            if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
-                if annotation[ANNOT_FIELD_KEY]:
-                    key = annotation[ANNOT_FIELD_KEY][1:-1]
-                    if key in self.form.keys():
-                        annotation.update(
-                            pdfrw.PdfDict(V='{}'.format(self.form[key]))
-                        )
-        template_pdf.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
-        pdfrw.PdfWriter().write(output, template_pdf)
-
-    def lbnl(self, extraInfo):
-
-        body = "Principal Investigator Name: " + self.form.name + "\n\n\n"
-        body += "Principal Investigator Organization: " + self.form.company + "\n\n\n"
-        body += "Principal Investigator E-mail: " + self.form.email + "\n\n\n"
-        body += "Principal Investigator Address:" + self.form.address + "\n\n\n"
-        body += "Principal Investigator Office Phone: " + extraInfo.officePhone + "\n\n\n"
-        body += "Principal Investigator Cell Phone During Experiment: " + self.form.cell + "\n\n\n"
-        body += "Contract/Financial Point of Contact Name: " + self.form.financierName + "\n\n\n"
-        body += "Contract/Financial Point of Contact E-mail: " + self.form.financierEmail + "\n\n\n"
-        body += "Contract/Financial Point of Contact Telephone: " + self.form.financierPhone + "\n\n\n"
-        body += "Title of Experiment/Proposal: " + self.form.title + "\n\n\n"
-        body += "Abstract of Experiment/Proposal: " + extraInfo.abstract + "\n\n\n"
-        body += "Desired Start Date of Run: " + self.form.scheduled_start + "\n\n\n"
-        body += "Alternate Start Date of Run: " + extraInfo.alternateDate + "\n\n\n"
-        body += "Total Tune & Run Hours Needed: " + self.form.hours + "\n\n\n"
-        body += "Target Material(s) and Thickness: " + extraInfo.targetMaterials + "\n\n\n"
-        # body += "Funding Source: " + self.form['fundingSource'] + "\n\n\n"
-        body += "Potential Safety Concerns: " + extraInfo.safetyConcerns + "\n\n\n"
-        body += "Type of Beam Desired: " + self.form.beamType + "\n\n\n"
-        body += "Special Request Ions: " + self.form.specialIons + "\n\n\n"
-        body += "Desired Energy: " + extraInfo.energies + "\n\n\n"
-        body += "Desired Intensity/Flux: " + extraInfo.desiredIntensity + "\n\n\n"
-        body += "Will the run be conducted in air or vacuum?: " + extraInfo.airOrVacuum + "\n\n\n"
-        body += "Does this work have export control restrictions?: " + extraInfo.controlRestrictions + "\n\n\n"
-        body += "Are all electrical/electronic equipment that will be used onsite electrically safe? " + extraInfo.electricallySafe + "\n\n\n"
-        body += "List the names of ALL personnel participating in the experiment: " + self.form.personnel + "\n\n\n"
-        body += "Comments: " + self.form.comments + "\n\n\n"
-
-        return body
+    return body

@@ -104,6 +104,43 @@ def create_entry():
 
     return result
 
+@app.route('/calendar/delete', methods=['DELETE'])
+@jwt_required
+def delete_calendar():
+    result = ""
+    try:
+        req = request.get_json()
+
+        entry = Calendar.query.filter_by(id=req['id']).first()
+
+        try:
+            beamReq = requests.query.filter_by(id=entry.requestId).first()
+            beamReq.status = "Approved"
+            beamReq.scheduled_start = None
+
+            msg = Message("Beam Time Request Date Rescinded")
+            msg.recipients = [beamReq.email]
+            
+            msg.body = "Your beam time request " + beamReq.title
+            msg.body += " has had it's scheduled date rescinded.\n\n"
+            msg.body += "ISEEU Team"
+
+            mail.send(msg)
+        except:
+            pass
+
+        Calendar.query.filter_by(id=req['id']).delete()
+        db.session.commit()
+
+        result = {'error' : "",
+        'success' : True}
+
+    except Exception as e:
+        result = {'error' : str(e),
+        'success' : False}
+    
+    return result
+
 def add_calendar(beam_request):
     result = ""
 

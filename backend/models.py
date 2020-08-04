@@ -273,6 +273,7 @@ class requests(db.Model):
     hoursOff = db.Column(db.ARRAY(db.Integer()))
     totalHours = db.Column(db.ARRAY(db.Integer()))
     personnel = db.Column(db.ARRAY(db.String(200)))
+    title = db.Column(db.String(200))
 
     def create_request(self):
         db.session.add(self)

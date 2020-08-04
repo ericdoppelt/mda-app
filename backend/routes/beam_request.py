@@ -10,7 +10,10 @@ from setup.extensions import db
 from models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, requests,
                     Integrator, Ranges, LBNL, TAMU, NSRL)
 
-from .request_helper import FormBuilder
+from .request_helper import attach
+
+import linecache
+import sys
 
 
 def add_request(form, username):
@@ -173,8 +176,8 @@ def create_calendar_entry(req):
         username = req.username,
         facility = req.facility,
         integrator = req.integrator,
-        totalTime = req.totalTime,
-        startDate = req.startDate,
+        totalTime = req.beam_time,
+        startDate = req.scheduled_start,
         private = False,
         title = req.title,
         requestId = req.id
@@ -183,39 +186,114 @@ def create_calendar_entry(req):
 
     return result
 
+def getBeams(beamReqs):
+    msg = ""
+    for form in beamReqs:
+        ions = {}
+        if form.facility == 'NSRL':
+            extraInfo = NSRL.query.filter_by(request_id=form.id).one()
+            if form.ions != None or form.ions != []:
+                for i, ion in enumerate(form.ions):
+                    beam = Beams.query.filter_by(id=ion).one()
+                    if extraInfo.energies[i] in ions:
+                        ions[str(extraInfo.energies[i])].append(beam.ion)
+                    else:
+                        ions[str(extraInfo.energies[i])] = [beam.ion]
+        else:
+            for i, ion in enumerate(form.ions):
+                beam = Beams.query.filter_by(id=ion).one()
+                if beam.amev in ions:
+                    ions[str(beam.amev)].append(beam.ion)
+                else:
+                    ions[str(beam.amev)] = [beam.ion]
+        msg += form.title + " at " + form.company + "\n"
+        msg += "scheduled for " + form.scheduled_start.strftime('%m/%d/%Y')
+        msg += " at " + form.scheduled_start.strftime('%I %p') + "\n"
+        for key in ions:
+            msg += key + ': ' + ', '.join(ions[key]) + "\n"
+            print(key, ions[key])
+        msg += "\n"
+
+    return msg
+
+def sendTesterMail(beamReq):
+    msg = Message("Beam Time Request Scheduled")
+    msg.recipients = [beamReq.email]
+    
+    msg.body = "Your beam time request " + beamReq.title
+    msg.body += " has been scheduled for " + beamReq.scheduled_start.strftime('%m/%d/%Y')
+    msg.body += " at " + beamReq.scheduled_start.strftime('%I %p') + "\n\n"
+    msg.body += "Thanks and have a wonderful day!\n"
+    msg.body += "The ISEEU Team"
+
+    # TODO
+    # mail.send(msg)
+
+def setValues(form, date, rangeId):
+    form.status = "Scheduled"
+    form.request_range = rangeId
+    form.scheduled_start = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
+
+    
+
 @app.route('/request/send-forms', methods=['POST'])
 @jwt_required
 def send_forms():
     
     try:
+        username = get_jwt_identity()
+        user = Users.query.filter_by(username=username).first()
         req = request.get_json()
         ids = req['ids']
         beamReqs = requests.query.filter(requests.id.in_(ids)).all()
+        rang = Ranges.query.filter_by(id=req['rangeId']).first()
+        
+        
 
-        msg = Message("Send Request Form Demo", cc=[req['email']])
+        msg = Message("Send Request Form Demo")
+        msg.recipients = ["robcyale@gmail.com"]#[user.email]
+
+        # for i, form in enumerate(beamReqs):
+        #     setValues(form, req['dates'][i], rang.id)
+        #     # print("1", msg)
+        #     msg = attach(form, msg, rang.id, req['dates'][i], i)
+        #     sendTesterMail(form)
+        #     if rang.scheduled:
+        #         try:
+        #             entry = Calendar.query.filter_by(id=req.requestId).first()
+        #             entry.startDate = req['dates'][i]
+        #         except:
+        #             create_calendar_entry(form)
+        #     else:
+        #         create_calendar_entry(form)
+        #     break
 
         msg.body = "Here are the dates, times, and ions requested:\n\n"
 
+        msg.body += getBeams(beamReqs)
+
         msg.body += "Attached are the details of each request\n\n"
 
-        msg.body += ("Please do not reply to this email. Please email "
-                    + req['email'] + " for questions.\n\n\n")
-
         msg.body += "Thanks and have a wonderful day!\n\n"
-        msg.body += "ISEEU"
+        msg.body += "The ISEEU Team"
+        # print(msg)
 
-        for i, req in enumerate(beamReqs):
-            if req['scheduled']:
-                try:
-                    entry = Calendar.query.filter_by(id=req.requestId).first()
-                    entry.startDate = req['dates'][i]
-                    db.session.commit()
-                except:
-                    create_calendar_entry(req)
-            else:
-                create_calendar_entry(req)
-        print(msg)
+        rang.scheduled = True
+        db.session.commit()
+        mail.send(msg)
+
+        return jsonify({'success': True, 'msg': "Scheduled requests successfully"}), 200
 
     except Exception as e:
         print(e)
+        PrintException()
         return jsonify({'success': False, 'msg': str(e)}), 500
