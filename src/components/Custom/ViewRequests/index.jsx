@@ -575,6 +575,12 @@ class ViewRequests extends React.Component {
     }
   }
 
+  closeSnackBar() {
+    if (this.props.location.state != undefined) {
+      this.props.location.state.formSubmitted = false
+
+    }
+  }
 
   /*** RENDER CALENDAR APPEARANCE ***/
   render() {
@@ -1030,7 +1036,7 @@ class ViewRequests extends React.Component {
             anchorOrigin={{vertical: 'top',horizontal: 'center'}}
             open={this.props.location.state !== undefined && this.props.location.state.formSubmitted} 
             autoHideDuration={6000} 
-            onClose={this.props.location.state.formSubmitted = false}
+            onClose={this.closeSnackBar()}
           >
             <Alert severity="success">
               The form has been submitted.
@@ -1047,7 +1053,6 @@ class ViewRequests extends React.Component {
       </div>
     );
   }
-
 }
 
 export default withRouter(withStyles(useStyles)(ViewRequests));
