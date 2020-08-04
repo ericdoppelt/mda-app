@@ -19,7 +19,6 @@ export default function Home() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Row style={{ justifyContent: 'center', minWidth: '50px', minHeight: '50px' }}>
-            <Card style={{ justifyContent: 'center', minWidth: '50px', minHeight: '500px', width: '500px', flexGrow: '0' }}>
               <Stack style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                 <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
                   <Image style={{ width: '120px', height: '120px', backgroundImage: 'url(/images/ISEEULogo.png)' }} />
@@ -28,7 +27,6 @@ export default function Home() {
                   <ForgotUsername/>
                 </Row>
               </Stack>
-            </Card>
           </Row>
         </main>
       </div>
