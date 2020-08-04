@@ -79,14 +79,23 @@ function optimize(requestsSplit, startDate, endDate) {
 
     addTunes(returnedSchedule, requestsSplit, pointer); 
     findPerfectSixteens(returnedSchedule, allRequests, pointer);
-
     findPerfectEights(returnedSchedule, allRequests, pointer);
 
     //findSlightSixteens(returnedSchedule, allRequests, downtime);
     //findSlightEights(returnedSchedule, allRequests, downtime);
-    return [pointer.beamTime, pointer.downTime, returnedSchedule];
+
+    if (hasValidEnd(pointer)) return [pointer.beamTime, pointer.downTime, returnedSchedule];
+    else return false;
 }
 
+function hasValidEnd(pointer) {
+    if (pointer.endTune) {
+        let endTesting = new Date(pointer.end.getTime());
+        endTesting.setHours(endTesting.getHours() - 4);
+        if (pointer.current > endTesting) return false;
+    } else if (pointer.current > pointer.end) return false;
+    else return true;
+}
 
 function addTunes(returnedSchedule, splitRequests, pointer) {
     
@@ -240,9 +249,68 @@ function getEightsMatch(mainRequest, allRequests) {
     }
 
     // HERE MEANS NO BASE CASE OF TWO +1S WERE FOUND
-    if (neutralOffsets.length === 2) return [[neutralOffsets[0]],[neutralOffsets[1]], 0];
+    if (possibleMatches.length === 0) return false;
+    else if (neutralOffsets.length === 2) return [[neutralOffsets[0]],[neutralOffsets[1]], 0];
     else if (positiveOffsets.length === 2) return [[positiveOffsets[0]], [positiveOffsets[1]], 1];
-    else return false;
+
+    let negativeOffsets = [];
+    // CLEAR THESE BECAUSE THEY WILL BE ADDED TO THE SUBSET LATER ON!
+    neutralOffsets = [];
+    positiveOffsets = [];
+
+    let n = possibleMatches.length; 
+    let totalShifts, subset;
+
+    for (let i = 0; i < (1<<n); i++) {
+        subset = [];
+        totalShifts = 0
+        for (let j = 0; j < n; j++) {
+            if ((i & (1 << j)) > 0) {
+                subset.push(possibleMatches[j]);
+                totalShifts += possibleMatches[j].shifts;
+            }
+        }
+        // IF THEY SUM TO CLOSE TO +/-1 SHIFTS, CONSIDER THEM
+        // OTHERWISE IGNORE
+        if (totalShifts === shifts + 1) positiveOffsets.push(subset);
+        if (totalShifts === shifts) neutralOffsets.push(subset);
+        if (totalShifts === shifts - 1) negativeOffsets.push(subset);
+    }
+
+    if (negativeOffsets.length >= 2) {
+        console.log("-1 EIGHT SUBSET");
+        for (let i = 0; i < negativeOffsets.length; i++) {
+            console.log(negativeOffsets[i]);
+        }
+        let smallestSubset = getSmallestSubset(negativeOffsets);
+        removeSubset(negativeOffsets, smallestSubset);
+        let secondSmallestSubset = getSmallestSubset(negativeOffsets);
+        return [smallestSubset, secondSmallestSubset, -1];
+    }
+
+    if (neutralOffsets.length >= 2) {
+        console.log("0 EIGHT SUBSET");
+        for (let i = 0; i < neutralOffsets.length; i++) {
+            console.log(neutralOffsets[i]);
+        }
+        let smallestSubset = getSmallestSubset(neutralOffsets);
+        removeSubset(neutralOffsets, smallestSubset);
+        let secondSmallestSubset = getSmallestSubset(neutralOffsets);
+        return [smallestSubset, secondSmallestSubset, 0];
+    }
+
+    if (positiveOffsets.length >= 2) {
+        console.log("1 SUBSET");
+        for (let i = 0; i < positiveOffsets.length; i++) {
+            console.log(positiveOffsets[i]);
+        }
+        let smallestSubset = getSmallestSubset(positiveOffsets);
+        removeSubset(positiveOffsets, smallestSubset);
+        let secondSmallestSubset = getSmallestSubset(positiveOffsets);
+        return [smallestSubset, secondSmallestSubset, 1];
+    }
+
+    return false;
 }
 
 
@@ -296,6 +364,24 @@ function addAllSameEnergy(returnedSchedule, energy, excludedRequests, pointer, a
                 addExperiment(returnedSchedule, request, pointer);
             }
         }
+    }
+}
+
+function removeSubset(allSubsets, subset) {
+    let subsetIsEqual = false;
+    let tempSubset;
+    for (let i = 0; i < allSubsets.length; i++) {
+        tempSubset =  allSubsets[i];
+        subsetIsEqual = true;
+        if (subset.length != tempSubset.length) subsetIsEqual = false;
+        if (subsetIsEqual) {
+            for (let j= 0; j < tempSubset.length; j++) {
+                if (!equals(tempSubset[j], subset[j])) subsetIsEqual = false;
+            }
+        }
+    
+        if (subsetIsEqual) allSubsets = allSubsets.splice(i, 1);
+        break;
     }
 }
 
@@ -400,11 +486,9 @@ function getMatch(mainRequest, allRequests, hours) {
     }
 
     if (possibleMatches.length === 0) return false;
-
     // IF HERE, NO NEGATIVE OFFSETS WERE FOUND
-    if (neutralOffsets.length != 0) return [neutralOffsets, 0];
-
-    if (positiveOffsets.length != 0) return [[positiveOffsets], 1];
+    else if (neutralOffsets.length != 0) return [neutralOffsets, 0];
+    else if (positiveOffsets.length != 0) return [[positiveOffsets], 1];
     // IF HERE, THEN THERE ARE NO GOOD OPTIONS AND ALL ARRAYS ARE EMPTY.
 
     // CHECK FOR SUBSETS, NOW MOVE ONTO EIGHTS
@@ -509,15 +593,13 @@ function splitUpRequests(requests) {
 }
 
 
-
-
 // RETURNS IF ENERGY CHANGE
 function hasEnergyChange(requests) {
     let energySet = new Set();
     requests.forEach(request => {
         energySet.add(request.energy);
     });
-    return (energySet.length > 1);
+    return (energySet.size > 1);
 }
 
 

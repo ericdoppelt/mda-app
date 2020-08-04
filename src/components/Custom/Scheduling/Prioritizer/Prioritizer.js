@@ -1,9 +1,10 @@
-import { Button, Card, CardHeader, Checkbox, Grid, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
+import { Button, Snackbar, Card, CardHeader, Checkbox, Grid, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer } from "mobx-react";
 import React from 'react';
 import SchedulingStore from '../../../../stores/SchedulingStore';
 import LBNLScheduler from '../LBNLScheduler';
+import Alert from '@material-ui/lab/Alert';
 
   const useStyles = theme => ({
     root: {
@@ -33,6 +34,7 @@ class Prioritizer extends React.Component {
           hours: this.props.hours,
           startDateTime: this.props.start,
           endDateTime: this.props.end,
+          scheduleOverflow: false,
       }
   }
 
@@ -158,13 +160,17 @@ getList(listArray, title) {
 
 
   moveToScheduling() {
+    let suggestion = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.endDateTime);
+    if (!suggestion) this.setState({scheduleOverflow: true});
+    else {
     SchedulingStore.setFacility(this.props.facility);
     SchedulingStore.setPriorities(this.state.priority);
     SchedulingStore.setGenerals(this.state.general);
-    SchedulingStore.setSuggestion(LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.endDateTime));
+    SchedulingStore.setSuggestion(suggestion);
     SchedulingStore.setStartDateTime(this.state.startDateTime)
     SchedulingStore.setEndDateTime(this.state.endDateTime);
     SchedulingStore.toggleCalendar();
+    }
   }
 
   getHeader() {
@@ -176,6 +182,23 @@ getList(listArray, title) {
     return startDisplay + " to " + endDisplay + " @ " + this.props.facility;
   }
 
+  getSnackBar() {
+    return(
+      <Snackbar 
+      open={this.state.scheduleOverflow}
+      autoHideDuration={6000}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      onClose={() => {this.setState({scheduleOverflow: false})}}
+      >
+      <Alert severity="error">
+        There are too many priority requests to fit in the given window.
+      </Alert>
+    </Snackbar>
+    );
+  }
   render() {
     const {classes} = this.props;
  
@@ -240,6 +263,8 @@ getList(listArray, title) {
           >
           Move to Scheduling
       </Button>
+
+      {this.getSnackBar()}
       </div>
     );
   }
