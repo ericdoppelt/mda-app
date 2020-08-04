@@ -39,11 +39,14 @@ class Prioritizer extends React.Component {
   }
 
   componentDidMount() {
-    if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
+    if ((window.sessionStorage.getItem("access_token") === null)){
+      window.sessionStorage.setItme("next_page", '/scheduler');
+      this.props.history.push('user-login');
+    }
     else {
     let i = 0;
     console.log(SchedulingStore.requests);
-    let possibleRequests = SchedulingStore.rangeRequests(this.props.start, this.props.end, this.props.facility); 
+    let possibleRequests = SchedulingStore.rangeRequests(this.props.start, this.props.end, this.props.facility);
     console.log("break");
     console.log(possibleRequests);
     let self = this;
@@ -184,7 +187,7 @@ getList(listArray, title) {
 
   getSnackBar() {
     return(
-      <Snackbar 
+      <Snackbar
       open={this.state.scheduleOverflow}
       autoHideDuration={6000}
       anchorOrigin={{
@@ -201,7 +204,7 @@ getList(listArray, title) {
   }
   render() {
     const {classes} = this.props;
- 
+
     return(
       <div>
         <Typography
@@ -256,7 +259,7 @@ getList(listArray, title) {
           {this.getList(this.state.priority, "Priority")}
           </Grid>
         </Grid>
-        <Button 
+        <Button
           variant="contained"
           onClick={(event) => this.moveToScheduling()}
           style={{margin: 'auto', marginTop: '10px', marginBottom: '10px', width: '96%', height: '60px'}}

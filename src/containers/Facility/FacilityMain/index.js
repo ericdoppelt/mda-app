@@ -10,6 +10,7 @@ import * as Constants from '../../../constants'
 import { ThemeProvider } from '@material-ui/core/styles';
 import FeatureTable from '../../../components/Custom/FacilityPages/FacilityMain/featureTable';
 import IonSearch from '../../../components/Custom/Homepage/ionSearch';
+import TabsFacility from '../../../components/Custom/FacilityPages/FacilityMain/facilitytabs';
 
 
 export default function Home() {
@@ -24,12 +25,8 @@ export default function Home() {
           <div className={classes.appBarSpacer} />
         <Stack style={{ flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
           <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <IonSearch/>
+            <TabsFacility/>
           </Row>
-          <Row style={{ justifyContent: 'center', flexGrow: '0', minWidth: '50px', minHeight: '50px' }}>
-            <FeatureTable/>
-          </Row>
-
         </Stack>
         </main>
       </div>

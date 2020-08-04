@@ -5,7 +5,7 @@ import SchedulingStore from '../../../../stores/SchedulingStore';
 import {Typography, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { withStyles } from '@material-ui/core/styles';
- 
+
 const useStyles = theme => ({
   rangeSelector: {
     marginBottom: '30px',
@@ -26,7 +26,10 @@ class AllPrioritizers extends React.Component {
     }
 
   async componentDidMount() {
-    if ((window.sessionStorage.getItem("access_token") === null)) this.props.history.push('user-login');
+    if ((window.sessionStorage.getItem("access_token") === null)){
+      window.sessionStorage.setItem("next_page", '/scheduler');
+      this.props.history.push('user-login');
+    }
     else {
     let  url = 'https://mda-phoenix.herokuapp.com/getforms/integrator';
     await axios.get(url, {
@@ -67,8 +70,8 @@ class AllPrioritizers extends React.Component {
       }
       this.setState({loaded: true});
     }
-  
-  
+
+
   getPrioritizer() {
     if (this.state.displayedRange != '') {
         return(
@@ -88,8 +91,8 @@ class AllPrioritizers extends React.Component {
   createPrioritizer(range) {
     console.log(range);
     let prioritizer = (<Prioritizer
-      start={range.startDate} 
-      end= {range.endDate} 
+      start={range.startDate}
+      end= {range.endDate}
       facility= {range.facility}
       hours = {range.hours}
       />);
@@ -106,9 +109,9 @@ class AllPrioritizers extends React.Component {
   getSelector() {
     let {classes} = this.props;
     return(
-      <FormControl 
+      <FormControl
         className={classes.rangeSelector}
-        > 
+        >
         <InputLabel>Select a Range</InputLabel>
         <Select
           value={this.state.displayedRange}
@@ -119,12 +122,12 @@ class AllPrioritizers extends React.Component {
           let end = new Date(range.endDate);
           return <MenuItem value={range}>{start.toDateString()} to {end.toDateString()} at {range.facility} </MenuItem>
           })}
-        </Select> 
+        </Select>
       </FormControl>
     );
-    
+
   }
-  
+
   render() {
     console.log("render");
     return(

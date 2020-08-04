@@ -60,7 +60,17 @@ class LoginForm extends React.Component {
       if (response.data.success === true) {
         window.sessionStorage.setItem("access_token", response.data.access_token);
         window.sessionStorage.setItem("integrator_token", response.data.integrator_token);
-        this.props.history.push('user-profile');
+        console.log(response.data.integrator_token);
+        console.log(window.sessionStorage.getItem('next_page'));
+        if (window.sessionStorage.getItem("next_page") == null){
+          this.props.history.push('user-profile');
+        }
+        else if(window.sessionStorage.getItem("next_page")=='/scheduler' && (window.sessionStorage.getItem('integrator_token') === 'false')){
+          this.props.history.push('user-profile');
+        }
+        else {
+          this.props.history.push(window.sessionStorage.getItem("next_page"));
+        }
       } else {
           self.setState({loginError:true, loginErrorHelper: response.data.error, submitted: false})
           if (response.data.error === "Incorrect username") {
