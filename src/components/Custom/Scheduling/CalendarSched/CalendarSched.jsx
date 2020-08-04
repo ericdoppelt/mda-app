@@ -18,6 +18,8 @@ import SchedulingStore from '../../../../stores/SchedulingStore';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
+import ViewRequestsSched from '../../ViewRequestsSched'
+
 // Checkbox items
 const facilities = [
   'TAMU',
@@ -38,7 +40,6 @@ const beamTypes = [
 ]; 
 
 const colors = [
-  '#c0392b',
   '#2980b9',
   '#27ae60',
   '#8e44ad',
@@ -57,7 +58,7 @@ const colors = [
   '#34495e',
 ]
 
-var uniqueEnergies = [];
+const downtimeColor = '#c0392b';
 
 /* const eventSample = [
   ['TAMU','MDA','2020-07-20T00:00','10'],
@@ -99,7 +100,7 @@ const useStyles = (theme) => ({
     minHeight: '80vh',
     maxHeight: '80vh',
     minWidth: '50vw',
-    maxWidth: '1000',
+    width: 1000,
   },
   leftTextField: {
     marginLeft: '5%',
@@ -188,7 +189,9 @@ class CalendarSched extends React.Component {
     this.handleDateSubmit = this.handleDateSubmit.bind(this);
     this.handleModal = this.handleModal.bind(this);
     this.handleEventClick = this.handleEventClick.bind(this);
-    this.loadPrioritizerData = this.loadPrioritizerData.bind(this);
+    this.handleAddNewDialog = this.handleAddNewDialog.bind(this);
+    this.addEvent = this.addEvent.bind(this);
+    this.colorEvents = this.colorEvents.bind(this);
     
     let sampleProp = "null";
     if (this.props.samp !== null) {
@@ -220,68 +223,94 @@ class CalendarSched extends React.Component {
       calendarStartDate: new Date(),
       personalEvents: ["hello"],
       modalOpen: false,
+      addNewOpen: false,
+      addNewDate: new Date(),
+      uniqueEnergies: [],
     }
+  }
+
+  makeUniqueEnergies(eventArray) {
+    let tempEnergies = [];
+    eventArray.forEach(function(event) {
+      //Add beam energies to uniques
+      if (event.energy !== undefined) {
+        tempEnergies.push(event.energy);
+      }
+    })
+    tempEnergies = tempEnergies.filter((v, i, a) => a.indexOf(v) === i).sort(); //make energies unique
+    this.setState({uniqueEnergies: tempEnergies});
+  }
+
+  colorEvents(eventArray) {
+    let data = [];
+    let self = this;
+    eventArray.forEach(function(event) {
+      let theColor;
+      let titleString;
+      if (event.energy === undefined) {
+        theColor = downtimeColor;
+        titleString = 'Tune Time';
+      } else {
+        theColor = colors[self.state.uniqueEnergies.indexOf(event.energy)];
+        titleString = event.energy + " MeV";
+      }
+      data.push(self.makeEvent2(event.start, event.end, event.energy, titleString, theColor));
+      if (event.start < self.state.calendarStartDate) {
+        console.log('changing calendar start')
+        self.setState({calendarStartDate: event.start});
+      }
+    })
+
+    return data;
   }
 
   
   
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
-    this.loadPrioritizerData();
-    let url = "https://mda-phoenix.herokuapp.com/calendar";
-    /* var self = this; */
-    await axios.post(url).then(response => {
-      /*self.setState({
-        username: response.data.username,
-        facility: response.data.facility,
-        integrator: response.data.integrator,
-        totalTime: response.data.totalTime,
-        startDate: response.data.startDate,
-        cannotRun: response.data.cannotRun
-        });*/
-        //console.log(response.data)
-        /* var data = []; */
-        /* response.data.entries.forEach(function(event) {
-          //data.push(self.makeEvent(event.facility,event.integrator,event.startDate));
-        }) */
-        /*
-        console.log('Generating Events')
-        eventSample.forEach(function(event) {
-          uniqueEnergies.push(event[3]);
-        })
-        uniqueEnergies = uniqueEnergies.filter((v, i, a) => a.indexOf(v) === i); //make energies unique
-        eventSample.forEach(function(event) {
-          let theColor = colors[uniqueEnergies.indexOf(event[3])]
-          data.push(self.makeEvent(event[0],event[1],event[2],theColor));
-        })
-        self.state.colorsReady = true;
-        console.log(data)
-        self.setState({calendarEvents : data});
-        */
-      })
-      .catch(error => {
-      });
+    console.log('Generating Events')
+    console.log(SchedulingStore);
+    this.makeUniqueEnergies(SchedulingStore.suggestion)
 
-      url = "https://mda-phoenix.herokuapp.com/calendar/personal";
-      await axios.post(url, null, {
-        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
-        }).then(response => {
-          /*self.setState({
-          username: response.data.username,
-          facility: response.data.facility,
-          integrator: response.data.integrator,
-          totalTime: response.data.totalTime,
-          startDate: response.data.startDate,
-          cannotRun: response.data.cannotRun
-          });*/
-          /* var data = [];
-          response.data.entries.forEach(function(event) {
-            //data.push(self.makeEventPersonal(event.facility,event.integrator,event.startDate));
-          }) */
-          //self.setState({personalEvents : data});
-        })
-        .catch(error => {
-        });
+    var data = [];
+    var self = this;
+    
+    console.log('Setting Start Date')
+    //this.setState({calendarStartDate: SchedulingStore.suggestion[0].start});
+    this.setState({ calendarStartDate: SchedulingStore.suggestion[0].start }, () => {
+      console.log(self.state.calendarStartDate);
+    }); 
+    console.log(typeof SchedulingStore.suggestion[0].start);
+    console.log(typeof self.state.calendarStartDate)
+    //console.log(self.dateStringConverter(self.state.calendarStartDate))
+
+    data = this.colorEvents(SchedulingStore.suggestion)
+    /*
+    SchedulingStore.suggestion.forEach(function(event) {
+      console.log(event)
+      let theColor;
+      let titleString;
+      if (event.type === 'downtime') {
+        theColor = downtimeColor;
+        titleString = 'Tune Time';
+      } else {
+        theColor = colors[self.state.uniqueEnergies.indexOf(event.energy)];
+        titleString = event.energy + " MeV";
+      }
+      console.log(event.energy)
+      data.push(self.makeEvent2(event.start, event.end, event.energy, titleString, theColor));
+      if (event.start < self.state.calendarStartDate) {
+        console.log('changing calendar start')
+        self.setState({calendarStartDate: event.start});
+      }
+    })
+    */
+
+    this.setState({
+      calendarEvents: data, 
+      colorsReady: true,
+    });
+    
   }
 
 
@@ -296,10 +325,9 @@ class CalendarSched extends React.Component {
     title: titleString, start: new Date(startDate), end: endDate, backgroundColor: color}
   };
 
-  makeEvent2 = (startDate, endDate, color) => {
-    var titleString = "Test";
+  makeEvent2 = (startDate, endDate, energy, titleString, color) => {
     return { id: "1", extendedProps: {facility: "TAMU", integrator: "MDA", beamType: "Heavy Ion"}, 
-    title: titleString, start: startDate, end: endDate, backgroundColor: color}
+    title: titleString, start: startDate, end: endDate, backgroundColor: color, energy: energy}
   };
 
   makeEventColor = (facility) => {
@@ -336,7 +364,7 @@ class CalendarSched extends React.Component {
     this.setState(state=> ({checkedBeamTypes: e.target.value}))
   }
 
-  handleDateSubmit(e) {
+  async handleDateSubmit(e) {
     let calendarApi = this.calendarComponentRef.current.getApi()
     console.log('Retrieving new events');
     let events = calendarApi.getEvents()
@@ -347,49 +375,92 @@ class CalendarSched extends React.Component {
     console.log(data)
   }
 
-  loadPrioritizerData() {
-    
-    console.log('Generating Events')
-    SchedulingStore.suggestion.forEach(function(event) {
-      //Add beam energies to uniques
-      uniqueEnergies.push(event.energy);
-    })
-    uniqueEnergies = uniqueEnergies.filter((v, i, a) => a.indexOf(v) === i).sort(); //make energies unique
-
-    var data = [];
-    var self = this;
-    
-    self.setState({calendarStartDate: SchedulingStore.suggestion[0].start});
-    console.log(SchedulingStore.suggestion[0].start);
-    console.log(self.state.calendarStartDate)
-    console.log(self.dateStringConverter(self.state.calendarStartDate))
-
-    SchedulingStore.suggestion.forEach(function(event) {
-      console.log('checking suggestion')
-      console.log(event)
-
-      let theColor = "";
-      for (let key in event.beams) {
-        theColor = colors[uniqueEnergies.indexOf(event.beams[key])]
-      }
-      //
-      data.push(self.makeEvent2(event.start,event.end,event.start,theColor));
-      if (event.start < self.state.calendarStartDate) {
-        console.log('changing calendar start')
-        self.setState({calendarStartDate: event.start});
-      }
-    })
-
-    this.setState({
-      calendarEvents: data, 
-      colorsReady: true,
-    });
-  }
-
   handleModal() {
     this.setState({
       modalOpen: !this.state.modalOpen
     })
+  }
+
+  handleAddNewDialog() {
+    this.setState({
+      addNewOpen: !this.state.addNewOpen
+    })
+  }
+
+  async addEvent(id) {
+    console.log('event adding')
+    console.log(id.type)
+    let self = this;
+
+    if (id.type === 'click') {
+      //adding tune time
+      let theColor = downtimeColor;
+      let titleString = 'Tune Time';
+      let eventEnergy = undefined;
+      // Setting end time
+      var endDate = new Date(self.state.addNewDate);
+      let h = 4;
+      console.log(endDate.getTime())
+      endDate.setTime(endDate.getTime() + (h*60*60*1000));
+
+      let data = [self.makeEvent2(self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
+      self.setState({calendarEvents: [...data]})
+    } else {
+      let url = "https://mda-phoenix.herokuapp.com/getforms/id";
+    
+      await axios.post(url, 
+        {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+        ).then(response => {
+          let data  = [];
+          let theColor = "";
+          let titleString = "";
+          let eventType = 'beamtime';
+          let eventEnergy = Object.keys(response.data.requests[0].beams)[0]
+
+          // Setting color and title
+          if (eventType === 'downtime') {
+            theColor = downtimeColor;
+            titleString = 'Tune Time';
+          } else {
+            theColor = colors[self.state.uniqueEnergies.indexOf(eventEnergy)];
+            titleString = eventEnergy + " MeV";
+          }
+
+          // Setting end time
+          var endDate = new Date(self.state.addNewDate);
+          if (response.data.requests[0].totalHours === null) {
+            let h = 4;
+            console.log(endDate.getTime())
+            endDate.setTime(endDate.getTime() + (h*60*60*1000));
+          } else {
+            let h = response.data.requests[0].totalHours;
+            endDate.setTime(endDate.getTime() + (h*60*60*1000));
+          }
+
+          // Re-running to reset colors
+          data = [self.makeEvent2(self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
+          console.log(data);
+          console.log(this.state.uniqueEnergies)
+          this.makeUniqueEnergies(data);
+          console.log(this.state.uniqueEnergies)
+          if (eventType === 'downtime') {
+            theColor = downtimeColor;
+            titleString = 'Tune Time';
+          } else {
+            theColor = colors[self.state.uniqueEnergies.indexOf(eventEnergy)];
+            titleString = eventEnergy + " MeV";
+          }
+          data = [self.makeEvent2(self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
+          data = this.colorEvents(data);
+
+          self.setState({calendarEvents: [...data]})
+        })
+        .catch(error => {
+          console.log(error);
+        }
+      );
+    }
+    this.handleAddNewDialog();
   }
 
   dateStringConverter (date) {
@@ -403,11 +474,28 @@ class CalendarSched extends React.Component {
   };
   
 
-  handleEventClick(event) {
+  async handleEventClick(id) {
     console.log("Event clicked");
-    console.log(event);
+    console.log(id);
+    
+    let url = "https://mda-phoenix.herokuapp.com/getforms/id";
+    let self = this;
+  
+    await axios.post(url, 
+      {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      ).then(response => {
+        console.log('Printing response');
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      }
+    );
+
     this.handleModal();
   }
+
+  
 
   
   /*** RENDER CALENDAR APPEARANCE ***/
@@ -432,140 +520,56 @@ class CalendarSched extends React.Component {
         <div className='calendar-inner'>
           <Stack style={{ justifyContent: 'flex-end', alignSelf: 'auto', minWidth: '50px', minHeight: '50px' }}>
 
-            {/*** FILTER CARD ***/}
-            {/*
-            <CardNoShadow style={{ justifyContent: 'left', minWidth: '300px', minHeight: '50px', width: '100%', flexGrow: '0' }}>
-              
-              <Row>
-                {/*** FACILITY FILTER ***
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-mutiple-name-label">Facility</InputLabel>
-                  <Select
-                    labelId="demo-mutiple-name-label"
-                    id="demo-mutiple-name"
-                    multiple
-                    value={ this.state.checkedFacilities }
-                    onChange={ this.handleChangeFacilities }
-                    input={<Input />}
-                    MenuProps={MenuProps}
-                    style={{width:'150px',}}
-                  >
-                    {facilities.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, facilities, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                {/*** INTEGRATOR FILTER ***
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-mutiple-name-label">Integrator</InputLabel>
-                  <Select
-                    labelId="demo-mutiple-name-label"
-                    id="demo-mutiple-name"
-                    multiple
-                    value={ this.state.checkedIntegrators }
-                    onChange={ this.handleChangeIntegrators }
-                    input={<Input />}
-                    MenuProps={MenuProps}
-                    style={{width:'150px',}}
-                  >
-                    {integrators.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, integrators, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                {/*** BEAM TYPE FILTER ***
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-mutiple-name-label">Integrator</InputLabel>
-                  <Select
-                    labelId="demo-mutiple-name-label"
-                    id="demo-mutiple-name"
-                    multiple
-                    value={ this.state.checkedBeamTypes }
-                    onChange={ this.handleChangeBeamTypes }
-                    input={<Input />}
-                    MenuProps={MenuProps}
-                    style={{width:'150px',}}
-                  >
-                    {beamTypes.map((name) => (
-                      <MenuItem key={name} value={name} style={getStyles(name, beamTypes, theme)}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.checkedPersonal}
-                      onChange={this.handleCheckPersonal}
-                      name="checkedB"
-                      color="primary"
-                    />
-                  }
-                  label="Personal"
-                />
-              </Row>
-            </CardNoShadow>
-            */}
-
-
             {/*** CALENDAR PLUGIN ***/}
             <Row style={{ minWidth: '50px', minHeight: '50px' }}>
               <FullCalendar
-              defaultView="timeGridWeek"
-              header={{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridTwoWeeks,timeGridWeek,timeGridDay,listWeek'
-              }}
-              views= {{
-                timeGridTwoWeeks: {
-                  type: 'timeGrid',
-                  duration: { weeks: 2 },
-                  rows: 2,
-                  buttonText: '2 weeks'
-                }
-              }}
-              height='500'
-              plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-              ref={ this.calendarComponentRef }
-              weekends={ this.state.calendarWeekends }
-              events={ this.state.checkedPersonal
-                        ? this.state.personalEvents
-                        : this.state.calendarEvents
-                      }
-              allDaySlot={false}
-              expandRows={true} // not working??
-              slotDuration='04:00:00'
-              defaultDate={this.state.calendarStartDate}
-              dateClick={(info) => {this.handleDateClick(info.event)} }
-              eventClick={ this.handleEventClick }
-              eventOrder="facility,start"
-              eventStartEditable='true'
+                defaultView="timeGridWeek"
+                header={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridTwoWeeks,timeGridWeek,timeGridDay,listWeek'
+                }}
+                views= {{
+                  timeGridTwoWeeks: {
+                    type: 'timeGrid',
+                    duration: { weeks: 2 },
+                    rows: 2,
+                    buttonText: '2 weeks'
+                  }
+                }}
+                height='500'
+                plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+                ref={ this.calendarComponentRef }
+                weekends={ this.state.calendarWeekends }
+                events={ this.state.checkedPersonal
+                          ? this.state.personalEvents
+                          : this.state.calendarEvents
+                        }
+                allDaySlot={false}
+                expandRows={true} // not working??
+                slotDuration='04:00:00'
+                defaultDate={this.state.calendarStartDate}
+                dateClick={(info) => {this.handleDateClick(info.date)} }
+                eventClick={(info) => {this.handleEventClick(info.event.id)} }
+                eventOrder="facility,start"
+                editable='true'
 
-              /* Render Event Options */
-              eventRender={ function(info) {
-                var arr1 = self.state.checkedFacilities;
-                var arr2 = self.state.checkedIntegrators;
-                var arr3 = self.state.checkedBeamTypes;
-                //console.log(arr)
-                return (arr1.indexOf(info.event.extendedProps.facility) >=0
-                  && arr2.indexOf(info.event.extendedProps.integrator) >=0
-                  && arr3.indexOf(info.event.extendedProps.beamType) >=0
-                )  
-              } }
+                /* Render Event Options */
+                eventRender={ function(info) {
+                  var arr1 = self.state.checkedFacilities;
+                  var arr2 = self.state.checkedIntegrators;
+                  var arr3 = self.state.checkedBeamTypes;
+                  //console.log(arr)
+                  return (arr1.indexOf(info.event.extendedProps.facility) >=0
+                    && arr2.indexOf(info.event.extendedProps.integrator) >=0
+                    && arr3.indexOf(info.event.extendedProps.beamType) >=0
+                  )  
+                } }
               />
             </Row>
             <Row>
               <Row style={{justifyContent: 'flex-start'}}>
-                {uniqueEnergies.map( (energy, index) =>
+                {this.state.uniqueEnergies.map( (energy, index) =>
                   <div>
                     <Box mx='10px'>
                       <Avatar size={10} style={{backgroundColor: colors[index]}}> </Avatar> {energy + " MeV"}
@@ -586,10 +590,18 @@ class CalendarSched extends React.Component {
             </Row>
             <Box></Box>
         </Stack>
-
-        
-          
         </div>
+
+
+
+        {/*** Add new event ***/}
+        <Dialog classes={{paper: classes.dialogPaper}} onClose={this.handleAddNewDialog}         aria-labelledby="addevent" open={this.state.addNewOpen}>
+          Add New event
+          <ViewRequestsSched addEvent={this.addEvent}/>
+        </Dialog>
+ 
+
+
 
         {/*** Popup for events ***/}
         <Dialog classes={{paper: classes.dialogPaper}} onClose={this.handleModal} aria-labelledby="simple-dialog-title" open={this.state.modalOpen}>
@@ -773,22 +785,10 @@ class CalendarSched extends React.Component {
     calendarApi.gotoDate('2000-01-01') // call a method on the Calendar object
   }
 
-  handleDateClick = (arg) => {/*
-    var userStr = prompt('Enter username');
-    var dateStr = prompt('Enter a date in YYYY-MM-DD format');
-    var timeStr = prompt('Enter a time in HH:MM format');
-    var date = new Date(dateStr + 'T'+timeStr+':00');
-    // eslint-disable-next-line no-restricted-globals
-    //if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
-      this.setState({  // add new event data
-        calendarEvents: this.state.calendarEvents.concat({ // creates a new array
-          id: userStr,
-          title: 'New Event',
-          start: date,
-          allDay: arg.allDay
-        })
-      })
-    //}*/
+  handleDateClick = (arg) => {
+    console.log(arg.date);
+    this.handleAddNewDialog();
+    this.setState({addNewDate : arg})
   }
 
 }

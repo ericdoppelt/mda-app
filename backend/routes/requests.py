@@ -31,14 +31,17 @@ def approve():
         req = request.get_json()
 
         beam_request = requests.query.filter_by(id=req['id']).first()
-        if req['approval'] == 'integrator':
-            beam_request.approved_integrator = True
-        if req['approval'] == 'facility':
-            beam_request.approved_facility = True
-        else:
-            raise Exception("No approval key found")
-        if beam_request.approved_facility and beam_request.approved_integrator:
-            beam_request.status = 'Approved'
+        # if req['approval'] == 'integrator':
+        #     beam_request.approved_integrator = True
+        # if req['approval'] == 'facility':
+        #     beam_request.approved_facility = True
+        # else:
+        #     raise Exception("No approval key found")
+        # if beam_request.approved_facility and beam_request.approved_integrator:
+        #     beam_request.status = 'Approved'
+        beam_request.approved_integrator = True
+        beam_request.approved_facility = True
+        beam_request.status = 'Approved'
         db.session.commit()
 
         msg = Message("Beam Time Request Approved")
@@ -161,7 +164,7 @@ def reject_form():
         'success' : False}
     return result
 
-def getForms(request_forms):
+def getForms(request_forms, route, req):
     myForms = []
     for form in request_forms:
         ions = {}
@@ -232,6 +235,15 @@ def getForms(request_forms):
                     if key not in attrBlacklist:
                         myDict[key] = getattr(extraInfo, key)
 
+        if route == 'range':
+            entries = Calendar.query.filter_by(rangeId = req['rangeId']).all()
+            myDict['tuneStart'] = []
+            myDict['tuneEnd'] = []
+            for entry in entries:
+                myDict['tuneStart'].append(entry.startDate)
+                delta = timedelta(hours=entry.totalTime)
+                myDict['tuneEnd'].append(entry.startDate + delta)
+
         myForms.append(myDict)
     return myForms
 
@@ -263,9 +275,13 @@ def getRequests(route):
         if route == 'id' and request.method == 'POST':
             req = request.get_json()
             request_forms = requests.query.filter_by(id=req['id']).all()
+        if route == 'range' and request.method == 'POST':
+            req = request.get_json()
+            rangeId = req['rangeId']
+            request_forms = requests.query.filter_by(request_range=rangeId).all()
         else:
             request_forms = requests.query.all()
-        myForms = getForms(request_forms)
+        myForms = getForms(request_forms, route, req)
         result = {'requests' : myForms}
 
     except Exception as e:

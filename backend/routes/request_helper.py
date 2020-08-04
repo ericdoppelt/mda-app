@@ -1,12 +1,14 @@
 import os
 import pdfrw
 import copy
+import numpy as np
 from datetime import datetime
 from fpdf import FPDF
 from flask_mail import Message
 
 from models import (requests, LBNL, TAMU, NSRL)
 from main import app
+
 
 ANNOT_KEY = '/Annots'
 ANNOT_FIELD_KEY = '/T'
@@ -15,38 +17,41 @@ ANNOT_RECT_KEY = '/Rect'
 SUBTYPE_KEY = '/Subtype'
 WIDGET_SUBTYPE_KEY = '/Widget'
 
-def attach(beamRequest, message, rangeId, date, idx):
+def attach(beamRequest, msg, rangeId, date, idx, stringIons):
     idx = str(idx)
-    msg = copy.deepcopy(message)
 
     if beamRequest.facility == 'TAMU':
         # msg.recipients = ['clark@comp.tamu.edu']
 
-        baseName = 'request_forms/TAMU/'
+        baseName = 'routes/request_forms/TAMU/'
         extraInfo = TAMU.query.filter_by(request_id=beamRequest.id).first()
         dictReq = beamRequest.__dict__
+        dictReq['blocks'] = np.ceil(np.sum(dictReq['hoursOn']) / 8)
+        dictReq['cocktail'] = stringIons
         dictReq['badDates'] = extraInfo.badDates
-        template = "TAMU_request_template.pdf"
-        output = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
+        template = "routes/TAMU_request_template.pdf"
+        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        output = baseName + addName + '.pdf'
         fill(dictReq, template, output)
 
-        with app.open_resource(output + '.pdf') as fp:
-            msg.attach(output + '.pdf', output + '/pdf', fp.read())
+        with app.open_resource(output) as fp:
+            msg.attach(addName + '.pdf', addName + '/pdf', fp.read())
 
 
     if beamRequest.facility == 'LBNL':
         # msg.recipients = ['88beamrequest@lbl.gov']
 
-        baseName = 'request_forms/LBNL/'
+        baseName = 'routes/request_forms/LBNL/'
         extraInfo = LBNL.query.filter_by(request_id=beamRequest.id).first()
         text = lbnl(beamRequest, extraInfo)
-        filename = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
+        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        filename = baseName + addName + '.txt'
         text_file = open(filename + '.txt', "w+")
         text_file.write(text)
         text_file.close()
 
         with app.open_resource(filename + '.txt') as fp:
-            msg.attach(filename + '.txt', "text/plain", fp.read())
+            msg.attach(addName + '.txt', "text/plain", fp.read())
 
     if beamRequest.facility == 'NSRL':
         # msg.recipients = ['sivertz@lbl.gov']
@@ -56,25 +61,28 @@ def attach(beamRequest, message, rangeId, date, idx):
         baseDict = beamRequest.__dict__
         extraDict = extraInfo.__dict__
         dictReq = {**baseDict, **extraDict}
-        template = "TAMU_request_template.pdf"
-        output = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
-        fill(dictReq, template, output + ".pdf")
+        dictReq['cocktail'] = stringIons
+        template = "routes/NSRL_request_template.pdf"
+        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        output = baseName + addName + '.pdf'
+        fill(dictReq, template, output)
 
-        with app.open_resource(output + '.pdf') as fp:
-            msg.attach(output + '.pdf', output + '/pdf', fp.read())
-        # print("2", msg)
+        with app.open_resource(output) as fp:
+            msg.attach(addName + '.pdf', addName + '/pdf', fp.read())
 
     if beamRequest.facility == 'MSU':
         # msg.recipients = ['88beamrequest@lbl.gov']
         
-        baseName = 'request_forms/MSU/'
+        baseName = 'routes/request_forms/MSU/'
         dictReq = beamRequest.__dict__
-        template = "Universal_request_template.pdf"
-        output = baseName + beamRequest.title.replace(" ", "_") + '_' + idx
+        dictReq['cocktail'] = stringIons
+        template = "routes/Universal_request_template.pdf"
+        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        output = baseName + addName + '.pdf'
         fill(dictReq, template, output)
 
-        with app.open_resource(output + '.pdf') as fp:
-            msg.attach(output + '.pdf', output + '/pdf', fp.read())
+        with app.open_resource(output) as fp:
+            msg.attach(addName + '.pdf', addName + '/pdf', fp.read())
 
     
 
@@ -82,15 +90,16 @@ def attach(beamRequest, message, rangeId, date, idx):
 
 def fill(form, template, output):
     template_pdf = pdfrw.PdfReader(template)
-    annotations = template_pdf.pages[0][ANNOT_KEY]
-    for annotation in annotations:
-        if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
-            if annotation[ANNOT_FIELD_KEY]:
-                key = annotation[ANNOT_FIELD_KEY][1:-1]
-                if key in form.keys():
-                    annotation.update(
-                        pdfrw.PdfDict(V='{}'.format(form[key]))
-                    )
+    for page in template_pdf.pages:
+        annotations = page[ANNOT_KEY]
+        for annotation in annotations:
+            if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
+                if annotation[ANNOT_FIELD_KEY]:
+                    key = annotation[ANNOT_FIELD_KEY][1:-1]
+                    if key in form.keys():
+                        annotation.update(
+                            pdfrw.PdfDict(V='{}'.format(form[key]))
+                        )
     template_pdf.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
     pdfrw.PdfWriter().write(output, template_pdf)
 
