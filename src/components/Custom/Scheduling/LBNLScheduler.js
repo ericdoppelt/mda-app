@@ -1,4 +1,7 @@
 // RETURNS A STRING IF THERE IS AN ERROR, OTHERWISE AN ARRAY SUGGESTION.
+
+import { remove } from "mobx";
+
     
 function scheduleLBNL(priorities, generals, start, end) {
 
@@ -11,6 +14,7 @@ function scheduleLBNL(priorities, generals, start, end) {
    
 
     let downTime = -1;
+    let beamTime = -1;
     let returned = [];
     let splitPriorities = splitUpRequests(priorities);
     let prioritySchedule = optimize(splitPriorities, startDate, endDate);
@@ -18,12 +22,11 @@ function scheduleLBNL(priorities, generals, start, end) {
     console.log(prioritySchedule);
     if (prioritySchedule[0] === false) return "Please select a priority list that fits within the alloted window.";
     else {
-        downTime = prioritySchedule[0];
-        returned = prioritySchedule[1];
+        beamTime = prioritySchedule[0];
+        downTime = prioritySchedule[1];
+        returned = prioritySchedule[2];
     }
 
-    console.log("AFTER PRIORITY SCHEDULE");
-    console.log(returned);
     let n = generals.length; 
     let subsets = [];
     let subset, allSplitRequests, splitAddedRequests;
@@ -45,9 +48,10 @@ function scheduleLBNL(priorities, generals, start, end) {
         let tempScheduleInfo = optimize(allSplitRequests, startDate, endDate);
         if (tempScheduleInfo[0] === false) return;
         else {
-            if (tempScheduleInfo[0] < downTime) {
-                downTime = tempScheduleInfo[0];
-                returned = tempScheduleInfo[1];
+            if (tempScheduleInfo[0] > beamTime || tempScheduleInfo[0] === beamTime && tempScheduleInfo[1] < downTime) {
+                beamTime = tempScheduleInfo[0];
+                downTime = tempScheduleInfo[1];
+                returned = tempScheduleInfo[2];
             }
         }
     });
@@ -69,26 +73,18 @@ function optimize(requestsSplit, startDate, endDate) {
         current: pointerCurrent,
         endTune: false,
         downTime: 0,
-        index: 0,
+        beamTime: 0,
+        index: -1,
     }
-    console.log("HERE");
-    console.log(startDate);
-    console.log(pointer.current);
-    console.log(pointer);
-    console.log("END");
-    console.log("POINTER");
-    console.log(pointer);
+
     addTunes(returnedSchedule, requestsSplit, pointer); 
-    console.log("AFTER TUNES POINTER");
-    console.log(pointer);
     findPerfectSixteens(returnedSchedule, allRequests, pointer);
-    console.log("POINTER");
-    console.log([pointer.downTime, returnedSchedule]);
-    //findPerfectEights(returnedSchedule, allRequests, downtime);
+
+    findPerfectEights(returnedSchedule, allRequests, pointer);
 
     //findSlightSixteens(returnedSchedule, allRequests, downtime);
     //findSlightEights(returnedSchedule, allRequests, downtime);
-    return [pointer.downTime, returnedSchedule];
+    return [pointer.beamTime, pointer.downTime, returnedSchedule];
 }
 
 
@@ -111,7 +107,14 @@ function findPerfectSixteens(returnedSchedule, allRequests, pointer) {
 
     let match;
     sixteens.forEach(request => {
+    
         match = getMatch(request, allRequests, 8);
+        for (let i = 0; i < match.length; i++) {
+            console.log(match[i]);
+        }
+        console.log("HEEEERREE");
+        console.log(request);
+        console.log(match);
         if (match === false) return;
         else {
             let matches = match[0];
@@ -119,6 +122,7 @@ function findPerfectSixteens(returnedSchedule, allRequests, pointer) {
             addPerfectMatch(returnedSchedule, request, matches, offset, request.shifts, pointer, allRequests);
             let removed = matches.push(request);
             removeExperiments(allRequests, removed);
+            removeExperiments(sixteens, removed);
         }
     });
 }
@@ -133,14 +137,112 @@ function findPerfectEights(returnedSchedule, allRequests, pointer) {
 
     let match;
     eights.forEach(request => {
-        match = getMatch(request, allRequests, 16);
+        match = getEightsMatch(request, allRequests);
         if (match === false) return;
         else {
-            addPerfectMatch(returnedSchedule, request, match[0],  match[1], request.shifts, pointer, allRequests);
-            let removed = [request, match];
+            let mainMatch = request;
+            let firstMatch = match[0];
+            let secondMatch = match[1];
+            let offset = match[2];
+            addPerfectEightsMatch(returnedSchedule, mainMatch, firstMatch, secondMatch, offset, request.shifts, pointer, allRequests);
+            let removed = [];
+            for (let i = 0; i < firstMatch.length; i++) {
+                removed.push(firstMatch[i]);
+            }
+            for (let j = 0; j < secondMatch.length; j++) {
+                removed.push(secondMatch[j]);
+            }
+            removed.push(mainMatch);
+            console.log("REMOVED");
+            console.log(removed);
             removeExperiments(allRequests, removed);
+            removeExperiments(eights, removed);
         }
     });
+}
+
+// firstMatch and secondMatch are ARRAYS
+function addPerfectEightsMatch(returnedSchedule, mainRequest, firstMatch, secondMatch, offset, times, pointer, allRequests) {
+
+    let excludedRequests = [];
+    for (let i = 0; i < firstMatch.length; i++) {
+        excludedRequests.push(firstMatch[i]);
+    }
+    for (let j = 0; j < firstMatch.length; j++) {
+        excludedRequests.push(secondMatch[j]);
+    }
+    excludedRequests.push(mainRequest);
+    addAllSameEnergy(returnedSchedule, mainRequest.energy, excludedRequests, pointer, allRequests);
+
+    let firstMatchIndex = 0;
+    let firstMatchShifts = 0;
+
+    let secondMatchIndex = 0;
+    let secondMatchShifts = 0;
+
+    // MEANS THERE ARE MORE SHIFTS FOR MATCHES
+    if (offset === -1) {
+        addExperiment(returnedSchedule, firstMatch[firstMatchIndex], pointer);
+        addExperiment(returnedSchedule, secondMatch[secondMatchIndex], pointer);
+    }
+
+    for (let i = 0; i < times; i++) {
+        addExperiment(returnedSchedule, mainRequest, pointer);
+
+        // CHECK TO ITERATE TO NEXT MATCHES SHIFT
+        if (firstMatchShifts === firstMatch[firstMatchIndex].shifts) {
+            firstMatchIndex += 1;
+            firstMatchShifts = 0;
+        }
+        addExperiment(returnedSchedule, firstMatch[firstMatchIndex], pointer);
+
+        if (secondMatchShifts === secondMatch[secondMatchIndex].shifts) {
+            secondMatchIndex += 1;
+            secondMatchShifts = 0;
+        }
+        addExperiment(returnedSchedule, secondMatch[secondMatchIndex], pointer);
+
+        if (offset === 1) {
+            addExperiment(returnedSchedule, mainRequest, pointer);
+        }
+    }
+}
+
+function getEightsMatch(mainRequest, allRequests) {
+    let energy = mainRequest.energy;
+    let shifts = mainRequest.shifts;
+
+    let possibleMatches = [];
+    let neutralOffsets = [];
+    let positiveOffsets = [];
+    // BASE CASE SO DIFFERENT FORMAT
+    let firstNegativeMatch;
+
+    let request;
+    for (let i = 0; i < allRequests.length; i++) {
+        request = allRequests[i];
+        if (request.hoursOn === 8 && request.energy === energy && !equals(mainRequest, request)) {
+            console.log(request);
+            possibleMatches.push(request);
+            if (request.shifts === shifts + 1) {
+                // BEST OPTION IS FINDING 2 REQUESTS WITH +1 SHIFT. IF FOUND, RETURN.
+                if (firstNegativeMatch != undefined) return [[firstNegativeMatch], [request], -1];
+                else firstNegativeMatch = request;
+            }
+            else if (request.shifts === shifts) {
+                if (neutralOffsets.length < 2) neutralOffsets.push(request);
+
+            }
+            else if (request.shifts === shifts - 1) {
+                if (positiveOffsets.length < 2) positiveOffsets.push(request);
+            }
+        }
+    }
+
+    // HERE MEANS NO BASE CASE OF TWO +1S WERE FOUND
+    if (neutralOffsets.length === 2) return [[neutralOffsets[0]],[neutralOffsets[1]], 0];
+    else if (positiveOffsets.length === 2) return [[positiveOffsets[0]], [positiveOffsets[1]], 1];
+    else return false;
 }
 
 
@@ -148,7 +250,6 @@ function findPerfectEights(returnedSchedule, allRequests, pointer) {
 // ASSUMES THIS IS AN 8/16 or 16/8 PERFECT MATCH AT SAME ENERGY
 // OFFSET OF -1 ADDS SECOND EXPERIMENT ONCE BEFORE, OFFSET OF 1 ADDS FIRST EXPERIMENT ONCE AFTER
 function addPerfectMatch(returnedSchedule, request, matches, offset, times, pointer, allRequests) {
-
     let matchesIndex = 0;
     let matchesShifts = 0;
     // IF NO OFFSET, ADD ALL SAME ENERGY NOW.
@@ -222,26 +323,46 @@ function equals(experimentOne, experimentTwo) {
 }
 
 
+function addDownTime(returnedSchedule, pointer) {
+    let startTune = new Date(pointer.current.getTime());
+    let endTune = new Date(startTune.getTime());
+    endTune.setHours(endTune.getHours() + 4);
+    let downTime = {
+        start: startTune,
+        end: endTune,
+        type: "downtime"
+    }
+    returnedSchedule.push(downTime);
+    pointer.downTime += 4;
+    pointer.current.setHours(pointer.current.getHours() + 4);
+    pointer.index += 1;
+}
 
 // MOVES POINTER AND ADDS EXPERIMENT
-function addExperiment(returnedSchedule, expirement, pointer) {
-    console.log("ADDED EXPERIMENT");
-    console.log(expirement);
+function addExperiment(returnedSchedule, experiment, pointer) {
+    console.log("ADDING EXPERIMENT");
+    console.log(experiment);
+    console.log(pointer.index);
+    console.log(returnedSchedule[pointer.index].type != "downtime");
+    console.log(returnedSchedule[pointer.index].energy != experiment.energy);
+    if (returnedSchedule[pointer.index].type != "downtime" && returnedSchedule[pointer.index].energy != experiment.energy) {
+        addDownTime(returnedSchedule, pointer);
+    }
+
     let startExperiment = new Date(pointer.current.getTime());
-    pointer.current.setHours(pointer.current.getHours() + expirement.hoursOn);
+    pointer.current.setHours(pointer.current.getHours() + experiment.hoursOn);
     let endExperiment = new Date(pointer.current.getTime());
     
     let addedExperiment = {
         start: startExperiment,
         end: endExperiment,
         type: "beamtime",
-        energy: expirement.energy,
-        id: expirement.id,
+        energy: experiment.energy,
+        id: experiment.id,
     }
     returnedSchedule.push(addedExperiment);
-    for (let i = 0; i < returnedSchedule.length; i++) {
-        console.log(returnedSchedule[i]);
-    }
+    pointer.index += 1;
+    pointer.beamTime += experiment.hoursOn;
 }
 
 // REQUEST SHOULD BE SIXTEEN HOURS
@@ -257,10 +378,8 @@ function getMatch(mainRequest, allRequests, hours) {
     let request;
     for (let i = 0; i < allRequests.length; i++) {
         request = allRequests[i];
-        console.log("request is array");
-        console.log(request);
         if (request.hoursOn === hours && request.energy === energy) {
-            
+            console.log(request);
             possibleMatches.push(request);
             if (request.shifts === shifts + 1) {
                 console.log("REQUEST - 1");
@@ -279,6 +398,8 @@ function getMatch(mainRequest, allRequests, hours) {
             }
         }
     }
+
+    if (possibleMatches.length === 0) return false;
 
     // IF HERE, NO NEGATIVE OFFSETS WERE FOUND
     if (neutralOffsets.length != 0) return [neutralOffsets, 0];
@@ -314,6 +435,9 @@ function getMatch(mainRequest, allRequests, hours) {
 
     if (negativeOffsets.length > 0) {
         console.log("-1 SUBSET");
+        for (let i = 0; i < negativeOffsets.length; i++) {
+            console.log(negativeOffsets[i]);
+        }
         console.log(getSmallestSubset(negativeOffsets));
         return [getSmallestSubset(negativeOffsets), -1];
     }
@@ -409,10 +533,8 @@ function addStartTune(returnedSchedule, pointer) {
     };
     returnedSchedule.push(returnedTune);
     pointer.downTime += 4;
-    console.log("pointer");
-    console.log(pointer);
     pointer.current.setHours(pointer.current.getHours() + 4);
-    console.log(pointer);
+    pointer.index = 0;
 }
 
 function addEndTune(returnedSchedule, pointer) {
@@ -428,6 +550,7 @@ function addEndTune(returnedSchedule, pointer) {
     returnedSchedule.push(returnedTune);
     pointer.downTime += 4;
     pointer.endTune = true;
+    pointer.index += 1;
 }
 
 

@@ -76,10 +76,10 @@ getList(listArray, title) {
         >
       </CardHeader>
       <List dense component="div" role="list">
-        {listArray.map((value, index) => {
+        {listArray.map((value) => {
           //const i = index;
           return (
-            <ListItem key={value.name} role="listitem" button onClick={() => this.toggleChecked(value)}>
+            <ListItem key={value.id} role="listitem" button onClick={() => this.toggleChecked(value)}>
               <ListItemIcon>
                 <Checkbox
                   disableRipple
@@ -112,13 +112,12 @@ getList(listArray, title) {
     for (var i = 0; i < this.state.general.length; i++) {
       let tempIndex = this.state.general[i].checkedIndex;
       if (this.state.checked[tempIndex]) {
-        console.log(tempIndex);
         let tempRequest = this.state.general[i];
         newPriority.push(tempRequest);
         let removedIndex = newGeneral.indexOf(this.state.general[i]);
-        console.log(newGeneral);
         newGeneral.splice(removedIndex, 1);
-        console.log(newGeneral);
+        this.state.checked[tempIndex] = false;
+        console.log(tempIndex);
       }
     }
     this.setState({
@@ -139,6 +138,8 @@ getList(listArray, title) {
         newGeneral.push(tempRequest);
         let removedIndex = newPriority.indexOf(this.state.priority[i]);
         newPriority.splice(removedIndex, 1);
+        this.state.checked[tempIndex] = false;
+        console.log(tempIndex);
       }
     }
     this.setState({
@@ -160,15 +161,10 @@ getList(listArray, title) {
     SchedulingStore.setFacility(this.props.facility);
     SchedulingStore.setPriorities(this.state.priority);
     SchedulingStore.setGenerals(this.state.general);
-    console.log("HERE");
-    console.log(LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.endDateTime));
     SchedulingStore.setSuggestion(LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.endDateTime));
     SchedulingStore.setStartDateTime(this.state.startDateTime)
     SchedulingStore.setEndDateTime(this.state.endDateTime);
-    console.log(SchedulingStore);
     SchedulingStore.toggleCalendar();
-
-    //let testSchedule = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.hours);
   }
 
   getHeader() {
