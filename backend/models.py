@@ -139,6 +139,7 @@ class Calendar(db.Model):
     private = db.Column(db.Boolean())
     title = db.Column(db.String(50))
     requestId = db.Column(db.Integer())
+    rangeId = db.Column(db.Integer())
 
     def create_entry(self):
         result = ""

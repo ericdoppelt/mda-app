@@ -95,11 +95,13 @@ def user():
     account_info = ""
 
     try:
+        username = get_jwt_identity()
         if request.method == 'POST':
-            req = request.get_json()
-            username = req['username']
-        else:
-            username = get_jwt_identity()
+            user = Users.query.filter_by(username=username).first()
+            if user.user_type == "Integrator" or user.isAdmin:
+                req = request.get_json()
+                username = req['username']
+
 
         user = Users.query.filter_by(username=username).first()
         account_info = {'success' : True, 'id': user.id, 'user': user.username,

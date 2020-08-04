@@ -113,21 +113,23 @@ def delete_calendar():
 
         entry = Calendar.query.filter_by(id=req['id']).first()
 
-        try:
-            beamReq = requests.query.filter_by(id=entry.requestId).first()
-            beamReq.status = "Approved"
-            beamReq.scheduled_start = None
+        if entry.requestId is not None:
+            try:
+                beamReq = requests.query.filter_by(id=entry.requestId).first()
+                beamReq.status = "Approved"
+                beamReq.scheduled_start = None
 
-            msg = Message("Beam Time Request Date Rescinded")
-            msg.recipients = [beamReq.email]
-            
-            msg.body = "Your beam time request " + beamReq.title
-            msg.body += " has had it's scheduled date rescinded.\n\n"
-            msg.body += "ISEEU Team"
+                msg = Message("Beam Time Request Date Rescinded")
+                msg.recipients = [beamReq.email]
+                
+                msg.body = "Your beam time request " + beamReq.title
+                msg.body += " has had it's scheduled date rescinded.\n\n"
+                msg.body += "ISEEU Team"
 
-            mail.send(msg)
-        except:
-            pass
+                # TODO
+                # mail.send(msg)
+            except:
+                pass
 
         Calendar.query.filter_by(id=req['id']).delete()
         db.session.commit()
