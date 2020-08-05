@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import {Button, Divider, Grid, List, ListItem, ListItemText, Paper, Snackbar, Table, TableBody, TableCell, TableHead, TableRow,Typography} from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, } from '@material-ui/core';
 import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded';
 import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import CalendarTodayRoundedIcon from '@material-ui/icons/CalendarTodayRounded';
@@ -51,6 +52,8 @@ class HomePage extends React.Component {
       this.state = {
         integrator: window.sessionStorage.getItem('integrator_token'),
         integratorError: false,
+        facility: '',
+        dialog: '',
       };
     }
 
@@ -69,9 +72,41 @@ class HomePage extends React.Component {
       this.props.history.push('/view-requests');
     }
 
-    handleRequestForms() {
-      //window.sessionStorage.setItem('next_page', '/request-forms');
-      this.props.history.push('/user-login');
+    dialogRequestForms() {
+      return (
+        <Dialog fullWidth="true" maxWidth="xs" open={this.state.dialog === 'request_forms'} onClose={() => this.setState({dialog: ''})}>
+          <DialogContent>
+          <FormControl
+            style={{width: '100%', textAlign: 'center',}}
+          >
+            <InputLabel>Facility</InputLabel>
+            <Select
+              value={this.state.facility}
+              onChange={event => {this.setState({facility: event.target.value})}}
+              >
+              <MenuItem value={"request-tamu"}>Texas A&M</MenuItem>
+              <MenuItem value={"request-MSU"}>MSU</MenuItem>
+              <MenuItem value={"request-LBNL"}>LBNL</MenuItem>
+              <MenuItem value={"request-NSRL"}>NSRL</MenuItem>
+            </Select>
+          </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button color='secondary' variant="outlined" onClick={() => this.setState({dialog: ''})}>
+              Cancel
+            </Button>
+            <Button color='primary' variant="outlined" onClick={() => this.handleRequestForms()}>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      );
+    }
+
+    handleRequestForms(){
+      this.setState({dialog: ''})
+      window.sessionStorage.setItem('next_page', this.state.facility);
+      this.props.history.push(this.state.facility);
     }
 
     getAlert() {
@@ -92,6 +127,19 @@ class HomePage extends React.Component {
           </Snackbar>
       );
       }
+    }
+
+    getDialogue() {
+        var returnedDialogue;
+        switch(this.state.dialog) {
+            case 'request_forms':
+              returnedDialogue = this.dialogRequestForms();
+              break;
+            default:
+              returnedDialogue = null;
+              break;
+        }
+      return returnedDialogue;
     }
 
   render() {
@@ -146,7 +194,7 @@ class HomePage extends React.Component {
           <TableBody>
             <TableRow style={{backgroundColor: '#e0e0e0',}}>
               <TableCell align='center'>
-                <Button onClick={() => {this.handleRequestForms()}}>
+                <Button onClick={() => {this.setState({dialog:'request_forms'})}}>
                   <AssignmentRoundedIcon/>
                 </Button>
                 <br/>
@@ -194,6 +242,7 @@ class HomePage extends React.Component {
             </TableRow>
           </TableBody>
         </Table>
+        {this.getDialogue()}
         {this.getAlert()}
     </div>
     );
