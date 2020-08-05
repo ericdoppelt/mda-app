@@ -432,14 +432,14 @@ class ViewRequests extends React.Component {
       ).then(response => {
       console.log(response);
       self.componentDidMount();
-      self.setState({
-        modifyBool: !this.state.modifyBool,
-        modifySnackOpen: true,
-      });
       //self.setState({modifyBool: false, component: "table"});
     })
     .catch(error => {
       console.log(error);
+    });
+    self.setState({
+      modifyBool: false,
+      modifySnackOpen: true,
     });
   }
 
