@@ -208,7 +208,7 @@ def create_calendar_entry(req, reqId, rangeId, startDate, hours, energy):
         requestId = reqId,
         rangeId = rangeId,
         beam = beam,
-        energy = energy
+        energy = int(energy)
     )
     result = entry.create_entry()
 
