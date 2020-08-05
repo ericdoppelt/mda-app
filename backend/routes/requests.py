@@ -164,7 +164,7 @@ def reject_form():
         'success' : False}
     return result
 
-def getForms(request_forms, route, req):
+def getForms(request_forms):
     myForms = []
     for form in request_forms:
         ions = {}
@@ -235,15 +235,6 @@ def getForms(request_forms, route, req):
                     if key not in attrBlacklist:
                         myDict[key] = getattr(extraInfo, key)
 
-        if route == 'range':
-            entries = Calendar.query.filter_by(rangeId = req['rangeId']).all()
-            myDict['tuneStart'] = []
-            myDict['tuneEnd'] = []
-            for entry in entries:
-                myDict['tuneStart'].append(entry.startDate)
-                delta = timedelta(hours=entry.totalTime)
-                myDict['tuneEnd'].append(entry.startDate + delta)
-
         myForms.append(myDict)
     return myForms
 
@@ -252,7 +243,7 @@ def getForms(request_forms, route, req):
 @jwt_required
 def getRequests(route):
     username = get_jwt_identity()
-    result = ""
+    result = {}
 
     req = request.get_json()
 
@@ -281,8 +272,20 @@ def getRequests(route):
             request_forms = requests.query.filter_by(request_range=rangeId).all()
         else:
             request_forms = requests.query.all()
-        myForms = getForms(request_forms, route, req)
-        result = {'requests' : myForms}
+        myForms = getForms(request_forms)
+
+        if route == 'range':
+            result = {'requests' : myForms}
+            entries = Calendar.query.filter_by(rangeId = req['rangeId']).all()
+            result['tuneStart'] = []
+            result['tuneEnd'] = []
+            for entry in entries:
+                result['tuneStart'].append(entry.startDate)
+                delta = timedelta(hours=entry.totalTime)
+                result['tuneEnd'].append(entry.startDate + delta)
+        
+        else:
+            result = {'requests' : myForms}
 
     except Exception as e:
         print(e)
