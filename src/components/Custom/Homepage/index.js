@@ -96,7 +96,7 @@ class HomePage extends React.Component {
               Cancel
             </Button>
             <Button color='primary' variant="outlined" onClick={() => this.handleRequestForms()}>
-              Submit
+              Go
             </Button>
           </DialogActions>
         </Dialog>
