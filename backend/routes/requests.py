@@ -258,16 +258,16 @@ def getRequests(route):
                 request_forms = requests.query.filter(and_(requests.username==username,
                 or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start),
                 requests.status != 'Rejected')).all()
-        if route == 'integrator':
+        elif route == 'integrator':
             user = Users.query.filter_by(username=username).first()
             if user.user_type != 'Integrator':
                 raise Exception("You must be an integrator to view this page!")
             request_forms = requests.query.filter(and_(requests.integrator == user.affiliation, requests.status != 'Rejected')).all()
-        if route == 'tester':
+        elif route == 'tester':
             request_forms = requests.query.filter_by(username=username).all()
-        if route == 'id' and request.method == 'POST':
+        elif route == 'id' and request.method == 'POST':
             request_forms = requests.query.filter_by(id=req['id']).all()
-        if route == 'range' and request.method == 'POST':
+        elif route == 'range' and request.method == 'POST':
             rangeId = req['rangeId']
             request_forms = requests.query.filter_by(request_range=rangeId).all()
         else:
