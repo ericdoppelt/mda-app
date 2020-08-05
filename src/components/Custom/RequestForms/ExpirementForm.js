@@ -39,6 +39,9 @@ const useStyles = theme => ({
     constructor(props) {
       super(props);
       ExperimentStore.clear();
+      this.state = {
+        affiliation: '',
+      }
     }
 
     render() {

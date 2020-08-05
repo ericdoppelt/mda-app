@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import { observer } from "mobx-react"
 import TesterStore from '../../../stores/TesterStore';
+import axios from 'axios';
 
 const useStyles = theme => ({
     leftTextField: {
@@ -58,6 +59,17 @@ const useStyles = theme => ({
       TesterStore.clear();
     }
 
+    async componentDidMount() {
+      let url = 'https://mda-phoenix.herokuapp.com/user';
+      await axios.get(url, {
+        headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
+      }).then(response => {
+        TesterStore.setIntegrator(response.data.affiliation);
+      }).catch(error => {
+      alert(error);
+      });
+    }
+
     render() {
       const { classes } = this.props;
       return(
@@ -104,9 +116,11 @@ const useStyles = theme => ({
               className={classes.leftTextField}
               label = "Integrator"
               value = {TesterStore.integrator}
-              onChange={event => {TesterStore.setIntegrator(event.target.value)}}
               error = {TesterStore.integratorError}
               helperText = {TesterStore.integratorHelperText}
+              InputProps={{
+                readOnly: true
+              }}
             />
             <TextField 
               className={classes.rightTextField}
