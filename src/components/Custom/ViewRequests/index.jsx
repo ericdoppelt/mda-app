@@ -234,19 +234,19 @@ class ViewRequests extends React.Component {
       console.log(response.data);
       let tempRows = [];
       result.forEach(function(entry) {
-        console.log('entry')
-        console.log(entry);
-        console.log('beams');
-        console.log(Object.keys(entry.beams))
+        //console.log('entry')
+        //console.log(entry);
+        //console.log('beams');
+        //console.log(Object.keys(entry.beams))
         let ions = [];
-        console.log('ions');
-        console.log(entry.beams)
+        //console.log('ions');
+        //console.log(entry.beams)
         for (var key in entry.beams) {
-          console.log(key)
-          console.log(entry.beams[key][0])
+          //console.log(key)
+          //console.log(entry.beams[key][0])
           ions.push(entry.beams[key][0])
         }
-        console.log(ions)
+        //console.log(ions)
         tempRows.push(createData(entry.id, entry.name, entry.status, entry.facility, entry.integrator, entry.company,
           entry.PO_number, entry.address, entry.city, entry.email, Object.keys(entry.beams), entry.funding_cell,
           entry.funding_contact, entry.funding_email, ions, entry.phone, entry.start, entry.state, entry.zipcode, entry.rejectNote))
