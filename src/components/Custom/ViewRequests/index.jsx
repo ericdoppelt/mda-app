@@ -348,7 +348,7 @@ class ViewRequests extends React.Component {
   }
 
   async handleApprove() {
-    let url = "https://mda-phoenix.herokuapp.com/request/modify";
+    let url = "https://mda-phoenix.herokuapp.com/request/approve";
     let self = this;
     let vars = {
       id: self.state.id, 
@@ -363,6 +363,14 @@ class ViewRequests extends React.Component {
       console.log(error);
     });
 
+    this.setState(state=>({
+      component: "table",
+      approveSnackOpen: true,
+    }))
+
+
+
+    /*
     url = "https://mda-phoenix.herokuapp.com/calendar-entry";
 
     await axios.post(url, {
@@ -385,6 +393,7 @@ class ViewRequests extends React.Component {
     .catch(error => {
       console.log(error);
     });
+    */
   }
 
   handleModify () {
