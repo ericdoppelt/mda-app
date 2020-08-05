@@ -316,7 +316,11 @@ class CalendarSched extends React.Component {
     //console.log('Setting Start Date')
     //this.setState({calendarStartDate: SchedulingStore.suggestion[0].start});
     this.setState({ calendarStartDate: SchedulingStore.suggestion[0].start }, () => {
-      //console.log(self.state.calendarStartDate);
+      console.log('setting start')
+      console.log(SchedulingStore.suggestion[0].start)
+      console.log(self.state.calendarStartDate);
+      let calendarApi = this.calendarComponentRef.current.getApi()
+      calendarApi.gotoDate(self.state.calendarStartDate);
     }); 
     //console.log(typeof SchedulingStore.suggestion[0].start);
     //console.log(typeof self.state.calendarStartDate)
@@ -408,11 +412,45 @@ class CalendarSched extends React.Component {
     let calendarApi = this.calendarComponentRef.current.getApi()
     console.log('Retrieving new events');
     let events = calendarApi.getEvents()
-    let data = [];
+    let ids = [];
+    let startDates = [];
+    let endDates = [];
+    let energies = [];
     events.forEach(function(event) {
-      data.push(event.start)
+      if (event.id !== "") {
+        ids.push(event.id);
+      } else {
+        ids.push(null);
+      }
+      startDates.push(event.start.toISOString());
+      endDates.push(event.end.toISOString());
+      energies.push(event.extendedProps.energy)
     })
-    console.log(data)
+    console.log(startDates)
+    console.log(ids)
+    console.log(endDates)
+    console.log(energies)
+    console.log(SchedulingStore.requests[0].rangeId)
+
+    
+    let url = "https://mda-phoenix.herokuapp.com/request/send-forms";
+    
+    await axios.post(url, 
+      {
+        "ids": ids, 
+        "startDate": startDates, 
+        "endDate": endDates,
+        "energies": energies,
+        "rangeId" : 13
+      }, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      ).then(response => {
+        
+      })
+      .catch(error => {
+        console.log(error);
+      }
+    );
+    
   }
 
   handleModal(row) {
