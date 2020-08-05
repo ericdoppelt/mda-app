@@ -368,8 +368,6 @@ class ViewRequests extends React.Component {
       approveSnackOpen: true,
     }))
 
-
-
     /*
     url = "https://mda-phoenix.herokuapp.com/calendar-entry";
 
@@ -883,8 +881,9 @@ class ViewRequests extends React.Component {
                 />
     
                 <br/><br/><br/>
-    
-                {this.showButtons()}
+                <Row style={{justifyContent: 'center'}}>
+                  {this.showButtons()}
+                </Row>
                 <br/><br/><br/><br/>
     
                 {/* Rejection Dialog */}
