@@ -19,6 +19,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
 import ViewRequestsSched from '../../ViewRequestsSched'
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 // Checkbox items
 const facilities = [
@@ -57,6 +59,10 @@ const colors = [
   '#fd79a8',
   '#34495e',
 ]
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const downtimeColor = '#c0392b';
 
@@ -192,6 +198,7 @@ class CalendarSched extends React.Component {
     this.handleAddNewDialog = this.handleAddNewDialog.bind(this);
     this.addEvent = this.addEvent.bind(this);
     this.colorEvents = this.colorEvents.bind(this);
+    this.handleApproveSnackClose = this.handleApproveSnackClose.bind(this);
     
     let sampleProp = "null";
     if (this.props.samp !== null) {
@@ -243,6 +250,7 @@ class CalendarSched extends React.Component {
       addNewOpen: false,
       addNewDate: new Date(),
       uniqueEnergies: [],
+      approveSnackOpen: false,
     }
   }
 
@@ -450,6 +458,8 @@ class CalendarSched extends React.Component {
         console.log(error);
       }
     );
+    
+    this.setState({approveSnackOpen: true})
     
   }
 
@@ -913,8 +923,24 @@ class CalendarSched extends React.Component {
             </Button>
           </Row>
         </Dialog>
+
+
+        <Snackbar 
+            anchorOrigin={{vertical: 'top',horizontal: 'center'}}
+            open={this.state.approveSnackOpen} 
+            autoHideDuration={6000} 
+            onClose={this.handleApproveSnackClose}
+          >
+            <Alert onClose={this.handleApproveSnackClose} severity="success">
+              The forms have been scheduled!
+            </Alert>
+          </Snackbar>
       </div>
     )
+  }
+
+  handleApproveSnackClose () {
+    this.setState({approveSnackOpen: false})
   }
   
   toggleWeekends = () => {
