@@ -41,7 +41,7 @@ class AllPrioritizers extends React.Component {
       let validRequests = [];
       for (let i = 0; i < response.data.requests.length; i++) {
         let request = response.data.requests[i];
-        if (request.status === "Approved" && request.scheduledStart === null) {
+        if ((request.status === "Approved" || request.status === "Approved with changes") && request.scheduledStart === null) {
           validRequests.push(request);
         }
       }
