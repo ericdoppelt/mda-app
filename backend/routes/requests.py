@@ -254,6 +254,8 @@ def getRequests(route):
     username = get_jwt_identity()
     result = ""
 
+    req = request.get_json()
+
     try:
         if route == 'view':
             user = Users.query.filter_by(username=username).first()
@@ -273,10 +275,8 @@ def getRequests(route):
         if route == 'tester':
             request_forms = requests.query.filter_by(username=username).all()
         if route == 'id' and request.method == 'POST':
-            req = request.get_json()
             request_forms = requests.query.filter_by(id=req['id']).all()
         if route == 'range' and request.method == 'POST':
-            req = request.get_json()
             rangeId = req['rangeId']
             request_forms = requests.query.filter_by(request_range=rangeId).all()
         else:
