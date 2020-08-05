@@ -302,21 +302,26 @@ def send_forms():
 
             if beamId is not None:
                 form = searchedBeams[beamId]
-                msg.body += str(req['energies'][i]) + " MeV \n"
                 energyMsg = str(req['energies'][i]) + " MeV \n"
-                msg.body += form.title + " at " + form.company + "\n"
                 energyMsg += form.title + " at " + form.company + "\n"
-                energyMsg += "scheduled for " + form.scheduled_start.strftime('%m/%d/%Y')
-                energyMsg += " at " + form.scheduled_start.strftime('%I %p')
+                energyMsg += "scheduled for " + start.strftime('%m/%d/%Y')
+                energyMsg += " at " + start.strftime('%I %p')
                 energyMsg += " for " + str(hours) + " hours\n\n"
                 info[beamId].append(energyMsg)
 
+                msg.body += str(req['energies'][i]) + " MeV \n"
+                msg.body += form.title + " at " + form.company + "\n"
+                msg.body += "scheduled for " + start.strftime('%m/%d/%Y')
+                msg.body += " at " + start.strftime('%I %p')
+                msg.body += " for " + str(hours) + " hours\n\n"
+
             else:
                 msg.body += 'Downtime' + '\n'
+                msg.body += "scheduled for " + start.strftime('%m/%d/%Y')
+                msg.body += " at " + start.strftime('%I %p')
+                msg.body += " for " + str(hours) + " hours\n\n"
 
-            msg.body += "scheduled for " + form.scheduled_start.strftime('%m/%d/%Y')
-            msg.body += " at " + form.scheduled_start.strftime('%I %p')
-            msg.body += " for " + str(hours) + " hours\n\n"
+            
 
             if rang.scheduled and beamId is not None:
                 try:
