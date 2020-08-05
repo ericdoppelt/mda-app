@@ -445,6 +445,8 @@ function addExperiment(returnedSchedule, experiment, pointer) {
         type: "beamtime",
         energy: experiment.energy,
         id: experiment.id,
+        company: experiment.company,
+        name: experiment.name,
     }
     returnedSchedule.push(addedExperiment);
     pointer.index += 1;
