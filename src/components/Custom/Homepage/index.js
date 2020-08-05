@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import {Button, Divider, Grid, List, ListItem, ListItemText, Paper, Table, TableBody, TableCell, TableHead, TableRow,Typography} from '@material-ui/core';
+import {Button, Divider, Grid, List, ListItem, ListItemText, Paper, Snackbar, Table, TableBody, TableCell, TableHead, TableRow,Typography} from '@material-ui/core';
 import AccountBalanceRoundedIcon from '@material-ui/icons/AccountBalanceRounded';
 import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import CalendarTodayRoundedIcon from '@material-ui/icons/CalendarTodayRounded';
@@ -10,6 +10,7 @@ import FaceRoundedIcon from '@material-ui/icons/FaceRounded';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Alert } from '@material-ui/lab';
 
 
 const useStyles = theme => ({
@@ -46,9 +47,47 @@ class HomePage extends React.Component {
 
     constructor(props) {
       super(props);
+
+      this.state = {
+        integrator: window.sessionStorage.getItem('integrator_token'),
+        integratorError: false,
+      };
     }
+
+    handleScheduler() {
+      if(window.sessionStorage.getItem('integrator_token') === 'true' || window.sessionStorage.getItem('access_token')==null){
+        window.sessionStorage.setItem('next_page', '/scheduler');
+        this.props.history.push('/scheduler');
+      }
+      else{
+        this.setState({integratorError: true});
+      }
+    }
+
+    getAlert() {
+      if (this.state.integratorError) {
+        return(
+          <Snackbar
+            open={this.state.integratorError}
+            autoHideDuration={6000}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            onClose={() => {this.setState({integratorError: false})}}
+            >
+            <Alert severity="warning">
+              Must be an integrator to use scheduler
+            </Alert>
+          </Snackbar>
+      );
+      }
+    }
+
   render() {
     const { classes } = this.props;
+    console.log(`Integrator: ${window.sessionStorage.getItem('integrator_token')}`);
+    console.log(this.state.integrator);
   return (
     <div className={classes.root}>
         <Typography variant='h4'>Welcome to Integrated Single Event Effects Utility</Typography>
@@ -104,7 +143,7 @@ class HomePage extends React.Component {
                 Request Forms
               </TableCell>
               <TableCell align='center'>
-                <Button onClick={() => {this.props.history.push('/scheduler')}}>
+                <Button onClick={() => this.handleScheduler()}>
                   <ImportContactsIcon/>
                 </Button>
                 <br/>
@@ -145,6 +184,7 @@ class HomePage extends React.Component {
             </TableRow>
           </TableBody>
         </Table>
+        {this.getAlert()}
     </div>
     );
   }
