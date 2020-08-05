@@ -348,7 +348,7 @@ class ViewRequests extends React.Component {
   }
 
   async handleApprove() {
-    let url = "https://mda-phoenix.herokuapp.com/request/modify";
+    let url = "https://mda-phoenix.herokuapp.com/request/approve";
     let self = this;
     let vars = {
       id: self.state.id, 
@@ -363,6 +363,12 @@ class ViewRequests extends React.Component {
       console.log(error);
     });
 
+    this.setState(state=>({
+      component: "table",
+      approveSnackOpen: true,
+    }))
+
+    /*
     url = "https://mda-phoenix.herokuapp.com/calendar-entry";
 
     await axios.post(url, {
@@ -385,6 +391,7 @@ class ViewRequests extends React.Component {
     .catch(error => {
       console.log(error);
     });
+    */
   }
 
   handleModify () {
@@ -425,14 +432,14 @@ class ViewRequests extends React.Component {
       ).then(response => {
       console.log(response);
       self.componentDidMount();
-      self.setState({
-        modifyBool: !this.state.modifyBool,
-        modifySnackOpen: true,
-      });
       //self.setState({modifyBool: false, component: "table"});
     })
     .catch(error => {
       console.log(error);
+    });
+    self.setState({
+      modifyBool: false,
+      modifySnackOpen: true,
     });
   }
 
@@ -874,8 +881,9 @@ class ViewRequests extends React.Component {
                 />
     
                 <br/><br/><br/>
-    
-                {this.showButtons()}
+                <Row style={{justifyContent: 'center'}}>
+                  {this.showButtons()}
+                </Row>
                 <br/><br/><br/><br/>
     
                 {/* Rejection Dialog */}

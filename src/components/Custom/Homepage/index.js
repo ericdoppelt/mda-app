@@ -64,6 +64,16 @@ class HomePage extends React.Component {
       }
     }
 
+    handleViewRequests() {
+      window.sessionStorage.setItem('next_page', '/view-requests');
+      this.props.history.push('/view-requests');
+    }
+
+    handleRequestForms() {
+      //window.sessionStorage.setItem('next_page', '/request-forms');
+      this.props.history.push('/user-login');
+    }
+
     getAlert() {
       if (this.state.integratorError) {
         return(
@@ -136,7 +146,7 @@ class HomePage extends React.Component {
           <TableBody>
             <TableRow style={{backgroundColor: '#e0e0e0',}}>
               <TableCell align='center'>
-                <Button onClick={() => {this.props.history.push('/request-forms')}}>
+                <Button onClick={() => {this.handleRequestForms()}}>
                   <AssignmentRoundedIcon/>
                 </Button>
                 <br/>
@@ -160,14 +170,14 @@ class HomePage extends React.Component {
             </TableRow>
             <TableRow style={{backgroundColor: '#e0e0e0',}}>
               <TableCell align='center'>
-                <Button onClick={() => {this.props.history.push('/view-requests')}}>
+                <Button onClick={() => {this.handleViewRequests()}}>
                   <DvrRoundedIcon/>
                 </Button>
                 <br/>
                 View Requests
               </TableCell>
               <TableCell align='center'>
-                <Button onClick={() => {this.props.history.push('/view-requests')}}>
+                <Button onClick={() => {this.handleViewRequests()}}>
                   <DvrRoundedIcon/>
                 </Button>
                 <br/>
