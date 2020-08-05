@@ -28,7 +28,7 @@ def attach(beamRequest, msg, rangeId, idx, stringIons):
         dictReq = beamRequest.__dict__
         dictReq['blocks'] = np.ceil(np.sum(dictReq['hoursOn']) / 8)
         dictReq['cocktail'] = stringIons
-        dictReq['badDates'] = extraInfo.badDates
+        dictReq['badDates'] = extraInfo.bad_dates
         template = "routes/TAMU_request_template.pdf"
         addName = beamRequest.company.replace(" ", "_") + '_' + idx
         output = baseName + addName + '.pdf'

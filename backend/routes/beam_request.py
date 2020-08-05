@@ -208,8 +208,20 @@ def create_calendar_entry(req, reqId, rangeId, startDate, hours, energy):
         requestId = reqId,
         rangeId = rangeId,
         beam = beam,
-        energy = int(energy)
+        energy = float(energy)
     )
+    print(req.username,
+        req.facility,
+        req.integrator,
+        hours,
+        startDate,
+        False,
+        title,
+        reqId,
+        rangeId,
+        beam,
+        float(energy))
+    
     result = entry.create_entry()
 
     return result
@@ -288,7 +300,7 @@ def send_forms():
                 beamReq = requests.query.filter_by(id=beamId).first()
                 energy = req['energies'][i]
                 searchedBeams[beamId] = beamReq
-                info[beamId] = []
+                info[int(beamId)] = []
                 date = req['startDate'][i]
                 beamReq.status = "Scheduled"
                 beamReq.request_range = rangeId
@@ -307,7 +319,8 @@ def send_forms():
                 energyMsg += "scheduled for " + start.strftime('%m/%d/%Y')
                 energyMsg += " at " + start.strftime('%I %p')
                 energyMsg += " for " + str(hours) + " hours\n\n"
-                info[beamId].append(energyMsg)
+                info[int(beamId)].append(energyMsg)
+                
 
                 msg.body += str(req['energies'][i]) + " MeV \n"
                 msg.body += form.title + " at " + form.company + "\n"
@@ -342,7 +355,7 @@ def send_forms():
             for key in ions:
                 cocktail = key + ' MeV: ' + ', '.join(ions[key])
                 stringIons.append(cocktail)
-            msg = attach(form, msg, rang.id, i, stringIons)
+            # msg = attach(form, msg, rang.id, i, stringIons)
             sendTesterMail(form, info[form.id])
 
         msg.body += "Attached are the details of each request\n\n\n"
