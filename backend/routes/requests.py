@@ -21,6 +21,16 @@ from setup.exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
 
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
+
+
 
 
 @app.route('/request/approve', methods=['POST'])
@@ -75,7 +85,7 @@ def request_modify():
         msg.body = "Your beam time request was modified with the following: \n\n"
         for key in req.keys():
             if req[key] != "" and key != "id":
-                msg.body += key + ": " + req[key] + "\n\n"
+                msg.body += str(key) + ": " + str(req[key]) + "\n\n"
         iterable = copy.deepcopy(req)
         for (key, value) in iterable.items():
             if value != "":
@@ -110,13 +120,21 @@ def request_modify():
         else:
             ion_ids = beam_request.ions
 
-        for attr, value in beam_request.__dict__.items():
-            if attr in req and req[attr] != "" and attr != 'id':
-                setattr(beam_request, attr, req[attr])
-        if req['facility'] != 'MSU':
-            for attr, value in req['facility'].__dict__.items():
-                if attr in req and req[attr] != "" and attr != 'id' and attr != 'request_id':
-                    setattr(req['facility'], attr, req[attr])
+        # for attr, value in beam_request.__dict__.items():
+        #     if attr in req and req[attr] != "" and attr != 'id':
+        #         setattr(beam_request, attr, req[attr])
+        # if req['facility'] == 'TAMU':
+        #     for attr, value in req['facility'].__dict__.items():
+        #         if attr in req and req[attr] != "" and attr != 'id' and attr != 'request_id':
+        #             setattr(TAMU, attr, req[attr])
+        # elif req['facility'] == 'LBNL':
+        #     for attr, value in req['facility'].__dict__.items():
+        #         if attr in req and req[attr] != "" and attr != 'id' and attr != 'request_id':
+        #             setattr(req['facility'], attr, req[attr])
+        # elif req['facility'] == 'NSRL':
+        #     for attr, value in req['facility'].__dict__.items():
+        #         if attr in req and req[attr] != "" and attr != 'id' and attr != 'request_id':
+        #             setattr(req['facility'], attr, req[attr])
 
         
 
@@ -132,6 +150,7 @@ def request_modify():
         result = {'success' : True}
     except Exception as e:
         print(e)
+        PrintException()
         result = {'error' : str(e),
         'success' : False}
     return jsonify(result)
