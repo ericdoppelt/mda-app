@@ -267,9 +267,6 @@ def getRequests(route):
             request_forms = requests.query.filter_by(username=username).all()
         elif route == 'id' and request.method == 'POST':
             request_forms = requests.query.filter_by(id=req['id']).all()
-        elif route == 'range' and request.method == 'POST':
-            rangeId = req['rangeId']
-            request_forms = requests.query.filter_by(request_range=rangeId).all()
         else:
             request_forms = requests.query.all()
         myForms = getForms(request_forms)
@@ -286,6 +283,37 @@ def getRequests(route):
         
         else:
             result = {'requests' : myForms}
+
+    except Exception as e:
+        print(e)
+        result = {'error' : str(e),
+        'success' : False}
+
+    return result
+
+
+@app.route('/getforms/schedule', methods=['POST'])
+@jwt_required
+def getSchedules():
+    result = {}
+
+    req = request.get_json()
+
+    try:
+        rangeId = req['rangeId']
+        entries = Calendar.query.filter_by(rangeId=rangeId).all()
+
+        schedules = []
+        for entry in entries:
+            foo = {}
+            delta = timedelta(hours=entry.totalTime)
+            end = entry.startDate + delta
+            foo['beam'] = entry.beam
+            foo['startTime'] = entry.startDate
+            foo['endTime'] = end
+            foo['energy'] = entry.energy
+            schedules.append(foo)
+        result = {"schedules" : schedules}
 
     except Exception as e:
         print(e)

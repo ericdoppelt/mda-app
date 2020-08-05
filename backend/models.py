@@ -140,6 +140,8 @@ class Calendar(db.Model):
     title = db.Column(db.String(50))
     requestId = db.Column(db.Integer())
     rangeId = db.Column(db.Integer())
+    beam = db.Column(db.Boolean())
+    energy = db.Column(db.Integer())
 
     def create_entry(self):
         result = ""

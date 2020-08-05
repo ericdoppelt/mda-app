@@ -169,31 +169,33 @@ def requestform():
         return jsonify({'success': False, 'msg': str(e)}), 500
 
 
-def create_calendar_entry(req):
+# def create_calendar_entry(req):
+#     result = ""
+
+#     entry = Calendar(
+#         username = req.username,
+#         facility = req.facility,
+#         integrator = req.integrator,
+#         totalTime = req.beam_time,
+#         startDate = req.scheduled_start,
+#         private = False,
+#         title = req.title,
+#         requestId = req.id,
+#         rangeId = None
+#     )
+#     result = entry.create_entry()
+
+#     return result
+
+def create_calendar_entry(req, reqId, rangeId, startDate, hours, energy):
     result = ""
 
-    entry = Calendar(
-        username = req.username,
-        facility = req.facility,
-        integrator = req.integrator,
-        totalTime = req.beam_time,
-        startDate = req.scheduled_start,
-        private = False,
-        title = req.title,
-        requestId = req.id,
-        rangeId = None
-    )
-    result = entry.create_entry()
-
-    return result
-
-def create_tune_entry(req, rangeId, startDate, endDate):
-    result = ""
-
-    start = datetime.strptime(startDate, '%Y-%m-%dT%H:%M:%S.%fZ')
-    end = datetime.strptime(endDate, '%Y-%m-%dT%H:%M:%S.%fZ')
-    delta = end - start
-    hours = delta.seconds // 3600
+    if reqId:
+        title = req.title
+        beam = True
+    else:
+        title = 'Downtime'
+        beam = False
 
     entry = Calendar(
         username = req.username,
@@ -202,9 +204,11 @@ def create_tune_entry(req, rangeId, startDate, endDate):
         totalTime = hours,
         startDate = startDate,
         private = False,
-        title = 'Tune Time',
-        requestId = req.id,
-        rangeId = rangeId
+        title = title,
+        requestId = reqId,
+        rangeId = rangeId,
+        beam = beam,
+        energy = energy
     )
     result = entry.create_entry()
 
@@ -228,27 +232,25 @@ def getBeams(form):
                 ions[str(beam.amev)].append(beam.ion)
             else:
                 ions[str(beam.amev)] = [beam.ion]
-        
 
     return ions
 
-def sendTesterMail(beamReq):
+def sendTesterMail(beamReq, beamMsgs):
     msg = Message("Beam Time Request Scheduled")
     msg.recipients = [beamReq.email]
     
     msg.body = "Your beam time request " + beamReq.title
-    msg.body += " has been scheduled for " + beamReq.scheduled_start.strftime('%m/%d/%Y')
+    msg.body += " has been scheduled start on " + beamReq.scheduled_start.strftime('%m/%d/%Y')
     msg.body += " at " + beamReq.scheduled_start.strftime('%I %p') + "\n\n"
+    msg.body += "Each energy has been scheduled for: \n\n"
+    for beamMsg in beamMsgs:
+        msg.body += beamMsg
+    msg.body += "\n\n"
     msg.body += "Thanks and have a wonderful day!\n"
     msg.body += "The ISEEU Team"
 
     # TODO
     # mail.send(msg)
-
-def setValues(form, date, rangeId):
-    form.status = "Scheduled"
-    form.request_range = rangeId
-    form.scheduled_start = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
 
 def PrintException():
     exc_type, exc_obj, tb = sys.exc_info()
@@ -272,53 +274,76 @@ def send_forms():
         ids = req['ids']
         beamReqs = requests.query.filter(requests.id.in_(ids)).all()
         rang = Ranges.query.filter_by(id=req['rangeId']).first()
-        
-        
+        rangeId = rang.id
 
         msg = Message("Send Request Form Demo")
         msg.recipients = [user.email]
 
         msg.body = user.affiliation + "requests the following energy cocktails at the specified times:\n\n"
 
-        for i, form in enumerate(beamReqs):
-            setValues(form, req['dates'][i], rang.id)
+        info = {}
+        searchedBeams = {}
+        for i, beamId in enumerate(req['ids']):
+            if beamId is not None and beamId not in searchedBeams:
+                beamReq = requests.query.filter_by(id=beamId).first()
+                energy = req['energies'][i]
+                searchedBeams[beamId] = beamReq
+                info[beamId] = []
+                date = req['startDate'][i]
+                beamReq.status = "Scheduled"
+                beamReq.request_range = rangeId
+                beamReq.scheduled_start = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
 
-            msg.body += form.title + " at " + form.company + "\n"
+            start = datetime.strptime(req['startDate'][i], '%Y-%m-%dT%H:%M:%S.%fZ')
+            end = datetime.strptime(req['endDate'][i], '%Y-%m-%dT%H:%M:%S.%fZ')
+            delta = end - start
+            hours = delta.seconds // 3600
+
+
+            if beamId is not None:
+                form = searchedBeams[beamId]
+                msg.body += str(req['energies'][i]) + " MeV \n"
+                energyMsg = str(req['energies'][i]) + " MeV \n"
+                msg.body += form.title + " at " + form.company + "\n"
+                energyMsg += form.title + " at " + form.company + "\n"
+                energyMsg += "scheduled for " + form.scheduled_start.strftime('%m/%d/%Y')
+                energyMsg += " at " + form.scheduled_start.strftime('%I %p')
+                energyMsg += " for " + str(hours) + " hours\n\n"
+                info[beamId].append(energyMsg)
+
+            else:
+                msg.body += 'Downtime' + '\n'
+
             msg.body += "scheduled for " + form.scheduled_start.strftime('%m/%d/%Y')
-            msg.body += " at " + form.scheduled_start.strftime('%I %p') + "\n"
-            ions = getBeams(form)
-            stringIons = []
-            for key in ions:
-                cocktail = key + ' MeV: ' + ', '.join(ions[key])
-                stringIons.append(cocktail)
-                msg.body += cocktail + "\n"
-            msg.body += "\n"
+            msg.body += " at " + form.scheduled_start.strftime('%I %p')
+            msg.body += " for " + str(hours) + " hours\n\n"
 
-
-            msg = attach(form, msg, rang.id, req['dates'][i], i, stringIons)
-            sendTesterMail(form)
-            
-            if rang.scheduled:
+            if rang.scheduled and beamId is not None:
                 try:
-                    entry = Calendar.query.filter_by(requestId=form.id).first()
+                    entry = Calendar.query.filter_by(requestId=form.id, energy=energy).first()
                     if entry is None:
                         raise Exception("Could not find entry")
                     entry.startDate = req['dates'][i]
+                    entry.hours = hours
                 except:
-                    create_calendar_entry(form)
-            else:
-                create_calendar_entry(form)
-        
+                    create_calendar_entry(form, beamId, rangeId, start, hours, energy)
+            elif beamId is not None:
+                create_calendar_entry(form, beamId, rangeId, start, hours, energy)
 
-        msg.body += "Attached are the details of each request\n\n"
+        for i, form in enumerate(beamReqs):
+            # setValues(form, req['dates'][i], rang.id)
+            stringIons = []
+            ions = getBeams(form)
+            for key in ions:
+                cocktail = key + ' MeV: ' + ', '.join(ions[key])
+                stringIons.append(cocktail)
+            msg = attach(form, msg, rang.id, i, stringIons)
+            sendTesterMail(form, info[form.id])
+
+        msg.body += "Attached are the details of each request\n\n\n"
 
         msg.body += "Thank you and have a wonderful day!\n\n"
         msg.body += "The ISEEU Team"
-        
-        for i in range(len(req['startTune'])):
-            startDate = req['startTune'][i]
-            endDate = req['endTune'][i]
-            create_tune_entry(form, rang.id, startDate, endDate)
 
         rang.scheduled = True
         db.session.commit()

@@ -17,7 +17,7 @@ ANNOT_RECT_KEY = '/Rect'
 SUBTYPE_KEY = '/Subtype'
 WIDGET_SUBTYPE_KEY = '/Widget'
 
-def attach(beamRequest, msg, rangeId, date, idx, stringIons):
+def attach(beamRequest, msg, rangeId, idx, stringIons):
     idx = str(idx)
 
     if beamRequest.facility == 'TAMU':
@@ -30,7 +30,7 @@ def attach(beamRequest, msg, rangeId, date, idx, stringIons):
         dictReq['cocktail'] = stringIons
         dictReq['badDates'] = extraInfo.badDates
         template = "routes/TAMU_request_template.pdf"
-        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        addName = beamRequest.company.replace(" ", "_") + '_' + idx
         output = baseName + addName + '.pdf'
         fill(dictReq, template, output)
 
@@ -44,7 +44,7 @@ def attach(beamRequest, msg, rangeId, date, idx, stringIons):
         baseName = 'routes/request_forms/LBNL/'
         extraInfo = LBNL.query.filter_by(request_id=beamRequest.id).first()
         text = lbnl(beamRequest, extraInfo)
-        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        addName = beamRequest.company.replace(" ", "_") + '_' + idx
         filename = baseName + addName + '.txt'
         text_file = open(filename + '.txt', "w+")
         text_file.write(text)
@@ -63,7 +63,7 @@ def attach(beamRequest, msg, rangeId, date, idx, stringIons):
         dictReq = {**baseDict, **extraDict}
         dictReq['cocktail'] = stringIons
         template = "routes/NSRL_request_template.pdf"
-        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        addName = beamRequest.company.replace(" ", "_") + '_' + idx
         output = baseName + addName + '.pdf'
         fill(dictReq, template, output)
 
@@ -77,7 +77,7 @@ def attach(beamRequest, msg, rangeId, date, idx, stringIons):
         dictReq = beamRequest.__dict__
         dictReq['cocktail'] = stringIons
         template = "routes/Universal_request_template.pdf"
-        addName = beamRequest.title.replace(" ", "_") + '_' + idx
+        addName = beamRequest.company.replace(" ", "_") + '_' + idx
         output = baseName + addName + '.pdf'
         fill(dictReq, template, output)
 
