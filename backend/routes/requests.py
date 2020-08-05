@@ -162,7 +162,7 @@ def reject_form():
     try:
         req = request.get_json()
         beam_request = requests.query.filter_by(id=req['id']).first()
-        msg = Message("Beam Time Request Rejected", cc=[req['email']])
+        msg = Message("Beam Time Request Rejected")
         msg.recipients = [beam_request.email]
         
         msg.body = "Your beam time request was rejected for the following reason: \n\n"
