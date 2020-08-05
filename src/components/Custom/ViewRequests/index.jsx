@@ -17,6 +17,7 @@ import TextField from '@material-ui/core/TextField';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Row from '../../UIzard/Row'
 import Image from '../../../components/UIzard/Image';
+import Card from '../../UIzard/Card'
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -233,10 +234,22 @@ class ViewRequests extends React.Component {
       console.log(response.data);
       let tempRows = [];
       result.forEach(function(entry) {
-        //console.log(entry);
+        console.log('entry')
+        console.log(entry);
+        console.log('beams');
+        console.log(Object.keys(entry.beams))
+        let ions = [];
+        console.log('ions');
+        console.log(entry.beams)
+        for (var key in entry.beams) {
+          console.log(key)
+          console.log(entry.beams[key][0])
+          ions.push(entry.beams[key][0])
+        }
+        console.log(ions)
         tempRows.push(createData(entry.id, entry.name, entry.status, entry.facility, entry.integrator, entry.company,
-          entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
-          entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode, entry.rejectNote))
+          entry.PO_number, entry.address, entry.city, entry.email, Object.keys(entry.beams), entry.funding_cell,
+          entry.funding_contact, entry.funding_email, ions, entry.phone, entry.start, entry.state, entry.zipcode, entry.rejectNote))
       });
       self.setState(state=>({oldrows: tempRows, entryCount: tempRows.length}))
     })
@@ -280,6 +293,8 @@ class ViewRequests extends React.Component {
   }
 
   handleViewMore(row) {
+    console.log('checking view more');
+    console.log(row)
     this.setState(state=>({
       id: row.id,
       name: row.name,
@@ -900,6 +915,7 @@ class ViewRequests extends React.Component {
                     </Button>
                   </DialogActions>
                 </Dialog>
+                
             </div>
           );
         } else if (this.state.component === 'table') {

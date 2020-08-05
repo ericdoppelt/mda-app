@@ -215,6 +215,7 @@ class ViewRequestsSched extends React.Component {
       page: 0,
       rowsPerPage: 10,
       component: "",
+      added: false,
     }
   }
 
@@ -234,9 +235,11 @@ class ViewRequestsSched extends React.Component {
       let tempRows = [];
       result.forEach(function(entry) {
         //console.log(entry);
-        tempRows.push(createData(entry.id, entry.name, entry.status, entry.facility, entry.integrator, entry.company,
-          entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
-          entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode, entry.rejectNote))
+        if (entry.status === 'Approved') {
+          tempRows.push(createData(entry.id, entry.name, entry.status, entry.facility, entry.integrator, entry.company,
+            entry.PO_number, entry.address, entry.city, entry.email, entry.energies, entry.funding_cell,
+            entry.funding_contact, entry.funding_email, entry.ions, entry.phone, entry.start, entry.state, entry.zipcode, entry.rejectNote))
+        }
       });
       self.setState(state=>({oldrows: tempRows, entryCount: tempRows.length}))
     })
@@ -259,7 +262,7 @@ class ViewRequestsSched extends React.Component {
     });
 
 
-    self.setState({component: "table"})
+    self.setState({component: "table", added: false})
     //console.log(result);
 
 
@@ -439,6 +442,11 @@ class ViewRequestsSched extends React.Component {
     this.setState({rejectSnackOpen: false})
   }
 
+  handleAddNew() {
+    this.setState({added: true});
+    this.props.addEvent(this.state.id);
+  }
+
   async handleReject () {
     const url = "https://mda-phoenix.herokuapp.com/request/reject";
     let self = this;
@@ -490,8 +498,9 @@ class ViewRequestsSched extends React.Component {
               id="button" 
               variant="contained"
               style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-              onClick={() => {this.props.addEvent(this.state.id)}}
+              onClick={() => {this.handleAddNew()}}
               color="primary"
+              disabled={this.state.added}
             >
               Add
             </Button>

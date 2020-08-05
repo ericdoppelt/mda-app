@@ -200,12 +200,29 @@ class CalendarSched extends React.Component {
 
     /*** LIST OF DATES ***/
     this.state = {
-      username: "",
+      name: "",
       facility: "",
       integrator: "",
+      company: "",
       totalTime: "",
       startDate: "",
       cannotRun: "",
+      poNum: "",
+      address: "hello",
+      city: "",
+      email: "",
+      energies: "",
+      funding_cell: "",
+      funding_contact: "",
+      funding_email: "",
+      ions: "",
+      phone: "",
+      state: "",
+      zipCode: "",
+      status: "",
+      rejectNote: "",
+
+      username: "",
       sampleProp: sampleProp,
       data: [],
       facilities: facilities,
@@ -241,20 +258,23 @@ class CalendarSched extends React.Component {
     this.setState({uniqueEnergies: tempEnergies});
   }
 
+  // Input - array of suggestions
+  // Output - array of event objects with updated colors, names, companies
   colorEvents(eventArray) {
     let data = [];
     let self = this;
     eventArray.forEach(function(event) {
       let theColor;
       let titleString;
+      let {name, company} = self.findNameAndCompany(event.id);
       if (event.energy === undefined) {
         theColor = downtimeColor;
         titleString = 'Tune Time';
       } else {
         theColor = colors[self.state.uniqueEnergies.indexOf(event.energy)];
-        titleString = event.energy + " MeV";
+        titleString = company + " - " + name;
       }
-      data.push(self.makeEvent2(event.start, event.end, event.energy, titleString, theColor));
+      data.push(self.makeEvent2(event.id, event.start, event.end, event.energy, titleString, theColor));
       if (event.start < self.state.calendarStartDate) {
         console.log('changing calendar start')
         self.setState({calendarStartDate: event.start});
@@ -262,6 +282,24 @@ class CalendarSched extends React.Component {
     })
 
     return data;
+  }
+
+  // Temporary fix - ideally get name and company from Prioritizer/Scheduler
+  findNameAndCompany = (id) => {
+    //console.log('finding name and company');
+    //console.log(id);
+    let {name, company} = [null, null]
+    SchedulingStore.requests.forEach(function (form) {
+      //console.log(form);
+      if (form.id === id) {
+        //console.log('found it');
+        name = form.name;
+        company = form.company;
+      }
+    })
+    //console.log(name);
+    //console.log(company);
+    return {name, company};
   }
 
   
@@ -275,13 +313,13 @@ class CalendarSched extends React.Component {
     var data = [];
     var self = this;
     
-    console.log('Setting Start Date')
+    //console.log('Setting Start Date')
     //this.setState({calendarStartDate: SchedulingStore.suggestion[0].start});
     this.setState({ calendarStartDate: SchedulingStore.suggestion[0].start }, () => {
-      console.log(self.state.calendarStartDate);
+      //console.log(self.state.calendarStartDate);
     }); 
-    console.log(typeof SchedulingStore.suggestion[0].start);
-    console.log(typeof self.state.calendarStartDate)
+    //console.log(typeof SchedulingStore.suggestion[0].start);
+    //console.log(typeof self.state.calendarStartDate)
     //console.log(self.dateStringConverter(self.state.calendarStartDate))
 
     data = this.colorEvents(SchedulingStore.suggestion)
@@ -325,8 +363,8 @@ class CalendarSched extends React.Component {
     title: titleString, start: new Date(startDate), end: endDate, backgroundColor: color}
   };
 
-  makeEvent2 = (startDate, endDate, energy, titleString, color) => {
-    return { id: "1", extendedProps: {facility: "TAMU", integrator: "MDA", beamType: "Heavy Ion"}, 
+  makeEvent2 = (id, startDate, endDate, energy, titleString, color) => {
+    return { id: id, extendedProps: {facility: "TAMU", integrator: "MDA", beamType: "Heavy Ion"}, 
     title: titleString, start: startDate, end: endDate, backgroundColor: color, energy: energy}
   };
 
@@ -336,6 +374,8 @@ class CalendarSched extends React.Component {
       : facility==='MSU' ? '#27ae60'
       : '#34495e';
   }
+
+  
 
 
   /***  CHECKBOX IMPLEMENTATION  ***/
@@ -375,10 +415,30 @@ class CalendarSched extends React.Component {
     console.log(data)
   }
 
-  handleModal() {
-    this.setState({
-      modalOpen: !this.state.modalOpen
-    })
+  handleModal(row) {
+    console.log('opening modal')
+    this.setState(state=>({
+      id: row.id,
+      name: row.name,
+      facility: row.facility,
+      company: row.company,
+      integrator: row.integrator,
+      poNum: row.poNum,
+      address: row.address,
+      city: row.city,
+      email: row.email,
+      energies: row.energies,
+      funding_cell: row.funding_cell,
+      funding_contact: row.funding_contact,
+      funding_email: row.funding_email,
+      ions: row.ions,
+      phone: row.phone,
+      startDate: row.startDate,
+      state: row.state,
+      zipCode: row.zipCode,
+      status: row.status,
+      modalOpen: !this.state.modalOpen,
+    }));
   }
 
   handleAddNewDialog() {
@@ -387,13 +447,14 @@ class CalendarSched extends React.Component {
     })
   }
 
+  // Adds event after viewing them from ViewRequestsSched
   async addEvent(id) {
     console.log('event adding')
     console.log(id.type)
     let self = this;
 
+    // Check if it's down time
     if (id.type === 'click') {
-      //adding tune time
       let theColor = downtimeColor;
       let titleString = 'Tune Time';
       let eventEnergy = undefined;
@@ -403,7 +464,7 @@ class CalendarSched extends React.Component {
       console.log(endDate.getTime())
       endDate.setTime(endDate.getTime() + (h*60*60*1000));
 
-      let data = [self.makeEvent2(self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
+      let data = [self.makeEvent2(id, self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
       self.setState({calendarEvents: [...data]})
     } else {
       let url = "https://mda-phoenix.herokuapp.com/getforms/id";
@@ -411,11 +472,14 @@ class CalendarSched extends React.Component {
       await axios.post(url, 
         {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
         ).then(response => {
+          console.log('checking add')
+          console.log(response)
           let data  = [];
           let theColor = "";
           let titleString = "";
           let eventType = 'beamtime';
           let eventEnergy = Object.keys(response.data.requests[0].beams)[0]
+          let {name, company} = this.findNameAndCompany(id);
 
           // Setting color and title
           if (eventType === 'downtime') {
@@ -423,34 +487,40 @@ class CalendarSched extends React.Component {
             titleString = 'Tune Time';
           } else {
             theColor = colors[self.state.uniqueEnergies.indexOf(eventEnergy)];
-            titleString = eventEnergy + " MeV";
+            titleString = name + " - " + company;
           }
 
           // Setting end time
+          console.log('doing end time')
           var endDate = new Date(self.state.addNewDate);
           if (response.data.requests[0].totalHours === null) {
             let h = 4;
             console.log(endDate.getTime())
             endDate.setTime(endDate.getTime() + (h*60*60*1000));
+            console.log(endDate.getTime())
           } else {
-            let h = response.data.requests[0].totalHours;
+            //let h = response.data.requests[0].totalHours; // totalHours is 96 for many requests??
+            let h = 4;
+            console.log(response.data)
+            console.log(h)
+            console.log(endDate.getTime())
             endDate.setTime(endDate.getTime() + (h*60*60*1000));
+            console.log(endDate.getTime())
           }
 
           // Re-running to reset colors
-          data = [self.makeEvent2(self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
+          data = [self.makeEvent2(id, self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
           console.log(data);
           console.log(this.state.uniqueEnergies)
           this.makeUniqueEnergies(data);
           console.log(this.state.uniqueEnergies)
           if (eventType === 'downtime') {
             theColor = downtimeColor;
-            titleString = 'Tune Time';
           } else {
             theColor = colors[self.state.uniqueEnergies.indexOf(eventEnergy)];
-            titleString = eventEnergy + " MeV";
           }
-          data = [self.makeEvent2(self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
+          console.log('checky here');
+          data = [self.makeEvent2(id, self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
           data = this.colorEvents(data);
 
           self.setState({calendarEvents: [...data]})
@@ -478,21 +548,23 @@ class CalendarSched extends React.Component {
     console.log("Event clicked");
     console.log(id);
     
-    let url = "https://mda-phoenix.herokuapp.com/getforms/id";
     let self = this;
   
+    let url = "https://mda-phoenix.herokuapp.com/getforms/id";
+    
     await axios.post(url, 
       {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
       ).then(response => {
         console.log('Printing response');
-        console.log(response.data);
+        console.log(response);
+        this.handleModal(response.data.requests[0]);
       })
       .catch(error => {
         console.log(error);
       }
     );
 
-    this.handleModal();
+    
   }
 
   
@@ -608,11 +680,44 @@ class CalendarSched extends React.Component {
           {/*<DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>*/}
           <CardNoShadow style={{display: 'inline'}}>
             <DialogTitle id="simple-dialog-title" style={{textAlign: 'center'}}>Contact and Funding Information</DialogTitle>
+            
+            <Row>
+              <TextField
+                label="Status"
+                className={classes.leftTextField}
+                id="standard-read-only-input"
+                defaultValue={this.state.status}
+              />
+            </Row>
+            <br/>
+            {this.state.status === 'Rejected'
+              ? <div>
+                  <Row style={{justifyContent: 'flex-start'}}>
+                    <TextField
+                      label="Rejection Reason"
+                      className={classes.leftTextField}
+                      id="standard-read-only-input"
+                      defaultValue={this.state.rejectNote}
+                    />
+                  </Row>
+                  <br/>
+                </div>
+            : null}
+            
+            <Row >
+              <TextField
+                label="Facility"
+                className={classes.leftTextField}
+                id="standard-read-only-input"
+                defaultValue={this.state.facility}
+              />
+            </Row>
+
             <TextField
               label="Name"
               className={classes.leftTextField}
               id="standard-read-only-input"
-              //defaultValue={this.state.name}
+              defaultValue={this.state.name}
               InputProps={{
                 readOnly: true,
               }}
@@ -621,7 +726,7 @@ class CalendarSched extends React.Component {
               label = "Company"
               className={classes.rightTextField}
               id="standard-read-only-input"
-              //defaultValue={this.state.company}
+              defaultValue={this.state.company}
               InputProps={{
                 readOnly: true,
               }}
@@ -630,7 +735,7 @@ class CalendarSched extends React.Component {
               label = "Email"
               className={classes.leftTextField}
               id="standard-read-only-input"
-              //defaultValue={this.state.email}
+              defaultValue={this.state.email}
               InputProps={{
                 readOnly: true,
               }}
@@ -639,7 +744,7 @@ class CalendarSched extends React.Component {
               label = "Phone"
               className={classes.rightTextField}
               id="standard-read-only-input"
-              //defaultValue={this.state.phone}
+              defaultValue={this.state.phone}
               InputProps={{
                 readOnly: true,
               }}
