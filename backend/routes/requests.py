@@ -155,7 +155,7 @@ def reject_form():
         beam_request.approved_integrator = False
         beam_request.rejected = True
         db.session.commit()
-        mail.send(msg)
+        # mail.send(msg)
         result = {'success' : True}
 
     except Exception as e:
