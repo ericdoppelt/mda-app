@@ -110,7 +110,7 @@ class TabsProfile extends React.Component {
             <PasswordChanger/>
           </TabPanel>
           <TabPanel value={this.state.value} index={2}>
-             <Calendar personal={true}/>
+             <Calendar/>
           </TabPanel>
           <TabPanel value={this.state.value} index={3}>
             <AuthenticateUser/>
