@@ -15,8 +15,10 @@ from .request_helper import attach
 import linecache
 import sys
 
-
+# Adds a request to the database
 def add_request(form, username):
+    # Quick fix to map facilities to their facility ids, easier than a 
+    # more complex query but should be changed
     IDs = {}
     IDs['TAMU'] = 3
     IDs['LBNL'] = 4
@@ -24,6 +26,8 @@ def add_request(form, username):
     IDs['MSU'] = 6
     facId = IDs[form['facility']]
 
+    # Comes in as "" instead of Null, so make sure that 
+    # it is instead stored as null
     if form['billingPO'] == "":
         form['billingPO'] = None
     ion_ids = []
@@ -33,6 +37,9 @@ def add_request(form, username):
     energyHours = []
     nsrlEnergy = []
     beamTime = 0
+
+    # Messy way of getting beam id from a given ion. NSRL
+    # is continuous so there is a different process
     if form['facility'] == 'NSRL':
         for i, energy in enumerate(form['energies']):
             hours = int(form['shifts'][i]) * int(form['hoursOn'][i])
@@ -41,6 +48,7 @@ def add_request(form, username):
             for ion in form['ions'][i]:
                 beams = Beams.query.filter(and_(Beams.ion==ion, Beams.amev>=energy)).all()
                 beam = beams[0]
+                # Quickfix for random error with getting multiple ions
                 minAmev = beams[0].amev
                 for b in beams:
                     if minAmev > b.amev:
@@ -57,7 +65,6 @@ def add_request(form, username):
             hours = int(form['shifts'][i]) * int(form['hoursOn'][i])
             beamTime += hours
             for ion in form['ions'][i]:
-                print(ion, energy, facId)
                 beam = Beams.query.filter_by(ion=ion, amev=energy, org_id=facId).one()
                 ion_ids.append(beam.id)
                 shifts.append(int(form['shifts'][i]))
@@ -100,6 +107,7 @@ def add_request(form, username):
                     personnel = form['personnel'])
     entry.create_request()
     request_id = entry.id
+    # Each facility has extra info, so this fills that out
     if form['facility'] == 'TAMU':
         facility_form = TAMU(request_id = request_id,
                             bad_dates = form['badDates'])
@@ -137,7 +145,8 @@ def add_request(form, username):
                             energies = nsrlEnergy)
         facility_form.create_request()
 
-@app.route('/requestform', methods=['POST'])
+# route for adding a request form to the database
+@app.route('/api/requestform', methods=['POST'])
 @jwt_required
 def requestform():
     
@@ -146,8 +155,10 @@ def requestform():
         print(form)
         facility = form['facility']
         if facility == 'TAMU':
+            # Signature for the form, depreciated
             form['signature'] = form['name']
             badDates = copy.deepcopy(form['badDates'])
+            # Way to organize baddates, depreciated
             if badDates is not []:
                 for i, date in enumerate(badDates):
                     date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
@@ -157,6 +168,7 @@ def requestform():
                         form['badDates'] = date.strftime('%m/%d/%Y')
                     else:
                         form['badDates'] += date.strftime('%m/%d/%Y')
+        # Frontend gives "" instead of null, needs to made null
         if facility == 'LBNL':
             if form['alternateDate'] == "":
                 form['alternateDate'] = None
@@ -168,25 +180,7 @@ def requestform():
         print(e)
         return jsonify({'success': False, 'msg': str(e)}), 500
 
-
-# def create_calendar_entry(req):
-#     result = ""
-
-#     entry = Calendar(
-#         username = req.username,
-#         facility = req.facility,
-#         integrator = req.integrator,
-#         totalTime = req.beam_time,
-#         startDate = req.scheduled_start,
-#         private = False,
-#         title = req.title,
-#         requestId = req.id,
-#         rangeId = None
-#     )
-#     result = entry.create_entry()
-
-#     return result
-
+# Creates an entry in the table for a beam request
 def create_calendar_entry(req, reqId, rangeId, startDate, hours, energy):
     result = ""
 
@@ -210,22 +204,12 @@ def create_calendar_entry(req, reqId, rangeId, startDate, hours, energy):
         beam = beam,
         energy = float(energy)
     )
-    print(req.username,
-        req.facility,
-        req.integrator,
-        hours,
-        startDate,
-        False,
-        title,
-        reqId,
-        rangeId,
-        beam,
-        float(energy))
     
     result = entry.create_entry()
 
     return result
 
+# Gets the energies and beams from database
 def getBeams(form):
     ions = {}
     if form.facility == 'NSRL':
@@ -247,6 +231,7 @@ def getBeams(form):
 
     return ions
 
+# Sends an email to the tester of the request
 def sendTesterMail(beamReq, beamMsgs):
     msg = Message("Beam Time Request Scheduled")
     msg.recipients = [beamReq.email]
@@ -264,18 +249,9 @@ def sendTesterMail(beamReq, beamMsgs):
     # TODO
     # mail.send(msg)
 
-def PrintException():
-    exc_type, exc_obj, tb = sys.exc_info()
-    f = tb.tb_frame
-    lineno = tb.tb_lineno
-    filename = f.f_code.co_filename
-    linecache.checkcache(filename)
-    line = linecache.getline(filename, lineno, f.f_globals)
-    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
-
-    
-
-@app.route('/request/send-forms', methods=['POST'])
+# Gets the request ids and sends the request 
+# to the integrator and testers
+@app.route('/api/request/send-forms', methods=['POST'])
 @jwt_required
 def send_forms():
     
@@ -373,5 +349,4 @@ def send_forms():
 
     except Exception as e:
         print(e)
-        PrintException()
         return jsonify({'success': False, 'msg': str(e)}), 500

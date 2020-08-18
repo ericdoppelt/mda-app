@@ -441,7 +441,7 @@ class CalendarSched extends React.Component {
     console.log(SchedulingStore.requests[0].rangeId)
 
     
-    let url = "https://mda-phoenix.herokuapp.com/request/send-forms";
+    let url = "https://vcm-15941.vm.duke.edu/api/request/send-forms";
     
     await axios.post(url, 
       {
@@ -515,7 +515,7 @@ class CalendarSched extends React.Component {
       let data = [self.makeEvent2(id, self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
       self.setState({calendarEvents: [...data]})
     } else {
-      let url = "https://mda-phoenix.herokuapp.com/getforms/id";
+      let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
     
       await axios.post(url, 
         {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
@@ -598,7 +598,7 @@ class CalendarSched extends React.Component {
     
     let self = this;
   
-    let url = "https://mda-phoenix.herokuapp.com/getforms/id";
+    let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
     
     await axios.post(url, 
       {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}

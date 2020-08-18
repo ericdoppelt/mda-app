@@ -65,7 +65,7 @@ class ProfileInfo extends React.Component {
 
   async componentDidMount() {
     var self = this;
-    let url = 'https://mda-phoenix.herokuapp.com/user';
+    let url = 'https://vcm-15941.vm.duke.edu/api/user';
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
@@ -89,7 +89,7 @@ class ProfileInfo extends React.Component {
 
     async submit() {
         let self = this;
-        let url = 'https://mda-phoenix.herokuapp.com/user/modify';
+        let url = 'https://vcm-15941.vm.duke.edu/api/user/modify';
         await axios.post(url, {
           first_name: self.state.first_name,
           last_name: self.state.last_name,

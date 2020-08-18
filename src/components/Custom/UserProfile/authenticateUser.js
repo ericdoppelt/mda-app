@@ -70,7 +70,7 @@ class AuthenticateUser extends React.Component {
 
   async componentDidMount() {
       var self = this;
-      let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
+      let url = 'https://vcm-15941.vm.duke.edu/api/user/authenticate-user';
       await axios.get(url, {
         headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
         }).then(response => {
@@ -93,7 +93,7 @@ class AuthenticateUser extends React.Component {
 
       async submit() {
           let self = this;
-          let url = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
+          let url = 'https://vcm-15941.vm.duke.edu/api/user/authenticate-user';
           await axios.post(url, {
               username: self.state.selected['user'],
           }, {
@@ -112,7 +112,7 @@ class AuthenticateUser extends React.Component {
 
     async deleteAccount() {
       let self = this;
-      let url = 'https://mda-phoenix.herokuapp.com/user/deleteuser';
+      let url = 'https://vcm-15941.vm.duke.edu/api/user/deleteuser';
       await axios.delete(url,{
         headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` },
         data: {username: self.state.selected['user'],},
@@ -134,7 +134,7 @@ class AuthenticateUser extends React.Component {
         alert(error);
     });
 
-    let urlGet = 'https://mda-phoenix.herokuapp.com/user/authenticate-user';
+    let urlGet = 'https://vcm-15941.vm.duke.edu/api/user/authenticate-user';
     await axios.get(urlGet, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {

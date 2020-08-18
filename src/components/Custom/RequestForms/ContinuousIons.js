@@ -49,7 +49,7 @@ class ContinuousIons extends React.Component {
     }
 
     async componentDidMount() {
-        let url = 'https://mda-phoenix.herokuapp.com/beams';
+        let url = 'https://vcm-15941.vm.duke.edu/api/beams';
           await axios.post(url, {
             facility: this.props.facility,
             }).then(response => {

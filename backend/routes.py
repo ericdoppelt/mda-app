@@ -20,7 +20,7 @@ from exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
 
-@app.route('/time', methods=['GET'])
+@app.route('/api/time', methods=['GET'])
 def get_current_time():
     sample = Test.query.first()
     sample = sample.text
@@ -28,7 +28,7 @@ def get_current_time():
 
 
 
-@app.route('/facility', methods=['GET'])
+@app.route('/api/facility', methods=['GET'])
 def facilities():
     myList = []
     facilities = Organization.query.filter_by(org_type='facility').all()
@@ -38,7 +38,7 @@ def facilities():
             myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-@app.route('/calendar', methods=['POST'])
+@app.route('/api/calendar', methods=['POST'])
 def entries():
     myList = []
     entries = Calendar.query.all()
@@ -51,7 +51,7 @@ def entries():
             myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-@app.route('/calendar/personal', methods=['POST'])
+@app.route('/api/calendar/personal', methods=['POST'])
 @jwt_required
 def personal_entries():
     username = get_jwt_identity()
@@ -66,7 +66,7 @@ def personal_entries():
         myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-@app.route('/calendar/tasks', methods=['GET', 'POST'])
+@app.route('/api/calendar/tasks', methods=['GET', 'POST'])
 @jwt_required
 def tasks():
     if request.method == 'POST':
@@ -89,7 +89,7 @@ def tasks():
         eventArray.append(adder)
     return jsonify({'eventArray' : eventArray})
 
-@app.route('/integrator', methods=['GET'])
+@app.route('/api/integrator', methods=['GET'])
 def get_integrators():
     myList = []
 
@@ -103,7 +103,7 @@ def get_integrators():
     return {'integrators' : myList}
 
 
-@app.route('/filterion', methods=['POST'])
+@app.route('/api/filterion', methods=['POST'])
 def filterion():
 
     req = request.get_json()
@@ -143,7 +143,7 @@ def filterion():
 
     return result
 
-@app.route('/calendar-entry', methods=['POST'])
+@app.route('/api/calendar-entry', methods=['POST'])
 # @jwt_required
 def create_entry():
 
@@ -173,7 +173,7 @@ def create_entry():
 
 
 
-@app.route('/beams', methods=['POST'])
+@app.route('/api/beams', methods=['POST'])
 def beams():
     myList = {}
     req = request.get_json()
@@ -218,7 +218,7 @@ def add_calendar(beam_request):
     return result
 
 
-@app.route('/approve', methods=['POST'])
+@app.route('/api/approve', methods=['POST'])
 #@jwt_required
 def approve():
     result = ""
@@ -242,7 +242,7 @@ def approve():
         'success' : False}
     return result
 
-@app.route('/request/modify', methods=['POST'])
+@app.route('/api/request/modify', methods=['POST'])
 #@jwt_required
 def request_modify():
     result = ""
@@ -306,7 +306,7 @@ def request_modify():
         'success' : False}
     return jsonify(result)
 
-@app.route('/request/reject', methods=['POST'])
+@app.route('/api/request/reject', methods=['POST'])
 # @jwt_required
 def reject_form():
     result = ""
@@ -348,7 +348,7 @@ def reject_form():
         'success' : False}
     return result
 
-@app.route('/getforms', methods=['POST'])
+@app.route('/api/getforms', methods=['POST'])
 #@jwt_required
 def getRequests():
     req = request.get_json()
@@ -383,7 +383,7 @@ def getRequests():
 
     return result
 
-@app.route('/getforms/integrator', methods=['POST'])
+@app.route('/api/getforms/integrator', methods=['POST'])
 @jwt_required
 def getRequests_integrators():
     username = get_jwt_identity()

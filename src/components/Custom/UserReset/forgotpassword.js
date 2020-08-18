@@ -44,7 +44,7 @@ class ForgotPassword extends React.Component {
     //Updates state variables, including errors in response
     async submit() {
       let self = this;
-      let url = 'https://mda-phoenix.herokuapp.com/user/forgot-password';
+      let url = 'https://vcm-15941.vm.duke.edu/api/user/forgot-password';
       await axios.post(url, {
         username: self.state.username,
       },{

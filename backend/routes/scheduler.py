@@ -14,8 +14,8 @@ from models import (Test, Users, Calendar, TokenBlacklist, Beams, Organization, 
 from setup.exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
-
-@app.route('/integrator/set-range', methods=['POST'])
+# Create a range of time that an integrator has bought
+@app.route('/api/integrator/set-range', methods=['POST'])
 @jwt_required
 def set_range():
     username = get_jwt_identity()
@@ -33,7 +33,6 @@ def set_range():
         time = datetime.strptime(startTime, "%Y-%m-%dT%H:%M:%S.%fZ")
         timeDelta = timedelta(hours = time.hour, minutes = time.minute)
         date = date + timeDelta
-        print(date)
         entry = Ranges(org_id=myOrg.id, start_date=date, hours=req['hours'],
                         facility=req['facility'], scheduled=False)
         result = entry.create_range()
@@ -47,7 +46,8 @@ def set_range():
 
     return jsonify(result)
 
-@app.route('/integrator/get-range', methods=['GET'])
+# Gets ranges
+@app.route('/api/integrator/get-range', methods=['GET'])
 @jwt_required
 def get_range():
     username = get_jwt_identity()
@@ -78,7 +78,9 @@ def get_range():
 
     return jsonify(result)
 
-@app.route('/request/priority', methods=['POST'])
+# Sets priority for requests to be scheduled
+# Handled in frontend so depreciated
+@app.route('/api/request/priority', methods=['POST'])
 @jwt_required
 def set_priority():
     result = ""

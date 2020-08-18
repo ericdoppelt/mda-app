@@ -2,7 +2,7 @@ import copy
 import string
 import random
 from sqlalchemy import and_, or_, between, func, inspect
-from flask import jsonify, request, json
+from flask import jsonify, request, json, abort
 from flask_mail import Message
 from flask_jwt_extended import (create_access_token,
 create_refresh_token, jwt_required,
@@ -20,9 +20,14 @@ from blacklist_helpers import (
 )
 from setup.exceptions import TokenNotFound
 
+# Limits traffic to one IP address, aka the frontend
+@app.before_request
+def limit_remote_addr():
+    if request.remote_addr != '127.0.0.1':
+        abort(403)  # Forbidden
 
-
-@app.route('/register', methods=['POST'])
+# Registers a user
+@app.route('/api/register', methods=['POST'])
 def register():
     req = request.get_json()
     username = req['username']
@@ -54,7 +59,8 @@ def register():
 
     return jsonify(result)
 
-@app.route('/login', methods=['POST'])
+# Logs in a user
+@app.route('/api/login', methods=['POST'])
 def login():
     username = request.get_json()['username']
     password = request.get_json()['password']
@@ -89,7 +95,8 @@ def login():
 
     return jsonify(result)
 
-@app.route('/user', methods=['GET', 'POST'])
+# Gets a user's information from jwt 
+@app.route('/api/user', methods=['GET', 'POST'])
 @jwt_required
 def user():
     account_info = ""
@@ -113,7 +120,8 @@ def user():
         account_info = {'success' : False, 'error' : 'unable to get user info'}
     return account_info
 
-@app.route('/user/modify', methods=['POST'])
+# Modify a user profile
+@app.route('/api/user/modify', methods=['POST'])
 @jwt_required
 def modify_user():
     result = ""
@@ -143,8 +151,8 @@ def modify_user():
 
     return jsonify(result)
 
-
-@app.route('/user/change-password', methods=['POST'])
+# Change a password of a user
+@app.route('/api/user/change-password', methods=['POST'])
 @jwt_required
 def change_password():
     result = ""
@@ -170,7 +178,8 @@ def change_password():
 
     return jsonify(result)
 
-@app.route('/user/forgot-username', methods=['POST'])
+# Sends email with username to user
+@app.route('/api/user/forgot-username', methods=['POST'])
 def forgot_username():
     result = ""
 
@@ -199,6 +208,7 @@ def forgot_username():
 
     return jsonify(result)
 
+# Generates a random password
 def password_generator(length=8):
     # create alphanumerical from string constants
     LETTERS = string.ascii_letters
@@ -215,7 +225,8 @@ def password_generator(length=8):
     random_password = ''.join(random_password)
     return random_password
 
-@app.route('/user/forgot-password', methods=['POST'])
+# Emails new password to user
+@app.route('/api/user/forgot-password', methods=['POST'])
 def forgot_password():
     result = ""
 
@@ -245,13 +256,13 @@ def forgot_password():
 
     return jsonify(result)
 
-
+# Checks if a token is blacklisted
 @jwt.token_in_blacklist_loader
 def check_if_token_revoked(decoded_token):
     return is_token_revoked(decoded_token)
 
 # Endpoint for revoking the current users access token
-@app.route('/logout', methods=['DELETE'])
+@app.route('/api/logout', methods=['DELETE'])
 @jwt_required
 def logout():
     username = get_jwt_identity()
@@ -261,7 +272,8 @@ def logout():
     except TokenNotFound:
         return jsonify({'success': False, 'msg': 'The specified token was not found'}), 404
 
-@app.route('/user/authenticate-user', methods=['GET', 'POST'])
+# Authenticates a user
+@app.route('/api/user/authenticate-user', methods=['GET', 'POST'])
 @jwt_required
 def authenticate_user():
     result = ""
@@ -318,7 +330,8 @@ def authenticate_user():
 
     return jsonify(result)
 
-@app.route('/user/deleteuser', methods=['DELETE'])
+# deletes a user
+@app.route('/api/user/deleteuser', methods=['DELETE'])
 @jwt_required
 def delete_user():
     try:

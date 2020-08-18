@@ -110,7 +110,7 @@ class RequestFormCommon extends React.Component {
     
     
     if (this.state.validForm) {
-    let url = 'https://mda-phoenix.herokuapp.com/requestform';
+    let url = 'https://vcm-15941.vm.duke.edu/api/requestform';
     await axios.post(url, {
       companyName: this.state.companyName,
       poNumber: this.state.poNumber,

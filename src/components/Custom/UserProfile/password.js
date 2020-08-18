@@ -91,7 +91,7 @@ import {Alert} from '@material-ui/lab';
 
   async submit() {
     let self = this;
-    let url = 'https://mda-phoenix.herokuapp.com/user/change-password';
+    let url = 'https://vcm-15941.vm.duke.edu/api/user/change-password';
     await axios.post(url, {
       oldPassword: self.state.oldPassword,
       newPassword: self.state.newPassword,

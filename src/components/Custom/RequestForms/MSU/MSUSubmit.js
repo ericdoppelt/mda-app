@@ -36,7 +36,7 @@ class MSUSubmit extends React.Component {
     ExperimentStore.setSubmitted();
     if (TesterStore.validForm && ExperimentStore.validForm) {
         let self = this;
-        let url = 'https://mda-phoenix.herokuapp.com/requestform';
+        let url = 'https://vcm-15941.vm.duke.edu/api/requestform';
         await axios.post(url, {
           name: TesterStore.senderName,
           email: TesterStore.email,

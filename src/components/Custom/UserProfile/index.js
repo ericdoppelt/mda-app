@@ -17,7 +17,7 @@ class UserProfile extends React.Component {
 
   async componentDidMount() {
     var self = this;
-    let url = 'https://mda-phoenix.herokuapp.com/user/user';
+    let url = 'https://vcm-15941.vm.duke.edu/api/user/user';
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {

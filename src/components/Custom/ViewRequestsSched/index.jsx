@@ -224,7 +224,7 @@ class ViewRequestsSched extends React.Component {
   
   // Collects request form data.
   async componentDidMount() {
-    let url = "https://mda-phoenix.herokuapp.com/getforms/integrator";
+    let url = "https://vcm-15941.vm.duke.edu/api/getforms/integrator";
     let self = this;
     let result;
     await axios.get(url, 
@@ -247,7 +247,7 @@ class ViewRequestsSched extends React.Component {
       console.log(error);
     });
 
-    url = 'https://mda-phoenix.herokuapp.com/user';
+    url = 'https://vcm-15941.vm.duke.edu/api/user';
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
@@ -338,7 +338,7 @@ class ViewRequestsSched extends React.Component {
   }
 
   async handleApprove() {
-    let url = "https://mda-phoenix.herokuapp.com/request/modify";
+    let url = "https://vcm-15941.vm.duke.edu/api/request/modify";
     let self = this;
     let vars = {
       id: self.state.id, 
@@ -353,7 +353,7 @@ class ViewRequestsSched extends React.Component {
       console.log(error);
     });
 
-    url = "https://mda-phoenix.herokuapp.com/calendar-entry";
+    url = "https://vcm-15941.vm.duke.edu/api/calendar-entry";
 
     await axios.post(url, {
       "username" : self.state.name,
@@ -386,7 +386,7 @@ class ViewRequestsSched extends React.Component {
 
   async handleApproveChanges () {
 
-    const url = "https://mda-phoenix.herokuapp.com/request/modify";
+    const url = "https://vcm-15941.vm.duke.edu/api/request/modify";
     let self = this;
     let vars = {
       id: self.state.id, 
@@ -448,7 +448,7 @@ class ViewRequestsSched extends React.Component {
   }
 
   async handleReject () {
-    const url = "https://mda-phoenix.herokuapp.com/request/reject";
+    const url = "https://vcm-15941.vm.duke.edu/api/request/reject";
     let self = this;
     await axios.post(url, {id: self.state.id, rejectNote: self.state.rejectNote},
       {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}

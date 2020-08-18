@@ -20,20 +20,8 @@ from blacklist_helpers import (
 from setup.exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
-
-def PrintException():
-    exc_type, exc_obj, tb = sys.exc_info()
-    f = tb.tb_frame
-    lineno = tb.tb_lineno
-    filename = f.f_code.co_filename
-    linecache.checkcache(filename)
-    line = linecache.getline(filename, lineno, f.f_globals)
-    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
-
-
-
-
-@app.route('/request/approve', methods=['POST'])
+# approve a request
+@app.route('/api/request/approve', methods=['POST'])
 @jwt_required
 def approve():
     result = ""
@@ -41,6 +29,7 @@ def approve():
         req = request.get_json()
 
         beam_request = requests.query.filter_by(id=req['id']).first()
+        # Left this code in case facilities start to approve requests 
         # if req['approval'] == 'integrator':
         #     beam_request.approved_integrator = True
         # if req['approval'] == 'facility':
@@ -58,6 +47,7 @@ def approve():
         msg.recipients = [beam_request.email]
         msg.body = "Your beam time request has been approved.\n\n"
 
+        # TODO
         # msg.send
 
         result = {'success' : True}
@@ -67,7 +57,8 @@ def approve():
         'success' : False}
     return result
 
-@app.route('/request/modify', methods=['POST'])
+# route to modify a request
+@app.route('/api/request/modify', methods=['POST'])
 @jwt_required
 def request_modify():
     result = ""
@@ -87,6 +78,8 @@ def request_modify():
             if req[key] != "" and key != "id":
                 msg.body += str(key) + ": " + str(req[key]) + "\n\n"
         iterable = copy.deepcopy(req)
+        # keys and db column names are different, maps this to the 
+        # right names
         for (key, value) in iterable.items():
             if value != "":
                 if key == "financierName":
@@ -120,6 +113,8 @@ def request_modify():
         else:
             ion_ids = beam_request.ions
 
+        # another way of setting values, leaving in for
+        # reference
         # for attr, value in beam_request.__dict__.items():
         #     if attr in req and req[attr] != "" and attr != 'id':
         #         setattr(beam_request, attr, req[attr])
@@ -143,6 +138,7 @@ def request_modify():
         if user.user_type == 'Integrator':
             beam_request.approved_integrator = True
             beam_request.status = "Approved with changes"
+            # TODO
             # mail.send(msg)
 
         db.session.commit()
@@ -150,12 +146,12 @@ def request_modify():
         result = {'success' : True}
     except Exception as e:
         print(e)
-        PrintException()
         result = {'error' : str(e),
         'success' : False}
     return jsonify(result)
 
-@app.route('/request/reject', methods=['POST'])
+# reject a request
+@app.route('/api/request/reject', methods=['POST'])
 @jwt_required
 def reject_form():
     result = ""
@@ -174,6 +170,7 @@ def reject_form():
         beam_request.approved_integrator = False
         beam_request.rejected = True
         db.session.commit()
+        # TODO
         # mail.send(msg)
         result = {'success' : True}
 
@@ -183,6 +180,7 @@ def reject_form():
         'success' : False}
     return result
 
+# Gets a request in the format frontend wants
 def getForms(request_forms):
     myForms = []
     for form in request_forms:
@@ -257,8 +255,8 @@ def getForms(request_forms):
         myForms.append(myDict)
     return myForms
 
-
-@app.route('/getforms/<route>', methods=['GET', 'POST'])
+# route to get specific request forms
+@app.route('/api/getforms/<route>', methods=['GET', 'POST'])
 @jwt_required
 def getRequests(route):
     username = get_jwt_identity()
@@ -267,6 +265,7 @@ def getRequests(route):
     req = request.get_json()
 
     try:
+        # This is for view request
         if route == 'view':
             user = Users.query.filter_by(username=username).first()
             if user.user_type == 'Integrator':
@@ -277,13 +276,16 @@ def getRequests(route):
                 request_forms = requests.query.filter(and_(requests.username==username,
                 or_(requests.scheduled_start == None, datetime.now() < requests.scheduled_start),
                 requests.status != 'Rejected')).all()
+        # Grabs all requests for an integrator
         elif route == 'integrator':
             user = Users.query.filter_by(username=username).first()
             if user.user_type != 'Integrator':
                 raise Exception("You must be an integrator to view this page!")
             request_forms = requests.query.filter(and_(requests.integrator == user.affiliation, requests.status != 'Rejected')).all()
+        # Grabs all requests for a tester
         elif route == 'tester':
             request_forms = requests.query.filter_by(username=username).all()
+        # Grabs all requests for a specific id
         elif route == 'id' and request.method == 'POST':
             request_forms = requests.query.filter_by(id=req['id']).all()
         else:
@@ -310,8 +312,8 @@ def getRequests(route):
 
     return result
 
-
-@app.route('/getforms/schedule', methods=['POST'])
+# Gets a range 
+@app.route('/api/getforms/schedule', methods=['POST'])
 @jwt_required
 def getSchedules():
     result = {}
@@ -341,7 +343,8 @@ def getSchedules():
 
     return result
 
-@app.route('/request/add-range', methods=['POST'])
+# add a range to the database
+@app.route('/api/request/add-range', methods=['POST'])
 @jwt_required
 def add_range():
     result = ""
@@ -363,8 +366,8 @@ def add_range():
 
     return result
 
-
-@app.route('/filterion', methods=['POST'])
+# Filter an ion given parameters
+@app.route('/api/filterion', methods=['POST'])
 def filterion():
 
     req = request.get_json()
@@ -381,7 +384,6 @@ def filterion():
         filteredBeams = []
         for beam in beams:
             ionCharsBeam = " ".join(re.findall("[a-zA-Z]+", beam.ion))
-            print(ionCharsBeam)
             if ionCharsBeam == ionCharsReq:
                 filteredBeams.append(beam)
 
@@ -403,7 +405,6 @@ def filterion():
             newDict = {'facility': key, 'ions' : myDict[key]}
             myList.append(newDict)
         result = {'result' : myList}
-        print(result)
 
     except Exception as e:
         print(e)

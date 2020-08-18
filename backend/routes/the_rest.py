@@ -19,14 +19,14 @@ from blacklist_helpers import (
 from setup.exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
-
-@app.route('/time', methods=['GET'])
+# Test for database, all this other stuff can be deleted
+@app.route('/api/time', methods=['GET'])
 def get_current_time():
     sample = Test.query.first()
     sample = sample.text
     return jsonify({'time': sample})
 
-# @app.route('/register', methods=['POST'])
+# @app.route('/api/register', methods=['POST'])
 # def register():
 #     req = request.get_json()
 #     username = req['username']
@@ -55,7 +55,7 @@ def get_current_time():
 
 #     return jsonify(result)
 
-# @app.route('/login', methods=['POST'])
+# @app.route('/api/login', methods=['POST'])
 # def login():
 #     username = request.get_json()['username']
 #     password = request.get_json()['password']
@@ -80,7 +80,7 @@ def get_current_time():
 
 #     return jsonify(result)
 
-# @app.route('/user', methods=['GET', 'POST'])
+# @app.route('/api/user', methods=['GET', 'POST'])
 # @jwt_required
 # def user():
 #     account_info = ""
@@ -105,7 +105,7 @@ def get_current_time():
 #     return is_token_revoked(decoded_token)
 
 # # Endpoint for revoking the current users access token
-# @app.route('/logout', methods=['DELETE'])
+# @app.route('/api/logout', methods=['DELETE'])
 # @jwt_required
 # def logout():
 #     username = get_jwt_identity()
@@ -116,7 +116,7 @@ def get_current_time():
 #         return jsonify({'success': False, 'msg': 'The specified token was not found'}), 404
 
 # # TODO delete or change for production, development purposes only
-# @app.route('/deleteuser/<username>', methods=['DELETE'])
+# @app.route('/api/deleteuser/<username>', methods=['DELETE'])
 # def delete(username):
 #     try:
 #         Users.query.filter_by(username=username).delete()

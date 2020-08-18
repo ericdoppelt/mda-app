@@ -24,7 +24,7 @@ from pdf_builder import FormBuilder
 
 
 
-@app.route('/calendar', methods=['POST'])
+@app.route('/api/calendar', methods=['POST'])
 def entries():
     myList = []
     entries = Calendar.query.all()
@@ -37,7 +37,7 @@ def entries():
             myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-@app.route('/calendar/personal', methods=['POST'])
+@app.route('/api/calendar/personal', methods=['POST'])
 @jwt_required
 def personal_entries():
     username = get_jwt_identity()
@@ -52,43 +52,17 @@ def personal_entries():
         myList.append(entry_info)
     return jsonify({'entries' : myList})
 
-# @app.route('/calendar/tasks', methods=['GET', 'POST'])
-# @jwt_required
-# def tasks():
-#     if request.method == 'POST':
-#         req = request.get_json()
-#         modifyEntry = Calendar.query.filter_by(id=req['id']).first()
-#         modifyEntry.steps = req['steps']
-#         db.session.commit()
 
-#     eventArray = []
-#     username = get_jwt_identity()
-#     # today = datetime.now().strftime('%Y-%m-%d')
-#     entries = Calendar.query.filter(and_(Calendar.username==username, Calendar.startDate >= datetime.now())).all()
-#     # entries = Calendar.query.filter(Calendar.username==username).all()
-#     for entry in entries:
-#         print(entry.startDate)
-#         date = entry.startDate.strftime("%m/%d/%Y")
-#         time = entry.startDate.strftime("%I %p")
-#         adder = {"site" : entry.facility, "date" : date,
-#                 "time" : time, "integrator" : entry.integrator,
-#                 "steps" : entry.steps, "id" : entry.id, "startDate" : entry.startDate}
-#         eventArray.append(adder)
-#     return jsonify({'eventArray' : eventArray})
-
-
-@app.route('/calendar-entry', methods=['POST'])
+@app.route('/api/calendar-entry', methods=['POST'])
 @jwt_required
 def create_entry():
 
     req = request.get_json()
     result = ""
 
-    # date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
-
     try:
         entry = Calendar(
-            username = req['username'], # username
+            username = req['username'],
             facility = req['facility'],
             integrator = req['integrator'],
             totalTime = req['totalTime'],
@@ -104,7 +78,7 @@ def create_entry():
 
     return result
 
-@app.route('/calendar/delete', methods=['DELETE'])
+@app.route('/api/calendar/delete', methods=['DELETE'])
 @jwt_required
 def delete_calendar():
     result = ""
@@ -126,8 +100,7 @@ def delete_calendar():
                 msg.body += " has had it's scheduled date rescinded.\n\n"
                 msg.body += "ISEEU Team"
 
-                # TODO
-                # mail.send(msg)
+                mail.send(msg)
             except:
                 pass
 
@@ -147,8 +120,6 @@ def add_calendar(beam_request):
     result = ""
 
     try:
-        print(beam_request.facility)
-        print(beam_request.username)
         entry = Calendar(
             username = beam_request.username,
             facility = beam_request.facility,
@@ -163,6 +134,5 @@ def add_calendar(beam_request):
     except Exception as e:
         result = {'error' : str(e),
         'success' : False}
-    print(result)
 
     return result

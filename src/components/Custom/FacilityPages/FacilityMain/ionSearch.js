@@ -106,7 +106,7 @@ class IonSearch extends React.Component {
     this.setState({submitted:true});
     console.log("called");
     console.log(this.state.ion);
-    let url = 'https://mda-phoenix.herokuapp.com/filterion';
+    let url = 'https://vcm-15941.vm.duke.edu/api/filterion';
     var self = this;
     await axios.post(url, {
       ion: self.state.ion,

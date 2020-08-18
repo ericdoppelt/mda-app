@@ -324,7 +324,7 @@ class MDAHeader2 extends React.Component {
 
   async componentDidMount() {
     /*
-    const url = "https://mda-phoenix.herokuapp.com/user";
+    const url = "https://vcm-15941.vm.duke.edu/api/user";
 
     var self = this;
     this.setState(state => ({loggedIn: false}));

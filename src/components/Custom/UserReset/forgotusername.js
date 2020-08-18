@@ -44,7 +44,7 @@ class ForgotUsername extends React.Component {
     //Updates state variables, including errors in response
     async submit() {
       let self = this;
-      let url = 'https://mda-phoenix.herokuapp.com/user/forgot-username';
+      let url = 'https://vcm-15941.vm.duke.edu/api/user/forgot-username';
       await axios.post(url, {
         email: self.state.email,
       },{
