@@ -321,15 +321,15 @@ class CalendarSched extends React.Component {
     var data = [];
     var self = this;
     
-    //console.log('Setting Start Date')
-    //this.setState({calendarStartDate: SchedulingStore.suggestion[0].start});
-    this.setState({ calendarStartDate: SchedulingStore.suggestion[0].start }, () => {
-      console.log('setting start')
-      console.log(SchedulingStore.suggestion[0].start)
-      console.log(self.state.calendarStartDate);
-      let calendarApi = this.calendarComponentRef.current.getApi()
-      calendarApi.gotoDate(self.state.calendarStartDate);
-    }); 
+    if (SchedulingStore.suggestion[0] !== undefined) {
+      this.setState({ calendarStartDate: SchedulingStore.suggestion[0].start }, () => {
+        console.log('setting start')
+        console.log(SchedulingStore.suggestion[0].start)
+        console.log(self.state.calendarStartDate);
+        let calendarApi = this.calendarComponentRef.current.getApi()
+        calendarApi.gotoDate(self.state.calendarStartDate);
+      }); 
+    }
     //console.log(typeof SchedulingStore.suggestion[0].start);
     //console.log(typeof self.state.calendarStartDate)
     //console.log(self.dateStringConverter(self.state.calendarStartDate))

@@ -21,7 +21,7 @@ class ScheduleContainer extends React.Component {
                 <Typography variant="h3">
                     Scheduling
                 </Typography>
-                <Button onClick={SchedulingStore.toggleCalendar}>Test Switcher</Button>
+                <Button onClick={SchedulingStore.toggleCalendar}>Return</Button>
                 {SchedulingStore.viewCalendar 
                         ? <div><AllPrioritizers/>
                           <RangeButton/></div>
