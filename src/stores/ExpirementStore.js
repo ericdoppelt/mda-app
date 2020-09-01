@@ -37,7 +37,7 @@ class ExpirementStore {
         console.log(newDate);
     }
     get startDateError() {
-        return this.startDate === "" && this.submitted;
+        return (this.startDate === "" || this.startDate === null) && this.submitted;
     }
     get startDateHelperText() {
         if (this.startDateError) return "Please enter the experiment's start date.";

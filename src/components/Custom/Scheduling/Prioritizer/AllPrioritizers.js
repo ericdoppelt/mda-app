@@ -35,11 +35,13 @@ class AllPrioritizers extends React.Component {
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
-      console.log("REQUESTS");
-      console.log(response.data.requests);
+      console.log("response");
+      console.log(response);
 
       let validRequests = [];
+      if (response.data.requests != undefined) {
       for (let i = 0; i < response.data.requests.length; i++) {
+        
         let request = response.data.requests[i];
         if ((request.status === "Approved" || request.status === "Approved with changes") && request.scheduledStart === null) {
           validRequests.push(request);
@@ -47,7 +49,11 @@ class AllPrioritizers extends React.Component {
       }
       console.log(validRequests);
       SchedulingStore.setRequests(validRequests);
+    } else {
+      alert("There are no requests in system to schedule.")
+    }
     }).catch(error => {
+      alert("Error");
       alert(error);
     });
 
@@ -89,12 +95,14 @@ class AllPrioritizers extends React.Component {
   }
 
   createPrioritizer(range) {
+    console.log("PRIORITIZER");
     console.log(range);
     let prioritizer = (<Prioritizer
       start={range.startDate}
       end= {range.endDate}
       facility= {range.facility}
       hours = {range.hours}
+      key = {range.id}
       />);
     console.log(prioritizer);
     return prioritizer;
