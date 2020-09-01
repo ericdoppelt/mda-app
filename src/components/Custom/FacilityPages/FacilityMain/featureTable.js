@@ -30,16 +30,16 @@ const StyledTableRow = withStyles((theme) => ({
 
 const useStyles = theme => ({
   table: {
-    width: '50%',
+    width: '100%',
     marginBottom: '5%',
     align: 'center',
     marginLeft: '0%',
-    marginRight: '25%',
 
   },
  subheader: {
    marginTop: '10%',
    marginBottom: '3%',
+   align: 'center',
  },
 });
 
@@ -58,7 +58,7 @@ class FeatureTable extends React.Component {
   render() {
     const { classes } = this.props;
   return (
-    <div style={{width:'75%'}}>
+    <div style={{align: 'center', width:'75%'}}>
     <Typography className={classes.subheader} variant='h4'>Compare Facility Capabilities</Typography>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>

@@ -156,8 +156,87 @@ class IonSearch extends React.Component {
     render() {
       const { classes } = this.props;
       var self = this;
+      if(this.state.submitted == true){
+        return (
+        <div style={{width:'75%',}}>
+            <Typography className={classes.header} variant='h4'>Search Facilities by Energy and Ion</Typography>
+            <Typography variant='body1' className={classes.header}>Enter ion atomic symbol (case sensitive) and energy in MeV/amu to find matching facilities</Typography>
+            <TextField
+              id="outlined-basic1"
+              label="Ion"
+              variant="outlined"
+              onChange={event => {this.setState({ion: event.target.value, ionErrorHelper: '', ionError: false})}}
+              error={this.state.ionError}
+              helperText={this.state.ionErrorHelper}
+              />
+
+            <TextField
+              id="outlined-basic2"
+              label="Min Energy"
+              variant="outlined"
+              onChange={event => {this.setState({minEnergy: event.target.value, energyReverseError:false, minEnergyError: false, validEnergyError: false, minEnergyErrorHelper: '',})}}
+              error={this.state.minEnergyError}
+              helperText={this.state.minEnergyErrorHelper}
+              />
+
+            <TextField
+              id="outlined-basic3"
+              label="Max Energy"
+              variant="outlined"
+              onChange={event => {this.setState({maxEnergy: event.target.value, energyReverseError: false, maxEnergyError: false, validEnergyError: false, maxEnergyErrorHelper: '',})}}
+              error={this.state.maxEnergyError}
+              helperText={this.state.maxEnergyErrorHelper}
+              />
+            <Button variant="contained" style={{align: 'top', height: '55px', width: '150px', marginBottom:'7%', marginLeft:'2%'}} onClick={(event) => this.handleSearch(event)}>
+              Search
+            </Button>
+            <Typography variant="h4" style={{marginBottom:'3%'}} >Matching Facilities</Typography>
+              <Table className={classes.table} aria-label="Matching Facilities List">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="center">Facility</StyledTableCell>
+                    <StyledTableCell align="center">Ion : Energy<br/><small>(MeV/amu)</small></StyledTableCell>
+                    <StyledTableCell align="center">Homepage</StyledTableCell>
+                    <StyledTableCell align="center">Request Form</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {this.state.facilities.map((facDict) => (
+                    <StyledTableRow key={facDict.facility}>
+                      <StyledTableCell align="center" component="th" scope="row">{facDict.facility}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {facDict.ions.map(function(ion){
+                          return(
+                            <List>
+                              <ListItem>
+                                <ListItemText align="center" primary={ion}/>
+                              </ListItem>
+                            </List>
+                          )
+                        })}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <Button onClick={() => {self.props.history.push(facilityLinks[facDict.facility].info)}}>
+                        <HomeIcon/>
+                        </Button>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <Button onClick={() => {self.props.history.push(facilityLinks[facDict.facility].request)}}>
+                        <ListAltIcon/>
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            <br/><br/>
+            {this.getAlert()}
+          </div>
+            );
+      }
+      else{
       return (
-      <div style={{width:'75%',}}>
+      <div style={{width:'75%', marginBottom:'15%'}}>
           <Typography className={classes.header} variant='h4'>Search Facilities by Energy and Ion</Typography>
           <Typography variant='body1' className={classes.header}>Enter ion atomic symbol (case sensitive) and energy in MeV/amu to find matching facilities</Typography>
           <TextField
@@ -186,53 +265,13 @@ class IonSearch extends React.Component {
             error={this.state.maxEnergyError}
             helperText={this.state.maxEnergyErrorHelper}
             />
-            <br/>
-          <Button variant="contained" style={{align: 'center', height: '50px', width: '150px', marginTop:'1%', marginBottom:'5%'}} onClick={(event) => this.handleSearch(event)}>
+          <Button variant="contained" style={{align: 'top', height: '55px', width: '150px', marginBottom:'7%', marginLeft:'2%'}} onClick={(event) => this.handleSearch(event)}>
             Search
           </Button>
-          <Typography variant="h4" style={{marginBottom:'3%'}} >Matching Facilities</Typography>
-            <Table className={classes.table} aria-label="Matching Facilities List">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell align="center">Facility</StyledTableCell>
-                  <StyledTableCell align="center">Ion : Energy<br/><small>(MeV/amu)</small></StyledTableCell>
-                  <StyledTableCell align="center">Homepage</StyledTableCell>
-                  <StyledTableCell align="center">Request Form</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-              {this.state.facilities.map((facDict) => (
-                  <StyledTableRow key={facDict.facility}>
-                    <StyledTableCell align="center" component="th" scope="row">{facDict.facility}</StyledTableCell>
-                    <StyledTableCell align="center">
-                      {facDict.ions.map(function(ion){
-                        return(
-                          <List>
-                            <ListItem>
-                              <ListItemText align="center" primary={ion}/>
-                            </ListItem>
-                          </List>
-                        )
-                      })}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Button onClick={() => {self.props.history.push(facilityLinks[facDict.facility].info)}}>
-                      <HomeIcon/>
-                      </Button>
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Button onClick={() => {self.props.history.push(facilityLinks[facDict.facility].request)}}>
-                      <ListAltIcon/>
-                      </Button>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          <br/><br/>
           {this.getAlert()}
         </div>
           );
+        }
   }
 }
 
