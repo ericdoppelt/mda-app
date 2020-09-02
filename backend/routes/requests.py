@@ -20,6 +20,22 @@ from blacklist_helpers import (
 from setup.exceptions import TokenNotFound
 from pdf_builder import FormBuilder
 
+import linecache
+import sys
+
+
+
+
+def PrintException():
+    print("JASD")
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
+
 # approve a request
 @app.route('/api/request/approve', methods=['POST'])
 @jwt_required
@@ -235,7 +251,8 @@ def getForms(request_forms):
             if extraInfo != None:
                 dates = []
                 for date in extraInfo.bad_dates:
-                    dates.append(date.strftime("%Y-%m-%dT%H:%M:%S"))
+                    if date is not None:
+                        dates.append(date.strftime("%Y-%m-%dT%H:%M:%S"))
                 myDict['badDates'] = dates
 
         if form.facility == 'LBNL':
