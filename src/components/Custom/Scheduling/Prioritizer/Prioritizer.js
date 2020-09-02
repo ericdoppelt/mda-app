@@ -36,9 +36,11 @@ class Prioritizer extends React.Component {
           endDateTime: this.props.end,
           scheduleOverflow: false,
       }
+      console.log("lalalala");
   }
 
   componentDidMount() {
+    console.log("CALLED RIGHT HERE");
     if ((window.sessionStorage.getItem("access_token") === null)){
       window.sessionStorage.setItme("next_page", '/scheduler');
       this.props.history.push('user-login');

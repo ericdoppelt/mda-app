@@ -1,7 +1,4 @@
 // RETURNS A STRING IF THERE IS AN ERROR, OTHERWISE AN ARRAY SUGGESTION.
-
-import { remove } from "mobx";
-
     
 function scheduleLBNL(priorities, generals, start, end) {
 
@@ -10,8 +7,6 @@ function scheduleLBNL(priorities, generals, start, end) {
     // DEFINED AND DATE OBEJCTS
     let startDate = new Date(start);
     let endDate = new Date(end);
-
-   
 
     let downTime = -1;
     let beamTime = -1;
@@ -74,16 +69,17 @@ function optimize(requestsSplit, startDate, endDate) {
         endTune: false,
         downTime: 0,
         beamTime: 0,
+        openTime: 0,
         index: -1,
     }
 
     addTunes(returnedSchedule, requestsSplit, pointer); 
     findPerfectSixteens(returnedSchedule, allRequests, pointer);
     findPerfectEights(returnedSchedule, allRequests, pointer);
-
-    //findSlightSixteens(returnedSchedule, allRequests, downtime);
+    findSlightSixteens(returnedSchedule, allRequests, pointer);
     //findSlightEights(returnedSchedule, allRequests, downtime);
-
+    addAllElse(returnedSchedule, allRequests, pointer);
+    
     if (hasValidEnd(pointer)) return [pointer.beamTime, pointer.downTime, returnedSchedule];
     else return false;
 }
@@ -107,17 +103,14 @@ function addTunes(returnedSchedule, splitRequests, pointer) {
 }
 
 function findPerfectSixteens(returnedSchedule, allRequests, pointer) {
-    let sixteens = [];
-    allRequests.forEach(request => {
-        if (request.hoursOn === 16) sixteens.push(request);
-    });
+    let sixteens = getExperimentsByDuration(allRequests, 16);
 
-    sortExperiments(sixteens);
+    sortDescending(sixteens);
 
     let match;
     sixteens.forEach(request => {
     
-        match = getMatch(request, allRequests, 8);
+        match = getPerfectMatch(request, allRequests, 8);
         for (let i = 0; i < match.length; i++) {
             console.log(match[i]);
         }
@@ -131,22 +124,19 @@ function findPerfectSixteens(returnedSchedule, allRequests, pointer) {
             addPerfectMatch(returnedSchedule, request, matches, offset, request.shifts, pointer, allRequests);
             let removed = matches.push(request);
             removeExperiments(allRequests, removed);
-            removeExperiments(sixteens, removed);
+            removeExperiments(sixteens, [request]);
         }
     });
 }
 
 function findPerfectEights(returnedSchedule, allRequests, pointer) {
-    let eights = [];
-    allRequests.forEach(request => {
-        if (request.hoursOn === 8) eights.push(request);
-    });
-
-    sortExperiments(eights);
+    let eights = getExperimentsByDuration(allRequests, 8);
+    
+    sortDescending(eights);
 
     let match;
     eights.forEach(request => {
-        match = getEightsMatch(request, allRequests);
+        match = getPerfectEightsMatch(request, allRequests);
         if (match === false) return;
         else {
             let mainMatch = request;
@@ -169,6 +159,270 @@ function findPerfectEights(returnedSchedule, allRequests, pointer) {
         }
     });
 }
+
+function findSlightSixteens(returnedSchedule, allRequests, pointer) {
+    let sixteens = getExperimentsByDuration(allRequests, 16);
+    sortAscending(sixteens);
+
+    let match;
+    sixteens.forEach(request => {
+        match = getSlightMatch(request, allRequests, 8);
+        if (match === false) return;
+        else {
+            let matches = match[0];
+            let offset = match[1];
+            addSlightMatch(returnedSchedule, request, matches, offset, request.shifts, pointer, allRequests);
+            let removed = matches.push(request);
+            removeExperiments(allRequests, removed);
+            removeExperiments(sixteens, [request]);
+        }
+    });
+}
+
+/* function findSlightEights(returnedSchedule, allRequests, pointer) {
+    let eights = getExperimentsByDuration(allRequests, 8);
+    sortAscending(eights);
+
+    let match;
+    eights.forEach(request => {
+        match = getSlightDoubleMatch(request, allRequests);
+        if (match === false) return;
+        else {
+            let matches = match[0];
+            let offset = match[1];
+            addSlightMatch(returnedSchedule, request, matches, offset, request.shifts, pointer, allRequests);
+            let removed = matches.push(request);
+            removeExperiments(allRequests, removed);
+            removeExperiments(eights, [request]);
+        }
+    });
+} */
+
+
+function addAllElse(returnedSchedule, allRequests, pointer) {
+    let sixteens = getExperimentsByDuration(allRequests, 16);
+    sixteens.forEach(request => {
+        addImperfectExperiment(returnedSchedule, request, pointer);
+    });
+    let eights = getExperimentsByDuration(allRequests, 8);
+    eights.forEach(request => {
+        addImperfectExperiment(returnedSchedule, eights, pointer);
+    })
+}
+
+function addImperfectExperiment(returnedSchedule, request, pointer) {
+    let added = false;
+    for (let i = 0; i < returnedSchedule.length; i++) {
+        let scheduledTime = returnedSchedule[i];
+        // IF ONE SINGLE EXPERIMENT
+        if (scheduledTime.type === 'open' && scheduledTime.time >= request.hoursOn) {
+            let slotsAvailable = checkOpenSlots(returnedSchedule, request, i);
+            if (slotsAvailable[0]) {
+                replaceOpenTime(returnedSchedule, slotsAvailable[1], request, pointer);
+                added = true;
+                break;
+            }
+        }
+    }
+    if (!added) addExperimentToEnd(returnedSchedule, request, pointer);
+}
+
+// TWO CASES: ALWAYS ADDING IN MIDDLE, OR ADDING FROM MIDDLE PAST END
+function replaceOpenTime(returnedSchedule, indices, request, pointer) {
+
+    let offset = 0;
+    indices.forEach(index => {
+        let openTime = returnedSchedule[index + offset];
+        let endExperiment = new Date(openTime.start.getTime() + request.hoursOn);
+    
+        let openTimeIndices = [];
+
+        let insertedExperiment = {
+            start: openTime.start,
+            end: endExperiment,
+            time: request.hoursOn,
+            type: "beamtime",
+            energy: request.energy,
+            id: request.id,
+            company: request.company,
+            name: request.name,
+        };
+
+        if (openTime.time > request.hoursOn) {
+            let duration = openTime.time - request.hoursOn;
+            let addedOpen = {
+                start: endExperiment,
+                end: openTime.end,
+                type: "open",
+                time: duration,
+            } 
+            returnedSchedule.splice(index + offset + 1, 0, addedOpen);
+            pointer.openTime += duration;
+            pointer.index += 1;
+            offset += 1;
+        }
+        openTimeIndices.push(index);
+        returnedSchedule[index] = insertedExperiment;
+        pointer.openTime -= openTime.time;
+        pointer.beamTime += request.hoursOn;
+    }); 
+    sortReturnedSchedule(returnedSchedule);
+}
+
+function addExperimentToEnd(returnedSchedule, request, pointer) {
+    for (let i = 0; i < request.shifts - 1; i++) {
+        addExperiment(returnedSchedule, request, pointer);
+        addOpenTime(returnedSchedule, 24 - request.hoursOn, pointer);
+    }
+    addExperiment(returnedSchedule, request, pointer);
+}
+
+// EXPERIMENTS ARE ALWAYS <24 HOURS
+function checkOpenSlots(returnedSchedule, request, startIndex) {
+    let timeSinceStart = 0;
+    let targetTime;
+
+    let success = true;
+    let indices = [];
+
+    for (let i = 0; i < request.shifts; i++) {
+        targetTime = 24*i;
+        for (let j = startIndex; j < returnedSchedule.length; j++) {
+            let tempExperiment = returnedSchedule[j];
+            if (timeSinceStart > targetTime) success = false;
+            else if (timeSinceStart === targetTime && tempExperiment.type === 'open' && tempExperiment.time > request.hoursOn) {
+                indices.push(j);
+                break;
+            }
+            else timeSinceStart += tempExperiment.time;
+        }
+    return [success, indices];
+    }
+}
+
+// BUBBLE SORT (nlogn)
+function sortReturnedSchedule(returnedSchedule) {
+    var length = returnedSchedule.length;
+    for (var i = 0; i < length; i++) { 
+        for (var j = 0; j < (length - i - 1); j++) { 
+            if(returnedSchedule[j].start > returnedSchedule[j+1].start) {
+                var tmp = returnedSchedule[j];
+                returnedSchedule[j] = returnedSchedule[j+1];
+                returnedSchedule[j+1] = tmp;
+            }
+        }        
+    }
+}
+ 
+function getSlightMatch(mainRequest, allRequests, hours) {
+    let energy = mainRequest.energy;
+    let shifts = mainRequest.shifts;
+
+    let possibleMatches = getExperimentsByDuration(allRequests, hours);
+    let possibleRequests = [];
+    possibleMatches.forEach(possibleMatch => {
+        if (possibleMatch.energy === energy) possibleRequests.push(possibleMatch);
+    });
+
+    let n = possibleRequests.length; 
+    let totalShifts, subset, bestSubsets, shiftDifference;
+    let minShifts = Number.MAX_SAFE_INTEGER;
+    // FIND ALL SUBSETS OF EIGHT HOUR CHUNKS
+    for (let i = 0; i < (1<<n); i++) {
+        subset = [];
+        totalShifts = 0
+        for (let j = 0; j < n; j++) {
+            if ((i & (1 << j)) > 0) {
+                subset.push(possibleRequests[j]);
+                totalShifts += possibleRequests[j].shifts;
+            }
+            // POSTIVE MEANS THAT THE "FILLER" IS LARGER
+            shiftDifference = (shifts - totalShifts);
+            if (Math.abs(shiftDifference) < Math.abs(minShifts)) {
+                minShifts = shiftDifference;
+                bestSubsets = [];
+                bestSubsets.push(subset);
+            } else if (shiftDifference === minShifts) bestSubsets.push(subset);
+        }
+
+        
+        if (bestSubsets.length === 0) return false;
+        else {
+        let bestMatch = getSmallestSubset(bestSubsets);
+        return [minShifts, bestMatch];
+        }
+    }
+}
+
+// SAME ENERGY
+function addSlightMatch(returnedSchedule, request, matches, offset, times, pointer, allRequests) {
+    let matchesIndex = 0;
+    let matchesShifts = 0;
+    
+    let excludedRequests = matches.push(request);
+    addAllSameEnergy(returnedSchedule, request.energy, excludedRequests, pointer, allRequests);    
+    
+    if (offset < 0) {
+        addExperiment(returnedSchedule, matches[matchesIndex], pointer);
+        matchesIndex++;
+    }
+
+    for (let i = 0; i < times; i++) {
+        addExperiment(returnedSchedule, request, pointer);
+        // CHECK TO ITERATE TO NEXT MATCHES SHIFT
+        if (matchesShifts === matches[matchesIndex].shifts) {
+            matchesIndex++;
+            matchesShifts = 0;
+        }
+        addExperiment(returnedSchedule, matches[matchesIndex], pointer);
+        matchesIndex++;
+    }
+
+    if (offset < 0) {
+        for (let i = 0; i < Math.abs(offset) - 1; i++) {
+            addOpenTime(returnedSchedule, request.hoursOn, pointer);
+            if (matchesShifts === matches[matchesIndex].shifts) {
+                matchesIndex++;
+                matchesShifts = 0;
+            }
+            addExperiment(returnedSchedule, matches[matchesIndex], pointer);
+            matchesIndex++;
+        }
+    } else if (offset > 1) {
+        for (let i = 0;  i < offset - 1; i++) {
+            addExperiment(returnedSchedule, request, pointer);
+            addOpenTime(returnedSchedule, (24 - request.hoursOn), pointer);
+        }
+        addExperiment(returnedSchedule, request, pointer);
+    }   
+}
+
+
+function addOpenTime(returnedSchedule, hours, pointer) {
+    let startOpen = new Date(pointer.current.getTime());
+    pointer.current.setHours(pointer.current.getHours() + hours);
+    let endOpen = new Date(pointer.current.getTime());
+    
+    let addedOpen = {
+        start: startOpen,
+        end: endOpen,
+        type: "open",
+        time: hours,
+    }
+    returnedSchedule.push(addedOpen);
+    pointer.index += 1;
+    pointer.openTime += hours;
+}
+
+
+function getExperimentsByDuration(allRequests, hours) {
+    let returned = [];
+    allRequests.forEach(request => {
+        if (request.hoursOn === hours) returned.push(request);
+    });
+    return returned;
+}
+
 
 // firstMatch and secondMatch are ARRAYS
 function addPerfectEightsMatch(returnedSchedule, mainRequest, firstMatch, secondMatch, offset, times, pointer, allRequests) {
@@ -217,7 +471,7 @@ function addPerfectEightsMatch(returnedSchedule, mainRequest, firstMatch, second
     }
 }
 
-function getEightsMatch(mainRequest, allRequests) {
+function getPerfectEightsMatch(mainRequest, allRequests) {
     let energy = mainRequest.energy;
     let shifts = mainRequest.shifts;
 
@@ -320,7 +574,7 @@ function getEightsMatch(mainRequest, allRequests) {
 function addPerfectMatch(returnedSchedule, request, matches, offset, times, pointer, allRequests) {
     let matchesIndex = 0;
     let matchesShifts = 0;
-    // IF NO OFFSET, ADD ALL SAME ENERGY NOW.
+
     let excludedRequests = matches.push(request);
     addAllSameEnergy(returnedSchedule, request.energy, excludedRequests, pointer, allRequests);
     
@@ -338,6 +592,7 @@ function addPerfectMatch(returnedSchedule, request, matches, offset, times, poin
             matchesShifts = 0;
         }
         addExperiment(returnedSchedule, matches[matchesIndex], pointer);
+        matchesIndex++;
     }
 
     if (offset === 1) {
@@ -442,6 +697,7 @@ function addExperiment(returnedSchedule, experiment, pointer) {
     let addedExperiment = {
         start: startExperiment,
         end: endExperiment,
+        time: experiment.hoursOn,
         type: "beamtime",
         energy: experiment.energy,
         id: experiment.id,
@@ -454,7 +710,7 @@ function addExperiment(returnedSchedule, experiment, pointer) {
 }
 
 // REQUEST SHOULD BE SIXTEEN HOURS
-function getMatch(mainRequest, allRequests, hours) {
+function getPerfectMatch(mainRequest, allRequests, hours) {
     let energy = mainRequest.energy;
     let shifts = mainRequest.shifts;
 
@@ -544,12 +800,25 @@ function getMatch(mainRequest, allRequests, hours) {
 }
 
 // USES BUBBLE SORT, COULD BE CHANGED FOR EFFICIENCY
-// REQUITES SPLIT EXPERIMENTS
-function sortExperiments(experiments) {
+// REQUIRES SPLIT EXPERIMENTS
+function sortAscending(experiments) {
     var length = experiments.length;
     for (var i = 0; i < length; i++) { 
         for (var j = 0; j < (length - i - 1); j++) { 
             if(experiments[j].shifts > experiments[j+1].shifts) {
+                var tmp = experiments[j];
+                experiments[j] = experiments[j+1];
+                experiments[j+1] = tmp;
+            }
+        }        
+    }
+}
+
+function sortDescending(experiments) {
+    var length = experiments.length;
+    for (var i = 0; i < length; i++) { 
+        for (var j = 0; j < (length - i - 1); j++) { 
+            if(experiments[j].shifts < experiments[j+1].shifts) {
                 var tmp = experiments[j];
                 experiments[j] = experiments[j+1];
                 experiments[j+1] = tmp;
@@ -636,8 +905,6 @@ function addEndTune(returnedSchedule, pointer) {
     pointer.endTune = true;
     pointer.index += 1;
 }
-
-
 
 export default scheduleLBNL;
 

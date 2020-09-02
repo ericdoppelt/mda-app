@@ -34,12 +34,12 @@ const useStyles = theme => ({
 });
 
 const rows = [
-  {key:'first_name', value:'First Name', class:'left'},
-  {key:'last_name', value:'Last Name', class:'right'},
-  {key:'phone', value:'Phone Number',class:'right'},
-  {key:'email', value:'Email',class:'left'},
-  {key:'userType', value: 'User Type', class: 'right'},
-  {key:'affiliation', value:'Affiliation',class:'left'},
+  {key:'first_name', value:'First Name', class:'left', type:'text'},
+  {key:'last_name', value:'Last Name', class:'right', type:'text'},
+  {key:'phone', value:'Phone Number',class:'right', type:'tel'},
+  {key:'email', value:'Email',class:'left', type: 'email'},
+  {key:'userType', value: 'User Type', class: 'right', type:'text'},
+  {key:'affiliation', value:'Affiliation',class:'left', type:'text'},
 ];
 
 class ProfileInfo extends React.Component {
@@ -287,7 +287,7 @@ class ProfileInfo extends React.Component {
                 fullWidth='true'
                 value = {this.state[row.key]}
                 onClick={event => {this.setState({dialog: row.key})}}
-                type="text"
+                type={row.type}
                 />
               </TableCell>
             </TableRow>
