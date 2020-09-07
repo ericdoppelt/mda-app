@@ -275,7 +275,7 @@ class requests(db.Model):
     hoursOn = db.Column(db.ARRAY(db.Integer()))
     hoursOff = db.Column(db.ARRAY(db.Integer()))
     totalHours = db.Column(db.ARRAY(db.Integer()))
-    personnel = db.Column(db.ARRAY(db.String(200)))
+    personnel = db.Column(db.String(200))
     title = db.Column(db.String(200))
 
     def create_request(self):

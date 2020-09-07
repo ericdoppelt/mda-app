@@ -72,7 +72,7 @@ def add_request(form, username):
                 hoursOff.append(int(form['hoursOff'][i]))
                 energyHours.append(hours)
 
-        
+    print('personel2', form['personnel'])
     entry = requests(name = form['name'],
                     email = form['email'],
                     cell = form['cell'],
@@ -86,7 +86,6 @@ def add_request(form, username):
                     approved_integrator = False,
                     approved_facility = True,
                     facility = form['facility'],
-                    # energy = '',
                     funding_cell = form['financierPhone'],
                     funding_email = form['financierEmail'],
                     start = form['date'],
@@ -152,22 +151,21 @@ def requestform():
     
     try:
         form = request.get_json()
-        print(form)
         facility = form['facility']
+        if form['date'] is None:
+            raise Exception('You must fill out the start date')
         if facility == 'TAMU':
             # Signature for the form, depreciated
             form['signature'] = form['name']
             badDates = copy.deepcopy(form['badDates'])
-            # Way to organize baddates, depreciated
+            # Need to make bad dates an array of date objects
             if badDates is not []:
                 for i, date in enumerate(badDates):
                     date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-                    if i != 0 or i != len(badDates) - 1:
-                        form['badDates'] += ', '
                     if i == 0:
-                        form['badDates'] = date.strftime('%m/%d/%Y')
+                        form['badDates'] = [date]
                     else:
-                        form['badDates'] += date.strftime('%m/%d/%Y')
+                        form['badDates'].append(date)
         # Frontend gives "" instead of null, needs to made null
         if facility == 'LBNL':
             if form['alternateDate'] == "":
