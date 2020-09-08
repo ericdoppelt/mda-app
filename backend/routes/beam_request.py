@@ -244,8 +244,7 @@ def sendTesterMail(beamReq, beamMsgs):
     msg.body += "Thanks and have a wonderful day!\n"
     msg.body += "The ISEEU Team"
 
-    # TODO
-    # mail.send(msg)
+    mail.send(msg)
 
 # Gets the request ids and sends the request 
 # to the integrator and testers
@@ -340,8 +339,7 @@ def send_forms():
         rang.scheduled = True
         db.session.commit()
         
-        # TODO
-        # mail.send(msg)
+        mail.send(msg)
 
         return jsonify({'success': True, 'msg': "Scheduled requests successfully"}), 200
 

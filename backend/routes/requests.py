@@ -154,8 +154,7 @@ def request_modify():
         if user.user_type == 'Integrator':
             beam_request.approved_integrator = True
             beam_request.status = "Approved with changes"
-            # TODO
-            # mail.send(msg)
+            mail.send(msg)
 
         db.session.commit()
 
@@ -186,8 +185,7 @@ def reject_form():
         beam_request.approved_integrator = False
         beam_request.rejected = True
         db.session.commit()
-        # TODO
-        # mail.send(msg)
+        mail.send(msg)
         result = {'success' : True}
 
     except Exception as e:
