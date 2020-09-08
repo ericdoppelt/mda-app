@@ -47,13 +47,13 @@ class SchedulingStore {
                 let tempStart = new Date(tempRequest.start);
                 let tempFacility = tempRequest.facility;
                 if (tempFacility === facility && tempStart < start) {
+                    
                     returnedRequests.unshift(tempRequest);
+    
                 }
             }
         }
         
-        console.log("returned");
-        console.log(returnedRequests);
 
         return returnedRequests;
     }

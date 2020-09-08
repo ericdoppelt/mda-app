@@ -12,10 +12,10 @@ function scheduleLBNL(priorities, generals, start, end) {
     let beamTime = -1;
     let returned = [];
     let splitPriorities = splitUpRequests(priorities);
+    console.log(splitPriorities);
     let prioritySchedule = optimize(splitPriorities, startDate, endDate);
-    console.log("priority schedule");
     console.log(prioritySchedule);
-    if (prioritySchedule[0] === false) return "Please select a priority list that fits within the alloted window.";
+    if (prioritySchedule === false) return false;
     else {
         beamTime = prioritySchedule[0];
         downTime = prioritySchedule[1];
@@ -41,27 +41,27 @@ function scheduleLBNL(priorities, generals, start, end) {
         splitAddedRequests = splitUpRequests(subset);
         splitAddedRequests.forEach(splitRequest => allSplitRequests.push(splitRequest));
         let tempScheduleInfo = optimize(allSplitRequests, startDate, endDate);
-        if (tempScheduleInfo[0] === false) return;
+        if (tempScheduleInfo === false) return;
         else {
-            if (tempScheduleInfo[0] > beamTime || tempScheduleInfo[0] === beamTime && tempScheduleInfo[1] < downTime) {
+            if ((tempScheduleInfo[0] > beamTime) || (tempScheduleInfo[0] === beamTime && tempScheduleInfo[1] < downTime)) {
                 beamTime = tempScheduleInfo[0];
                 downTime = tempScheduleInfo[1];
                 returned = tempScheduleInfo[2];
             }
         }
     });
+    console.log("returned schedule");
+    console.log(JSON.parse(JSON.stringify(returned)));
     return returned;
 }
 
 
 // WORKS ON SPLIT REQUESTS
 function optimize(requestsSplit, startDate, endDate) {
-    console.log("OPTIMIZING");
+    console.log("new take");
     let returnedSchedule = [];
     let allRequests = requestsSplit.slice();
     let pointerCurrent = new Date(startDate);
-    console.log("START DATE POINTER");
-    console.log(startDate.getHours());
     let pointer = {
         start: startDate,
         end: endDate,
@@ -80,18 +80,22 @@ function optimize(requestsSplit, startDate, endDate) {
     //findSlightEights(returnedSchedule, allRequests, downtime);
     addAllElse(returnedSchedule, allRequests, pointer);
     
+    console.log(JSON.parse(JSON.stringify(pointer)));
     if (hasValidEnd(pointer)) return [pointer.beamTime, pointer.downTime, returnedSchedule];
     else return false;
 }
 
 function hasValidEnd(pointer) {
+    console.log(JSON.parse(JSON.stringify((pointer))));
     if (pointer.endTune) {
         let endTesting = new Date(pointer.end.getTime());
         endTesting.setHours(endTesting.getHours() - 4);
         if (pointer.current > endTesting) return false;
-    } else if (pointer.current > pointer.end) return false;
-    else return true;
+    }
+    else if (pointer.current > pointer.end) return false;
+    return true;
 }
+
 
 function addTunes(returnedSchedule, splitRequests, pointer) {
     
@@ -109,23 +113,11 @@ function findPerfectSixteens(returnedSchedule, allRequests, pointer) {
 
     let match;
     sixteens.forEach(request => {
-        console.log("MATCHES FOR SIXTEENS");
         match = getPerfectMatch(request, allRequests, 8);
-        console.log("HEEEERREE");
-        console.log(match);
-        console.log(request);
         if (match === false) return;
         else {
-            console.log("BREAKPOINT");
-            console.log(match);
             let matches = match[0];
             let offset = match[1];
-            console.log("LOOK RIGHT HERE");
-            console.log(request);
-            console.log(JSON.parse(JSON.stringify(matches[0])));
-            console.log(matches.length);
-            console.log(matches.length);
-            
             addPerfectMatch(returnedSchedule, request, matches, offset, request.shifts, pointer, allRequests);
             let removed = matches.push(request);
             removeExperiments(allRequests, removed);
@@ -157,8 +149,6 @@ function findPerfectEights(returnedSchedule, allRequests, pointer) {
                 removed.push(secondMatch[j]);
             }
             removed.push(mainMatch);
-            console.log("REMOVED");
-            console.log(removed);
             removeExperiments(allRequests, removed);
             removeExperiments(eights, removed);
         }
@@ -174,12 +164,8 @@ function findSlightSixteens(returnedSchedule, allRequests, pointer) {
         match = getSlightMatch(request, allRequests, 8);
         if (match === false) return;
         else {
-            console.log(JSON.parse(JSON.stringify(match)));
             let matches = match[0];
             let offset = match[1];
-            console.log("BREAKEVEN");
-            console.log(JSON.parse(JSON.stringify(matches)));
-            console.log(JSON.parse(JSON.stringify(offset)));
             addSlightMatch(returnedSchedule, request, matches, offset, request.shifts, pointer, allRequests);
             let removed = matches.push(request);
             removeExperiments(allRequests, removed);
@@ -210,16 +196,19 @@ function findSlightSixteens(returnedSchedule, allRequests, pointer) {
 
 function addAllElse(returnedSchedule, allRequests, pointer) {
     let sixteens = getExperimentsByDuration(allRequests, 16);
+
     sixteens.forEach(request => {
         addImperfectExperiment(returnedSchedule, request, pointer);
     });
+
     let eights = getExperimentsByDuration(allRequests, 8);
     eights.forEach(request => {
-        addImperfectExperiment(returnedSchedule, eights, pointer);
+        addImperfectExperiment(returnedSchedule, request, pointer);
     })
 }
 
 function addImperfectExperiment(returnedSchedule, request, pointer) {
+    console.log(request);
     let added = false;
     for (let i = 0; i < returnedSchedule.length; i++) {
         let scheduledTime = returnedSchedule[i];
@@ -234,11 +223,11 @@ function addImperfectExperiment(returnedSchedule, request, pointer) {
         }
     }
     if (!added) addExperimentToEnd(returnedSchedule, request, pointer);
+    console.log(JSON.parse(JSON.stringify(returnedSchedule)));
 }
 
 // TWO CASES: ALWAYS ADDING IN MIDDLE, OR ADDING FROM MIDDLE PAST END
 function replaceOpenTime(returnedSchedule, indices, request, pointer) {
-
     let offset = 0;
     indices.forEach(index => {
         let openTime = returnedSchedule[index + offset];
@@ -351,17 +340,11 @@ function getSlightMatch(mainRequest, allRequests, hours) {
             if (Math.abs(shiftDifference) < Math.abs(minShifts) && subset.length > 0) {
                 minShifts = shiftDifference;
                 bestSubsets = [];
-                console.log("PUSHED");
-                console.log(JSON.parse(JSON.stringify(subset)));
                 bestSubsets.push(subset);
             } else if (shiftDifference === minShifts) bestSubsets.push(subset);
         }
-        console.log(JSON.parse(JSON.stringify(bestSubsets)));
-        console.log(bestSubsets.length);
         if (bestSubsets.length === 0) return false;
         else {
-        console.log("HEHEH");
-        console.log(JSON.parse(JSON.stringify(bestSubsets)));
         let bestMatch = getSmallestSubset(bestSubsets);
         return [minShifts, bestMatch];
         }
@@ -373,7 +356,6 @@ function addSlightMatch(returnedSchedule, request, matches, offset, times, point
     let matchesIndex = 0;
     let matchesShifts = 0;
     
-    console.log(JSON.parse(JSON.stringify(matches)));
     let excludedRequests = matches.push(request);
     addAllSameEnergy(returnedSchedule, request.energy, excludedRequests, pointer, allRequests);    
     
@@ -500,7 +482,6 @@ function getPerfectEightsMatch(mainRequest, allRequests) {
     for (let i = 0; i < allRequests.length; i++) {
         request = allRequests[i];
         if (request.hoursOn === 8 && request.energy === energy && !equals(mainRequest, request)) {
-            console.log(request);
             possibleMatches.push(request);
             if (request.shifts === shifts + 1) {
                 // BEST OPTION IS FINDING 2 REQUESTS WITH +1 SHIFT. IF FOUND, RETURN.
@@ -547,10 +528,6 @@ function getPerfectEightsMatch(mainRequest, allRequests) {
     }
 
     if (negativeOffsets.length >= 2) {
-        console.log("-1 EIGHT SUBSET");
-        for (let i = 0; i < negativeOffsets.length; i++) {
-            console.log(negativeOffsets[i]);
-        }
         let smallestSubset = getSmallestSubset(negativeOffsets);
         removeSubset(negativeOffsets, smallestSubset);
         let secondSmallestSubset = getSmallestSubset(negativeOffsets);
@@ -558,10 +535,6 @@ function getPerfectEightsMatch(mainRequest, allRequests) {
     }
 
     if (neutralOffsets.length >= 2) {
-        console.log("0 EIGHT SUBSET");
-        for (let i = 0; i < neutralOffsets.length; i++) {
-            console.log(neutralOffsets[i]);
-        }
         let smallestSubset = getSmallestSubset(neutralOffsets);
         removeSubset(neutralOffsets, smallestSubset);
         let secondSmallestSubset = getSmallestSubset(neutralOffsets);
@@ -569,10 +542,6 @@ function getPerfectEightsMatch(mainRequest, allRequests) {
     }
 
     if (positiveOffsets.length >= 2) {
-        console.log("1 SUBSET");
-        for (let i = 0; i < positiveOffsets.length; i++) {
-            console.log(positiveOffsets[i]);
-        }
         let smallestSubset = getSmallestSubset(positiveOffsets);
         removeSubset(positiveOffsets, smallestSubset);
         let secondSmallestSubset = getSmallestSubset(positiveOffsets);
@@ -587,14 +556,6 @@ function getPerfectEightsMatch(mainRequest, allRequests) {
 // ASSUMES THIS IS AN 8/16 or 16/8 PERFECT MATCH AT SAME ENERGY
 // OFFSET OF -1 ADDS SECOND EXPERIMENT ONCE BEFORE, OFFSET OF 1 ADDS FIRST EXPERIMENT ONCE AFTER
 function addPerfectMatch(returnedSchedule, request, matches, offset, times, pointer, allRequests) {
-    
-    console.log("PERFECT MATCHES");
-    console.log(JSON.parse(JSON.stringify(request)));
-    console.log(JSON.parse(JSON.stringify(matches)));
-    console.log(JSON.parse(JSON.stringify(offset)));
-    console.log(JSON.parse(JSON.stringify(times)));
-    console.log("ERROR ABOVE");
-    
     let matchesIndex = 0;
     let matchesShifts = 0;
 
@@ -609,16 +570,7 @@ function addPerfectMatch(returnedSchedule, request, matches, offset, times, poin
     
     for (let i = 0; i < times - 1; i++) {
         addExperiment(returnedSchedule, request, pointer);
-
-        // CHECK TO ITERATE TO NEXT MATCHES SHIFT
-        console.log("HERE NOW");
-        console.log(JSON.parse(JSON.stringify(matches)));
-        console.log(JSON.parse(JSON.stringify(matches.length)));
-        console.log(JSON.parse(JSON.stringify(matchesIndex)));
-        console.log(JSON.parse(JSON.stringify(matchesShifts)));
-        console.log(JSON.parse(JSON.stringify(i)));
         if (matchesShifts === matches[matchesIndex].shifts) {
-            console.log("called");
             matchesIndex += 1;
             matchesShifts = 0;
         }
@@ -646,7 +598,6 @@ function addAllSameEnergy(returnedSchedule, energy, excludedRequests, pointer, a
             }
             
             if (!excluded) {
-                console.log("excluded");
                 addExperiment(returnedSchedule, request, pointer);
             }
         }
@@ -712,20 +663,13 @@ function addDownTime(returnedSchedule, pointer) {
 
 // MOVES POINTER AND ADDS EXPERIMENT
 function addExperiment(returnedSchedule, experiment, pointer) {
-    console.log("ADDING EXPERIMENT");
-    console.log(experiment == null);
-    console.log(JSON.parse(JSON.stringify(pointer.index)));
-    //console.log(JSON.parse(JSON.stringify(experiment)));
-    console.log(JSON.parse(JSON.stringify(returnedSchedule)));
-    console.log(returnedSchedule[pointer.index].type != "downtime");
-    console.log(experiment.energy)
 
-    console.log(returnedSchedule[pointer.index].energy != experiment.energy);
-    if (returnedSchedule[pointer.index].type != "downtime" && returnedSchedule[pointer.index].energy != experiment.energy) {
+    if (returnedSchedule[pointer.index].type === "beamtime" && returnedSchedule[pointer.index].energy != experiment.energy) {
         addDownTime(returnedSchedule, pointer);
     }
 
     let startExperiment = new Date(pointer.current.getTime());
+    
     pointer.current.setHours(pointer.current.getHours() + experiment.hoursOn);
     let endExperiment = new Date(pointer.current.getTime());
     
@@ -758,30 +702,20 @@ function getPerfectMatch(mainRequest, allRequests, hours) {
     for (let i = 0; i < allRequests.length; i++) {
         request = allRequests[i];
         if (request.hoursOn === hours && request.energy === energy) {
-            console.log("OPTION");
-            console.log(request);
             possibleMatches.push(request);
             if (request.shifts === shifts + 1) {
-                console.log("REQUEST - 1");
-                console.log(request);
                 let returnedArray = [];
                 returnedArray.push(request);
                 return [returnedArray, -1];
             }
             else if (request.shifts === shifts) {
-                console.log("REQUEST 0");
-                console.log(request);
                 neutralOffsets.push(request);
             }
             else if (request.shifts === shifts - 1) {
-                console.log("REQUEST 1");
                 positiveOffsets.push(request);
             }
         }
     }
-
-    console.log("POSITIVE OFFSETS");
-    console.log(positiveOffsets);
 
     if (possibleMatches.length === 0) return false;
     // IF HERE, NO NEGATIVE OFFSETS WERE FOUND
@@ -791,15 +725,11 @@ function getPerfectMatch(mainRequest, allRequests, hours) {
         return [returnedArray, 0];
     }
     else if (positiveOffsets.length != 0) {
-        console.log("RETURNING POSITIVE MATCH");
         let returnedArray = [];
-        console.log(positiveOffsets[0]);
         returnedArray.push(positiveOffsets[0]);
-        console.log(returnedArray[0]);
-        console.log(returnedArray.length)
+
         return [returnedArray, 1];
     }
-    console.log("MADE IT THIS FAR");
     // IF HERE, THEN THERE ARE NO GOOD OPTIONS AND ALL ARRAYS ARE EMPTY.
 
     // CHECK FOR SUBSETS, NOW MOVE ONTO EIGHTS
@@ -808,12 +738,9 @@ function getPerfectMatch(mainRequest, allRequests, hours) {
     let negativeOffsets = [];
     let n = possibleMatches.length; 
     let totalShifts, subset;
-    console.log(possibleMatches);
     // FIND ALL SUBSETS OF EIGHT HOUR CHUNKS
     for (let i = 0; i < (1<<n); i++) {
         subset = [];
-        console.log('cleared subset');
-        console.log(subset.length);
         totalShifts = 0
         for (let j = 0; j < n; j++) {
             if ((i & (1 << j)) > 0) {
@@ -829,26 +756,16 @@ function getPerfectMatch(mainRequest, allRequests, hours) {
     }
 
     if (negativeOffsets.length > 0) {
-        console.log("-1 SUBSET");
-        for (let i = 0; i < negativeOffsets.length; i++) {
-            console.log(negativeOffsets[i]);
-        }
-        console.log(getSmallestSubset(negativeOffsets));
         return [getSmallestSubset(negativeOffsets), -1];
     }
     if (neutralOffsets.length > 0) {
-        console.log("0 SUBSET");
-        console.log(getSmallestSubset(neutralOffsets));
         return [getSmallestSubset(neutralOffsets), 0];
     }
     if (positiveOffsets.length > 0) {
-        console.log("1 SUBSET");
-        console.log(getSmallestSubset(positiveOffsets));
         return [getSmallestSubset(positiveOffsets), 1];
     }
 
     // AT THIS POINT, NO PERFECT MATCHES EXIST.
-    console.log("RETURNING FALSE");
     return false;
 }
 
