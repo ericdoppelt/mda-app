@@ -118,6 +118,8 @@ def request_modify():
                     req["po_number"] = value
                 if key == "hours":
                     req["beam_time"] = value
+                setattr(beam_request, key, req[key])
+
         ion_ids = []
         if "ions" in req:
             if req["ions"] is not []:
@@ -161,9 +163,10 @@ def request_modify():
         result = {'success' : True}
     except Exception as e:
         print(e)
+        print("email error")
         result = {'error' : str(e),
         'success' : False}
-    return jsonify(result)
+    return jsonify(result), 500
 
 # reject a request
 @app.route('/api/request/reject', methods=['POST'])
