@@ -215,6 +215,7 @@ function addImperfectExperiment(returnedSchedule, request, pointer) {
         // IF ONE SINGLE EXPERIMENT
         if (scheduledTime.type === 'open' && scheduledTime.time >= request.hoursOn) {
             let slotsAvailable = checkOpenSlots(returnedSchedule, request, i);
+            console.log(slotsAvailable);
             if (slotsAvailable[0]) {
                 replaceOpenTime(returnedSchedule, slotsAvailable[1], request, pointer);
                 added = true;

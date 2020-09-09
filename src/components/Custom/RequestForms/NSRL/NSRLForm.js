@@ -93,8 +93,8 @@ class NSRLForm extends React.Component {
           value={NSRLStore.isNasa}
           onChange={event => {NSRLStore.setIsNasa(event.target.value)}}
           >
-          <MenuItem value={"NASA"}>NASA</MenuItem>
-          <MenuItem value={"Not NASA"}>Not NASA</MenuItem>
+          <MenuItem value={"true"}>NASA</MenuItem>
+          <MenuItem value={"false"}>Not NASA</MenuItem>
         </Select>
       </FormControl>
       <FormControl 
