@@ -72,7 +72,6 @@ def add_request(form, username):
                 hoursOff.append(int(form['hoursOff'][i]))
                 energyHours.append(hours)
 
-    print('personel2', form['personnel'])
     entry = requests(name = form['name'],
                     email = form['email'],
                     cell = form['cell'],
