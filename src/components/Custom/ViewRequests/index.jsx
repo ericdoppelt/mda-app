@@ -462,6 +462,7 @@ class ViewRequests extends React.Component {
   async handleReject () {
     const url = "https://vcm-15941.vm.duke.edu/api/request/reject";
     let self = this;
+    console.log('Inside handleReject');
     await axios.post(url, {id: self.state.id, rejectNote: self.state.rejectNote},
       {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
       ).then(response => {
