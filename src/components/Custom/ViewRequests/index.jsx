@@ -68,12 +68,12 @@ const columns = [
   },
 ];
 
-function createData(id, name, status, facility, integrator, company, 
+function createData(id, name, status, facility, integrator, company,
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode, rejectNote) {
   var viewMore = 'View More'
   //var status = 'Pending'
-  return { id, name, status, facility, integrator, company, viewMore, 
+  return { id, name, status, facility, integrator, company, viewMore,
     poNum, address, city, email, energies, funding_cell,
     funding_contact, funding_email, ions, phone, startDate, state, zipCode, rejectNote };
 }
@@ -142,8 +142,8 @@ class ViewRequests extends React.Component {
 
   /*** INITIALIZE STATE VARIABLES ***/
   calendarComponentRef = React.createRef();
-  
-  
+
+
   constructor(props) {
     super(props);
     this.handleDialog= this.handleDialog.bind(this);
@@ -221,13 +221,13 @@ class ViewRequests extends React.Component {
 
   newRows = [];
   tester;
-  
+
   // Collects request form data.
   async componentDidMount() {
-    let url = "https://vcm-15941.vm.duke.edu/api/getforms/integrator";
+    let url = "https://vcm-15941.vm.duke.edu/api/getforms/view";
     let self = this;
     let result;
-    await axios.get(url, 
+    await axios.get(url,
       {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
       ).then(response => {
       result = response.data.requests;
@@ -281,8 +281,8 @@ class ViewRequests extends React.Component {
   // Used to view form information.
   viewMore(row) {
     return(
-      <Button 
-            id="button" 
+      <Button
+            id="button"
             variant="contained"
             style={{width: '100px', height: '30px', fontSize: '12px'}}
             onClick={(event) => this.handleViewMore(row)}
@@ -351,7 +351,7 @@ class ViewRequests extends React.Component {
     let url = "https://vcm-15941.vm.duke.edu/api/request/approve";
     let self = this;
     let vars = {
-      id: self.state.id, 
+      id: self.state.id,
     }
     await axios.post(url, vars,
       {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
@@ -406,7 +406,7 @@ class ViewRequests extends React.Component {
     const url = "https://vcm-15941.vm.duke.edu/api/request/modify";
     let self = this;
     let vars = {
-      id: self.state.id, 
+      id: self.state.id,
       name: self.state.nameNew,
       facility: self.state.facilityNew,
       company: self.state.companyNew,
@@ -481,8 +481,8 @@ class ViewRequests extends React.Component {
       return (
         <div>
           <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
-            <Button 
-              id="button" 
+            <Button
+              id="button"
               variant="contained"
               style={{width: '160px', height: '40px', fontSize: '12px', margin:'0 30px'}}
               onClick={(event) => this.handleApproveChanges()}
@@ -491,8 +491,8 @@ class ViewRequests extends React.Component {
               Approve Changes
             </Button>
 
-            <Button 
-              id="button" 
+            <Button
+              id="button"
               variant="contained"
               style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
               onClick={(event) => this.handleModify()}
@@ -506,8 +506,8 @@ class ViewRequests extends React.Component {
       return (
         <div>
           <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
-            <Button 
-              id="button" 
+            <Button
+              id="button"
               variant="contained"
               style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
               onClick={(event) => this.handleApprove()}
@@ -516,16 +516,16 @@ class ViewRequests extends React.Component {
               Approve
             </Button>
 
-            <Button 
-              id="button" 
+            <Button
+              id="button"
               variant="contained"
               style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
               onClick={(event) => this.handleModify()}
             >
               Modify
             </Button>
-            <Button 
-              id="button" 
+            <Button
+              id="button"
               variant="contained"
               style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
               onClick={(event) => this.handleDialog()}
@@ -537,7 +537,7 @@ class ViewRequests extends React.Component {
         </div>
       )
     }
-    
+
   }
 
   viewRequestsHeader () {
@@ -571,7 +571,7 @@ class ViewRequests extends React.Component {
     if (this.state.oldrows.length > 0) {
       this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
         return (
-          
+
           <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
             {columns.map((column) => {
               const value = row[column.id];
@@ -624,7 +624,7 @@ class ViewRequests extends React.Component {
         return(
             <div>
               {this.viewRequestsHeader()}
-            
+
               <br/>
                 <Row>
                   <TextField
@@ -636,9 +636,9 @@ class ViewRequests extends React.Component {
                       readOnly: true
                     }}
                   />
-                  <Button 
+                  <Button
                     className={classes.rightTextField}
-                    id="button" 
+                    id="button"
                     variant="contained"
                     style={{width: '100px', height: '30px', fontSize: '12px'}}
                     onClick={(event) => this.handleBack()}
@@ -663,7 +663,7 @@ class ViewRequests extends React.Component {
                       <br/>
                     </div>
                 : null}
-                
+
                 <Row >
                   <TextField
                     label="Facility"
@@ -676,7 +676,7 @@ class ViewRequests extends React.Component {
                     onChange={event => {this.setState({facilityNew: event.target.value})}}
                     variant={this.state.modifyBool ? "outlined" : "standard"}
                   />
-                  
+
                 </Row>
                 <br/>
                 <Typography variant="h6">Contact and Funding Information</Typography>
@@ -693,7 +693,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Company"
                   className={classes.rightTextField}
                   id="standard-read-only-input"
@@ -705,7 +705,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Email"
                   className={classes.leftTextField}
                   id="standard-read-only-input"
@@ -717,7 +717,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Phone"
                   className={classes.rightTextField}
                   id="standard-read-only-input"
@@ -731,7 +731,7 @@ class ViewRequests extends React.Component {
                 />
                 <br/>
                 <br/>
-                <TextField 
+                <TextField
                   label = "Integrator"
                   className={classes.leftTextField}
                   id="standard-read-only-input"
@@ -743,7 +743,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Funding Contact"
                   className={classes.rightTextField}
                   id="standard-read-only-input"
@@ -755,7 +755,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Funding Contact Phone"
                   className={classes.leftTextField}
                   id="standard-read-only-input"
@@ -767,7 +767,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Funding Contact Email"
                   className={classes.rightTextField}
                   id="standard-read-only-input"
@@ -781,7 +781,7 @@ class ViewRequests extends React.Component {
                 />
                 <br/>
                 <br/>
-                <TextField 
+                <TextField
                   label = "Billing Address"
                   className={classes.billingAddress}
                   id="standard-read-only-input"
@@ -793,7 +793,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "P.O. No."
                   className={classes.poNumber}
                   id="standard-read-only-input"
@@ -805,7 +805,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "City"
                   className={classes.billingCity}
                   id="standard-read-only-input"
@@ -817,7 +817,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "State"
                   className={classes.billingState}
                   id="standard-read-only-input"
@@ -829,7 +829,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Zip"
                   className={classes.billingZip}
                   id="standard-read-only-input"
@@ -843,7 +843,7 @@ class ViewRequests extends React.Component {
                 />
                 <br/><br/>
                 <Typography variant="h6">Experiment Information</Typography>
-                <TextField 
+                <TextField
                   label = "Energies"
                   className={classes.leftTextField}
                   id="standard-read-only-input"
@@ -855,7 +855,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Ions"
                   className={classes.rightTextField}
                   id="standard-read-only-input"
@@ -867,7 +867,7 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-                <TextField 
+                <TextField
                   label = "Start Date"
                   className={classes.leftTextField}
                   id="standard-read-only-input"
@@ -879,13 +879,13 @@ class ViewRequests extends React.Component {
                   variant={this.state.modifyBool ? "outlined" : "standard"}
                   margin={this.state.modifyBool ? "normal" : "none"}
                 />
-    
+
                 <br/><br/><br/>
                 <Row style={{justifyContent: 'center'}}>
                   {this.showButtons()}
                 </Row>
                 <br/><br/><br/><br/>
-    
+
                 {/* Rejection Dialog */}
                 <Dialog
                   open={this.state.dialogOpen}
@@ -904,8 +904,8 @@ class ViewRequests extends React.Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button 
-                      id="button" 
+                    <Button
+                      id="button"
                       variant="contained"
                       style={{width: '160px', height: '40px', fontSize: '12px', margin:'0 30px'}}
                       onClick={(event) => this.handleReject()}
@@ -913,8 +913,8 @@ class ViewRequests extends React.Component {
                     >
                       Confirm Rejection
                     </Button>
-                    <Button 
-                      id="button" 
+                    <Button
+                      id="button"
                       variant="contained"
                       style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
                       onClick={this.handleDialog}
@@ -923,12 +923,12 @@ class ViewRequests extends React.Component {
                     </Button>
                   </DialogActions>
                 </Dialog>
-                
+
             </div>
           );
         } else if (this.state.component === 'table') {
           return (
-            
+
             <div className='view-requests'>
               {this.viewRequestsHeader()}
               <div className='view-requests-inner'>
@@ -949,10 +949,10 @@ class ViewRequests extends React.Component {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {this.state.oldrows.length > 0 
+                        {this.state.oldrows.length > 0
                           ? this.state.oldrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                             return (
-                              
+
                               <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
                                 {columns.map((column) => {
                                   const value = row[column.id];
@@ -1026,40 +1026,40 @@ class ViewRequests extends React.Component {
       return (
         <div>
           {/* Snackbars */}
-          <Snackbar 
+          <Snackbar
             anchorOrigin={{vertical: 'top',horizontal: 'center'}}
-            open={this.state.approveSnackOpen} 
-            autoHideDuration={6000} 
+            open={this.state.approveSnackOpen}
+            autoHideDuration={6000}
             onClose={this.handleApproveSnackClose}
           >
             <Alert onClose={this.handleApproveSnackClose} severity="success">
               The form has been approved.
             </Alert>
           </Snackbar>
-          <Snackbar 
+          <Snackbar
             anchorOrigin={{vertical: 'top',horizontal: 'center'}}
-            open={this.state.modifySnackOpen} 
-            autoHideDuration={6000} 
+            open={this.state.modifySnackOpen}
+            autoHideDuration={6000}
             onClose={this.handleModifySnackClose}
           >
             <Alert onClose={this.handleModifySnackClose} severity="success">
               The form has been approved with modifications.
             </Alert>
           </Snackbar>
-          <Snackbar 
+          <Snackbar
             anchorOrigin={{vertical: 'top',horizontal: 'center'}}
-            open={this.state.rejectSnackOpen} 
-            autoHideDuration={6000} 
+            open={this.state.rejectSnackOpen}
+            autoHideDuration={6000}
             onClose={this.handleRejectSnackClose}
           >
             <Alert onClose={this.handleRejectSnackClose} severity="error">
               The form has been rejected.
             </Alert>
           </Snackbar>
-          <Snackbar 
+          <Snackbar
             anchorOrigin={{vertical: 'top',horizontal: 'center'}}
-            open={this.props.location.state !== undefined && this.props.location.state.formSubmitted} 
-            autoHideDuration={6000} 
+            open={this.props.location.state !== undefined && this.props.location.state.formSubmitted}
+            autoHideDuration={6000}
             onClose={this.closeSnackBar()}
           >
             <Alert severity="success">
@@ -1069,7 +1069,7 @@ class ViewRequests extends React.Component {
         </div>
       )
     }
-    
+
     return (
       <div>
         {tableAndViewMaster()}
