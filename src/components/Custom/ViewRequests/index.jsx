@@ -431,7 +431,6 @@ class ViewRequests extends React.Component {
       {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
       ).then(response => {
       console.log(response);
-      self.componentDidMount();
       //self.setState({modifyBool: false, component: "table"});
     })
     .catch(error => {
@@ -442,6 +441,8 @@ class ViewRequests extends React.Component {
       modifySnackOpen: true,
       component: 'table',
     });
+    self.componentDidMount();
+
   }
 
   handleDialog () {
