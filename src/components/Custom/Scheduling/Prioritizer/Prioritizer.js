@@ -26,7 +26,6 @@ class Prioritizer extends React.Component {
 
   constructor(props) {
       super(props);
-      console.log(props);
       this.state = {
           priority: [],
           general: [],
@@ -36,21 +35,16 @@ class Prioritizer extends React.Component {
           endDateTime: this.props.end,
           scheduleOverflow: false,
       }
-      console.log("lalalala");
   }
 
   componentDidMount() {
-    console.log("CALLED RIGHT HERE");
     if ((window.sessionStorage.getItem("access_token") === null)){
       window.sessionStorage.setItme("next_page", '/scheduler');
       this.props.history.push('user-login');
     }
     else {
     let i = 0;
-    console.log(SchedulingStore.requests);
     let possibleRequests = SchedulingStore.rangeRequests(this.props.start, this.props.end, this.props.facility);
-    console.log("break");
-    console.log(possibleRequests);
     let self = this;
     var requestsChecked = possibleRequests.map(function(request) {
       var requestOut = Object.assign({}, request);
@@ -124,7 +118,6 @@ getList(listArray, title) {
         let removedIndex = newGeneral.indexOf(this.state.general[i]);
         newGeneral.splice(removedIndex, 1);
         this.state.checked[tempIndex] = false;
-        console.log(tempIndex);
       }
     }
     this.setState({
@@ -146,7 +139,6 @@ getList(listArray, title) {
         let removedIndex = newPriority.indexOf(this.state.priority[i]);
         newPriority.splice(removedIndex, 1);
         this.state.checked[tempIndex] = false;
-        console.log(tempIndex);
       }
     }
     this.setState({
@@ -166,7 +158,7 @@ getList(listArray, title) {
 
   moveToScheduling() {
     let suggestion = LBNLScheduler(this.state.priority, this.state.general, this.state.startDateTime, this.state.endDateTime);
-    if (!suggestion) this.setState({scheduleOverflow: true});
+    if (suggestion === false) this.setState({scheduleOverflow: true});
     else {
     SchedulingStore.setFacility(this.props.facility);
     SchedulingStore.setPriorities(this.state.priority);
