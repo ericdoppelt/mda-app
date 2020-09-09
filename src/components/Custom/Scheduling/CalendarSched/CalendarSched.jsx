@@ -485,7 +485,7 @@ class CalendarSched extends React.Component {
       facility: row.facility,
       company: row.company,
       integrator: row.integrator,
-      poNum: row.poNum,
+      //poNum: row.poNum,
       address: row.address,
       city: row.city,
       email: row.email,
@@ -495,9 +495,9 @@ class CalendarSched extends React.Component {
       funding_email: row.funding_email,
       ions: row.beams[Object.keys(row.beams)][0],
       phone: row.phone,
-      startDate: row.startDate,
+      startDate: row.start,
       state: row.state,
-      zipCode: row.zipCode,
+      zipCode: row.zipcode,
       status: row.status,
       modalOpen: !this.state.modalOpen,
     }));
@@ -871,6 +871,7 @@ class CalendarSched extends React.Component {
                 readOnly: true,
               }}
             />
+            {/*
             <TextField 
               label = "P.O. No."
               className={classes.poNumber}
@@ -880,6 +881,7 @@ class CalendarSched extends React.Component {
                 readOnly: true,
               }}
             />
+            */}
             <TextField 
               label = "City"
               className={classes.billingCity}
