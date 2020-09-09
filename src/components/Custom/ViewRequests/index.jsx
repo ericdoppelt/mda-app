@@ -224,7 +224,7 @@ class ViewRequests extends React.Component {
   
   // Collects request form data.
   async componentDidMount() {
-    let url = "https://vcm-15941.vm.duke.edu/api/getforms/integrator";
+    let url = "https://vcm-15941.vm.duke.edu/api/getforms/view";
     let self = this;
     let result;
     await axios.get(url, 
