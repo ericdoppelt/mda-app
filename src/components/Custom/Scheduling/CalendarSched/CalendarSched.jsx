@@ -199,6 +199,8 @@ class CalendarSched extends React.Component {
     this.addEvent = this.addEvent.bind(this);
     this.colorEvents = this.colorEvents.bind(this);
     this.handleApproveSnackClose = this.handleApproveSnackClose.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
+    this.confirmRemove = this.confirmRemove.bind(this);
     
     let sampleProp = "null";
     if (this.props.samp !== null) {
@@ -251,6 +253,8 @@ class CalendarSched extends React.Component {
       addNewDate: new Date(),
       uniqueEnergies: [],
       approveSnackOpen: false,
+      selectedEvent: "",
+      confirmRemove: false,
     }
   }
 
@@ -489,6 +493,17 @@ class CalendarSched extends React.Component {
     }));
   }
 
+  confirmRemove() {
+    this.setState({confirmRemove: true})
+  }
+
+  handleRemove() {
+    console.log("removing event")
+    let tempEvent = this.state.selectedEvent;
+    tempEvent.remove();
+    this.setState({modalOpen: false, confirmRemove: false})
+  }
+
   handleAddNewDialog() {
     this.setState({
       addNewOpen: !this.state.addNewOpen
@@ -592,16 +607,16 @@ class CalendarSched extends React.Component {
   };
   
 
-  async handleEventClick(id) {
+  async handleEventClick(info) {
     console.log("Event clicked");
-    console.log(id);
-    
+    console.log(info.event);
+    this.setState({selectedEvent: info.event});
     let self = this;
   
     let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
     
     await axios.post(url, 
-      {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      {"id": info.event.id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
       ).then(response => {
         console.log('Printing response');
         console.log(response);
@@ -670,7 +685,7 @@ class CalendarSched extends React.Component {
                 slotDuration='04:00:00'
                 defaultDate={this.state.calendarStartDate}
                 dateClick={(info) => {this.handleDateClick(info.date)} }
-                eventClick={(info) => {this.handleEventClick(info.event.id)} }
+                eventClick={(info) => {this.handleEventClick(info)} }
                 eventOrder="facility,start"
                 editable='true'
 
@@ -917,10 +932,30 @@ class CalendarSched extends React.Component {
               onClick={this.handleModal} 
               variant="contained"
               color="primary"
-              style={{maxWidth:'150px', margin:'25px 25px 25px 25px'}}
+              style={{maxWidth:'150px', margin:'25px 10px 25px 10px'}}
             >
               Return
             </Button>
+
+            {this.state.confirmRemove 
+            ? <Button 
+                onClick={this.handleRemove} 
+                variant="contained"
+                color="secondary"
+                style={{maxWidth:'250px', margin:'25px 10px 25px 10px'}}
+              >
+                Confirm Remove
+              </Button>
+            : <Button 
+                onClick={this.confirmRemove} 
+                variant="contained"
+                color="secondary"
+                style={{maxWidth:'150px', margin:'25px 10px 25px 10px'}}
+              >
+                Remove
+              </Button>
+            }
+            
           </Row>
         </Dialog>
 
