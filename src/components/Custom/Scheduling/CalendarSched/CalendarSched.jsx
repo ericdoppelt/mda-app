@@ -65,6 +65,7 @@ function Alert(props) {
 }
 
 const downtimeColor = '#c0392b';
+const openColor = '#b2bec3';
 
 /* const eventSample = [
   ['TAMU','MDA','2020-07-20T00:00','10'],
@@ -279,9 +280,12 @@ class CalendarSched extends React.Component {
       let theColor;
       let titleString;
       let {name, company} = self.findNameAndCompany(event.id);
-      if (event.energy === undefined) {
+      if (event.type === 'downtime') {
         theColor = downtimeColor;
         titleString = 'Tune Time';
+      } else if (event.type === 'open') {
+        theColor = openColor;
+        titleString = 'Open';
       } else {
         theColor = colors[self.state.uniqueEnergies.indexOf(event.energy)];
         titleString = company + " - " + name;
