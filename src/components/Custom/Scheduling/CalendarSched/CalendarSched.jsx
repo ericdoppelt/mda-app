@@ -65,7 +65,7 @@ function Alert(props) {
 }
 
 const downtimeColor = '#c0392b';
-const openColor = '#b2bec3';
+const openColor = '#636e72';
 
 /* const eventSample = [
   ['TAMU','MDA','2020-07-20T00:00','10'],
