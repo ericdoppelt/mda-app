@@ -440,6 +440,7 @@ class ViewRequests extends React.Component {
     self.setState({
       modifyBool: false,
       modifySnackOpen: true,
+      component: 'table',
     });
   }
 
