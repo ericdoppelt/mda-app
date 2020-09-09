@@ -80,7 +80,7 @@ class LBNLSubmit extends React.Component {
           {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}
           }).then(response => {
             if (response.data.success === true) {
-            alert("Form was sent to LBNL successfully. Please check your email!")
+            alert("Form was sent to your integrator for review!")
               self.props.history.push({
                 pathname: "/view-requests",
                 state: {formSubmiited: true}

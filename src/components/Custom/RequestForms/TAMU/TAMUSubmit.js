@@ -73,7 +73,7 @@ class TAMUSubmit extends React.Component {
           }).then(response => {
             console.log(response);
             if (response.data.success === true) {
-            alert("Form was sent to TAMU successfully. Please check your email!");
+            alert("Form was sent to your integrator for review!");
               self.props.history.push({
                 pathname: "/view-requests",
                 state: {formSubmitted: true}

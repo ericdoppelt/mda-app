@@ -508,15 +508,18 @@ class ViewRequests extends React.Component {
       return (
         <div>
           <Row style={{maxWidth: MAXTABLEWIDTH, justifyContent: 'center'}}>
-            <Button
-              id="button"
-              variant="contained"
-              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-              onClick={(event) => this.handleApprove()}
-              color="primary"
-            >
-              Approve
-            </Button>
+          {(window.sessionStorage.getItem('integrator_token') === 'true') 
+              ? <Button 
+                  id="button" 
+                  variant="contained"
+                  style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+                  onClick={(event) => this.handleApprove()}
+                  color="primary"
+                >
+                  Approve
+                </Button>
+              : null
+            }
 
             <Button
               id="button"
@@ -526,15 +529,18 @@ class ViewRequests extends React.Component {
             >
               Modify
             </Button>
-            <Button
-              id="button"
-              variant="contained"
-              style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
-              onClick={(event) => this.handleDialog()}
-              color="secondary"
-            >
-              Reject
-            </Button>
+            {(window.sessionStorage.getItem('integrator_token') === 'true') 
+              ? <Button 
+                  id="button" 
+                  variant="contained"
+                  style={{width: '100px', height: '40px', fontSize: '12px', margin:'0 30px'}}
+                  onClick={(event) => this.handleDialog()}
+                  color="secondary"
+                >
+                  Reject
+                </Button>
+              : null
+            }
           </Row>
         </div>
       )
