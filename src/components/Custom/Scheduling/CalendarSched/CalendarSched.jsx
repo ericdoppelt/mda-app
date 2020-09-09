@@ -65,6 +65,7 @@ function Alert(props) {
 }
 
 const downtimeColor = '#c0392b';
+const openColor = '#636e72';
 
 /* const eventSample = [
   ['TAMU','MDA','2020-07-20T00:00','10'],
@@ -199,6 +200,8 @@ class CalendarSched extends React.Component {
     this.addEvent = this.addEvent.bind(this);
     this.colorEvents = this.colorEvents.bind(this);
     this.handleApproveSnackClose = this.handleApproveSnackClose.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
+    this.confirmRemove = this.confirmRemove.bind(this);
     
     let sampleProp = "null";
     if (this.props.samp !== null) {
@@ -251,6 +254,8 @@ class CalendarSched extends React.Component {
       addNewDate: new Date(),
       uniqueEnergies: [],
       approveSnackOpen: false,
+      selectedEvent: "",
+      confirmRemove: false,
     }
   }
 
@@ -271,18 +276,23 @@ class CalendarSched extends React.Component {
   colorEvents(eventArray) {
     let data = [];
     let self = this;
+    let totalTime = 0;
     eventArray.forEach(function(event) {
       let theColor;
       let titleString;
       let {name, company} = self.findNameAndCompany(event.id);
-      if (event.energy === undefined) {
+      if (event.type === 'downtime') {
         theColor = downtimeColor;
         titleString = 'Tune Time';
+      } else if (event.type === 'open') {
+        theColor = openColor;
+        titleString = 'Open';
       } else {
         theColor = colors[self.state.uniqueEnergies.indexOf(event.energy)];
         titleString = company + " - " + name;
+        totalTime = event.time;
       }
-      data.push(self.makeEvent2(event.id, event.start, event.end, event.energy, titleString, theColor));
+      data.push(self.makeEvent2(event.id, event.start, event.end, event.energy, titleString, theColor, totalTime));
       if (event.start < self.state.calendarStartDate) {
         console.log('changing calendar start')
         self.setState({calendarStartDate: event.start});
@@ -375,9 +385,9 @@ class CalendarSched extends React.Component {
     title: titleString, start: new Date(startDate), end: endDate, backgroundColor: color}
   };
 
-  makeEvent2 = (id, startDate, endDate, energy, titleString, color) => {
+  makeEvent2 = (id, startDate, endDate, energy, titleString, color, totalTime) => {
     return { id: id, extendedProps: {facility: "TAMU", integrator: "MDA", beamType: "Heavy Ion"}, 
-    title: titleString, start: startDate, end: endDate, backgroundColor: color, energy: energy}
+    title: titleString, start: startDate, end: endDate, backgroundColor: color, energy: energy, totalTime: totalTime}
   };
 
   makeEventColor = (facility) => {
@@ -465,28 +475,43 @@ class CalendarSched extends React.Component {
 
   handleModal(row) {
     console.log('opening modal')
+    console.log(row.beams);
+    console.log(Object.keys(row.beams))
+    console.log(row.beams[Object.keys(row.beams)][0])
+
     this.setState(state=>({
       id: row.id,
       name: row.name,
       facility: row.facility,
       company: row.company,
       integrator: row.integrator,
-      poNum: row.poNum,
+      //poNum: row.poNum,
       address: row.address,
       city: row.city,
       email: row.email,
-      energies: row.energies,
+      energies: Object.keys(row.beams),
       funding_cell: row.funding_cell,
       funding_contact: row.funding_contact,
       funding_email: row.funding_email,
-      ions: row.ions,
+      ions: row.beams[Object.keys(row.beams)][0],
       phone: row.phone,
-      startDate: row.startDate,
+      startDate: row.start,
       state: row.state,
-      zipCode: row.zipCode,
+      zipCode: row.zipcode,
       status: row.status,
       modalOpen: !this.state.modalOpen,
     }));
+  }
+
+  confirmRemove() {
+    this.setState({confirmRemove: true})
+  }
+
+  handleRemove() {
+    console.log("removing event")
+    let tempEvent = this.state.selectedEvent;
+    tempEvent.remove();
+    this.setState({modalOpen: false, confirmRemove: false})
   }
 
   handleAddNewDialog() {
@@ -592,16 +617,16 @@ class CalendarSched extends React.Component {
   };
   
 
-  async handleEventClick(id) {
+  async handleEventClick(info) {
     console.log("Event clicked");
-    console.log(id);
-    
+    console.log(info.event);
+    this.setState({selectedEvent: info.event, totalTime: info.event.extendedProps.totalTime});
     let self = this;
   
     let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
     
     await axios.post(url, 
-      {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+      {"id": info.event.id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
       ).then(response => {
         console.log('Printing response');
         console.log(response);
@@ -670,7 +695,7 @@ class CalendarSched extends React.Component {
                 slotDuration='04:00:00'
                 defaultDate={this.state.calendarStartDate}
                 dateClick={(info) => {this.handleDateClick(info.date)} }
-                eventClick={(info) => {this.handleEventClick(info.event.id)} }
+                eventClick={(info) => {this.handleEventClick(info)} }
                 eventOrder="facility,start"
                 editable='true'
 
@@ -846,6 +871,7 @@ class CalendarSched extends React.Component {
                 readOnly: true,
               }}
             />
+            {/*
             <TextField 
               label = "P.O. No."
               className={classes.poNumber}
@@ -855,6 +881,7 @@ class CalendarSched extends React.Component {
                 readOnly: true,
               }}
             />
+            */}
             <TextField 
               label = "City"
               className={classes.billingCity}
@@ -911,16 +938,45 @@ class CalendarSched extends React.Component {
                 readOnly: true,
               }}
             />
+            <TextField 
+              label = "Total Time in Hours"
+              className={classes.rightTextField}
+              id="standard-read-only-input"
+              defaultValue={this.state.totalTime}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </CardNoShadow>
           <Row style={{justifyContent: 'flex-end'}}>
             <Button 
               onClick={this.handleModal} 
               variant="contained"
               color="primary"
-              style={{maxWidth:'150px', margin:'25px 25px 25px 25px'}}
+              style={{maxWidth:'150px', margin:'25px 10px 25px 10px'}}
             >
               Return
             </Button>
+
+            {this.state.confirmRemove 
+            ? <Button 
+                onClick={this.handleRemove} 
+                variant="contained"
+                color="secondary"
+                style={{maxWidth:'250px', margin:'25px 10px 25px 10px'}}
+              >
+                Confirm Remove
+              </Button>
+            : <Button 
+                onClick={this.confirmRemove} 
+                variant="contained"
+                color="secondary"
+                style={{maxWidth:'150px', margin:'25px 10px 25px 10px'}}
+              >
+                Remove
+              </Button>
+            }
+            
           </Row>
         </Dialog>
 
