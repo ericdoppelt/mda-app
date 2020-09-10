@@ -541,6 +541,13 @@ class ViewRequestsSched extends React.Component {
           >
             Add Tune Time
           </Button>
+          <Button 
+            color="default" 
+            variant='contained' 
+            onClick={this.props.addOpenEvent}
+          >
+            Add Open Time
+          </Button>
         </Row>
         <br/>
         

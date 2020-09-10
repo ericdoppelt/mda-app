@@ -198,6 +198,7 @@ class CalendarSched extends React.Component {
     this.handleEventClick = this.handleEventClick.bind(this);
     this.handleAddNewDialog = this.handleAddNewDialog.bind(this);
     this.addEvent = this.addEvent.bind(this);
+    this.addOpenEvent = this.addOpenEvent.bind(this);
     this.colorEvents = this.colorEvents.bind(this);
     this.handleApproveSnackClose = this.handleApproveSnackClose.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
@@ -474,33 +475,37 @@ class CalendarSched extends React.Component {
   }
 
   handleModal(row) {
-    console.log('opening modal')
-    console.log(row.beams);
-    console.log(Object.keys(row.beams))
-    console.log(row.beams[Object.keys(row.beams)][0])
+    console.log('closing modal')
 
-    this.setState(state=>({
-      id: row.id,
-      name: row.name,
-      facility: row.facility,
-      company: row.company,
-      integrator: row.integrator,
-      //poNum: row.poNum,
-      address: row.address,
-      city: row.city,
-      email: row.email,
-      energies: Object.keys(row.beams),
-      funding_cell: row.funding_cell,
-      funding_contact: row.funding_contact,
-      funding_email: row.funding_email,
-      ions: row.beams[Object.keys(row.beams)][0],
-      phone: row.phone,
-      startDate: row.start,
-      state: row.state,
-      zipCode: row.zipcode,
-      status: row.status,
-      modalOpen: !this.state.modalOpen,
-    }));
+    if (row.beams !== undefined) {
+      console.log(row.beams);
+      console.log(Object.keys(row.beams))
+      console.log(row.beams[Object.keys(row.beams)][0])
+
+      this.setState(state=>({
+        id: row.id,
+        name: row.name,
+        facility: row.facility,
+        company: row.company,
+        integrator: row.integrator,
+        //poNum: row.poNum,
+        address: row.address,
+        city: row.city,
+        email: row.email,
+        energies: Object.keys(row.beams),
+        funding_cell: row.funding_cell,
+        funding_contact: row.funding_contact,
+        funding_email: row.funding_email,
+        ions: row.beams[Object.keys(row.beams)][0],
+        phone: row.phone,
+        startDate: row.start,
+        state: row.state,
+        zipCode: row.zipcode,
+        status: row.status,
+        modalOpen: !this.state.modalOpen,
+      }));
+    }
+    
   }
 
   confirmRemove() {
@@ -515,6 +520,8 @@ class CalendarSched extends React.Component {
   }
 
   handleAddNewDialog() {
+    
+
     this.setState({
       addNewOpen: !this.state.addNewOpen
     })
@@ -526,6 +533,8 @@ class CalendarSched extends React.Component {
     console.log(id.type)
     let self = this;
 
+    
+
     // Check if it's down time
     if (id.type === 'click') {
       let theColor = downtimeColor;
@@ -534,7 +543,6 @@ class CalendarSched extends React.Component {
       // Setting end time
       var endDate = new Date(self.state.addNewDate);
       let h = 4;
-      console.log(endDate.getTime())
       endDate.setTime(endDate.getTime() + (h*60*60*1000));
 
       let data = [self.makeEvent2(id, self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
@@ -606,6 +614,25 @@ class CalendarSched extends React.Component {
     this.handleAddNewDialog();
   }
 
+  addOpenEvent() {
+    console.log('event adding')
+    let self = this;
+
+    // Check if it's down time
+    let theColor = openColor;
+    let titleString = 'Open Time';
+    let eventEnergy = undefined;
+    // Setting end time
+    var endDate = new Date(self.state.addNewDate);
+    let h = 4;
+    console.log(endDate.getTime())
+    endDate.setTime(endDate.getTime() + (h*60*60*1000));
+
+    let data = [self.makeEvent2("", self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
+    self.setState({calendarEvents: [...data]})
+    this.handleAddNewDialog();
+  }
+
   dateStringConverter (date) {
     var mm = date.getMonth() + 1; // getMonth() is zero-based
     var dd = date.getDate();
@@ -620,24 +647,26 @@ class CalendarSched extends React.Component {
   async handleEventClick(info) {
     console.log("Event clicked");
     console.log(info.event);
-    this.setState({selectedEvent: info.event, totalTime: info.event.extendedProps.totalTime});
-    let self = this;
-  
-    let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
+    if (info.event.title === 'Tune Time' || info.event.title === 'Open Time') {
+      info.event.remove();
+    } else {
+      this.setState({selectedEvent: info.event, totalTime: info.event.extendedProps.totalTime});
+      let self = this;
     
-    await axios.post(url, 
-      {"id": info.event.id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
-      ).then(response => {
-        console.log('Printing response');
-        console.log(response);
-        this.handleModal(response.data.requests[0]);
-      })
-      .catch(error => {
-        console.log(error);
-      }
-    );
-
-    
+      let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
+      
+      await axios.post(url, 
+        {"id": info.event.id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
+        ).then(response => {
+          console.log('Printing response');
+          console.log(response);
+          this.handleModal(response.data.requests[0]);
+        })
+        .catch(error => {
+          console.log(error);
+        }
+      );
+    }
   }
 
   
@@ -741,8 +770,7 @@ class CalendarSched extends React.Component {
 
         {/*** Add new event ***/}
         <Dialog classes={{paper: classes.dialogPaper}} onClose={this.handleAddNewDialog}         aria-labelledby="addevent" open={this.state.addNewOpen}>
-          Add New event
-          <ViewRequestsSched addEvent={this.addEvent}/>
+          <ViewRequestsSched addEvent={this.addEvent} addOpenEvent={this.addOpenEvent}/>
         </Dialog>
  
 
@@ -1012,6 +1040,11 @@ class CalendarSched extends React.Component {
 
   handleDateClick = (arg) => {
     console.log(arg.date);
+    // First update events with the edited events
+    let calendarApi = this.calendarComponentRef.current.getApi()
+    let events = calendarApi.getEvents()
+    this.setState({calendarEvents: events})
+    
     this.handleAddNewDialog();
     this.setState({addNewDate : arg})
   }
