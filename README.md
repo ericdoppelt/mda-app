@@ -35,7 +35,11 @@ pip install -r requirements.txt
 ```
 
 ## Running the app
-To run the backend, run `yarn start-api` for mac users or `yart start-windows` for windows users.
+To run the backend, cd into the backend folder, then run
+```
+python run.py
+```
+If you in development, make sure to uncomment the development code and comment out the production code in the run.py file.
 
 To run the frontend, run
 ```
