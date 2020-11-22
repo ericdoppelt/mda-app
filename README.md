@@ -1,4 +1,7 @@
 # mda-app
+
+Site is deployed here: https://mda-testing.netlify.app/
+
 ## Initial Installation
 When downloading the app for the first time, react needs to be initialized along with the virtual environment along with its dependencies need to be installed locally. After cloning the repository, open up your python termal, cd into the mda-app. To initialize the react app, run 
 ```
