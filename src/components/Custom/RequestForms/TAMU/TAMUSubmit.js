@@ -39,7 +39,7 @@ class TAMUSubmit extends React.Component {
 
     if (TesterStore.validForm && ExperimentStore.validForm) {
         let self = this;
-        let url = 'https://vcm-15941.vm.duke.edu/api/requestform';
+        let url = 'https://vcm-17934.vm.duke.edu/api/requestform';
         console.log(self.props);
         await axios.post(url, {
           name: TesterStore.senderName,

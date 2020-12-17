@@ -60,7 +60,7 @@ const App = () => (
 window.addEventListener("beforeunload", (ev) =>
 {
   if (window.sessionStorage.getItem("access_token") !== null) {
-    let url = "https://vcm-15941.vm.duke.edu/api/logout"
+    let url = "https://vcm-17934.vm.duke.edu/api/logout"
     axios.delete(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     })

@@ -63,7 +63,7 @@ class UsertodoList extends React.Component {
 
       async componentDidMount(event) {
         var self = this;
-        let url = "https://vcm-15941.vm.duke.edu/api/calendar/tasks";
+        let url = "https://vcm-17934.vm.duke.edu/api/calendar/tasks";
         await axios.get(url, {
           headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
           }).then(response => {
@@ -83,7 +83,7 @@ class UsertodoList extends React.Component {
         //console.log(steps);
         //console.log(window.sessionStorage.getItem("access_token"));
         var self = this;
-        let url = "https://vcm-15941.vm.duke.edu/api/calendar/tasks";
+        let url = "https://vcm-17934.vm.duke.edu/api/calendar/tasks";
         await axios.post(url, {
           id: id,
           steps: steps},

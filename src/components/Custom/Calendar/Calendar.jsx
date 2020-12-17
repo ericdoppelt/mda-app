@@ -125,7 +125,7 @@ class Calendar extends React.Component {
   
   /*** COLLECT CALENDAR DATA FROM HEROKU ***/
   async componentDidMount(username) {
-    let url = "https://vcm-15941.vm.duke.edu/api/calendar";
+    let url = "https://vcm-17934.vm.duke.edu/api/calendar";
     var self = this;
     await axios.post(url).then(response => {
       /*self.setState({
@@ -152,7 +152,7 @@ class Calendar extends React.Component {
       .catch(error => {
       });
 
-      url = "https://vcm-15941.vm.duke.edu/api/calendar/personal";
+      url = "https://vcm-17934.vm.duke.edu/api/calendar/personal";
       await axios.post(url, null, {
         headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
         }).then(response => {

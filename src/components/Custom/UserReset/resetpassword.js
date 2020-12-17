@@ -81,7 +81,7 @@ import { withRouter } from 'react-router-dom';
   //Updates state variables, including errors in response
   async submit() {
     let self = this;
-    let url = 'https://vcm-15941.vm.duke.edu/api/user/reset-password';
+    let url = 'https://vcm-17934.vm.duke.edu/api/user/reset-password';
     await axios.post(url, {
       password: self.state.newPassword,
     },{

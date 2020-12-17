@@ -83,7 +83,7 @@ class RegistrationForm extends React.Component {
   }
 
   async componentDidMount() {
-    let url = 'https://vcm-15941.vm.duke.edu/api/integrator';
+    let url = 'https://vcm-17934.vm.duke.edu/api/integrator';
     await axios.get(url, {
       }).then(response => {
         console.log("RESPONSE");
@@ -121,7 +121,7 @@ class RegistrationForm extends React.Component {
 
   async postToAxios() {
       var self = this;
-      await axios.post('https://vcm-15941.vm.duke.edu/api/register', {
+      await axios.post('https://vcm-17934.vm.duke.edu/api/register', {
         first_name: self.state.firstName,
         last_name: self.state.lastName,
         username: self.state.username,

@@ -452,7 +452,7 @@ class CalendarSched extends React.Component {
     console.log(SchedulingStore.requests[0].rangeId)
 
     
-    let url = "https://vcm-15941.vm.duke.edu/api/request/send-forms";
+    let url = "https://vcm-17934.vm.duke.edu/api/request/send-forms";
     
     await axios.post(url, 
       {
@@ -548,7 +548,7 @@ class CalendarSched extends React.Component {
       let data = [self.makeEvent2(id, self.state.addNewDate, endDate, eventEnergy, titleString, theColor), ...this.state.calendarEvents];
       self.setState({calendarEvents: [...data]})
     } else {
-      let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
+      let url = "https://vcm-17934.vm.duke.edu/api/getforms/id";
     
       await axios.post(url, 
         {"id": id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}
@@ -653,7 +653,7 @@ class CalendarSched extends React.Component {
       this.setState({selectedEvent: info.event, totalTime: info.event.extendedProps.totalTime});
       let self = this;
     
-      let url = "https://vcm-15941.vm.duke.edu/api/getforms/id";
+      let url = "https://vcm-17934.vm.duke.edu/api/getforms/id";
       
       await axios.post(url, 
         {"id": info.event.id}, {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}

@@ -60,7 +60,7 @@ const useStyles = theme => ({
     }
 
     async componentDidMount() {
-      let url = 'https://vcm-15941.vm.duke.edu/api/user';
+      let url = 'https://vcm-17934.vm.duke.edu/api/user';
       await axios.get(url, {
         headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {

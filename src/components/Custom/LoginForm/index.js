@@ -51,7 +51,7 @@ class LoginForm extends React.Component {
     this.setState({ usernameError: "", passwordError: "" });
 
     var self = this;
-    let url = 'https://vcm-15941.vm.duke.edu/api/login';
+    let url = 'https://vcm-17934.vm.duke.edu/api/login';
     await axios.post(url, {
       username: self.state.username,
       password: self.state.password

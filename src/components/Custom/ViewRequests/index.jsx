@@ -224,7 +224,7 @@ class ViewRequests extends React.Component {
 
   // Collects request form data.
   async componentDidMount() {
-    let url = "https://vcm-15941.vm.duke.edu/api/getforms/view";
+    let url = "https://vcm-17934.vm.duke.edu/api/getforms/view";
     let self = this;
     let result;
     await axios.get(url,
@@ -257,7 +257,7 @@ class ViewRequests extends React.Component {
       console.log(error);
     });
 
-    url = 'https://vcm-15941.vm.duke.edu/api/user';
+    url = 'https://vcm-17934.vm.duke.edu/api/user';
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
       }).then(response => {
@@ -348,7 +348,7 @@ class ViewRequests extends React.Component {
   }
 
   async handleApprove() {
-    let url = "https://vcm-15941.vm.duke.edu/api/request/approve";
+    let url = "https://vcm-17934.vm.duke.edu/api/request/approve";
     let self = this;
     let vars = {
       id: self.state.id,
@@ -462,7 +462,7 @@ class ViewRequests extends React.Component {
   }
 
   async handleReject () {
-    const url = "https://vcm-15941.vm.duke.edu/api/request/reject";
+    const url = "https://vcm-17934.vm.duke.edu/api/request/reject";
     let self = this;
     await axios.post(url, {id: self.state.id, rejectNote: self.state.rejectNote},
       {headers: {Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}`}}

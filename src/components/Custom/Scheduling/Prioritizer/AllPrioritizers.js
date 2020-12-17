@@ -31,7 +31,7 @@ class AllPrioritizers extends React.Component {
       this.props.history.push('user-login');
     }
     else {
-    let  url = 'https://vcm-15941.vm.duke.edu/api/getforms/integrator';
+    let  url = 'https://vcm-17934.vm.duke.edu/api/getforms/integrator';
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }
     }).then(response => {
@@ -57,7 +57,7 @@ class AllPrioritizers extends React.Component {
       alert(error);
     });
 
-    url = 'https://vcm-15941.vm.duke.edu/api/integrator/get-range';
+    url = 'https://vcm-17934.vm.duke.edu/api/integrator/get-range';
     let self = this;
     await axios.get(url, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem("access_token")}` }

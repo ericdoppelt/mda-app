@@ -53,7 +53,7 @@ class RangeButton extends React.Component {
 
 
   async componentDidMount() {
-    let url = 'https://vcm-15941.vm.duke.edu/api/facility';
+    let url = 'https://vcm-17934.vm.duke.edu/api/facility';
     await axios.get(url).then(response => {
       this.setState({facilities: response.data.entries});
     }).catch(error => {
@@ -217,7 +217,7 @@ class RangeButton extends React.Component {
 
   async submit() {
       let self = this;
-      let url = 'https://vcm-15941.vm.duke.edu/api/integrator/set-range';
+      let url = 'https://vcm-17934.vm.duke.edu/api/integrator/set-range';
       await axios.post(url, {
         startDate: self.state.startDate,
         startTime: self.state.startTime,
