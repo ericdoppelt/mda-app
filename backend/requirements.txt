@@ -21,7 +21,7 @@ numpy==1.19.1
 pdfrw==0.4
 psycopg2-binary==2.8.5
 pycparser==2.20
-PyJWT==1.7.1
+PyJWT==2.4.0
 python-dotenv==0.13.0
 pytz==2020.1
 six==1.15.0
